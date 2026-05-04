@@ -6,8 +6,14 @@
   <title>Terms of Service | Evermore Life</title>
   <meta name="description" content="Terms of Service for Evermore Life LLC. Please read these terms before using our website or services." />
   <link rel="canonical" href="https://evermorelife.org/terms" />
-  <link rel="stylesheet" href="../shared/_tokens.css" />
-  <link rel="stylesheet" href="../shared/_base.css" />
+  <meta property="og:title" content="Terms of Service | Evermore Life" />
+  <meta property="og:description" content="Terms of Service for Evermore Life LLC." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://evermorelife.org/terms" />
+  <meta property="og:image" content="https://kurrea23.github.io/evermore-life/01_website/v2/assets/og-evermore-life.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="stylesheet" href="_tokens.css" />
+  <link rel="stylesheet" href="_base.css" />
   <style>
   .page-hero { background: var(--navy); color: var(--white); padding: 60px var(--section-padding-x) 50px; text-align: center; }
   .page-hero h1 { font-size: var(--font-size-4xl); font-weight: 900; margin-bottom: var(--space-3); }
@@ -27,13 +33,15 @@
 <!-- NAV -->
 <style>
 .site-nav { position: sticky; top: 0; z-index: 200; background: var(--navy); padding: 0 var(--section-padding-x); height: 68px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 12px rgba(0,0,0,0.18); }
-.nav-logo { font-size: var(--font-size-xl); font-weight: 900; color: var(--white); }
-.nav-logo span { color: var(--gold); }
+.nav-logo { display: flex; align-items: center; flex-shrink: 0; }
+.nav-logo img { display: block; width: auto; height: 62px; }
 .nav-cta { background: var(--gold); color: var(--navy); padding: 10px 22px; border-radius: var(--radius-sm); font-size: var(--font-size-sm); font-weight: 800; }
 .nav-cta:hover { background: var(--gold-dark); }
 </style>
 <nav class="site-nav">
-  <a href="index.html" class="nav-logo">Evermore <span>Life</span></a>
+  <a href="index.html" class="nav-logo" aria-label="Evermore Life home">
+    <img src="../assets/evermorelife-llc-logo-nav.png" alt="Evermore Life LLC" />
+  </a>
   <a href="optin.html" class="nav-cta">Free Quote →</a>
 </nav>
 
@@ -118,6 +126,11 @@
   </div>
   <p class="footer-copy">© 2026 Evermore Life LLC. All rights reserved. · 4539 N 22nd St, Ste R, Phoenix, AZ 85016</p>
 </footer>
+
+<div class="mobile-cta-bar" role="region" aria-label="Quick contact actions">
+  <a href="tel:+15055043101" class="mobile-cta-call">Call Us</a>
+  <a href="optin.html" class="mobile-cta-quote" aria-label="Get free quote">Quote</a>
+</div>
 
 </body>
 </html>

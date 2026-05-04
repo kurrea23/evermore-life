@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Evermore Life</title>
+  <desc id="desc">Open Graph image for Evermore Life LLC, a licensed independent insurance brokerage in Phoenix, Arizona.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#091238"/>
+      <stop offset="0.58" stop-color="#0d1b4b"/>
+      <stop offset="1" stop-color="#1a3070"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="55%" cy="20%" r="75%">
+      <stop offset="0" stop-color="#c8a96e" stop-opacity="0.24"/>
+      <stop offset="0.55" stop-color="#c8a96e" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#c8a96e" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect x="80" y="76" width="1040" height="478" rx="28" fill="none" stroke="#c8a96e" stroke-opacity="0.38" stroke-width="2"/>
+  <circle cx="151" cy="154" r="31" fill="#c8a96e"/>
+  <path d="M151 122l24 16v33c0 31-24 47-24 47s-24-16-24-47v-33l24-16z" fill="#091238" opacity="0.88"/>
+  <text x="203" y="165" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="900" letter-spacing="1">Evermore</text>
+  <text x="443" y="165" fill="#c8a96e" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="900" letter-spacing="1">Life</text>
+  <text x="88" y="298" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="900">Life Insurance Made Simple</text>
+  <text x="91" y="366" fill="#c8ddf5" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="500">Independent licensed brokerage in Phoenix, AZ</text>
+  <text x="91" y="427" fill="#c8a96e" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="800">Final Expense  •  Term Life  •  IUL  •  Mortgage Protection  •  Annuities</text>
+  <text x="91" y="497" fill="#9aafce" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="600">Evermore Life LLC · 4539 N 22nd St, Ste R · Phoenix, AZ 85016 · +1 (505) 504-3101</text>
+</svg>

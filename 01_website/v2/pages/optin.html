@@ -6,10 +6,16 @@
   <title>Get a Free Life Insurance Quote | Evermore Life</title>
   <meta name="description" content="Request a free, no-obligation life insurance quote from Evermore Life. Licensed independent brokers compare top carriers for final expense, term life, IUL, and more." />
   <link rel="canonical" href="https://evermorelife.org/optin" />
+  <meta property="og:title" content="Get a Free Life Insurance Quote | Evermore Life" />
+  <meta property="og:description" content="Request a free, no-obligation life insurance quote from a licensed independent broker." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://evermorelife.org/optin" />
+  <meta property="og:image" content="https://kurrea23.github.io/evermore-life/01_website/v2/assets/og-evermore-life.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
 
   <!-- Shared Tokens + Base -->
-  <link rel="stylesheet" href="../shared/_tokens.css" />
-  <link rel="stylesheet" href="../shared/_base.css" />
+  <link rel="stylesheet" href="_tokens.css" />
+  <link rel="stylesheet" href="_base.css" />
 
   <style>
   /* ============================================================
@@ -233,8 +239,32 @@
   }
   @media (max-width: 540px) {
     .optin-hero { padding: 56px 20px 48px; }
+    .optin-hero h1,
+    .optin-hero p,
+    .optin-eyebrow {
+      max-width: 340px;
+      margin-inline: auto;
+    }
+    .optin-hero h1 {
+      font-size: 1.9rem;
+    }
+    .optin-eyebrow {
+      line-height: 1.55;
+      white-space: normal;
+    }
     .form-section { padding: 48px 20px; }
     .form-card { padding: var(--space-6); }
+    .mini-trust-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      justify-items: center;
+      text-align: center;
+    }
+    .mini-trust-item {
+      max-width: 320px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
   }
   </style>
 </head>
@@ -245,17 +275,18 @@
      ============================================================ -->
 <style>
 .site-nav { position: sticky; top: 0; z-index: 200; background: var(--navy); padding: 0 var(--section-padding-x); height: 68px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 12px rgba(0,0,0,0.18); }
-.nav-logo { font-size: var(--font-size-xl); font-weight: 900; color: var(--white); letter-spacing: 0.5px; }
-.nav-logo span { color: var(--gold); }
+.nav-logo { display: flex; align-items: center; flex-shrink: 0; }
+.nav-logo img { display: block; width: auto; height: 62px; }
 .nav-links { display: flex; align-items: center; gap: var(--space-8); }
 .nav-links a { color: var(--text-muted); font-size: var(--font-size-sm); font-weight: 500; transition: color var(--transition-fast); }
-.nav-links a:hover { color: var(--gold); }
+.nav-links a:hover, .nav-links a.is-active { color: var(--gold); }
 .nav-cta { background: var(--gold); color: var(--navy); padding: 10px 22px; border-radius: var(--radius-sm); font-size: var(--font-size-sm); font-weight: 800; transition: background var(--transition-fast); flex-shrink: 0; }
 .nav-cta:hover { background: var(--gold-dark); }
 .nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: var(--space-2); background: none; border: none; }
 .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; }
 @media (max-width: 768px) {
   .site-nav { padding: 0 20px; height: 60px; }
+  .nav-logo img { height: 48px; }
   .nav-links { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--navy-deep); flex-direction: column; padding: var(--space-6); gap: var(--space-5); border-top: 1px solid rgba(255,255,255,0.08); box-shadow: var(--shadow-lg); }
   .nav-links.open { display: flex; }
   .nav-links a { font-size: var(--font-size-base); color: var(--white); }
@@ -263,7 +294,9 @@
 }
 </style>
 <nav class="site-nav" role="navigation" aria-label="Main navigation">
-  <a href="index.html" class="nav-logo">Evermore <span>Life</span></a>
+  <a href="index.html" class="nav-logo" aria-label="Evermore Life home">
+    <img src="../assets/evermorelife-llc-logo-nav.png" alt="Evermore Life LLC" />
+  </a>
   <ul class="nav-links" id="navLinks" role="list">
     <li><a href="index.html#products">Products</a></li>
     <li><a href="index.html#how-it-works">How It Works</a></li>
@@ -490,6 +523,10 @@
 </footer>
 <!-- END BLOCK: GLOBAL FOOTER -->
 
+<div class="mobile-cta-bar" role="region" aria-label="Quick contact actions">
+  <a href="tel:+15055043101" class="mobile-cta-call">Call Us</a>
+  <a href="#quote-form" class="mobile-cta-quote" aria-label="Get free quote">Quote</a>
+</div>
 
 <script src="https://link.msgsndr.com/js/form_embed.js"></script>
 <script>
@@ -516,6 +553,14 @@
   toggle.addEventListener('click', function() {
     var open = links.classList.toggle('open');
     toggle.setAttribute('aria-expanded', open);
+  });
+  links.querySelectorAll('a').forEach(function(a) {
+    a.addEventListener('click', function() {
+      links.querySelectorAll('a').forEach(function(link) { link.classList.remove('is-active'); });
+      a.classList.add('is-active');
+      links.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
   });
 })();
 </script>

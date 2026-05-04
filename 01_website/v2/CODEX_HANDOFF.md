@@ -70,16 +70,9 @@ can be patched independently without breaking the whole page.
 
 ### Priority 1 — Critical for Launch
 
-**1. Fix CSS token path issue on GitHub Pages**
-The pages use `../shared/_tokens.css` and `../shared/_base.css` as relative paths.
-On GitHub Pages this may break because the root is the repo root, not `pages/`.
-**Fix:** Either inline the CSS token variables into each page's `<style>` block,
-OR copy `_tokens.css` and `_base.css` into the `pages/` folder and update the link href to `_tokens.css`.
-
-Recommended quick fix — add this to the top of each page's `<style>` block and remove the external link tags:
-```css
-/* paste full contents of _tokens.css here */
-```
+**1. Fix CSS token path issue on GitHub Pages — DONE**
+The v2 pages now load local `pages/_tokens.css` and `pages/_base.css` copies,
+so GitHub Pages can serve the styles safely from the live page directory.
 
 **2. Create `thank-you.html`**
 After GHL form submission, redirect lands on a thank you page.
@@ -244,16 +237,17 @@ rm -f .git/index.lock .git/HEAD.lock .git/refs/heads/main.lock
 
 ## 📋 Finish Line Checklist
 
-- [ ] Fix CSS relative path issue for GitHub Pages
-- [ ] Build thank-you.html
-- [ ] Build 404.html
-- [ ] Add Protection Gap donut chart
-- [ ] Add counter animation to trust bar
-- [ ] Add sticky mobile CTA bar
-- [ ] Add JSON-LD structured data
-- [ ] Add sitemap.xml + robots.txt
-- [ ] Add GHL chat widget to index.html
-- [ ] Test all pages on mobile (iPhone Safari + Android Chrome)
-- [ ] Test all internal links work (privacy, terms, optin)
-- [ ] Point evermorelife.org custom domain at GitHub Pages
+- [x] Fix CSS relative path issue for GitHub Pages
+- [x] Build thank-you.html
+- [x] Build 404.html
+- [x] Add Protection Gap donut chart
+- [x] Add counter animation to trust bar
+- [x] Add sticky mobile CTA bar
+- [x] Add JSON-LD structured data
+- [x] Add sitemap.xml + robots.txt
+- [x] Add GHL chat widget to index.html
+- [x] Test all pages on mobile (iPhone Safari + Android Chrome viewport/user-agent checks)
+- [x] Test all internal links work (privacy, terms, optin)
+- [x] Add GitHub Pages CNAME for evermorelife.org
+- [ ] Point Cloudflare DNS records for evermorelife.org at GitHub Pages
 - [ ] Submit site to Google Search Console
