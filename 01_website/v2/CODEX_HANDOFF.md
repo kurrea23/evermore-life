@@ -248,6 +248,6 @@ rm -f .git/index.lock .git/HEAD.lock .git/refs/heads/main.lock
 - [x] Add GHL chat widget to index.html
 - [x] Test all pages on mobile (iPhone Safari + Android Chrome viewport/user-agent checks)
 - [x] Test all internal links work (privacy, terms, optin)
-- [x] Add GitHub Pages CNAME for evermorelife.org
+- [ ] Add GitHub Pages CNAME for evermorelife.org after DNS cutover is approved
 - [ ] Point Cloudflare DNS records for evermorelife.org at GitHub Pages
 - [ ] Submit site to Google Search Console
