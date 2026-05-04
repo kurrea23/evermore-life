@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "evermore-ghl-lead-relay",
+  "main": "ghl_lead_relay_worker.js",
+  "compatibility_date": "2026-05-02",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "vars": {
+    "GHL_API_VERSION": "2021-07-28",
+    "GHL_LOCATION_ID": "replace-with-ghl-location-id",
+    "GHL_DEFAULT_TAGS": "evermore-life-lead,website-lead",
+    "ALLOWED_ORIGINS": "https://evermorelife.org,https://www.evermorelife.org,http://127.0.0.1:8099,http://localhost:8099"
+  }
+}

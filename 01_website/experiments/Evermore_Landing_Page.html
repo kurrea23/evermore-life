@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Final Expense Insurance | Evermore Life LLC</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1895928277755643');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1895928277755643&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0D1B3E;
+  --navy2:#162550;
+  --gold:#C9A84C;
+  --gold2:#e2c170;
+  --white:#fff;
+  --cream:#faf7f0;
+  --text:#2c2c2c;
+  --shadow:0 8px 32px rgba(13,27,62,0.18);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Lato',sans-serif;color:var(--text);background:#fff;}
+
+/* ── HEADER ── */
+.header{
+  background:var(--navy);
+  padding:14px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 12px rgba(0,0,0,0.3);
+}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-icon{
+  width:38px;height:38px;
+  background:var(--navy2);border:2px solid var(--gold);
+  border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:18px;
+}
+.logo-name{color:white;}
+.logo-name .brand{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;letter-spacing:1px;}
+.logo-name .tagline{font-size:9px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;}
+.header-cta{
+  background:var(--gold);color:var(--navy);
+  border:none;padding:10px 20px;border-radius:50px;
+  font-size:13px;font-weight:700;cursor:pointer;
+  font-family:'Lato',sans-serif;text-decoration:none;
+  white-space:nowrap;
+  transition:all 0.2s;
+}
+.header-cta:hover{background:var(--gold2);transform:translateY(-1px);}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(135deg,var(--navy) 0%,#1a3060 100%);
+  padding:60px 20px 50px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;
+  top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(ellipse at 60% 40%,rgba(201,168,76,0.08) 0%,transparent 60%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  display:inline-block;
+  background:rgba(201,168,76,0.15);
+  color:var(--gold);border:1px solid rgba(201,168,76,0.3);
+  padding:6px 18px;border-radius:50px;
+  font-size:12px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;margin-bottom:20px;
+}
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,5vw,48px);
+  color:white;line-height:1.2;
+  margin-bottom:16px;max-width:700px;margin-left:auto;margin-right:auto;
+}
+.hero h1 .gold{color:var(--gold);}
+.hero-sub{
+  font-size:clamp(16px,2.5vw,20px);
+  color:rgba(255,255,255,0.8);
+  max-width:560px;margin:0 auto 30px;line-height:1.6;
+}
+.hero-badges{
+  display:flex;flex-wrap:wrap;
+  justify-content:center;gap:12px;margin-bottom:32px;
+}
+.badge{
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.2);
+  color:white;padding:8px 16px;border-radius:50px;
+  font-size:13px;display:flex;align-items:center;gap:6px;
+}
+.badge-icon{font-size:14px;}
+.hero-cta-group{display:flex;flex-direction:column;align-items:center;gap:12px;}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--gold),#a8893a);
+  color:var(--navy);padding:18px 36px;
+  border-radius:50px;font-size:17px;font-weight:900;
+  font-family:'Lato',sans-serif;
+  text-decoration:none;border:none;cursor:pointer;
+  box-shadow:0 6px 24px rgba(201,168,76,0.4);
+  transition:all 0.25s;letter-spacing:0.3px;
+  animation:pulse-gold 2.5s ease-in-out infinite;
+}
+@keyframes pulse-gold{
+  0%,100%{box-shadow:0 6px 24px rgba(201,168,76,0.4);}
+  50%{box-shadow:0 8px 32px rgba(201,168,76,0.65);}
+}
+.btn-primary:hover{transform:translateY(-2px);}
+.hero-no-pressure{color:rgba(255,255,255,0.5);font-size:12px;font-style:italic;}
+
+/* ── PROBLEM STRIP ── */
+.problem-strip{
+  background:var(--cream);
+  padding:40px 20px;text-align:center;
+  border-top:4px solid var(--gold);
+}
+.problem-strip h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(22px,3.5vw,32px);color:var(--navy);
+  margin-bottom:12px;
+}
+.problem-strip p{font-size:16px;color:#555;max-width:600px;margin:0 auto 24px;line-height:1.7;}
+.stat-row{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:24px;
+  max-width:700px;margin:0 auto;
+}
+.stat-box{
+  background:white;border-radius:12px;
+  padding:20px 24px;text-align:center;
+  box-shadow:var(--shadow);flex:1;min-width:160px;max-width:200px;
+  border-top:3px solid var(--gold);
+}
+.stat-number{font-size:28px;font-weight:900;color:var(--navy);font-family:'Playfair Display',serif;}
+.stat-label{font-size:12px;color:#777;margin-top:4px;line-height:1.4;}
+
+/* ── HOW IT WORKS ── */
+.how-it-works{padding:56px 20px;background:white;text-align:center;}
+.section-label{
+  font-size:11px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--gold);margin-bottom:8px;
+}
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(24px,3.5vw,34px);color:var(--navy);
+  margin-bottom:10px;
+}
+.section-sub{font-size:16px;color:#666;max-width:560px;margin:0 auto 40px;line-height:1.6;}
+.steps-grid{
+  display:flex;flex-wrap:wrap;justify-content:center;
+  gap:20px;max-width:900px;margin:0 auto 40px;
+}
+.step-card{
+  background:var(--cream);border-radius:16px;
+  padding:28px 24px;text-align:center;
+  flex:1;min-width:200px;max-width:240px;
+  border-bottom:3px solid var(--gold);
+  position:relative;
+}
+.step-num{
+  width:44px;height:44px;
+  background:var(--navy);color:var(--gold);
+  border-radius:50%;font-size:18px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;
+}
+.step-card h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:8px;}
+.step-card p{font-size:13px;color:#666;line-height:1.5;}
+
+/* ── WHAT'S COVERED ── */
+.covered{padding:56px 20px;background:var(--navy);}
+.covered .section-label{color:var(--gold);}
+.covered .section-title{color:white;}
+.covered .section-sub{color:rgba(255,255,255,0.7);}
+.covered-grid{
+  display:flex;flex-wrap:wrap;justify-content:center;
+  gap:16px;max-width:800px;margin:0 auto;
+}
+.covered-item{
+  background:rgba(255,255,255,0.08);border:1px solid rgba(201,168,76,0.25);
+  border-radius:12px;padding:20px 24px;
+  flex:1;min-width:200px;max-width:260px;
+  display:flex;align-items:flex-start;gap:12px;
+}
+.covered-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+.covered-item h4{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:4px;}
+.covered-item p{font-size:12px;color:rgba(255,255,255,0.65);line-height:1.5;}
+
+/* ── WHY EVERMORE ── */
+.why{padding:56px 20px;background:white;text-align:center;}
+.why-grid{
+  display:flex;flex-wrap:wrap;justify-content:center;
+  gap:20px;max-width:800px;margin:0 auto;
+}
+.why-card{
+  flex:1;min-width:180px;max-width:230px;
+  padding:24px 20px;border-radius:14px;
+  background:var(--cream);text-align:center;
+  border-top:3px solid var(--gold);
+}
+.why-icon{font-size:32px;margin-bottom:10px;}
+.why-card h3{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.why-card p{font-size:12px;color:#666;line-height:1.5;}
+
+/* ── SARAH CTA ── */
+.sarah-cta{
+  padding:60px 20px;
+  background:linear-gradient(135deg,var(--navy),#1a3060);
+  text-align:center;position:relative;overflow:hidden;
+}
+.sarah-cta::before{
+  content:'';position:absolute;
+  top:-30%;left:-20%;width:60%;height:160%;
+  background:radial-gradient(ellipse,rgba(201,168,76,0.1) 0%,transparent 70%);
+  pointer-events:none;
+}
+.sarah-avatar-wrap{
+  width:90px;height:90px;
+  background:white;border-radius:50%;
+  border:4px solid var(--gold);
+  margin:0 auto 20px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:42px;
+  box-shadow:0 4px 20px rgba(201,168,76,0.3);
+}
+.sarah-cta h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(24px,4vw,38px);color:white;
+  margin-bottom:12px;
+}
+.sarah-cta p{color:rgba(255,255,255,0.75);font-size:16px;max-width:520px;margin:0 auto 28px;line-height:1.6;}
+.sarah-features{
+  display:flex;flex-wrap:wrap;justify-content:center;
+  gap:14px;margin-bottom:32px;
+}
+.sarah-feat{
+  background:rgba(255,255,255,0.1);
+  color:white;padding:8px 16px;border-radius:50px;
+  font-size:13px;font-weight:600;
+  border:1px solid rgba(255,255,255,0.2);
+}
+
+/* ── FAQ ── */
+.faq{padding:56px 20px;background:var(--cream);}
+.faq-list{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
+.faq-item{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+.faq-q{
+  padding:18px 20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;
+  font-weight:700;font-size:15px;color:var(--navy);
+  transition:background 0.2s;
+}
+.faq-q:hover{background:var(--cream);}
+.faq-toggle{font-size:18px;color:var(--gold);transition:transform 0.2s;}
+.faq-a{
+  padding:0 20px;max-height:0;overflow:hidden;
+  transition:max-height 0.3s ease,padding 0.3s;
+  font-size:14px;color:#555;line-height:1.7;
+}
+.faq-item.open .faq-a{max-height:200px;padding:0 20px 18px;}
+.faq-item.open .faq-toggle{transform:rotate(45deg);}
+
+/* ── FOOTER ── */
+.footer{
+  background:var(--navy);padding:32px 20px;text-align:center;
+}
+.footer-logo{color:white;font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:8px;}
+.footer-tagline{color:var(--gold);font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;}
+.footer-links{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:16px;}
+.footer-links a{color:rgba(255,255,255,0.5);font-size:12px;text-decoration:none;}
+.footer-links a:hover{color:white;}
+.footer-compliance{
+  color:rgba(255,255,255,0.3);font-size:10px;
+  max-width:600px;margin:0 auto;line-height:1.6;
+}
+
+/* ── SARAH CSS PORTRAIT ── */
+.sarah-portrait {
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  border: 4px solid var(--gold);
+  margin: 0 auto 20px;
+  background: white;
+  box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.sp-body {
+  width: 68px; height: 46px;
+  background: linear-gradient(180deg,#2a5ca8 0%,#1e4a90 100%);
+  border-radius: 34px 34px 0 0;
+  position: absolute;
+  bottom: 0;
+  display: flex; justify-content: center;
+}
+.sp-neck {
+  width: 18px; height: 14px;
+  background: #f5d5a8;
+  position: absolute;
+  bottom: 42px;
+  border-radius: 0 0 8px 8px;
+}
+.sp-head {
+  width: 46px; height: 52px;
+  background: linear-gradient(180deg,#fde8c8 0%,#f5d5a8 100%);
+  border-radius: 50% 50% 44% 44%;
+  position: absolute;
+  bottom: 48px;
+}
+.sp-hair {
+  width: 52px; height: 30px;
+  background: linear-gradient(180deg,#3a2008 0%,#5a3010 100%);
+  border-radius: 50% 50% 20% 20%;
+  position: absolute;
+  bottom: 72px;
+}
+.sp-hair-side-l {
+  width: 12px; height: 28px;
+  background: #3a2008;
+  border-radius: 0 0 60% 60%;
+  position: absolute;
+  bottom: 52px; left: 19px;
+}
+.sp-hair-side-r {
+  width: 12px; height: 28px;
+  background: #3a2008;
+  border-radius: 0 0 60% 60%;
+  position: absolute;
+  bottom: 52px; right: 19px;
+}
+.sp-eye-l, .sp-eye-r {
+  width: 7px; height: 8px;
+  background: #2c1a0a;
+  border-radius: 50%;
+  position: absolute;
+}
+.sp-eye-l { bottom: 68px; left: 27px; }
+.sp-eye-r { bottom: 68px; right: 27px; }
+.sp-eye-l::after, .sp-eye-r::after {
+  content: '';
+  position: absolute;
+  top: 1px; left: 1px;
+  width: 2px; height: 2px;
+  background: white;
+  border-radius: 50%;
+}
+.sp-smile {
+  width: 16px; height: 8px;
+  border: 2px solid #c8785a;
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  position: absolute;
+  bottom: 57px;
+  left: 50%; transform: translateX(-50%);
+}
+.sp-cheek-l, .sp-cheek-r {
+  width: 8px; height: 5px;
+  background: rgba(220,120,100,0.3);
+  border-radius: 50%;
+  position: absolute;
+  bottom: 63px;
+}
+.sp-cheek-l { left: 22px; }
+.sp-cheek-r { right: 22px; }
+.sp-collar {
+  width: 20px; height: 14px;
+  background: white;
+  clip-path: polygon(50% 0%,0% 100%,100% 100%);
+  position: absolute;
+  bottom: 44px;
+  left: 50%; transform: translateX(-50%);
+  opacity: 0.9;
+}
+
+/* ── STICKY MOBILE CTA ── */
+.sticky-mobile{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--navy);
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  box-shadow:0 -4px 20px rgba(0,0,0,0.3);
+  z-index:200;
+}
+@media(max-width:600px){
+  .sticky-mobile{display:block;}
+  body{padding-bottom:80px;}
+  .header-cta{display:none;}
+}
+.sticky-btn{
+  display:block;width:100%;
+  background:linear-gradient(135deg,var(--gold),#a8893a);
+  color:var(--navy);padding:16px;border-radius:12px;
+  font-size:16px;font-weight:900;font-family:'Lato',sans-serif;
+  text-align:center;text-decoration:none;border:none;cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <!-- Logo placeholder: swap out this div for your actual Evermore LIFE logo image -->
+  <div id="evermore-logo" style="display:flex;align-items:center;gap:10px;border:2px solid var(--gold);padding:6px 14px;border-radius:8px;">
+    <img src="../assets/images/evermore_logo.png" alt="Evermore Life" style="width:28px;height:28px;object-fit:cover;border-radius:50%;" />
+    <div class="logo-name">
+      <div class="brand" style="color:var(--gold);font-family:'Playfair Display',serif;font-size:15px;font-weight:700;letter-spacing:1.5px;">EVERMORE LIFE</div>
+      <div class="tagline" style="font-size:8px;color:rgba(201,168,76,0.7);letter-spacing:2px;text-transform:uppercase;">LLC</div>
+    </div>
+  </div>
+  <a href="#" class="header-cta" onclick="event.preventDefault();openSarahChat();trackCTA('header');">See If You Qualify →</a>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Final Expense Insurance — Licensed in Your State</div>
+  <h1>Protect Your Family From <span class="gold">Burial Debt.</span></h1>
+  <p class="hero-sub">The average funeral costs $12,000–$15,000. Final expense insurance can cover it — with rates that may surprise you. No medical exam required.</p>
+  <div class="hero-badges">
+    <div class="badge"><span class="badge-icon">✅</span> No Medical Exam</div>
+    <div class="badge"><span class="badge-icon">🔒</span> Rate Locked for Life</div>
+    <div class="badge"><span class="badge-icon">⚡</span> Coverage Starts Immediately</div>
+    <div class="badge"><span class="badge-icon">🏆</span> Multiple Carriers</div>
+  </div>
+  <div class="hero-cta-group">
+    <a href="#" class="btn-primary" onclick="event.preventDefault();openSarahChat();trackCTA('hero');">
+      💬 Talk to Sarah — See If You Qualify
+    </a>
+    <div class="hero-no-pressure">No pressure. No sales pitch. Just answers. Takes 2 minutes.</div>
+  </div>
+</section>
+
+<!-- PROBLEM STRIP -->
+<section class="problem-strip">
+  <h2>Most Families Aren't Prepared</h2>
+  <p>When a loved one passes, families have just days to come up with thousands of dollars. Social Security doesn't cover it. Most life insurance isn't enough. Final expense insurance is specifically designed for this moment.</p>
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="stat-number">$12,000</div>
+      <div class="stat-label">Average funeral cost in the U.S.</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">72 hrs</div>
+      <div class="stat-label">How fast families need to come up with the money</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">64%</div>
+      <div class="stat-label">Of Americans have no final expense plan in place</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works">
+  <div class="section-label">Simple Process</div>
+  <h2 class="section-title">How It Works</h2>
+  <p class="section-sub">Getting covered takes one conversation and usually less than 15 minutes.</p>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <h3>Chat With Sarah</h3>
+      <p>Our AI assistant asks a few simple questions about your age, health, and coverage goal.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <h3>We Shop All Carriers</h3>
+      <p>Our licensed agents compare carriers so you can review available options.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <h3>Get Covered</h3>
+      <p>One 15-minute call. We handle the paperwork. Your family is protected.</p>
+    </div>
+  </div>
+  <a href="#" class="btn-primary" style="font-size:15px;padding:15px 32px;" onclick="event.preventDefault();openSarahChat();trackCTA('how-it-works');">
+    See If You Qualify →
+  </a>
+</section>
+
+<!-- WHAT'S COVERED -->
+<section class="covered">
+  <div class="section-label" style="text-align:center;">What Final Expense Covers</div>
+  <h2 class="section-title" style="text-align:center;margin-bottom:10px;">Your Family Gets a Lump Sum — Tax Free</h2>
+  <p class="section-sub" style="text-align:center;">They can use it for anything related to your passing.</p>
+  <div class="covered-grid">
+    <div class="covered-item">
+      <div class="covered-icon">⚰️</div>
+      <div>
+        <h4>Funeral & Burial</h4>
+        <p>Casket, burial plot, service, flowers, headstone — all of it.</p>
+      </div>
+    </div>
+    <div class="covered-item">
+      <div class="covered-icon">🏥</div>
+      <div>
+        <h4>Medical Bills</h4>
+        <p>Final hospital bills, hospice, or medical debt left behind.</p>
+      </div>
+    </div>
+    <div class="covered-item">
+      <div class="covered-icon">🏠</div>
+      <div>
+        <h4>Outstanding Debts</h4>
+        <p>Credit cards, personal loans, or any bills your family inherits.</p>
+      </div>
+    </div>
+    <div class="covered-item">
+      <div class="covered-icon">💛</div>
+      <div>
+        <h4>Family Support</h4>
+        <p>Give your loved ones time to grieve without financial stress.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY EVERMORE -->
+<section class="why">
+  <div class="section-label">Why Evermore Life</div>
+  <h2 class="section-title">Simple. Honest. Trusted.</h2>
+  <p class="section-sub">We're not just selling policies — we're protecting families.</p>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon">🏆</div>
+      <h3>Multiple Carriers</h3>
+      <p>We shop multiple insurance companies so you are not limited to one option.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">📋</div>
+      <h3>No Medical Exam</h3>
+      <p>Most plans require only a few health questions. No doctor visits or blood tests.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🔒</div>
+      <h3>Locked-In Rate</h3>
+      <p>Your premium never increases. Ever. It's fixed for the life of your policy.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">⚡</div>
+      <h3>Fast Coverage</h3>
+      <p>Accidental death coverage starts immediately. Most plans activate within days.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">📍</div>
+      <h3>Licensed in Your State</h3>
+      <p>Our agents are licensed and in good standing in your state. You're in good hands.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SARAH CTA SECTION -->
+<section class="sarah-cta" id="sarah-section">
+  <div style="width:110px;height:110px;border-radius:50%;border:4px solid var(--gold);overflow:hidden;margin:0 auto 20px;box-shadow:0 4px 24px rgba(201,168,76,0.35);">
+    <img src="../assets/images/Sarah at desk .png" alt="Sarah — Evermore Life" style="width:100%;height:100%;object-fit:cover;object-position:center top;" />
+  </div>
+  <h2>Hi, I'm Sarah.</h2>
+  <p>I'm Evermore Life's AI assistant. I'll ask you a few quick questions and connect you with a licensed agent who can show you exactly what you qualify for — no pressure, completely free.</p>
+  <div class="sarah-features">
+    <div class="sarah-feat">✅ Takes 2 minutes</div>
+    <div class="sarah-feat">✅ No obligation</div>
+    <div class="sarah-feat">✅ Real licensed agent</div>
+    <div class="sarah-feat">✅ Free consultation</div>
+  </div>
+  <button class="btn-primary" style="font-size:17px;border:none;cursor:pointer;" onclick="openSarahChat();trackSarahOpen();">
+    💬 See If You Qualify →
+  </button>
+  <p style="color:rgba(255,255,255,0.4);font-size:11px;margin-top:14px;font-style:italic;">
+    No pressure. No sales pitch. Just honest answers from real people.
+  </p>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div style="text-align:center;margin-bottom:32px;">
+    <div class="section-label">Common Questions</div>
+    <h2 class="section-title">You've Got Questions. We've Got Answers.</h2>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFAQ(this)">
+        How much does final expense insurance cost?
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a">
+        Cost depends on your age, health, and how much coverage you want. Many people in their 50s and 60s pay between $30–$70/month for $10,000–$20,000 in coverage. The best way to know your exact rate is to answer a few quick questions — Sarah can help you get started in under 2 minutes.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFAQ(this)">
+        Do I need a medical exam to get covered?
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a">
+        Many final expense plans do not require a medical exam. We ask a few simple health questions, and many health situations can still qualify for coverage. For harder-to-insure situations, guaranteed-issue options may be available.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFAQ(this)">
+        What if I have health problems? Will I still qualify?
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a">
+        Often, yes. We work with carriers that consider a range of health situations, including diabetes, COPD, heart conditions, and more. If standard plans are not available, guaranteed-issue options may still be worth reviewing.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFAQ(this)">
+        I already have life insurance. Do I need this too?
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a">
+        Final expense insurance is specifically designed for end-of-life costs. Many people with existing life insurance find their policy isn't enough to cover funeral costs PLUS ongoing family expenses. Final expense fills that specific gap — it's a targeted, affordable addition.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFAQ(this)">
+        Will my rate ever go up?
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a">
+        No. Your premium is locked in for life the day you're approved. It never increases due to age or health changes. That's one of the key benefits of final expense insurance — predictable, stable coverage.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFAQ(this)">
+        How does the free consultation work?
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-a">
+        Just 15 minutes on the phone with one of our licensed Evermore Life agents. They'll review your answers from Sarah, compare carrier options, and show you exact rates and coverage amounts you qualify for. Zero pressure — if it's not right for you, no problem at all.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-logo">EVERMORE LIFE LLC</div>
+  <div class="footer-tagline">Simple. Honest. Trusted.</div>
+  <div class="footer-links">
+    <a href="../current/privacy.html">Privacy Policy</a>
+    <a href="../current/terms.html">Terms of Service</a>
+    <a href="../current/optin.html">Opt-In / Opt-Out</a>
+    <a href="mailto:evermorelifeagent01@gmail.com">Contact Us</a>
+  </div>
+  <div class="footer-compliance">
+    Not affiliated with any government program, including Medicare or Social Security. Evermore Life LLC is a licensed insurance agency. Coverage amounts, eligibility, and rates vary based on age, health, and state of residence. This is not a solicitation for any specific carrier. Licensed insurance agents available to discuss your options. © 2026 Evermore Life LLC. All rights reserved.
+  </div>
+</footer>
+
+<!-- STICKY MOBILE CTA -->
+<div class="sticky-mobile">
+  <a href="#sarah-section" class="sticky-btn" onclick="openSarahChat();trackCTA('sticky-mobile');">
+    💬 See If You Qualify — Talk to Sarah
+  </a>
+</div>
+
+<!-- ===== SARAH CHAT WIDGET ===== -->
+<style>
+#sarah-widget-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #C9A84C, #e2c170);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(201,168,76,0.5);
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+#sarah-widget-btn:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(201,168,76,0.65); }
+#sarah-widget-btn .sw-badge {
+  position: absolute;
+  top: -3px; right: -3px;
+  width: 18px; height: 18px;
+  background: #4ade80;
+  border-radius: 50%;
+  border: 2px solid white;
+  animation: sw-pulse 2s infinite;
+}
+@keyframes sw-pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.2);} }
+
+#sarah-widget-panel {
+  position: fixed;
+  bottom: 100px;
+  right: 24px;
+  width: 370px;
+  max-width: calc(100vw - 32px);
+  height: 540px;
+  max-height: calc(100vh - 120px);
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(13,27,62,0.25);
+  z-index: 9999;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(201,168,76,0.2);
+}
+#sarah-widget-panel.open { display: flex; }
+
+.sw-header {
+  background: linear-gradient(135deg, #0D1B3E, #162550);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.sw-avatar {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #C9A84C, #e2c170);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  border: 2px solid rgba(201,168,76,0.4);
+}
+.sw-info { flex: 1; }
+.sw-name { color: #C9A84C; font-weight: 900; font-size: 14px; letter-spacing: 0.05em; }
+.sw-status { color: rgba(255,255,255,0.55); font-size: 11px; margin-top: 1px; }
+.sw-close {
+  background: none; border: none; color: rgba(255,255,255,0.5);
+  font-size: 20px; cursor: pointer; padding: 4px; line-height: 1;
+  transition: color 0.15s;
+}
+.sw-close:hover { color: white; }
+
+.sw-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #fafaf8;
+}
+.sw-messages::-webkit-scrollbar { width: 4px; }
+.sw-messages::-webkit-scrollbar-thumb { background: #ddd; border-radius: 2px; }
+
+.sw-msg { display: flex; flex-direction: column; max-width: 88%; }
+.sw-msg.sarah { align-self: flex-start; }
+.sw-msg.user { align-self: flex-end; }
+.sw-msg-name { font-size: 10px; color: #999; margin-bottom: 3px; font-weight: 700; letter-spacing: 0.05em; }
+.sw-msg.user .sw-msg-name { text-align: right; }
+.sw-bubble {
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.sw-msg.sarah .sw-bubble {
+  background: white;
+  border: 1px solid #e8e0d0;
+  border-radius: 4px 14px 14px 14px;
+  color: #2c2c2c;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.sw-msg.user .sw-bubble {
+  background: linear-gradient(135deg, #0D1B3E, #162550);
+  color: white;
+  border-radius: 14px 14px 4px 14px;
+}
+
+.sw-quick-replies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+.sw-qr-btn {
+  background: white;
+  border: 1.5px solid #C9A84C;
+  color: #0D1B3E;
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.15s, color 0.15s;
+  font-family: 'Lato', sans-serif;
+}
+.sw-qr-btn:hover { background: #C9A84C; color: white; }
+.sw-qr-btn:disabled { opacity: 0.45; cursor: default; }
+
+.sw-typing {
+  display: none;
+  align-self: flex-start;
+  padding: 10px 14px;
+  background: white;
+  border: 1px solid #e8e0d0;
+  border-radius: 4px 14px 14px 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.sw-typing.visible { display: flex; gap: 4px; align-items: center; }
+.sw-dot { width: 7px; height: 7px; background: #C9A84C; border-radius: 50%; animation: sw-bounce 1.2s infinite; }
+.sw-dot:nth-child(2) { animation-delay: 0.2s; }
+.sw-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes sw-bounce { 0%,60%,100%{transform:translateY(0);} 30%{transform:translateY(-6px);} }
+
+.sw-input-row {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  background: white;
+  border-top: 1px solid #eee;
+  flex-shrink: 0;
+}
+.sw-input {
+  flex: 1;
+  border: 1.5px solid #e0d8c8;
+  border-radius: 22px;
+  padding: 9px 16px;
+  font-size: 13px;
+  outline: none;
+  font-family: 'Lato', sans-serif;
+  transition: border-color 0.15s;
+}
+.sw-input:focus { border-color: #C9A84C; }
+.sw-send {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #C9A84C, #e2c170);
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.15s;
+}
+.sw-send:hover { transform: scale(1.08); }
+
+.sw-booking-form {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background: #fafaf8;
+  flex: 1;
+  overflow-y: auto;
+}
+.sw-booking-form.active { display: flex; }
+.sw-form-title { font-weight: 900; color: #0D1B3E; font-size: 14px; margin-bottom: 4px; }
+.sw-form-input {
+  border: 1.5px solid #e0d8c8;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-family: 'Lato', sans-serif;
+  outline: none;
+  width: 100%;
+}
+.sw-form-input:focus { border-color: #C9A84C; }
+.sw-form-btn {
+  background: linear-gradient(135deg, #C9A84C, #e2c170);
+  color: #0D1B3E;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  font-family: 'Lato', sans-serif;
+  margin-top: 4px;
+}
+.sw-confirm {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 28px 20px;
+  gap: 12px;
+  flex: 1;
+}
+.sw-confirm.active { display: flex; }
+.sw-confirm-icon { font-size: 48px; }
+.sw-confirm-title { font-weight: 900; color: #0D1B3E; font-size: 18px; }
+.sw-confirm-sub { color: #666; font-size: 13px; line-height: 1.5; }
+</style>
+
+<!-- Widget Bubble -->
+<button id="sarah-widget-btn" onclick="toggleSarahChat()" title="Chat with Sarah" style="padding:0;overflow:hidden;background:none;">
+  <img src="../assets/images/Sarah- wave.png" alt="Sarah" style="width:100%;height:100%;object-fit:cover;object-position:center 15%;" />
+  <span class="sw-badge"></span>
+</button>
+
+<!-- Widget Panel -->
+<div id="sarah-widget-panel">
+  <div class="sw-header">
+    <div style="width:42px;height:42px;border-radius:50%;overflow:hidden;border:2px solid rgba(201,168,76,0.5);flex-shrink:0;">
+      <img src="../assets/images/Sarah welcoming sitting.png" alt="Sarah" style="width:100%;height:100%;object-fit:cover;object-position:center top;" />
+    </div>
+    <div class="sw-info">
+      <div class="sw-name">SARAH — EVERMORE LIFE</div>
+      <div class="sw-status">● Online now · Licensed Agent Support</div>
+    </div>
+    <button class="sw-close" onclick="closeSarahChat()">✕</button>
+  </div>
+
+  <!-- Chat View -->
+  <div class="sw-messages" id="sw-messages">
+    <div class="sw-typing" id="sw-typing">
+      <div class="sw-dot"></div><div class="sw-dot"></div><div class="sw-dot"></div>
+    </div>
+  </div>
+  <div class="sw-input-row" id="sw-input-row">
+    <input class="sw-input" id="sw-input" placeholder="Type your answer…" onkeydown="if(event.key==='Enter')swSend();" />
+    <button class="sw-send" onclick="swSend()">➤</button>
+  </div>
+
+  <!-- Booking Form (shown after chat) -->
+  <div class="sw-booking-form" id="sw-booking">
+    <div class="sw-form-title">📅 Book Your Free Call</div>
+    <p style="font-size:12px;color:#666;margin-bottom:2px;">Fill this out and we'll reach out <strong>right away.</strong></p>
+    <input class="sw-form-input" id="sw-fname" placeholder="First Name *" />
+    <input class="sw-form-input" id="sw-lname" placeholder="Last Name *" />
+    <input class="sw-form-input" id="sw-phone" placeholder="Phone Number *" type="tel" />
+    <input class="sw-form-input" id="sw-email" placeholder="Email Address *" type="email" />
+    <label style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#555;cursor:pointer;line-height:1.4;">
+      <input type="checkbox" id="sw-optin" style="margin-top:2px;flex-shrink:0;accent-color:#C9A84C;" />
+      <span>Optional: I agree to receive SMS messages from Evermore Life LLC about my quote request and appointment reminders. Msg &amp; data rates may apply. Message frequency varies. Reply STOP to opt out, HELP for help. Consent is not a condition of purchase. <a href="../current/privacy.html" target="_blank" style="color:#C9A84C;">Privacy Policy</a> · <a href="../current/terms.html" target="_blank" style="color:#C9A84C;">Terms</a></span>
+    </label>
+    <button class="sw-form-btn" onclick="swSubmitBooking()">✅ Book My Free Call →</button>
+    <p style="font-size:11px;color:#999;text-align:center;">No obligation. No pressure. Just answers.</p>
+  </div>
+
+  <!-- Confirmation View -->
+  <div class="sw-confirm" id="sw-confirm">
+    <div class="sw-confirm-icon">🎉</div>
+    <div class="sw-confirm-title">You're All Set!</div>
+    <div class="sw-confirm-sub">A licensed Evermore Life agent will be in touch <strong>shortly</strong> — keep an eye on your phone. 📱<br><br>Thank you for trusting us with your family's future. 🌳</div>
+  </div>
+</div>
+
+<script>
+// ===== SARAH WIDGET =====
+window.EVERMORE_CONFIG = window.EVERMORE_CONFIG || {
+  ghlWebhookUrl: '',
+  ghlCalendarUrl: '',
+  thankYouUrl: 'thank-you.html'
+};
+
+function swTrackingFields() {
+  const params = new URLSearchParams(window.location.search);
+  const tracking = {};
+  ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k => {
+    const v = params.get(k);
+    if (v) tracking[k] = v;
+  });
+  tracking.page_url = window.location.href;
+  tracking.referrer = document.referrer || '';
+  return tracking;
+}
+
+function swIsLocalPreview() {
+  return window.location.protocol === 'file:' || ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+}
+
+async function swSendLeadToGHL(data) {
+  const webhook = window.EVERMORE_CONFIG.ghlWebhookUrl;
+  if (!webhook) {
+    if (swIsLocalPreview()) {
+      const previewLeads = JSON.parse(localStorage.getItem('evermore_preview_leads') || '[]');
+      previewLeads.push(data);
+      localStorage.setItem('evermore_preview_leads', JSON.stringify(previewLeads));
+      return { preview: true };
+    }
+    throw new Error('Lead webhook is not connected yet. Add your GHL inbound webhook URL to EVERMORE_CONFIG.ghlWebhookUrl.');
+  }
+  const response = await fetch(webhook, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(data)
+  });
+  if (!response.ok) throw new Error('GHL webhook rejected the submission.');
+  return response;
+}
+
+let swStep = 0;
+let swLeadData = { topic: '', age: '', health: '', coverage: '' };
+let swStarted = false;
+let swWaitingBooking = false;
+let swExtraCount = 0;
+
+function openSarahChat() {
+  document.getElementById('sarah-widget-panel').classList.add('open');
+  if (!swStarted) { swStarted = true; swInit(); }
+}
+function closeSarahChat() {
+  document.getElementById('sarah-widget-panel').classList.remove('open');
+}
+function toggleSarahChat() {
+  const p = document.getElementById('sarah-widget-panel');
+  if (p.classList.contains('open')) { closeSarahChat(); }
+  else { openSarahChat(); }
+}
+
+function swInit() {
+  swShowTyping();
+  setTimeout(() => {
+    swHideTyping();
+    swSarahSay("Hi there! I'm Sarah 👋 — Evermore Life's AI guide.<br><br>I'll ask a couple of quick questions and connect you with a licensed agent. <strong>What brings you here today?</strong>", swBuildTopicBtns());
+  }, 900);
+}
+
+function swSarahSay(text, extras, delay) {
+  delay = delay || 700;
+  swShowTyping();
+  setTimeout(() => {
+    swHideTyping();
+    swAppend('sarah', text);
+    if (extras) setTimeout(() => swAppendExtras(extras), 250);
+  }, delay);
+}
+
+function swAppend(who, text) {
+  const msgs = document.getElementById('sw-messages');
+  const typing = document.getElementById('sw-typing');
+  const div = document.createElement('div');
+  div.className = 'sw-msg ' + who;
+  const name = who === 'sarah' ? 'Sarah' : 'You';
+  div.innerHTML = '<div class="sw-msg-name">' + name + '</div><div class="sw-bubble">' + text + '</div>';
+  msgs.insertBefore(div, typing);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function swAppendExtras(el) {
+  const msgs = document.getElementById('sw-messages');
+  const typing = document.getElementById('sw-typing');
+  msgs.insertBefore(el, typing);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function swShowTyping() { document.getElementById('sw-typing').classList.add('visible'); }
+function swHideTyping() { document.getElementById('sw-typing').classList.remove('visible'); }
+
+function swBuildTopicBtns() {
+  const wrap = document.createElement('div');
+  wrap.className = 'sw-quick-replies';
+  const opts = [
+    ['🛡️ Final expense', 'Final Expense Insurance'],
+    ['👨‍👩‍👧 Protect my family', 'Family Protection'],
+    ['💰 Life insurance options', 'General Life Insurance'],
+    ['❓ Just have questions', 'General Questions']
+  ];
+  opts.forEach(([label, val]) => {
+    const btn = document.createElement('button');
+    btn.className = 'sw-qr-btn';
+    btn.textContent = label;
+    btn.onclick = () => {
+      wrap.querySelectorAll('.sw-qr-btn').forEach(b => b.disabled = true);
+      swLeadData.topic = val;
+      swAppend('user', label);
+      swHandleTopic(val);
+    };
+    wrap.appendChild(btn);
+  });
+  return wrap;
+}
+
+function swBuildHealthBtns() {
+  const wrap = document.createElement('div');
+  wrap.className = 'sw-quick-replies';
+  ['Excellent','Good','Fair','Poor'].forEach(h => {
+    const btn = document.createElement('button');
+    btn.className = 'sw-qr-btn';
+    btn.textContent = h;
+    btn.onclick = () => {
+      wrap.querySelectorAll('.sw-qr-btn').forEach(b => b.disabled = true);
+      swLeadData.health = h;
+      swAppend('user', h);
+      swHandleHealth(h);
+    };
+    wrap.appendChild(btn);
+  });
+  return wrap;
+}
+
+function swBuildYesNo(onYes, onNo) {
+  const wrap = document.createElement('div');
+  wrap.className = 'sw-quick-replies';
+  [["✅ Yes, book my call!", onYes],["🤔 Not quite yet", onNo]].forEach(([label, fn]) => {
+    const btn = document.createElement('button');
+    btn.className = 'sw-qr-btn';
+    btn.textContent = label;
+    btn.onclick = () => {
+      wrap.querySelectorAll('.sw-qr-btn').forEach(b => b.disabled = true);
+      swAppend('user', label);
+      fn();
+    };
+    wrap.appendChild(btn);
+  });
+  return wrap;
+}
+
+function swHandleTopic(topic) {
+  swStep = 1;
+  let r = '';
+  if (topic.includes('Final Expense')) r = "Final expense coverage is one of the most thoughtful things you can do for your family — they won't worry about costs during an already hard time.<br><br><strong>How old are you?</strong>";
+  else if (topic.includes('Family')) r = "Protecting your family is exactly what we're here for. 💛<br><br><strong>How old are you?</strong>";
+  else if (topic.includes('General Life')) r = "We have options from term life to final expense — something for every situation.<br><br><strong>How old are you?</strong>";
+  else r = "Of course — no pressure! I'm here to give you honest answers.<br><br>To point you in the right direction, <strong>how old are you?</strong>";
+  swSarahSay(r, null, 900);
+  document.getElementById('sw-input').focus();
+}
+
+function swHandleAge(age) {
+  swLeadData.age = age;
+  swStep = 2;
+  const n = parseInt(age);
+  let r = '';
+  if (n < 50) r = "Great — at " + age + " you have excellent options! Very affordable rates available.<br><br><strong>How would you describe your overall health?</strong>";
+  else if (n <= 70) r = "Perfect — " + age + " is a very common age for final expense coverage. Our best plans are right in your range.<br><br><strong>How would you describe your health?</strong>";
+  else r = "At " + age + " there are still solid options — many carriers don't require a medical exam.<br><br><strong>How would you describe your overall health?</strong>";
+  swSarahSay(r, swBuildHealthBtns(), 900);
+}
+
+function swHandleHealth(h) {
+  swStep = 3;
+  let r = '';
+  if (h === 'Excellent' || h === 'Good') r = "Great! " + h + " health may give you access to more carrier options. 🎉<br><br>How much <strong>coverage</strong> are you looking for?";
+  else r = "No worries — we work with carriers for many health situations, including some guaranteed-issue options with no medical exam.<br><br>How much <strong>coverage</strong> are you looking for?";
+  swSarahSay(r, swBuildCoverageBtns(), 900);
+}
+
+function swBuildCoverageBtns() {
+  const wrap = document.createElement('div');
+  wrap.className = 'sw-quick-replies';
+  [['$10,000', '$10,000'], ['$15,000', '$15,000'], ['$25,000+', '$25,000+']].forEach(([label, val]) => {
+    const btn = document.createElement('button');
+    btn.className = 'sw-qr-btn';
+    btn.textContent = label;
+    btn.onclick = () => {
+      wrap.querySelectorAll('.sw-qr-btn').forEach(b => b.disabled = true);
+      swAppend('user', label);
+      swHandleCoverage(val);
+    };
+    wrap.appendChild(btn);
+  });
+  return wrap;
+}
+
+function swHandleCoverage(cov) {
+  swLeadData.coverage = cov;
+  swStep = 4;
+  swSarahSay("Perfect — " + cov + " is a great goal. Based on what you've shared, I think we can find you some really solid options. 💪<br><br>Would you like to speak with one of our <strong>licensed Evermore Life agents</strong>? Free, no obligation, ~15 minutes.", swBuildYesNo(swGoBooking, swHandleNotYet), 1100);
+}
+
+function swHandleNotYet() {
+  swExtraCount++;
+  swWaitingBooking = true;
+  swStep = 5;
+  if (swExtraCount === 1) swSarahSay("Totally understand! One more thing — do you have a <strong>spouse or dependents</strong> you'd like to cover too, or is this primarily for yourself?", null, 700);
+  else swSarahSay("That helps a lot! I'd really love to make sure an agent can follow up with the right information for you. Ready to grab a quick free call?", swBuildYesNo(swGoBooking, () => swSarahSay("No problem at all! Feel free to come back anytime — we're always here. 🌳", null, 600)), 700);
+}
+
+function swGoBooking() {
+  document.getElementById('sw-messages').style.display = 'none';
+  document.getElementById('sw-input-row').style.display = 'none';
+  document.getElementById('sw-booking').classList.add('active');
+}
+
+async function swSubmitBooking() {
+  const fname = document.getElementById('sw-fname').value.trim();
+  const lname = document.getElementById('sw-lname').value.trim();
+  const phone = document.getElementById('sw-phone').value.trim();
+  const email = document.getElementById('sw-email').value.trim();
+  const optin = document.getElementById('sw-optin').checked;
+  const button = document.querySelector('.sw-form-btn');
+  if (!fname || !lname || !phone || !email) { alert('Please fill out all fields.'); return; }
+  swLeadData.firstName = fname;
+  swLeadData.lastName = lname;
+  swLeadData.phone = phone;
+  swLeadData.email = email;
+  swLeadData.sms_consent = optin ? 'yes' : 'no';
+  swLeadData.sms_consent_text = optin ? 'Optional SMS quote follow-up and appointment reminders. STOP to opt out. HELP for help. Consent is not a condition of purchase.' : '';
+  swLeadData.sms_consent_timestamp = optin ? new Date().toISOString() : '';
+  swLeadData.source = 'Evermore Sarah landing widget';
+  swLeadData.lead_type = 'sarah-widget-booking';
+  swLeadData.timestamp = new Date().toISOString();
+  Object.assign(swLeadData, swTrackingFields());
+
+  button.disabled = true;
+  button.textContent = 'Submitting...';
+  try {
+    await swSendLeadToGHL(swLeadData);
+    if (typeof fbq !== 'undefined') fbq('track', 'Schedule', { content_name: 'Sarah Widget Booking', content_category: 'Insurance Lead' });
+    if (typeof gtag !== 'undefined') gtag('event', 'generate_lead', { event_category: 'Lead', event_label: 'Sarah Widget Booking' });
+    document.getElementById('sw-booking').classList.remove('active');
+    document.getElementById('sw-confirm').classList.add('active');
+  } catch (error) {
+    alert(error.message + ' If this is a live visitor, ask them to call or email Evermore Life directly.');
+    button.disabled = false;
+    button.textContent = '✅ Book My Free Call →';
+  }
+}
+
+function swSend() {
+  const input = document.getElementById('sw-input');
+  const val = input.value.trim();
+  if (!val) return;
+  input.value = '';
+  swAppend('user', val);
+  if (swStep === 1) swHandleAge(val);
+  else if (swStep === 3) swHandleCoverage(val);
+  else if (swStep === 5 && swWaitingBooking) {
+    swExtraCount++;
+    swHandleNotYet();
+  } else {
+    swSarahSay("Got it! Is there anything else I can help clarify before connecting you with an agent?", swBuildYesNo(swGoBooking, () => swSarahSay("No worries! Come back anytime — we're always here. 🌳", null, 600)), 700);
+  }
+}
+
+// Auto-open widget after 8 seconds if user hasn't interacted
+setTimeout(() => {
+  if (!swStarted) openSarahChat();
+}, 8000);
+</script>
+
+<script>
+function toggleFAQ(el) {
+  const item = el.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+function trackCTA(location) {
+  // META PIXEL — fire Lead event when any CTA clicked
+  if (typeof fbq !== 'undefined') {
+    fbq('track', 'Lead', {
+      content_name: 'Final Expense Landing Page',
+      content_category: 'Insurance',
+      cta_location: location
+    });
+  }
+}
+
+function trackSarahOpen() {
+  // META PIXEL — fire Lead event when Sarah chat opens
+  if (typeof fbq !== 'undefined') {
+    fbq('track', 'Lead', {
+      content_name: 'Sarah Chat Opened',
+      content_category: 'Insurance Lead'
+    });
+  }
+}
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// UTM parameter capture — INTEGRATION POINT: GHL will read these via Sarah's UTM passthrough
+(function captureUTMs() {
+  const params = new URLSearchParams(window.location.search);
+  const utms = {};
+  ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k => {
+    const v = params.get(k);
+    if (v) utms[k] = v;
+  });
+  if (Object.keys(utms).length) {
+    sessionStorage.setItem('evermore_utms', JSON.stringify(utms));
+  }
+})();
+</script>
+</body>
+</html>

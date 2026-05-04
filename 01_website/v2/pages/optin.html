@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get a Free Life Insurance Quote | Evermore Life</title>
+  <meta name="description" content="Request a free, no-obligation life insurance quote from Evermore Life. Licensed independent brokers compare top carriers for final expense, term life, IUL, and more." />
+  <link rel="canonical" href="https://evermorelife.org/optin" />
+
+  <!-- Shared Tokens + Base -->
+  <link rel="stylesheet" href="../shared/_tokens.css" />
+  <link rel="stylesheet" href="../shared/_base.css" />
+
+  <style>
+  /* ============================================================
+     PAGE-LEVEL STYLES — optin.html
+     Sections: nav | optin-hero | form | trust | footer
+     ============================================================ */
+
+  /* ── OPTIN HERO ── */
+  .optin-hero {
+    background: linear-gradient(140deg, var(--navy-deep) 0%, var(--navy-mid) 60%, var(--navy) 100%);
+    padding: 70px var(--section-padding-x) 60px;
+    text-align: center;
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .optin-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(200,169,110,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .optin-eyebrow {
+    display: inline-block;
+    background: rgba(200,169,110,0.15);
+    border: 1px solid rgba(200,169,110,0.3);
+    color: var(--gold);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: var(--radius-full);
+    margin-bottom: var(--space-5);
+  }
+  .optin-hero h1 {
+    font-size: var(--font-size-4xl);
+    font-weight: 900;
+    line-height: 1.12;
+    margin-bottom: var(--space-5);
+    max-width: 640px;
+    margin-inline: auto;
+  }
+  .optin-hero h1 em { font-style: normal; color: var(--gold); }
+  .optin-hero p {
+    font-size: var(--font-size-lg);
+    color: #c8ddf5;
+    max-width: 520px;
+    margin-inline: auto;
+    line-height: 1.7;
+  }
+
+  /* ── FORM SECTION ── */
+  .form-section {
+    padding: var(--section-padding-y) var(--section-padding-x);
+    background: var(--off-white);
+  }
+  .form-layout {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 60px;
+    max-width: var(--max-width);
+    margin-inline: auto;
+    align-items: start;
+  }
+
+  /* Left: bullets */
+  .form-benefits { padding-top: var(--space-4); }
+  .form-benefits h2 {
+    font-size: var(--font-size-3xl);
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1.2;
+    margin-bottom: var(--space-8);
+  }
+  .form-benefits h2 span { color: var(--gold); }
+  .benefit-list { display: flex; flex-direction: column; gap: var(--space-5); margin-bottom: var(--space-10); }
+  .benefit-item { display: flex; gap: var(--space-4); align-items: flex-start; }
+  .benefit-check {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(13,27,75,0.07);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .benefit-check svg { width: 14px; height: 14px; stroke: var(--navy); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .benefit-item p { font-size: var(--font-size-base); color: var(--text-secondary); line-height: 1.6; }
+  .benefit-item strong { color: var(--navy); font-weight: 700; }
+
+  .carriers-badge {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+  }
+  .carriers-badge p {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-4);
+  }
+  .carriers-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .carrier-chip {
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    padding: 5px 14px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  /* Right: Form card */
+  .form-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-10);
+    box-shadow: var(--shadow-xl);
+    position: sticky;
+    top: 84px;
+  }
+  .form-card-header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+  }
+  .form-card-header h3 {
+    font-size: var(--font-size-2xl);
+    font-weight: 900;
+    color: var(--navy);
+    margin-bottom: var(--space-2);
+  }
+  .form-card-header p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+  }
+
+  /* GHL embed container */
+  .ghl-embed {
+    width: 100%;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .ghl-embed iframe {
+    display: block;
+    width: 100%;
+    border: none;
+  }
+
+  .form-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+    padding: var(--space-4);
+    background: var(--off-white);
+    border-radius: var(--radius-md);
+  }
+  .form-consent input[type="checkbox"] {
+    margin-top: 3px;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--navy);
+  }
+  .form-consent label {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .form-consent a { color: var(--navy); font-weight: 700; }
+
+  .form-disclaimer {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: var(--space-4);
+    line-height: 1.6;
+    opacity: 0.75;
+  }
+  .form-disclaimer a { color: var(--text-secondary); font-weight: 700; }
+
+  /* ── MINI TRUST BAR ── */
+  .mini-trust {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 28px var(--section-padding-x);
+  }
+  .mini-trust-inner {
+    max-width: 860px;
+    margin-inline: auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+  }
+  .mini-trust-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+  }
+  .mini-trust-item svg { width: 20px; height: 20px; stroke: var(--navy); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .mini-trust-item strong { color: var(--navy); }
+
+  @media (max-width: 900px) {
+    .form-layout {
+      grid-template-columns: 1fr;
+      gap: var(--space-10);
+    }
+    .form-card { position: static; }
+  }
+  @media (max-width: 540px) {
+    .optin-hero { padding: 56px 20px 48px; }
+    .form-section { padding: 48px 20px; }
+    .form-card { padding: var(--space-6); }
+  }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     BLOCK: GLOBAL NAV
+     ============================================================ -->
+<style>
+.site-nav { position: sticky; top: 0; z-index: 200; background: var(--navy); padding: 0 var(--section-padding-x); height: 68px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 12px rgba(0,0,0,0.18); }
+.nav-logo { font-size: var(--font-size-xl); font-weight: 900; color: var(--white); letter-spacing: 0.5px; }
+.nav-logo span { color: var(--gold); }
+.nav-links { display: flex; align-items: center; gap: var(--space-8); }
+.nav-links a { color: var(--text-muted); font-size: var(--font-size-sm); font-weight: 500; transition: color var(--transition-fast); }
+.nav-links a:hover { color: var(--gold); }
+.nav-cta { background: var(--gold); color: var(--navy); padding: 10px 22px; border-radius: var(--radius-sm); font-size: var(--font-size-sm); font-weight: 800; transition: background var(--transition-fast); flex-shrink: 0; }
+.nav-cta:hover { background: var(--gold-dark); }
+.nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: var(--space-2); background: none; border: none; }
+.nav-toggle span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; }
+@media (max-width: 768px) {
+  .site-nav { padding: 0 20px; height: 60px; }
+  .nav-links { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--navy-deep); flex-direction: column; padding: var(--space-6); gap: var(--space-5); border-top: 1px solid rgba(255,255,255,0.08); box-shadow: var(--shadow-lg); }
+  .nav-links.open { display: flex; }
+  .nav-links a { font-size: var(--font-size-base); color: var(--white); }
+  .nav-toggle { display: flex; }
+}
+</style>
+<nav class="site-nav" role="navigation" aria-label="Main navigation">
+  <a href="index.html" class="nav-logo">Evermore <span>Life</span></a>
+  <ul class="nav-links" id="navLinks" role="list">
+    <li><a href="index.html#products">Products</a></li>
+    <li><a href="index.html#how-it-works">How It Works</a></li>
+    <li><a href="index.html#why-us">Why Us</a></li>
+    <li><a href="tel:+15055043101">(505) 504-3101</a></li>
+  </ul>
+  <a href="tel:+15055043101" class="nav-cta">Call Us →</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<!-- END BLOCK: GLOBAL NAV -->
+
+
+<!-- ============================================================
+     BLOCK: OPTIN HERO
+     ============================================================ -->
+<section class="optin-hero" aria-label="Get a free quote">
+  <div class="optin-eyebrow">Free · No Obligation · No Medical Exam Required</div>
+  <h1>Get Your <em>Free Quote</em><br />in Under 60 Seconds</h1>
+  <p>Tell us a little about yourself and a licensed agent will reach out with your personalized options. No pressure, no commitment.</p>
+</section>
+<!-- END BLOCK: OPTIN HERO -->
+
+
+<!-- ============================================================
+     BLOCK: MINI TRUST BAR
+     ============================================================ -->
+<div class="mini-trust" role="region" aria-label="Trust indicators">
+  <div class="mini-trust-inner">
+    <div class="mini-trust-item">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span><strong>Licensed</strong> independent brokers</span>
+    </div>
+    <div class="mini-trust-item">
+      <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <span><strong>A-rated</strong> carrier partners</span>
+    </div>
+    <div class="mini-trust-item">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span><strong>No obligation</strong> — cancel anytime</span>
+    </div>
+    <div class="mini-trust-item">
+      <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      <span>Your <strong>info is secure</strong> &amp; never sold</span>
+    </div>
+  </div>
+</div>
+<!-- END BLOCK: MINI TRUST BAR -->
+
+
+<!-- ============================================================
+     BLOCK: FORM + BENEFITS
+     ============================================================ -->
+<section class="form-section" aria-label="Quote request form">
+  <div class="form-layout">
+
+    <!-- Left: Benefits -->
+    <div class="form-benefits reveal">
+      <h2>Why families choose<br /><span>Evermore Life</span></h2>
+      <div class="benefit-list">
+        <div class="benefit-item">
+          <div class="benefit-check">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <p><strong>We shop multiple carriers for you.</strong> Mutual of Omaha, Ethos Life, American Amicable, Transamerica, and Aetna — compared side by side.</p>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-check">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <p><strong>No medical exam required</strong> for many of our final expense and simplified-issue plans — even with pre-existing conditions.</p>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-check">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <p><strong>No high-pressure sales.</strong> We present your options clearly and let you decide on your own terms.</p>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-check">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <p><strong>Coverage for every budget.</strong> From $20/mo final expense plans to comprehensive whole life policies.</p>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-check">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <p><strong>Licensed in multiple states.</strong> Fully compliant, regulated, and accountable agents serving families nationwide.</p>
+        </div>
+      </div>
+
+      <div class="carriers-badge">
+        <p>Carriers we compare</p>
+        <div class="carriers-list">
+          <span class="carrier-chip">Mutual of Omaha</span>
+          <span class="carrier-chip">Ethos Life</span>
+          <span class="carrier-chip">American Amicable</span>
+          <span class="carrier-chip">Transamerica</span>
+          <span class="carrier-chip">Aetna</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Form Card -->
+    <div class="form-card reveal" id="quote-form">
+      <div class="form-card-header">
+        <h3>Request My Free Quote</h3>
+        <p>A licensed agent will reach out — usually within 1 business day.</p>
+      </div>
+
+      <!-- GHL Embedded Form -->
+      <div class="ghl-embed">
+        <iframe
+          src="https://api.leadconnectorhq.com/widget/form/e8RIDTdhAVlc6CT9Zfj5"
+          style="width:100%;height:606px;border:none;"
+          id="inline-e8RIDTdhAVlc6CT9Zfj5"
+          data-layout="{'id':'INLINE'}"
+          data-trigger-type="alwaysShow"
+          data-trigger-value=""
+          data-activation-type="alwaysActivated"
+          data-activation-value=""
+          data-deactivation-type="neverDeactivate"
+          data-deactivation-value=""
+          data-form-name="Form 10"
+          data-height="606"
+          data-layout-iframe-id="inline-e8RIDTdhAVlc6CT9Zfj5"
+          data-form-id="e8RIDTdhAVlc6CT9Zfj5"
+          title="Free Life Insurance Quote Request Form"
+          aria-label="Quote request form">
+        </iframe>
+      </div>
+
+      <!-- SMS Consent (A2P required) -->
+      <div class="form-consent">
+        <input type="checkbox" id="smsConsent" name="smsConsent" />
+        <label for="smsConsent">
+          By checking this box, I agree to receive text messages from Evermore Life LLC at the number provided.
+          Message and data rates may apply. Reply STOP to opt out at any time.
+          Consent is not a condition of purchase. View our
+          <a href="privacy.html">Privacy Policy</a> and <a href="terms.html">Terms of Service</a>.
+        </label>
+      </div>
+
+      <p class="form-disclaimer">
+        You may request a quote without consenting to text messages. A licensed agent may contact
+        you by phone or email regarding your inquiry. Evermore Life LLC · 4539 N 22nd St, Ste R,
+        Phoenix, AZ 85016 · <a href="tel:+15055043101">(505) 504-3101</a>
+      </p>
+    </div>
+
+  </div>
+</section>
+<!-- END BLOCK: FORM + BENEFITS -->
+
+
+<!-- ============================================================
+     BLOCK: GLOBAL FOOTER
+     ============================================================ -->
+<style>
+.site-footer { background: var(--navy-deep); color: var(--text-muted); padding: 60px var(--section-padding-x) 32px; }
+.footer-grid { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1.4fr; gap: 40px; max-width: var(--max-width); margin-inline: auto; margin-bottom: 48px; }
+.footer-brand-name { font-size: var(--font-size-2xl); font-weight: 900; color: var(--white); margin-bottom: var(--space-3); }
+.footer-brand-name span { color: var(--gold); }
+.footer-tagline { font-size: var(--font-size-sm); color: var(--text-muted); line-height: 1.65; max-width: 260px; margin-bottom: var(--space-5); }
+.footer-license { font-size: var(--font-size-xs); color: rgba(154,175,206,0.6); line-height: 1.6; max-width: 280px; }
+.footer-col-title { font-size: var(--font-size-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gold); margin-bottom: var(--space-5); }
+.footer-col a, .footer-col p { display: block; font-size: var(--font-size-sm); color: var(--text-muted); margin-bottom: var(--space-3); line-height: 1.5; transition: color var(--transition-fast); }
+.footer-col a:hover { color: var(--gold); }
+.footer-bottom { max-width: var(--max-width); margin-inline: auto; padding-top: var(--space-6); border-top: 1px solid rgba(255,255,255,0.07); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4); font-size: var(--font-size-xs); color: rgba(154,175,206,0.55); }
+.footer-bottom a { color: rgba(154,175,206,0.55); }
+.footer-bottom a:hover { color: var(--gold); }
+.footer-legal-links { display: flex; gap: var(--space-5); flex-wrap: wrap; }
+@media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 540px) { .footer-grid { grid-template-columns: 1fr; } .site-footer { padding: 48px 20px 28px; } }
+</style>
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">Evermore <span>Life</span></div>
+      <p class="footer-tagline">Independent life insurance brokerage helping families protect what matters most.</p>
+      <p class="footer-license">Evermore Life LLC is a licensed independent insurance agency. We represent multiple carriers and are not captive to any single insurer. Products and availability vary by state.</p>
+    </div>
+    <div>
+      <p class="footer-col-title">Products</p>
+      <div class="footer-col">
+        <a href="index.html#products">Final Expense</a>
+        <a href="index.html#products">Term Life</a>
+        <a href="index.html#products">Indexed Universal Life</a>
+        <a href="index.html#products">Whole Life</a>
+        <a href="index.html#products">Mortgage Protection</a>
+        <a href="index.html#products">Annuities</a>
+      </div>
+    </div>
+    <div>
+      <p class="footer-col-title">Company</p>
+      <div class="footer-col">
+        <a href="index.html#why-us">About Us</a>
+        <a href="optin.html">Get a Quote</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="optin.html">Opt-In / Opt-Out</a>
+      </div>
+    </div>
+    <div>
+      <p class="footer-col-title">Contact</p>
+      <div class="footer-col">
+        <p>Evermore Life LLC<br>4539 N 22nd St, Ste R<br>Phoenix, AZ 85016</p>
+        <a href="tel:+15055043101">+1 (505) 504-3101</a>
+        <a href="mailto:evermorelifeagent01@gmail.com">evermorelifeagent01@gmail.com</a>
+        <a href="optin.html">Request a Callback</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Evermore Life LLC. All rights reserved.</span>
+    <div class="footer-legal-links">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="optin.html">Opt-In / Opt-Out</a>
+    </div>
+  </div>
+</footer>
+<!-- END BLOCK: GLOBAL FOOTER -->
+
+
+<script src="https://link.msgsndr.com/js/form_embed.js"></script>
+<script>
+/* ── Scroll reveal ── */
+(function() {
+  var els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('visible'); });
+    return;
+  }
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(function(el) { obs.observe(el); });
+})();
+
+/* ── Nav hamburger ── */
+(function() {
+  var toggle = document.getElementById('navToggle');
+  var links  = document.getElementById('navLinks');
+  if (!toggle || !links) return;
+  toggle.addEventListener('click', function() {
+    var open = links.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open);
+  });
+})();
+</script>
+
+</body>
+</html>

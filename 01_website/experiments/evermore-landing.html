@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evermore Life | Life Insurance &amp; Final Expense Solutions</title>
+<meta name="description" content="Evermore Life — final expense, term life, IUL, whole life, and mortgage protection. Compare coverage options with guidance from a licensed agent.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<style>
+  :root {
+    --navy: #1B2E5E;
+    --navy-dark: #111D3F;
+    --navy-light: #243d7a;
+    --gold: #C8943A;
+    --gold-light: #E0AD56;
+    --gold-pale: #FBF0DC;
+    --cream: #FAF7F1;
+    --cream-dark: #F2EDE3;
+    --text: #1C1C1E;
+    --text-muted: #555F70;
+    --white: #FFFFFF;
+    --border: #DDD5C8;
+    --success: #2E7D52;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-body); font-size: 18px; color: var(--text); background: var(--cream); -webkit-font-smoothing: antialiased; }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--cream); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .fade-up   { animation: fadeUp 0.7s ease forwards; }
+  .fade-up-2 { animation: fadeUp 0.7s 0.15s ease both; }
+  .fade-up-3 { animation: fadeUp 0.7s 0.3s ease both; }
+  .fade-up-4 { animation: fadeUp 0.7s 0.45s ease both; }
+
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+  .section { padding: 96px 0; }
+  .section-sm { padding: 64px 0; }
+
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.2; }
+  h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); }
+  h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); }
+  h3 { font-size: 1.35rem; }
+  p { line-height: 1.75; color: var(--text-muted); }
+
+  .btn {
+    display: inline-block; padding: 16px 36px; border-radius: 6px;
+    font-family: var(--font-body); font-size: 1rem; font-weight: 600;
+    letter-spacing: 0.02em; cursor: pointer; border: none;
+    text-decoration: none; transition: all 0.2s ease;
+  }
+  .btn-gold { background: var(--gold); color: var(--white); box-shadow: 0 4px 20px rgba(200,148,58,0.35); }
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200,148,58,0.45); }
+  .btn-navy { background: var(--navy); color: var(--white); }
+  .btn-navy:hover { background: var(--navy-light); transform: translateY(-2px); }
+  .btn-outline { background: transparent; color: var(--navy); border: 2px solid var(--navy); }
+  .btn-outline:hover { background: var(--navy); color: var(--white); }
+
+  /* Nav */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--white); border-bottom: 1px solid var(--border);
+    padding: 0 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .nav-inner {
+    max-width: 1140px; margin: 0 auto; height: 72px;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .nav-logo-icon {
+    width: 44px; height: 44px; background: var(--navy); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .nav-logo-text .brand { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--navy); line-height: 1.1; }
+  .nav-logo-text .sub { font-size: 0.72rem; font-weight: 500; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; }
+  .nav-cta { display: flex; align-items: center; gap: 16px; }
+  .nav-links-list { display: flex; gap: 28px; list-style: none; }
+  .nav-links-list a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+  .nav-links-list a:hover { color: var(--gold); }
+  @media (max-width: 900px) { .nav-links-list { display: none; } }
+  @media (max-width: 640px) { .nav-cta .btn { display: none; } }
+
+  /* Hero */
+  .hero {
+    background: var(--navy); position: relative; overflow: hidden; padding: 80px 0 100px;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 50%, rgba(200,148,58,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 80% at 10% 80%, rgba(100,140,255,0.08) 0%, transparent 60%);
+  }
+  .hero::after {
+    content: ''; position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 1140px; margin: 0 auto; padding: 0 24px;
+    display: grid; grid-template-columns: 1fr 420px; gap: 64px;
+    align-items: center; position: relative; z-index: 1;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(200,148,58,0.2); border: 1px solid rgba(200,148,58,0.4);
+    color: var(--gold-light); font-size: 0.82rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 100px; margin-bottom: 24px;
+  }
+  .hero h1 { color: var(--white); margin-bottom: 20px; }
+  .hero h1 em { color: var(--gold-light); font-style: normal; }
+  .hero-sub { color: rgba(255,255,255,0.72); font-size: 1.15rem; line-height: 1.7; margin-bottom: 36px; }
+  .hero-bullets { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; }
+  .hero-bullets li { display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.85); font-size: 1rem; }
+  .check-icon {
+    width: 22px; height: 22px; border-radius: 50%; background: var(--gold);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .hero-phone { display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.65); font-size: 0.92rem; }
+  .hero-phone a { color: var(--gold-light); font-weight: 600; text-decoration: none; }
+  .hero-phone a:hover { text-decoration: underline; }
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .lead-form-card { max-width: 480px; margin: 0 auto; }
+  }
+
+  /* Lead Form Card */
+  .lead-form-card { background: var(--white); border-radius: 16px; padding: 40px 36px; box-shadow: 0 24px 80px rgba(0,0,0,0.35); }
+  .lead-form-card h3 { font-family: var(--font-display); color: var(--navy); font-size: 1.5rem; margin-bottom: 6px; }
+  .lead-form-card .sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 28px; }
+  .form-field { margin-bottom: 16px; }
+  .form-field label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 6px; letter-spacing: 0.02em; }
+  .form-field input, .form-field select {
+    width: 100%; padding: 13px 16px; border: 1.5px solid var(--border); border-radius: 8px;
+    font-family: var(--font-body); font-size: 1rem; color: var(--text); background: var(--cream);
+    transition: border-color 0.2s, box-shadow 0.2s; outline: none; -webkit-appearance: none;
+  }
+  .form-field input:focus, .form-field select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,148,58,0.18); background: var(--white); }
+  .form-field input.error { border-color: #C0392B; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-submit { width: 100%; padding: 16px; font-size: 1.05rem; margin-top: 8px; border-radius: 8px; }
+  .sms-consent-field { display:flex; align-items:flex-start; gap:9px; background:var(--cream); border:1px solid var(--border); border-radius:8px; padding:10px 12px; margin:4px 0 12px; font-size:0.72rem; line-height:1.45; color:var(--text-muted); }
+  .sms-consent-field input { margin-top:3px; flex-shrink:0; accent-color:var(--gold); }
+  .sms-consent-field a { color:var(--navy); font-weight:600; }
+  .form-disclaimer { font-size: 0.72rem; color: var(--text-muted); text-align: center; margin-top: 12px; line-height: 1.5; }
+  .form-disclaimer a { color: var(--navy); font-weight: 600; }
+  .form-success { text-align: center; padding: 24px 0; }
+  .form-success .check-big { width: 64px; height: 64px; background: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+  .form-success h3 { color: var(--success); margin-bottom: 8px; }
+  .form-success p { font-size: 0.95rem; }
+
+  /* Trust Bar */
+  .trust-bar { background: var(--white); border-bottom: 1px solid var(--border); padding: 28px 0; }
+  .trust-items { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 40px; }
+  .trust-item { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+  .trust-item svg { color: var(--gold); flex-shrink: 0; }
+
+  /* Section Headers */
+  .section-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  .section-header { margin-bottom: 56px; }
+  .section-header h2 { margin-bottom: 14px; color: var(--navy); }
+  .section-header p { max-width: 600px; font-size: 1.05rem; }
+  .section-header.center { text-align: center; }
+  .section-header.center p { margin: 0 auto; }
+
+  /* Products grid */
+  .products { background: var(--cream); }
+  .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .product-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: 14px;
+    padding: 36px 28px; transition: box-shadow 0.25s, transform 0.25s; overflow: hidden;
+  }
+  .product-card:hover { box-shadow: 0 12px 40px rgba(27,46,94,0.12); transform: translateY(-4px); }
+  .product-img {
+    width: 100%; height: 160px; object-fit: cover; border-radius: 8px;
+    margin-bottom: 22px; background: var(--gold-pale);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .product-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+  .product-img-placeholder {
+    width: 100%; height: 160px; border-radius: 8px; margin-bottom: 22px;
+    background: linear-gradient(135deg, var(--gold-pale) 0%, var(--cream-dark) 100%);
+    display: flex; align-items: center; justify-content: center;
+    border: 1.5px dashed var(--border);
+  }
+  .product-img-placeholder span { font-size: 0.78rem; color: var(--text-muted); text-align: center; padding: 8px; line-height: 1.5; }
+  .product-icon-wrap { width: 52px; height: 52px; background: var(--gold-pale); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+  .product-card h3 { color: var(--navy); margin-bottom: 10px; font-size: 1.2rem; }
+  .product-card p { font-size: 0.93rem; line-height: 1.65; }
+  @media (max-width: 900px) { .products-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .products-grid { grid-template-columns: 1fr; } }
+
+  /* Carriers */
+  .carriers-section { background: var(--white); }
+  .carriers-list { display: flex; flex-direction: column; gap: 16px; max-width: 700px; margin: 0 auto; }
+  .carrier-card {
+    background: var(--cream); border: 1px solid var(--border); border-radius: 12px;
+    padding: 22px 28px; display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;
+  }
+  .carrier-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 5px; }
+  .carrier-info { flex: 1; }
+  .carrier-name { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+  .carrier-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; }
+  .carrier-badge {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--gold); background: var(--gold-pale); border: 1px solid rgba(200,148,58,0.3);
+    padding: 5px 12px; border-radius: 100px; white-space: nowrap; flex-shrink: 0;
+  }
+  .carrier-footer-note { text-align: center; margin-top: 20px; font-size: 0.82rem; color: var(--text-muted); font-style: italic; }
+
+  /* How it works */
+  .how-it-works { background: var(--navy); }
+  .how-it-works .section-label { color: var(--gold-light); }
+  .how-it-works .section-header h2 { color: var(--white); }
+  .how-it-works .section-header p { color: rgba(255,255,255,0.65); }
+  .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; position: relative; }
+  .steps-grid::before {
+    content: ''; position: absolute; top: 40px;
+    left: calc(16.66% + 16px); right: calc(16.66% + 16px);
+    height: 2px; background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%); opacity: 0.4;
+  }
+  .step { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 40px 32px; text-align: center; }
+  .step-number { width: 54px; height: 54px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; color: var(--white); margin: 0 auto 24px; box-shadow: 0 4px 20px rgba(200,148,58,0.4); }
+  .step h3 { color: var(--white); margin-bottom: 12px; }
+  .step p { color: rgba(255,255,255,0.65); font-size: 0.95rem; }
+  @media (max-width: 768px) { .steps-grid { grid-template-columns: 1fr; } .steps-grid::before { display: none; } }
+
+  /* Testimonials */
+  .testimonials { background: var(--white); }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .testimonial-card { background: var(--cream); border: 1px solid var(--border); border-radius: 14px; padding: 36px 32px; }
+  .quote-mark { font-family: var(--font-display); font-size: 5rem; color: var(--gold); line-height: 0.7; margin-bottom: 16px; opacity: 0.4; }
+  .testimonial-text { font-size: 1rem; line-height: 1.75; color: var(--text); margin-bottom: 24px; font-style: italic; }
+  .testimonial-author { display: flex; align-items: center; gap: 14px; }
+  .author-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; color: var(--white); font-size: 1.1rem; flex-shrink: 0; }
+  .author-name { font-weight: 600; color: var(--navy); font-size: 0.95rem; }
+  .author-detail { font-size: 0.8rem; color: var(--text-muted); }
+  .stars { color: var(--gold); font-size: 1rem; margin-bottom: 4px; }
+  @media (max-width: 768px) { .testimonials-grid { grid-template-columns: 1fr; } }
+
+  /* FAQ */
+  .faq { background: var(--cream); }
+  .faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+  .faq-item { background: var(--white); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .faq-question { width: 100%; text-align: left; padding: 24px 28px; background: none; border: none; font-family: var(--font-body); font-size: 1.05rem; font-weight: 600; color: var(--navy); cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px; transition: background 0.15s; }
+  .faq-question:hover { background: var(--cream); }
+  .faq-chevron { width: 24px; height: 24px; border-radius: 50%; background: var(--gold-pale); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.25s, background 0.2s; }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); background: var(--gold); }
+  .faq-item.open .faq-chevron svg { stroke: white; }
+  .faq-answer { padding: 0 28px; max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.25s; font-size: 0.98rem; color: var(--text-muted); line-height: 1.75; }
+  .faq-item.open .faq-answer { max-height: 400px; padding: 0 28px 24px; }
+
+  /* Bottom CTA */
+  .bottom-cta { background: var(--navy); padding: 100px 0; position: relative; overflow: hidden; }
+  .bottom-cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 80% at 50% 100%, rgba(200,148,58,0.15) 0%, transparent 70%); }
+  .bottom-cta-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 420px; gap: 64px; align-items: center; }
+  .bottom-cta h2 { color: var(--white); margin-bottom: 16px; }
+  .bottom-cta p { color: rgba(255,255,255,0.65); font-size: 1.05rem; margin-bottom: 36px; }
+  .cta-contact { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .cta-phone-block { display: flex; align-items: center; gap: 10px; }
+  .cta-phone-icon { width: 44px; height: 44px; background: rgba(200,148,58,0.2); border: 1px solid rgba(200,148,58,0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .cta-phone-label { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
+  .cta-phone-number { font-size: 1.3rem; font-weight: 700; color: var(--white); text-decoration: none; }
+  .cta-phone-number:hover { color: var(--gold-light); }
+  @media (max-width: 900px) { .bottom-cta-inner { grid-template-columns: 1fr; } }
+
+  /* Footer */
+  footer { background: var(--navy-dark); padding: 48px 0 32px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .footer-inner { display: flex; flex-direction: column; align-items: center; gap: 24px; text-align: center; }
+  .footer-logo-text .brand { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--white); }
+  .footer-logo-text .sub { font-size: 0.7rem; font-weight: 600; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; }
+  .footer-links { display: flex; gap: 28px; flex-wrap: wrap; justify-content: center; }
+  .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.88rem; transition: color 0.15s; }
+  .footer-links a:hover { color: var(--gold-light); }
+  .footer-disclaimer { max-width: 820px; font-size: 0.72rem; color: rgba(255,255,255,0.3); line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; }
+
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+window.EVERMORE_CONFIG = window.EVERMORE_CONFIG || {
+  ghlWebhookUrl: '',
+  thankYouUrl: 'thank-you.html'
+};
+
+function getTrackingFields() {
+  const params = new URLSearchParams(window.location.search);
+  const tracking = {};
+  ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(key => {
+    const value = params.get(key);
+    if (value) tracking[key] = value;
+  });
+  tracking.page_url = window.location.href;
+  tracking.referrer = document.referrer || '';
+  return tracking;
+}
+
+function isLocalPreview() {
+  return window.location.protocol === 'file:' || ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+}
+
+async function submitEvermoreLead(payload) {
+  const webhook = window.EVERMORE_CONFIG.ghlWebhookUrl;
+  if (!webhook) {
+    if (isLocalPreview()) {
+      const previewLeads = JSON.parse(localStorage.getItem('evermore_preview_leads') || '[]');
+      previewLeads.push(payload);
+      localStorage.setItem('evermore_preview_leads', JSON.stringify(previewLeads));
+      return { preview: true };
+    }
+    throw new Error('Lead webhook is not connected yet. Add your GHL inbound webhook URL to EVERMORE_CONFIG.ghlWebhookUrl.');
+  }
+  const response = await fetch(webhook, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!response.ok) throw new Error('GHL webhook rejected the submission.');
+  return response;
+}
+
+// Icons
+const LeafIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+  </svg>
+);
+const PhoneIcon = ({ size = 20 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 .99h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+  </svg>
+);
+const ShieldIcon = () => (
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+  </svg>
+);
+const HeartIcon = () => (
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+  </svg>
+);
+const DollarIcon = () => (
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+  </svg>
+);
+const HomeIcon = () => (
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+  </svg>
+);
+const TrendingIcon = () => (
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+  </svg>
+);
+const CheckIcon = ({ white }) => (
+  <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+    <path d="M1 5l3 3 7-7" stroke={white ? "#fff" : "#C8943A"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+const ChevronIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#C8943A" strokeWidth="2" strokeLinecap="round">
+    <path d="M2 5l5 5 5-5"/>
+  </svg>
+);
+const AwardIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+  </svg>
+);
+const UsersIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+    <path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
+  </svg>
+);
+const ClockIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+  </svg>
+);
+
+// Lead Form
+function LeadForm() {
+  const [form, setForm] = useState({ firstName:'', lastName:'', phone:'', email:'', age:'', coverage:'', smsConsent:false });
+  const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const validate = () => {
+    const e = {};
+    if (!form.firstName.trim()) e.firstName = true;
+    if (!form.lastName.trim()) e.lastName = true;
+    if (!form.phone.match(/^\(?\d{3}\)?[\s\-]?\d{3}[\s\-]?\d{4}$/)) e.phone = true;
+    if (!form.age) e.age = true;
+    return e;
+  };
+
+  const handleSubmit = async (ev) => {
+    ev.preventDefault();
+    const e = validate();
+    setErrors(e);
+    if (Object.keys(e).length === 0) {
+      setLoading(true);
+      const payload = {
+        first_name: form.firstName.trim(),
+        last_name: form.lastName.trim(),
+        phone: form.phone.trim(),
+        email: form.email.trim(),
+        age: form.age,
+        coverage_type: form.coverage,
+        sms_consent: form.smsConsent ? 'yes' : 'no',
+        sms_consent_text: form.smsConsent ? 'Optional SMS quote follow-up and appointment reminders. STOP to opt out. HELP for help. Consent is not a condition of purchase.' : '',
+        sms_consent_timestamp: form.smsConsent ? new Date().toISOString() : '',
+        source: 'evermorelife.org-react-landing',
+        lead_type: 'life-insurance-quote',
+        timestamp: new Date().toISOString(),
+        ...getTrackingFields()
+      };
+      try {
+        await submitEvermoreLead(payload);
+        if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: 'Evermore React Landing Form' });
+        if (typeof gtag !== 'undefined') gtag('event', 'generate_lead', { event_category: 'Lead', event_label: 'Evermore React Landing Form' });
+        setSubmitted(true);
+      } catch (error) {
+        alert(error.message + ' If this is a live visitor, ask them to call or email Evermore Life directly.');
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  if (submitted) return (
+    <div className="form-success">
+      <div className="check-big"><CheckIcon white /></div>
+      <h3 style={{fontFamily:'var(--font-display)',color:'#2E7D52'}}>You're All Set!</h3>
+      <p>A licensed Evermore Life agent will be in touch with you shortly.</p>
+      <p style={{fontSize:'0.82rem',marginTop:8,color:'var(--text-muted)'}}>Check your email for a confirmation.</p>
+    </div>
+  );
+
+  return (
+    <form onSubmit={handleSubmit} noValidate>
+      <div className="form-row">
+        <div className="form-field">
+          <label>First Name</label>
+          <input type="text" placeholder="John" className={errors.firstName ? 'error' : ''} value={form.firstName} onChange={e => setForm({...form, firstName: e.target.value})} />
+        </div>
+        <div className="form-field">
+          <label>Last Name</label>
+          <input type="text" placeholder="Smith" className={errors.lastName ? 'error' : ''} value={form.lastName} onChange={e => setForm({...form, lastName: e.target.value})} />
+        </div>
+      </div>
+      <div className="form-field">
+        <label>Phone Number</label>
+        <input type="tel" placeholder="(555) 000-0000" className={errors.phone ? 'error' : ''} value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
+      </div>
+      <div className="form-field">
+        <label>Email Address <span style={{fontWeight:400,color:'var(--text-muted)'}}>(optional)</span></label>
+        <input type="email" placeholder="john@example.com" value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
+      </div>
+      <div className="form-row">
+        <div className="form-field">
+          <label>Age</label>
+          <select className={errors.age ? 'error' : ''} value={form.age} onChange={e => setForm({...form, age: e.target.value})}>
+            <option value="">Select...</option>
+            {Array.from({length:68},(_,i)=>i+18).map(a=><option key={a} value={a}>{a}</option>)}
+          </select>
+        </div>
+        <div className="form-field">
+          <label>Coverage Interested In</label>
+          <select value={form.coverage} onChange={e => setForm({...form, coverage: e.target.value})}>
+            <option value="">Not sure yet</option>
+            <option>Final Expense</option>
+            <option>Term Life</option>
+            <option>Indexed Universal Life (IUL)</option>
+            <option>Whole Life</option>
+            <option>Mortgage Protection</option>
+          </select>
+        </div>
+      </div>
+      <label className="sms-consent-field">
+        <input type="checkbox" checked={form.smsConsent} onChange={e => setForm({...form, smsConsent: e.target.checked})} />
+        <span>Optional: I agree to receive SMS messages from Evermore Life about my quote request and appointment reminders. Msg &amp; data rates may apply. Message frequency varies. Reply STOP to opt out, HELP for help. Consent is not a condition of purchase. <a href="../current/privacy.html">Privacy Policy</a> · <a href="../current/terms.html">Terms</a>.</span>
+      </label>
+      <button type="submit" className="btn btn-gold form-submit" disabled={loading}>
+        {loading ? 'Submitting...' : 'Get My Free Quote'}
+      </button>
+      <p className="form-disclaimer">
+        You can request a quote without agreeing to text messages. A licensed agent may contact you by phone or email about your request. We never sell your information.
+      </p>
+    </form>
+  );
+}
+
+// FAQ
+const faqs = [
+  { q: "Do I need a medical exam to qualify?", a: "Many final expense and simplified-issue plans do not require a medical exam. Some applicants can review options with just a few basic health questions, and guaranteed-issue options may be available for harder-to-insure situations." },
+  { q: "What ages are eligible?", a: "Coverage is available for adults of all ages. Our final expense plans serve ages 40–85, term life plans cover ages 18–75, and IUL and mortgage protection plans are available to adults 18 and older. A licensed agent will find the right fit for your age and needs." },
+  { q: "How quickly does coverage start?", a: "Some policies can move quickly after carrier approval and first premium. Timing depends on the carrier, product, underwriting, and your individual application." },
+  { q: "Will my premiums ever increase?", a: "For whole life and final expense policies, your premium is locked in at enrollment and will never increase due to age or changes in health. Term and IUL products have their own rate structures our agents will explain." },
+  { q: "What carriers do you work with?", a: "We work with Mutual of Omaha, Ethos Life, American Amicable, Transamerica, and Aetna. As an independent broker, we compare options across carriers." },
+  { q: "Is Evermore Life affiliated with any government agency?", a: "No. Evermore Life is a private, independent insurance brokerage and is not affiliated with Medicare, Medicaid, Social Security, or any government agency." },
+];
+
+function FAQ() {
+  const [open, setOpen] = useState(null);
+  return (
+    <div className="faq-list">
+      {faqs.map((f, i) => (
+        <div key={i} className={`faq-item${open === i ? ' open' : ''}`}>
+          <button className="faq-question" onClick={() => setOpen(open === i ? null : i)}>
+            {f.q}
+            <span className="faq-chevron"><ChevronIcon /></span>
+          </button>
+          <div className="faq-answer">{f.a}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Products data — swap placeholder text with actual image src once you have images
+const products = [
+  {
+    Icon: ShieldIcon,
+    title: 'Final Expense',
+    desc: 'Affordable whole life coverage to handle end-of-life costs. Many plans do not require a medical exam. Helps protect your family from unexpected burial and funeral expenses.',
+    imgPrompt: 'REPLACE: serene image of an elderly couple holding hands outdoors at golden hour, soft warm lighting, no text',
+  },
+  {
+    Icon: HeartIcon,
+    title: 'Term Life Insurance',
+    desc: 'Cost-effective coverage for income replacement, mortgage protection, and providing for your family during your working years.',
+    imgPrompt: 'REPLACE: professional family portrait — parents with young children, natural light, warm tones, no text',
+  },
+  {
+    Icon: TrendingIcon,
+    title: 'Indexed Universal Life (IUL)',
+    desc: 'Build tax-advantaged cash value tied to market index growth with downside protection. A powerful tool for retirement income and legacy planning.',
+    imgPrompt: 'REPLACE: abstract financial growth concept — upward-trending graph with warm gold and navy tones, clean and modern, no text',
+  },
+  {
+    Icon: HeartIcon,
+    title: 'Whole Life Insurance',
+    desc: 'Permanent coverage designed to last for life and build cash value according to policy terms.',
+    imgPrompt: 'REPLACE: multi-generational family gathering — grandparents with adult children and grandchildren, warm indoor setting, no text',
+  },
+  {
+    Icon: HomeIcon,
+    title: 'Mortgage Protection',
+    desc: "Ensure your family can stay in their home if something happens to you. Pays off your balance so your loved ones never lose the house.",
+    imgPrompt: 'REPLACE: welcoming family home exterior — charming house with green lawn at dusk, warm porch light glowing, no text',
+  },
+];
+
+// Carriers
+const carriers = [
+  { name: 'Mutual of Omaha', desc: 'One of the most recognized names in final expense. Known for competitive rates and fast claim payouts.', badge: 'Best Overall Rates' },
+  { name: 'Ethos Life', desc: 'Modern carrier with a streamlined digital approval process — great for healthier applicants who want quick coverage.', badge: 'Fast & Fully Digital' },
+  { name: 'American Amicable', desc: 'Strong options for applicants with moderate health history. Multiple plan types available.', badge: 'Flexible Underwriting' },
+  { name: 'Transamerica', desc: 'A household name with solid guaranteed issue options for harder-to-insure applicants.', badge: 'Trusted Since 1928' },
+  { name: 'Aetna', desc: 'Guaranteed-issue options may be available for applicants with significant health conditions.', badge: 'Guaranteed-Issue Options' },
+];
+
+function App() {
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <>
+      {/* Nav */}
+      <nav>
+        <div className="nav-inner">
+          <a href="#" className="nav-logo">
+            <div className="nav-logo-icon">
+              <LeafIcon style={{color:'var(--gold-light)'}} />
+            </div>
+            <div className="nav-logo-text">
+              <div className="brand">Evermore Life</div>
+              <div className="sub">Independent Insurance Brokers</div>
+            </div>
+          </a>
+          <ul className="nav-links-list">
+            <li><a href="#products">Products</a></li>
+            <li><a href="#carriers">Carriers</a></li>
+            <li><a href="#how">How It Works</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+          <div className="nav-cta">
+            <a href="#get-quote" className="btn btn-gold" style={{padding:'11px 24px',fontSize:'0.92rem'}}>Free Quote</a>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <section className="hero">
+        <div className="hero-inner">
+          <div>
+            <div className="hero-badge fade-up">
+              Independent · Licensed · No-Pressure
+            </div>
+            <h1 className="fade-up-2">
+              Protect What Matters Most.<br/>
+              <em>Coverage That Lasts.</em>
+            </h1>
+            <p className="hero-sub fade-up-3">
+              Final expense, term life, IUL, whole life, and mortgage protection — Evermore Life compares top carriers so you can review coverage options. Many plans do not require a medical exam.
+            </p>
+            <ul className="hero-bullets fade-up-3">
+              <li><span className="check-icon"><CheckIcon white /></span>Final expense, term, IUL, whole life &amp; mortgage protection</li>
+              <li><span className="check-icon"><CheckIcon white /></span>Many plans require no medical exam</li>
+              <li><span className="check-icon"><CheckIcon white /></span>Rates locked in — never increase</li>
+              <li><span className="check-icon"><CheckIcon white /></span>We shop Mutual of Omaha, Transamerica, Aetna &amp; more</li>
+            </ul>
+          </div>
+          <div className="lead-form-card fade-up-3" id="get-quote">
+            <h3>Get Your Free Quote</h3>
+            <p className="sub">Takes less than 2 minutes. No obligation.</p>
+            <LeadForm />
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Bar */}
+      <div className="trust-bar">
+        <div className="container">
+          <div className="trust-items">
+            <div className="trust-item"><UsersIcon /><span>Independent Brokers</span></div>
+            <div className="trust-item"><AwardIcon /><span>A+ Rated Carriers</span></div>
+            <div className="trust-item"><ShieldIcon style={{width:18,height:18}} /><span>No Medical Exam Required</span></div>
+            <div className="trust-item"><ClockIcon /><span>Same-Day Coverage Available</span></div>
+            <div className="trust-item"><HeartIcon style={{width:18,height:18}} /><span>100% No-Obligation Quote</span></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Products */}
+      <section className="section products" id="products">
+        <div className="container">
+          <div className="section-header center reveal">
+            <div className="section-label">Our Products</div>
+            <h2>Coverage for Every Stage of Life</h2>
+            <p>Whether you need to cover final expenses, protect your income, grow tax-free wealth, or keep your family in their home — we have a solution that fits your budget.</p>
+          </div>
+          <div className="products-grid">
+            {products.map(({ Icon, title, desc, imgPrompt }, i) => (
+              <div key={i} className="product-card reveal">
+                {/* IMAGE SLOT — replace the placeholder below with:
+                    <div className="product-img"><img src="your-image.jpg" alt={title} /></div>
+                    See image prompts in the code comments above each card */}
+                <div className="product-img-placeholder">
+                  <span>Image placeholder<br/><em style={{fontSize:'0.7rem',opacity:0.7}}>{imgPrompt.replace('REPLACE: ','')}</em></span>
+                </div>
+                <div className="product-icon-wrap"><Icon /></div>
+                <h3>{title}</h3>
+                <p>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Carriers */}
+      <section className="section carriers-section" id="carriers">
+        <div className="container">
+          <div className="section-header center reveal">
+            <div className="section-label">Our Trusted Carriers</div>
+            <h2>We Shop the Best Rates For You</h2>
+            <p>We work with top-rated final expense and life insurance carriers so you can compare available options.</p>
+          </div>
+          <div className="carriers-list reveal">
+            {carriers.map((c, i) => (
+              <div key={i} className="carrier-card">
+                <div className="carrier-dot" />
+                <div className="carrier-info">
+                  <div className="carrier-name">{c.name}</div>
+                  <div className="carrier-desc">{c.desc}</div>
+                </div>
+                <div className="carrier-badge">{c.badge}</div>
+              </div>
+            ))}
+          </div>
+          <p className="carrier-footer-note">Your agent will help match your needs to available carrier options.</p>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="section how-it-works" id="how">
+        <div className="container">
+          <div className="section-header center reveal">
+            <div className="section-label">Simple Process</div>
+            <h2>Coverage in 3 Easy Steps</h2>
+            <p style={{color:'rgba(255,255,255,0.65)'}}>We make protecting your family as simple as possible. No complicated paperwork, no doctor visits.</p>
+          </div>
+          <div className="steps-grid">
+            {[
+              { n:'1', title:'Get a Free Quote', desc:'Fill out the short form above or call us. A licensed Evermore Life agent reviews your needs and finds the best plan options for your budget.' },
+              { n:'2', title:'Choose Your Plan', desc:'Pick the coverage that fits — from final expense to IUL. Your agent walks you through every option with zero pressure and no jargon.' },
+              { n:'3', title:'Coverage Starts Today', desc:'Once enrolled, coverage begins immediately on most plans. Your family is protected from the very first day, for life.' },
+            ].map(({ n, title, desc }, i) => (
+              <div key={i} className="step reveal">
+                <div className="step-number">{n}</div>
+                <h3>{title}</h3>
+                <p>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="section testimonials">
+        <div className="container">
+          <div className="section-header center reveal">
+            <div className="section-label">Real Stories</div>
+            <h2>Families We've Protected</h2>
+          </div>
+          <div className="testimonials-grid">
+            {[
+              { init:'DM', name:'Dorothy M.', detail:'Albuquerque, NM · Age 67', text:"I called expecting a complicated process and was shocked by how easy it was. My agent was patient, explained everything clearly, and I had coverage the same afternoon. I sleep better knowing my kids won't face a big bill." },
+              { init:'RK', name:'Robert K.', detail:'Phoenix, AZ · Age 71', text:"After my wife passed and we saw how expensive everything was, I knew I needed to act. Evermore Life took care of everything in one phone call. My premium is less than my cable bill and it will never go up." },
+              { init:'PT', name:'Patricia T.', detail:'Las Vegas, NV · Age 58', text:"I was worried my health history would disqualify me. It didn't matter at all. I got approved with no exam. My son cried when I told him — he said it was the most thoughtful thing I've ever done for the family." },
+            ].map((t, i) => (
+              <div key={i} className="testimonial-card reveal">
+                <div className="quote-mark">"</div>
+                <div className="stars">★★★★★</div>
+                <p className="testimonial-text">{t.text}</p>
+                <div className="testimonial-author">
+                  <div className="author-avatar">{t.init}</div>
+                  <div>
+                    <div className="author-name">{t.name}</div>
+                    <div className="author-detail">{t.detail}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="section faq" id="faq">
+        <div className="container">
+          <div className="section-header center reveal">
+            <div className="section-label">Common Questions</div>
+            <h2>Answers You Can Trust</h2>
+          </div>
+          <FAQ />
+        </div>
+      </section>
+
+      {/* Bottom CTA */}
+      <section className="bottom-cta">
+        <div className="container">
+          <div className="bottom-cta-inner">
+            <div>
+              <div className="section-label" style={{color:'var(--gold-light)'}}>Don't Wait</div>
+              <h2>Your Family Deserves This Protection</h2>
+              <p>A licensed Evermore Life agent is ready to help review your options — no pressure, no obligation, and many plans require no medical exam.</p>
+              <div className="cta-contact">
+                <a href="#get-quote" className="btn btn-gold">Get My Free Quote</a>
+              </div>
+            </div>
+            <div className="lead-form-card">
+              <h3>Request a Free Quote</h3>
+              <p className="sub">A licensed agent will be in touch shortly.</p>
+              <LeadForm />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer>
+        <div className="container">
+          <div className="footer-inner">
+            <div className="footer-logo-text">
+              <div className="brand">Evermore Life</div>
+              <div className="sub">Independent Insurance Brokers</div>
+            </div>
+            <div className="footer-links">
+              <a href="../current/index.html">Home</a>
+              <a href="../current/privacy.html">Privacy Policy</a>
+              <a href="../current/terms.html">Terms of Service</a>
+              <a href="../current/optin.html">Opt-In / Opt-Out</a>
+            </div>
+            <div className="footer-disclaimer">
+              Evermore Life is a licensed independent insurance brokerage. Life insurance products are underwritten by third-party carriers including Mutual of Omaha, Ethos Life, American Amicable, Transamerica, and Aetna. Coverage amounts, premiums, and eligibility vary by carrier and individual health profile. The information on this page is for illustrative purposes only and does not constitute a binding insurance quote or guarantee of coverage. Not affiliated with any government agency, Medicare, or Medicaid. SMS consent is optional and not a condition of purchase. Reply STOP to opt out. Msg &amp; data rates may apply. &copy; 2026 Evermore Life. All rights reserved.
+            </div>
+          </div>
+        </div>
+      </footer>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+<div id="root"></div>
+</body>
+</html>

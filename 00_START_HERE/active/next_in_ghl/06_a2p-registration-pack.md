@@ -1,0 +1,1 @@
+../../../02_ghl/launch_kit/a2p-registration-pack.md

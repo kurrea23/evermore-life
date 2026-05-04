@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Evermore Life — Coverage Review Reference</title>
+  <style>
+    :root {
+      --bg: #0d1110;
+      --panel: #151b18;
+      --gold: #d7b56d;
+      --text: #f5f1e8;
+      --muted: #c9c1ad;
+      --line: rgba(215,181,109,.28);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Georgia, 'Times New Roman', serif;
+      background: radial-gradient(circle at top, #1f2b24, #0d1110 60%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 20px; }
+    header {
+      min-height: 70vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .badge {
+      color: var(--gold);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-size: .78rem;
+    }
+    h1 { font-size: clamp(2.3rem, 7vw, 5.4rem); line-height: 1.02; margin: 18px 0; }
+    h2 { font-size: clamp(1.7rem, 4vw, 3rem); line-height: 1.1; margin: 0 0 12px; }
+    p { color: var(--muted); font-size: 1.08rem; }
+    .hero p { max-width: 720px; margin: 0 auto 28px; }
+    .btn {
+      display: inline-block;
+      background: var(--gold);
+      color: #111;
+      padding: 14px 22px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 8px;
+    }
+    .btn.secondary {
+      background: transparent;
+      color: var(--gold);
+      border: 1px solid var(--line);
+    }
+    section { padding: 64px 0; border-bottom: 1px solid var(--line); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+    .card {
+      background: rgba(21,27,24,.82);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 24px;
+      min-height: 190px;
+    }
+    .card h3 { color: var(--gold); margin-top: 0; }
+    .form {
+      background: rgba(21,27,24,.9);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 28px;
+    }
+    input, select, textarea {
+      width: 100%;
+      background: #0f1412;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 13px;
+      margin: 8px 0 14px;
+    }
+    label { color: var(--gold); font-size: .95rem; }
+    .fine { font-size: .84rem; color: #aaa18d; }
+    footer { padding: 36px 0; color: #aaa18d; font-size: .86rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap hero">
+      <div class="badge">Evermore Life</div>
+      <h1>Your legacy moves on.</h1>
+      <p>Protect the people who carry it. Start a simple coverage review based on your age, health, budget, state, and goals.</p>
+      <a class="btn" href="#review">Start My Coverage Review</a>
+      <a class="btn secondary" href="#how">See How It Works</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section>
+      <h2>Life insurance is one more way to show up.</h2>
+      <p>You work hard for the people you love. You show up in the small moments, the big moments, and the quiet moments no one sees. A life insurance plan can help protect that love with clarity.</p>
+    </section>
+
+    <section id="how">
+      <h2>A simple process. A real conversation.</h2>
+      <div class="grid">
+        <div class="card"><h3>1. Tell us the basics</h3><p>Age, state, health, budget, and what you want coverage to protect.</p></div>
+        <div class="card"><h3>2. Review options</h3><p>A licensed broker helps compare coverage types and carriers that may fit your situation.</p></div>
+        <div class="card"><h3>3. Choose what makes sense</h3><p>No pressure. No one-size-fits-all policy. Just a clearer path.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Coverage types we may review</h2>
+      <div class="grid">
+        <div class="card"><h3>Final Expense</h3><p>Designed to help loved ones with funeral costs, burial or cremation costs, and other final bills.</p></div>
+        <div class="card"><h3>Term Life</h3><p>Often used for mortgage protection, income replacement, or family protection during key years.</p></div>
+        <div class="card"><h3>Permanent Coverage</h3><p>Whole life, IUL, or other options may be reviewed when appropriate for the client’s goals.</p></div>
+      </div>
+    </section>
+
+    <section id="review">
+      <div class="form">
+        <h2>Start with a few simple questions.</h2>
+        <p>This is a reference mockup. In GHL, use the native form or chat widget here.</p>
+        <label>First Name</label><input placeholder="First name">
+        <label>Phone</label><input placeholder="Phone number">
+        <label>Email</label><input placeholder="Email">
+        <label>State</label><input placeholder="State">
+        <label>What are you most interested in protecting?</label>
+        <select>
+          <option>Final expenses</option>
+          <option>Mortgage/home</option>
+          <option>Spouse/family income</option>
+          <option>Children’s future</option>
+          <option>Not sure yet</option>
+        </select>
+        <p class="fine">By submitting, I agree to receive calls, texts, and emails from Evermore Life regarding my insurance inquiry. Message and data rates may apply. Message frequency may vary. Reply STOP to unsubscribe. Consent is not a condition of purchase.</p>
+        <a class="btn" href="#">Submit Coverage Review</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    Coverage availability, policy type, benefits, premiums, and approval depend on age, health, state, carrier underwriting, product type, and other eligibility factors. Not all applicants qualify. Evermore Life may work with multiple carriers to help compare available options. This is a solicitation for insurance.
+  </footer>
+</body>
+</html>

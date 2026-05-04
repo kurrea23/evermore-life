@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sarah | Evermore Life AI Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0D1B3E;
+    --navy-light: #162550;
+    --navy-mid: #1a2d5a;
+    --gold: #C9A84C;
+    --gold-light: #e2c170;
+    --gold-dark: #a8893a;
+    --white: #ffffff;
+    --cream: #faf7f0;
+    --gray-light: #f0f0f0;
+    --gray: #888;
+    --text: #2c2c2c;
+    --shadow: 0 8px 32px rgba(13,27,62,0.18);
+    --shadow-sm: 0 2px 8px rgba(13,27,62,0.12);
+  }
+
+  html, body {
+    font-family: 'Lato', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* ===== SCREEN SYSTEM ===== */
+  .screen {
+    position: fixed;
+    inset: 0;
+    display: none;
+    overflow-y: auto;
+  }
+  .screen.active {
+    display: flex;
+  }
+
+  /* ===== SCREEN 1: VIRTUAL OFFICE ===== */
+  #screen-office {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    background: linear-gradient(180deg, #87CEEB 0%, #B8D4E8 30%, #D4956A 60%, #8B6914 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Window / Sky */
+  .office-sky {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 45%;
+    background: linear-gradient(180deg, #4a90d9 0%, #87CEEB 40%, #ffd89b 80%, #ffb347 100%);
+    z-index: 0;
+  }
+
+  /* Window frame */
+  .office-window {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    height: 180px;
+    border: 8px solid #5c3d1e;
+    border-radius: 4px;
+    background: linear-gradient(180deg, #87ceeb 0%, #ffd89b 100%);
+    box-shadow: inset 0 0 20px rgba(255,200,100,0.4), 4px 4px 0 #3d2510;
+    z-index: 1;
+  }
+  .office-window::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    width: 6px;
+    height: 100%;
+    background: #5c3d1e;
+    transform: translateX(-50%);
+  }
+  .office-window::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    width: 100%;
+    height: 6px;
+    background: #5c3d1e;
+    transform: translateY(-50%);
+  }
+
+  /* Wall */
+  .office-wall {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    bottom: 35%;
+    background: linear-gradient(180deg, #e8d5b0 0%, #dcc89a 100%);
+    z-index: 2;
+    border-bottom: 6px solid #b8915a;
+  }
+
+  /* Certificates on wall */
+  .cert {
+    position: absolute;
+    background: white;
+    border: 3px solid var(--gold);
+    border-radius: 3px;
+    z-index: 3;
+    box-shadow: var(--shadow-sm);
+  }
+  .cert::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 1px solid var(--gold-light);
+    opacity: 0.5;
+  }
+  .cert-1 { width: 70px; height: 55px; top: 12%; left: 8%; }
+  .cert-2 { width: 55px; height: 45px; top: 10%; left: 20%; }
+
+  /* Bookshelf */
+  .bookshelf {
+    position: absolute;
+    right: 6%;
+    top: 15%;
+    width: 90px;
+    height: 120px;
+    background: #5c3d1e;
+    border-radius: 3px;
+    z-index: 3;
+    box-shadow: 3px 3px 0 #3d2510;
+  }
+  .books {
+    position: absolute;
+    bottom: 6px;
+    left: 4px;
+    right: 4px;
+    display: flex;
+    gap: 2px;
+    align-items: flex-end;
+  }
+  .book {
+    border-radius: 1px 1px 0 0;
+    flex-shrink: 0;
+  }
+
+  /* Floor */
+  .office-floor {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 35%;
+    background: linear-gradient(180deg, #8B6914 0%, #6b4f0e 100%);
+    z-index: 2;
+  }
+
+  /* Desk */
+  .desk {
+    position: absolute;
+    bottom: 28%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    max-width: 560px;
+    height: 70px;
+    background: linear-gradient(180deg, #8B6914 0%, #6b4f0e 60%, #5a4010 100%);
+    border-radius: 4px 4px 0 0;
+    z-index: 4;
+    box-shadow: 0 4px 0 #3d2910, 0 8px 0 #2e1f0a;
+  }
+  .desk::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 12px;
+    background: #a07820;
+    border-radius: 4px 4px 0 0;
+  }
+
+  /* Monitor on desk */
+  .monitor {
+    position: absolute;
+    top: -70px;
+    right: 20px;
+    width: 80px;
+    height: 60px;
+    background: #1a1a2e;
+    border-radius: 6px 6px 0 0;
+    border: 3px solid #333;
+    z-index: 5;
+  }
+  .monitor-screen {
+    position: absolute;
+    inset: 4px;
+    background: linear-gradient(135deg, #0d1b3e 0%, #162550 100%);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: var(--gold);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .monitor-stand {
+    position: absolute;
+    top: 57px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 12px;
+    background: #333;
+  }
+  .monitor-base {
+    position: absolute;
+    top: 68px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 28px;
+    height: 5px;
+    background: #333;
+    border-radius: 2px;
+  }
+
+  /* Desk lamp */
+  .lamp {
+    position: absolute;
+    top: -55px;
+    left: 20px;
+    width: 10px;
+    height: 50px;
+    background: #888;
+    border-radius: 5px;
+    z-index: 5;
+  }
+  .lamp::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    width: 40px;
+    height: 22px;
+    background: #aaa;
+    border-radius: 50% 50% 0 0;
+    transform: rotate(-20deg);
+  }
+  .lamp-glow {
+    position: absolute;
+    top: -10px;
+    left: -25px;
+    width: 50px;
+    height: 30px;
+    background: radial-gradient(ellipse, rgba(255,230,100,0.35) 0%, transparent 70%);
+    z-index: 4;
+    animation: glowPulse 3s ease-in-out infinite;
+  }
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+  }
+
+  /* Plant */
+  .plant-pot {
+    position: absolute;
+    top: -40px;
+    right: 110px;
+    width: 20px;
+    height: 20px;
+    background: #b8603a;
+    border-radius: 0 0 4px 4px;
+    z-index: 5;
+  }
+  .plant-leaf {
+    position: absolute;
+    bottom: 18px;
+    left: -5px;
+    width: 14px;
+    height: 20px;
+    background: #2d7a2d;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-30deg);
+  }
+  .plant-leaf-2 {
+    position: absolute;
+    bottom: 16px;
+    left: 8px;
+    width: 14px;
+    height: 22px;
+    background: #3d8a3d;
+    border-radius: 50% 50% 0 50%;
+    transform: rotate(25deg);
+  }
+  .plant-leaf-3 {
+    position: absolute;
+    bottom: 22px;
+    left: 2px;
+    width: 12px;
+    height: 24px;
+    background: #2d7a2d;
+    border-radius: 50%;
+    transform: rotate(5deg);
+  }
+
+  /* Sarah Avatar (CSS illustrated) */
+  .sarah-avatar-large {
+    position: absolute;
+    bottom: 33%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .sarah-body {
+    width: 90px;
+    height: 110px;
+    background: linear-gradient(180deg, #2563a8 0%, #1a4a8a 100%);
+    border-radius: 45px 45px 12px 12px;
+    position: relative;
+    margin-top: -10px;
+  }
+  .sarah-body::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 20px;
+    background: #fde0c0;
+    border-radius: 0 0 15px 15px;
+  }
+  /* Collar / neckline detail */
+  .sarah-collar {
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 16px;
+    background: white;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    opacity: 0.9;
+  }
+
+  .sarah-head {
+    width: 64px;
+    height: 72px;
+    background: linear-gradient(180deg, #fde8c8 0%, #f5d5a8 100%);
+    border-radius: 50% 50% 45% 45%;
+    position: relative;
+    z-index: 6;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  /* Hair */
+  .sarah-hair {
+    position: absolute;
+    top: -10px;
+    left: -4px;
+    right: -4px;
+    height: 42px;
+    background: linear-gradient(180deg, #4a2c0a 0%, #6b3d12 100%);
+    border-radius: 50% 50% 20% 20%;
+    z-index: 5;
+  }
+  .sarah-hair::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: -6px;
+    right: -6px;
+    height: 22px;
+    background: #4a2c0a;
+    border-radius: 0 0 40% 40%;
+  }
+
+  /* Eyes */
+  .sarah-eyes {
+    position: absolute;
+    top: 28px;
+    left: 0; right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    z-index: 7;
+  }
+  .sarah-eye {
+    width: 10px;
+    height: 11px;
+    background: #2c1a0a;
+    border-radius: 50%;
+    position: relative;
+  }
+  .sarah-eye::after {
+    content: '';
+    position: absolute;
+    top: 1px; left: 1px;
+    width: 3px; height: 3px;
+    background: white;
+    border-radius: 50%;
+  }
+
+  /* Smile */
+  .sarah-smile {
+    position: absolute;
+    top: 44px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 22px;
+    height: 11px;
+    border: 2px solid #c8785a;
+    border-top: none;
+    border-radius: 0 0 11px 11px;
+    z-index: 7;
+  }
+
+  /* Cheeks */
+  .sarah-cheek {
+    position: absolute;
+    top: 38px;
+    width: 10px; height: 7px;
+    background: rgba(220, 120, 100, 0.3);
+    border-radius: 50%;
+    z-index: 7;
+  }
+  .sarah-cheek-left { left: 6px; }
+  .sarah-cheek-right { right: 6px; }
+
+  /* Welcome Card */
+  .welcome-card {
+    position: absolute;
+    bottom: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    max-width: 440px;
+    background: rgba(255,255,255,0.97);
+    border-radius: 18px;
+    padding: 24px 28px;
+    box-shadow: var(--shadow);
+    z-index: 10;
+    text-align: center;
+    animation: floatUp 0.8s ease-out;
+    border-top: 4px solid var(--gold);
+  }
+  @keyframes floatUp {
+    from { transform: translateX(-50%) translateY(30px); opacity: 0; }
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+  }
+
+  .evermore-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .logo-icon {
+    width: 40px; height: 40px;
+    background: var(--navy);
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .logo-text {
+    text-align: left;
+  }
+  .logo-text .brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+  .logo-text .sub {
+    font-size: 9px;
+    color: var(--gold-dark);
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+
+  .welcome-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    color: var(--navy);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .welcome-card p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+
+  .btn-start {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Lato', sans-serif;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 16px rgba(13,27,62,0.35);
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .btn-start::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .btn-start:hover::before { opacity: 1; }
+  .btn-start span { position: relative; z-index: 1; }
+  .btn-start:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(13,27,62,0.4); }
+
+  .no-pressure {
+    font-size: 12px;
+    color: #888;
+    font-style: italic;
+  }
+
+  /* ===== SCREEN 2: CHAT ===== */
+  #screen-chat {
+    flex-direction: row;
+    background: #f5f5f5;
+  }
+
+  /* Sidebar */
+  .chat-sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-mid) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 20px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .chat-sidebar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    width: 100%;
+  }
+  .sidebar-logo .logo-icon { width: 36px; height: 36px; font-size: 16px; }
+  .sidebar-logo .brand { color: white; font-size: 14px; }
+  .sidebar-logo .sub { color: var(--gold); }
+
+  /* Mini Sarah in sidebar */
+  .sarah-mini {
+    position: relative;
+    margin-bottom: 16px;
+  }
+  .sarah-mini .sarah-head { width: 52px; height: 58px; }
+  .sarah-mini .sarah-hair { top: -8px; left: -3px; right: -3px; height: 34px; }
+  .sarah-mini .sarah-hair::after { height: 18px; left: -5px; right: -5px; }
+  .sarah-mini .sarah-eyes { top: 22px; gap: 11px; }
+  .sarah-mini .sarah-eye { width: 8px; height: 9px; }
+  .sarah-mini .sarah-smile { top: 36px; width: 18px; height: 9px; }
+  .sarah-mini .sarah-cheek { top: 30px; width: 8px; height: 6px; }
+  .sarah-mini .sarah-body { width: 72px; height: 50px; border-radius: 36px 36px 8px 8px; }
+  .sarah-mini .sarah-body::before { width: 24px; height: 16px; }
+
+  .status-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: #4CAF50;
+    border-radius: 50%;
+    margin-right: 5px;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.2); }
+  }
+  .sarah-status {
+    color: rgba(255,255,255,0.8);
+    font-size: 12px;
+    margin-bottom: 24px;
+  }
+
+  /* Progress tracker */
+  .progress-title {
+    color: var(--gold);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    align-self: flex-start;
+    width: 100%;
+  }
+  .progress-steps {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+  .prog-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    transition: all 0.3s;
+  }
+  .prog-step.active { background: rgba(201,168,76,0.18); }
+  .prog-step.done { background: rgba(76,175,80,0.12); }
+  .prog-dot {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px;
+    color: rgba(255,255,255,0.4);
+    flex-shrink: 0;
+    transition: all 0.3s;
+  }
+  .prog-step.active .prog-dot {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(201,168,76,0.2);
+  }
+  .prog-step.done .prog-dot {
+    border-color: #4CAF50;
+    background: rgba(76,175,80,0.3);
+    color: #4CAF50;
+  }
+  .prog-label {
+    color: rgba(255,255,255,0.55);
+    font-size: 11px;
+    transition: all 0.3s;
+  }
+  .prog-step.active .prog-label { color: rgba(255,255,255,0.9); font-weight: 700; }
+  .prog-step.done .prog-label { color: rgba(255,255,255,0.65); }
+
+  .sidebar-tagline {
+    color: rgba(255,255,255,0.3);
+    font-size: 10px;
+    text-align: center;
+    margin-top: auto;
+    line-height: 1.5;
+  }
+
+  /* Chat panel */
+  .chat-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    overflow: hidden;
+  }
+
+  .chat-header {
+    background: white;
+    border-bottom: 1px solid #eee;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .chat-header-avatar {
+    width: 38px; height: 38px;
+    background: var(--navy);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    border: 2px solid var(--gold);
+  }
+  .chat-header-info h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .chat-header-info p {
+    font-size: 11px;
+    color: #888;
+  }
+  .evermore-badge {
+    margin-left: auto;
+    background: var(--navy);
+    color: var(--gold);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Messages */
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 20px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-behavior: smooth;
+  }
+
+  .msg {
+    max-width: 78%;
+    animation: msgIn 0.3s ease-out;
+  }
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .msg-sarah { align-self: flex-start; }
+  .msg-user { align-self: flex-end; }
+
+  .msg-bubble {
+    padding: 12px 16px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.5;
+    box-shadow: var(--shadow-sm);
+  }
+  .msg-sarah .msg-bubble {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    color: white;
+    border-bottom-left-radius: 4px;
+  }
+  .msg-user .msg-bubble {
+    background: #f0f0f0;
+    color: var(--text);
+    border-bottom-right-radius: 4px;
+  }
+  .msg-name {
+    font-size: 11px;
+    color: #aaa;
+    margin-bottom: 3px;
+    padding: 0 4px;
+  }
+  .msg-sarah .msg-name { color: var(--gold-dark); font-weight: 700; }
+
+  /* Quick replies */
+  .quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 0 4px;
+    align-self: flex-start;
+    max-width: 90%;
+  }
+  .qr-btn {
+    background: white;
+    border: 2px solid var(--navy);
+    color: var(--navy);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-family: 'Lato', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+  }
+  .qr-btn:hover {
+    background: var(--navy);
+    color: white;
+  }
+  .qr-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  /* Typing indicator */
+  .typing-indicator {
+    align-self: flex-start;
+    display: flex;
+    gap: 4px;
+    padding: 10px 14px;
+    background: var(--navy);
+    border-radius: 18px;
+    border-bottom-left-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    box-shadow: var(--shadow-sm);
+  }
+  .typing-indicator.visible { opacity: 1; }
+  .typing-dot {
+    width: 7px; height: 7px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 50%;
+    animation: typingBounce 1.2s infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingBounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.6; }
+    40% { transform: translateY(-5px); opacity: 1; }
+  }
+
+  /* Chat input */
+  .chat-input-area {
+    padding: 14px 16px;
+    background: white;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .chat-input {
+    flex: 1;
+    border: 2px solid #e0e0e0;
+    border-radius: 24px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-family: 'Lato', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+    background: #fafafa;
+  }
+  .chat-input:focus { border-color: var(--navy); background: white; }
+  .chat-input::placeholder { color: #bbb; }
+
+  .btn-send {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    box-shadow: var(--shadow-sm);
+  }
+  .btn-send:hover { transform: scale(1.05); background: linear-gradient(135deg, var(--gold-dark), var(--gold)); }
+
+  /* ===== SCREEN 3: BOOKING ===== */
+  #screen-booking {
+    background: linear-gradient(135deg, var(--navy) 0%, #0a1428 100%);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 24px 16px;
+  }
+
+  .booking-card {
+    background: white;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    animation: slideUp 0.5s ease-out;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .booking-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    padding: 28px 28px 24px;
+    text-align: center;
+    position: relative;
+  }
+  .booking-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 60px; height: 3px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+  .booking-header h2 {
+    font-family: 'Playfair Display', serif;
+    color: white;
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+  .booking-header p {
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+  }
+
+  .booking-body {
+    padding: 28px;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .form-group label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .form-group input,
+  .form-group select {
+    border: 2px solid #e8e8e8;
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 14px;
+    font-family: 'Lato', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+    color: var(--text);
+    background: white;
+    width: 100%;
+  }
+  .form-group input:focus,
+  .form-group select:focus { border-color: var(--navy); }
+
+  .booking-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    background: #faf7f0;
+    border: 1px solid #eadfbf;
+    border-radius: 10px;
+    padding: 11px 12px;
+    margin: 2px 0 12px;
+    color: #555;
+    font-size: 11px;
+    line-height: 1.45;
+    cursor: pointer;
+  }
+  .booking-consent input {
+    margin-top: 2px;
+    flex-shrink: 0;
+    accent-color: var(--gold);
+  }
+  .booking-consent a {
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  .btn-book {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Lato', sans-serif;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.25s;
+    box-shadow: 0 4px 16px rgba(13,27,62,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-book::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .btn-book span { position: relative; z-index: 1; }
+  .btn-book:hover::before { opacity: 1; }
+  .btn-book:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(13,27,62,0.4); }
+
+  .trust-badges {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #888;
+  }
+  .badge-icon { font-size: 14px; }
+
+  /* ===== SCREEN 4: CONFIRMATION ===== */
+  #screen-confirm {
+    background: linear-gradient(135deg, var(--navy) 0%, #0a1428 100%);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 24px 16px;
+  }
+
+  .confirm-card {
+    background: white;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 460px;
+    padding: 40px 36px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  @keyframes bounceIn {
+    0% { transform: scale(0.7); opacity: 0; }
+    70% { transform: scale(1.04); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .confirm-check {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, #4CAF50, #2e7d32);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px;
+    margin: 0 auto 20px;
+    box-shadow: 0 4px 20px rgba(76,175,80,0.35);
+    animation: checkPop 0.4s ease-out 0.3s both;
+  }
+  @keyframes checkPop {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+  }
+
+  .confirm-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    color: var(--navy);
+    margin-bottom: 10px;
+  }
+  .confirm-card p {
+    color: #555;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .confirm-details {
+    background: var(--cream);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    text-align: left;
+    border-left: 4px solid var(--gold);
+  }
+  .confirm-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  .confirm-detail-row:last-child { border-bottom: none; }
+  .confirm-detail-row .label { color: #888; font-weight: 600; }
+  .confirm-detail-row .value { color: var(--navy); font-weight: 700; }
+
+  .sarah-thumbsup {
+    display: inline-block;
+    font-size: 36px;
+    animation: bounce 1s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .btn-done {
+    background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Lato', sans-serif;
+    cursor: pointer;
+    transition: all 0.25s;
+    width: 100%;
+  }
+  .btn-done:hover { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .chat-sidebar { display: none; }
+    .booking-body { padding: 20px; }
+    .form-row { flex-direction: column; gap: 0; }
+    .confirm-card { padding: 28px 20px; }
+    .welcome-card { padding: 18px 16px; bottom: 4%; }
+    .welcome-card h2 { font-size: 16px; }
+  }
+
+  /* Scrollbar */
+  .chat-messages::-webkit-scrollbar { width: 4px; }
+  .chat-messages::-webkit-scrollbar-track { background: transparent; }
+  .chat-messages::-webkit-scrollbar-thumb { background: #ddd; border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- ===== SCREEN 1: VIRTUAL OFFICE ===== -->
+<div id="screen-office" class="screen active">
+  <div class="office-sky"></div>
+  <div class="office-wall">
+    <div class="cert cert-1"></div>
+    <div class="cert cert-2"></div>
+    <div class="bookshelf">
+      <div class="books">
+        <div class="book" style="width:10px;height:50px;background:#c0392b;"></div>
+        <div class="book" style="width:8px;height:44px;background:#2980b9;"></div>
+        <div class="book" style="width:9px;height:52px;background:#27ae60;"></div>
+        <div class="book" style="width:7px;height:40px;background:#f39c12;"></div>
+        <div class="book" style="width:10px;height:48px;background:#8e44ad;"></div>
+        <div class="book" style="width:8px;height:46px;background:#16a085;"></div>
+        <div class="book" style="width:6px;height:38px;background:#e74c3c;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="office-floor"></div>
+
+  <div class="desk">
+    <div class="lamp">
+      <div class="lamp-glow"></div>
+    </div>
+    <div class="monitor">
+      <div class="monitor-screen">EL</div>
+      <div class="monitor-stand"></div>
+      <div class="monitor-base"></div>
+    </div>
+    <div class="plant-pot">
+      <div class="plant-leaf"></div>
+      <div class="plant-leaf-2"></div>
+      <div class="plant-leaf-3"></div>
+    </div>
+  </div>
+
+  <!-- Sarah's Large Avatar -->
+  <div class="sarah-avatar-large">
+    <div class="sarah-head">
+      <div class="sarah-hair"></div>
+      <div class="sarah-eyes">
+        <div class="sarah-eye"></div>
+        <div class="sarah-eye"></div>
+      </div>
+      <div class="sarah-smile"></div>
+      <div class="sarah-cheek sarah-cheek-left"></div>
+      <div class="sarah-cheek sarah-cheek-right"></div>
+    </div>
+    <div class="sarah-body">
+      <div class="sarah-collar"></div>
+    </div>
+  </div>
+
+  <!-- Welcome Card -->
+  <div class="welcome-card">
+    <div class="evermore-logo">
+      <div class="logo-icon">🌳</div>
+      <div class="logo-text">
+        <div class="brand">EVERMORE LIFE</div>
+        <div class="sub">LLC</div>
+      </div>
+    </div>
+    <h2>Hi, I'm Sarah — your Evermore Life guide.</h2>
+    <p>I'm here to help you find the right life insurance for your family, answer your questions, and connect you with a licensed agent when you're ready.</p>
+    <button class="btn-start" onclick="startChat()"><span>Start Conversation →</span></button>
+    <div class="no-pressure">No pressure. No sales pitch. Just answers.</div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 2: CHAT ===== -->
+<div id="screen-chat" class="screen">
+  <!-- Sidebar -->
+  <div class="chat-sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🌳</div>
+      <div class="logo-text">
+        <div class="brand">EVERMORE LIFE</div>
+        <div class="sub">LLC</div>
+      </div>
+    </div>
+
+    <div class="sarah-mini">
+      <div class="sarah-head">
+        <div class="sarah-hair"></div>
+        <div class="sarah-eyes">
+          <div class="sarah-eye"></div>
+          <div class="sarah-eye"></div>
+        </div>
+        <div class="sarah-smile"></div>
+        <div class="sarah-cheek sarah-cheek-left"></div>
+        <div class="sarah-cheek sarah-cheek-right"></div>
+      </div>
+      <div class="sarah-body">
+        <div class="sarah-collar"></div>
+      </div>
+    </div>
+
+    <div class="sarah-status">
+      <span class="status-dot"></span>Sarah is online
+    </div>
+
+    <div class="progress-title">Your Journey</div>
+    <div class="progress-steps">
+      <div class="prog-step active" id="step-1">
+        <div class="prog-dot">1</div>
+        <div class="prog-label">Your Needs</div>
+      </div>
+      <div class="prog-step" id="step-2">
+        <div class="prog-dot">2</div>
+        <div class="prog-label">About You</div>
+      </div>
+      <div class="prog-step" id="step-3">
+        <div class="prog-dot">3</div>
+        <div class="prog-label">Health Check</div>
+      </div>
+      <div class="prog-step" id="step-4">
+        <div class="prog-dot">4</div>
+        <div class="prog-label">Coverage Goal</div>
+      </div>
+      <div class="prog-step" id="step-5">
+        <div class="prog-dot">5</div>
+        <div class="prog-label">Book Appointment</div>
+      </div>
+    </div>
+
+    <div class="sidebar-tagline">Simple. Honest. Trusted.<br>Protect What Matters.</div>
+  </div>
+
+  <!-- Chat Panel -->
+  <div class="chat-panel">
+    <div class="chat-header">
+      <div class="chat-header-avatar">👩</div>
+      <div class="chat-header-info">
+        <h3>Sarah</h3>
+        <p>Evermore Life AI Assistant</p>
+      </div>
+      <div class="evermore-badge">EVERMORE LIFE</div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="typing-indicator" id="typingIndicator">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Type a message..." onkeypress="handleKey(event)" />
+      <button class="btn-send" onclick="sendUserMessage()">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 3: BOOKING ===== -->
+<div id="screen-booking" class="screen">
+  <div class="booking-card">
+    <div class="booking-header">
+      <div style="font-size:32px;margin-bottom:8px;">📅</div>
+      <h2>Book Your Free Consultation</h2>
+      <p>You're one step away from protecting your family.</p>
+    </div>
+    <div class="booking-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" id="firstName" placeholder="Jane" />
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" id="lastName" placeholder="Smith" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="phone" placeholder="(505) 555-0100" />
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="email" placeholder="jane@email.com" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Preferred Date</label>
+          <select id="prefDate"></select>
+        </div>
+        <div class="form-group">
+          <label>Preferred Time</label>
+          <select id="prefTime">
+            <option value="">Select time...</option>
+            <option value="Morning (9am–12pm)">Morning (9am–12pm)</option>
+            <option value="Afternoon (12pm–4pm)">Afternoon (12pm–4pm)</option>
+            <option value="Evening (4pm–7pm)">Evening (4pm–7pm)</option>
+          </select>
+        </div>
+      </div>
+      <label class="booking-consent" for="bookingSmsConsent">
+        <input type="checkbox" id="bookingSmsConsent" />
+        <span>Optional: I agree to receive SMS messages from Evermore Life about my quote request and appointment reminders. Message and data rates may apply. Message frequency varies. Reply STOP to opt out, HELP for help. Consent is not a condition of purchase. See <a href="../current/privacy.html" target="_blank">Privacy Policy</a> and <a href="../current/terms.html" target="_blank">Terms</a>.</span>
+      </label>
+      <button class="btn-book" onclick="submitBooking()"><span>📋 Book My Free Consultation</span></button>
+      <div class="trust-badges">
+        <div class="badge"><span class="badge-icon">🔒</span> 100% Confidential</div>
+        <div class="badge"><span class="badge-icon">✅</span> No Obligation</div>
+        <div class="badge"><span class="badge-icon">⚡</span> 15-Min Call</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 4: CONFIRMATION ===== -->
+<div id="screen-confirm" class="screen">
+  <div class="confirm-card">
+    <div class="sarah-thumbsup">👍</div>
+    <div class="confirm-check" id="confirmCheck">✓</div>
+    <h2 id="confirmTitle">You're all set!</h2>
+    <p id="confirmMsg">One of our licensed Evermore Life agents will be in touch shortly to confirm your appointment.</p>
+    <div class="confirm-details" id="confirmDetails"></div>
+    <p style="font-size:12px;color:#aaa;margin-bottom:16px;">Check your email for a confirmation. We look forward to helping protect your family.</p>
+    <button class="btn-done" onclick="restartApp()">← Start Over</button>
+  </div>
+</div>
+
+<script>
+  window.EVERMORE_CONFIG = window.EVERMORE_CONFIG || {
+    ghlWebhookUrl: '',
+    ghlCalendarUrl: '',
+    thankYouUrl: 'thank-you.html'
+  };
+
+  // ===== LEAD DATA OBJECT (collected throughout conversation) =====
+  // INTEGRATION POINT 2: On booking submit, this object is sent to GoHighLevel webhook
+  const leadData = {
+    topic: null,
+    age: null,
+    health: null,
+    coverageGoal: null,
+    beneficiary: null,
+    smoker: null,
+    firstName: null,
+    lastName: null,
+    phone: null,
+    email: null,
+    preferredDate: null,
+    preferredTime: null,
+    smsConsent: 'no',
+    smsConsentText: '',
+    smsConsentTimestamp: '',
+    source: 'Sarah AI Assistant',
+    timestamp: null
+  };
+
+  // ===== CONVERSATION STATE =====
+  let conversationStep = 0;
+  let waitingForBooking = false;
+  let extraQuestionsCount = 0;
+  let typingTimeout = null;
+
+  function getTrackingFields() {
+    const params = new URLSearchParams(window.location.search);
+    const tracking = {};
+    ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(key => {
+      const value = params.get(key);
+      if (value) tracking[key] = value;
+    });
+    tracking.page_url = window.location.href;
+    tracking.referrer = document.referrer || '';
+    return tracking;
+  }
+
+  function isLocalPreview() {
+    return window.location.protocol === 'file:' || ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+  }
+
+  async function sendLeadToGHL(data) {
+    const webhook = window.EVERMORE_CONFIG.ghlWebhookUrl;
+    if (!webhook) {
+      if (isLocalPreview()) {
+        const previewLeads = JSON.parse(localStorage.getItem('evermore_preview_leads') || '[]');
+        previewLeads.push(data);
+        localStorage.setItem('evermore_preview_leads', JSON.stringify(previewLeads));
+        return { preview: true };
+      }
+      throw new Error('Lead webhook is not connected yet. Add your GHL inbound webhook URL to EVERMORE_CONFIG.ghlWebhookUrl.');
+    }
+
+    const response = await fetch(webhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) throw new Error('GHL webhook rejected the submission.');
+    return response;
+  }
+
+  // ===== SCREEN TRANSITIONS =====
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => {
+      s.classList.remove('active');
+    });
+    const el = document.getElementById(id);
+    el.classList.add('active');
+  }
+
+  async function startChat() {
+    showScreen('screen-chat');
+    const openingMsg = await getOpeningMessage();
+    setTimeout(() => sarahSay(openingMsg, buildTopicButtons()), 800);
+  }
+
+  // ===== SARAH MESSAGES =====
+  function sarahSay(text, extras, delay) {
+    delay = delay || 600;
+    showTyping();
+    setTimeout(() => {
+      hideTyping();
+      appendMessage('sarah', text);
+      if (extras) {
+        setTimeout(() => appendExtras(extras), 300);
+      }
+    }, delay);
+  }
+
+  function appendMessage(who, text) {
+    const msgs = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'msg msg-' + who;
+    const name = who === 'sarah' ? '<div class="msg-name">Sarah</div>' : '<div class="msg-name" style="text-align:right;">You</div>';
+    div.innerHTML = name + '<div class="msg-bubble">' + text + '</div>';
+    msgs.insertBefore(div, document.getElementById('typingIndicator'));
+    scrollToBottom();
+  }
+
+  function appendExtras(extras) {
+    const msgs = document.getElementById('chatMessages');
+    msgs.insertBefore(extras, document.getElementById('typingIndicator'));
+    scrollToBottom();
+  }
+
+  function scrollToBottom() {
+    const msgs = document.getElementById('chatMessages');
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function showTyping() {
+    document.getElementById('typingIndicator').classList.add('visible');
+    scrollToBottom();
+  }
+
+  function hideTyping() {
+    document.getElementById('typingIndicator').classList.remove('visible');
+  }
+
+  // ===== QUICK REPLY BUTTONS =====
+  function buildTopicButtons() {
+    const wrap = document.createElement('div');
+    wrap.className = 'quick-replies';
+    const options = [
+      { label: '🛡️ Final expense insurance', val: 'Final Expense Insurance' },
+      { label: '👨‍👩‍👧 Protect my family', val: 'Family Protection' },
+      { label: '💰 Life insurance options', val: 'General Life Insurance' },
+      { label: '❓ I just have questions', val: 'General Questions' }
+    ];
+    options.forEach(o => {
+      const btn = document.createElement('button');
+      btn.className = 'qr-btn';
+      btn.textContent = o.label;
+      btn.onclick = () => {
+        disableQuickReplies(wrap);
+        leadData.topic = o.val;
+        appendMessage('user', o.label);
+        handleTopicSelected(o.val);
+      };
+      wrap.appendChild(btn);
+    });
+    return wrap;
+  }
+
+  function buildHealthButtons() {
+    const wrap = document.createElement('div');
+    wrap.className = 'quick-replies';
+    ['Excellent', 'Good', 'Fair', 'Poor'].forEach(h => {
+      const btn = document.createElement('button');
+      btn.className = 'qr-btn';
+      btn.textContent = h;
+      btn.onclick = () => {
+        disableQuickReplies(wrap);
+        leadData.health = h;
+        appendMessage('user', h);
+        handleHealthSelected(h);
+      };
+      wrap.appendChild(btn);
+    });
+    return wrap;
+  }
+
+  function buildYesNoButtons(onYes, onNo) {
+    const wrap = document.createElement('div');
+    wrap.className = 'quick-replies';
+    [['✅ Yes, let\'s book!', onYes], ['🤔 Not quite yet', onNo]].forEach(([label, fn]) => {
+      const btn = document.createElement('button');
+      btn.className = 'qr-btn';
+      btn.textContent = label;
+      btn.onclick = () => {
+        disableQuickReplies(wrap);
+        appendMessage('user', label);
+        fn();
+      };
+      wrap.appendChild(btn);
+    });
+    return wrap;
+  }
+
+  function disableQuickReplies(wrap) {
+    wrap.querySelectorAll('.qr-btn').forEach(b => b.disabled = true);
+  }
+
+
+  // ===== CLAUDE API — LIVE INTELLIGENCE =====
+  // NOTE: Direct browser API calls are blocked by CORS when running as a local file.
+  // Configure a backend proxy or deploy to a server to enable live AI responses.
+  // The assistant uses polished built-in scripts below as the local fallback.
+  async function callClaudeAPI(context) {
+    // Disabled for local file use — always returns null to trigger fallback scripts
+    return null;
+  }
+  // ===== END CLAUDE API =====
+
+  // ===== OPENING MESSAGE =====
+  async function getOpeningMessage() {
+    return "Great — welcome! I'm so glad you stopped by. 😊<br><br>To help me point you in the right direction, <strong>what brings you here today?</strong>";
+  }
+
+  // ===== CONVERSATION FLOW =====
+  function handleTopicSelected(topic) {
+    updateProgress(2);
+    let response = '';
+    if (topic.includes('Final Expense')) {
+      response = "Final expense insurance is one of the most thoughtful things you can do for your family — it means they won't have to worry about funeral costs or end-of-life expenses during an already hard time.<br><br>I just need to gather a little info to find the best options for you. <strong>How old are you?</strong>";
+    } else if (topic.includes('Family')) {
+      response = "Protecting your family is exactly what we're here for. There's nothing more important. 💛<br><br>Let me ask a few quick questions to find the right fit. <strong>How old are you?</strong>";
+    } else if (topic.includes('General Life')) {
+      response = "We have a range of options from term life to final expense and IUL (Indexed Universal Life) — something for every situation and budget.<br><br>Let's start simple. <strong>How old are you?</strong>";
+    } else {
+      response = "Of course — no pressure at all! That's what I'm here for. I'll do my best to answer everything clearly and honestly.<br><br>To make sure I give you the most relevant info, <strong>how old are you?</strong>";
+    }
+    conversationStep = 1;
+    sarahSay(response, null, 1000);
+    document.getElementById('chatInput').focus();
+  }
+
+  function handleAgeInput(age) {
+    leadData.age = age;
+    updateProgress(3);
+    const ageNum = parseInt(age);
+    let response = '';
+    if (ageNum < 50) {
+      response = "Great — at " + age + ", you have excellent options available! Term life and IUL policies at your age are very affordable.<br><br>How would you describe your overall health?";
+    } else if (ageNum <= 70) {
+      response = "Perfect — " + age + " is actually a very common age for people to start thinking about final expense coverage. Many of our best plans are designed right in your range.<br><br>How would you describe your overall health?";
+    } else {
+      response = "Thank you. At " + age + ", there are definitely still solid options — we work with carriers that don't require medical exams.<br><br>How would you describe your overall health?";
+    }
+    conversationStep = 2;
+    sarahSay(response, buildHealthButtons(), 1000);
+  }
+
+  function handleHealthSelected(health) {
+    updateProgress(4);
+    let response = '';
+    if (health === 'Excellent' || health === 'Good') {
+      response = "That's great to hear! " + health + " health may give you access to more carrier options. 🎉<br><br>One more question — is there a <strong>coverage amount</strong> you have in mind? For example: $10,000 for final expenses, $25,000, $50,000, or more for family protection?";
+    } else {
+      response = "No worries at all — we work with many carriers who consider different health situations. Some guaranteed-issue options may not require a medical exam.<br><br>Roughly, is there a <strong>coverage amount</strong> you have in mind? (e.g. $10,000 / $25,000 / $50,000+)";
+    }
+    conversationStep = 3;
+    sarahSay(response, null, 1000);
+  }
+
+  function handleCoverageInput(coverage) {
+    leadData.coverageGoal = coverage;
+    updateProgress(5);
+    conversationStep = 4;
+    const response = "Perfect — " + coverage + " is a great goal to have in mind. Based on everything you've shared, I think we can find you some really solid options. 💪<br><br>Would you like to speak with one of our <strong>licensed Evermore Life agents</strong>? The call is free, no obligation, and usually only takes 15 minutes.";
+    sarahSay(response, buildYesNoButtons(goToBooking, handleNotYet), 1200);
+  }
+
+  function handleNotYet() {
+    extraQuestionsCount++;
+    waitingForBooking = true;
+    if (extraQuestionsCount === 1) {
+      conversationStep = 5;
+      sarahSay("Totally understand — no rush at all! I do have a couple more questions that can help me give you better info.<br><br>Do you have a <strong>spouse or dependents</strong> you're looking to cover as well, or is this coverage primarily for yourself?", null, 800);
+    } else if (extraQuestionsCount === 2) {
+      conversationStep = 6;
+      sarahSay("That helps a lot, thank you!<br><br>Last question — are you currently a <strong>smoker or tobacco user</strong>? (This affects your rate options, but we have great plans either way)", null, 800);
+    } else {
+      sarahSay("I appreciate you sharing all of this! I've got a really clear picture now, and I genuinely think a quick 15-minute call with one of our agents would be worth your time — they can give you exact quotes and answer anything I can't.<br><br>Would you be open to scheduling that free call?", buildYesNoButtons(goToBooking, () => {
+        sarahSay("Absolutely no pressure. If you change your mind, we're always here! Is there anything else I can help answer for you today? 😊", null, 800);
+        conversationStep = 0;
+        waitingForBooking = false;
+      }), 1000);
+    }
+  }
+
+  function goToBooking() {
+    updateProgress(5, true);
+    sarahSay("Wonderful! I'm so glad. Let me pull up the booking form — just takes a second. 🗓️", null, 600);
+    setTimeout(() => {
+      populateDates();
+      showScreen('screen-booking');
+    }, 1800);
+  }
+
+  // ===== INPUT HANDLING =====
+  function handleKey(e) {
+    if (e.key === 'Enter') sendUserMessage();
+  }
+
+  function sendUserMessage() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    appendMessage('user', text);
+    processUserInput(text);
+  }
+
+  function processUserInput(text) {
+    // INTEGRATION POINT 1: Replace the switch below with a call to Claude/ChatGPT API
+    // Send conversationStep + leadData + text to AI, get back a response
+    // Example: callClaudeAPI({ step: conversationStep, leadData, userMessage: text })
+
+    switch (conversationStep) {
+      case 1:
+        const ageMatch = text.match(/\d+/);
+        if (ageMatch) {
+          handleAgeInput(ageMatch[0]);
+        } else {
+          sarahSay("I just need your age — feel free to just type a number like <strong>58</strong> or <strong>42</strong> 😊", null, 600);
+        }
+        break;
+      case 3:
+        handleCoverageInput(text);
+        break;
+      case 5:
+        leadData.beneficiary = text;
+        extraQuestionsCount = 1;
+        handleNotYet();
+        break;
+      case 6:
+        leadData.smoker = text.toLowerCase().includes('no') ? 'No' : 'Yes / Sometimes';
+        extraQuestionsCount = 2;
+        handleNotYet();
+        break;
+      default:
+        sarahSay("That's helpful, thank you! Is there anything specific about life insurance I can explain further, or are you ready to book a quick free call with one of our agents?", buildYesNoButtons(goToBooking, () => {
+          sarahSay("Of course! Feel free to ask me anything. I'm here to help. 😊", null, 600);
+        }), 800);
+    }
+  }
+
+  // ===== PROGRESS TRACKER =====
+  function updateProgress(activeStep, complete) {
+    for (let i = 1; i <= 5; i++) {
+      const el = document.getElementById('step-' + i);
+      el.classList.remove('active', 'done');
+      if (i < activeStep) el.classList.add('done');
+      else if (i === activeStep) el.classList.add('active');
+    }
+    const dot = document.querySelector('#step-' + activeStep + ' .prog-dot');
+    if (dot) dot.textContent = activeStep < activeStep ? '✓' : activeStep;
+    // Mark done steps with checkmark
+    for (let i = 1; i < activeStep; i++) {
+      const d = document.querySelector('#step-' + i + ' .prog-dot');
+      if (d) d.textContent = '✓';
+    }
+  }
+
+  // ===== BOOKING FORM =====
+  function populateDates() {
+    const sel = document.getElementById('prefDate');
+    sel.innerHTML = '<option value="">Select a date...</option>';
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    for (let i = 1; i <= 7; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() + i);
+      const label = days[d.getDay()] + ', ' + months[d.getMonth()] + ' ' + d.getDate();
+      const val = label;
+      const opt = document.createElement('option');
+      opt.value = val;
+      opt.textContent = label;
+      sel.appendChild(opt);
+    }
+  }
+
+  async function submitBooking() {
+    const fn = document.getElementById('firstName').value.trim();
+    const ln = document.getElementById('lastName').value.trim();
+    const ph = document.getElementById('phone').value.trim();
+    const em = document.getElementById('email').value.trim();
+    const dt = document.getElementById('prefDate').value;
+    const tm = document.getElementById('prefTime').value;
+    const smsConsent = document.getElementById('bookingSmsConsent').checked;
+    const button = document.querySelector('.btn-book');
+
+    if (!fn || !ln || !ph || !em || !dt || !tm) {
+      alert('Please fill in all fields to book your consultation.');
+      return;
+    }
+
+    leadData.firstName = fn;
+    leadData.lastName = ln;
+    leadData.phone = ph;
+    leadData.email = em;
+    leadData.preferredDate = dt;
+    leadData.preferredTime = tm;
+    leadData.timestamp = new Date().toISOString();
+    leadData.smsConsent = smsConsent ? 'yes' : 'no';
+    leadData.smsConsentText = smsConsent ? 'Optional SMS quote follow-up and appointment reminders. STOP to opt out. HELP for help. Consent is not a condition of purchase.' : '';
+    leadData.smsConsentTimestamp = smsConsent ? new Date().toISOString() : '';
+    Object.assign(leadData, getTrackingFields(), { lead_type: 'sarah-booking' });
+
+    button.disabled = true;
+    button.querySelector('span').textContent = 'Submitting...';
+
+    try {
+      await sendLeadToGHL(leadData);
+      if (typeof fbq !== 'undefined') fbq('track', 'Schedule', { content_name: 'Sarah Booking', content_category: 'Insurance Lead' });
+      if (typeof gtag !== 'undefined') gtag('event', 'generate_lead', { event_category: 'Lead', event_label: 'Sarah Booking' });
+      showConfirmation();
+    } catch (error) {
+      alert(error.message + ' If this is a live visitor, ask them to call or email Evermore Life directly.');
+      button.disabled = false;
+      button.querySelector('span').textContent = '📋 Book My Free Consultation';
+    }
+  }
+
+  function showConfirmation() {
+    document.getElementById('confirmTitle').textContent = 'You\'re all set, ' + leadData.firstName + '! 🎉';
+    document.getElementById('confirmMsg').textContent =
+      'One of our licensed Evermore Life agents will call you to confirm your appointment. We can\'t wait to help protect your family.';
+
+    const details = document.getElementById('confirmDetails');
+    details.innerHTML = `
+      <div class="confirm-detail-row">
+        <span class="label">Name</span>
+        <span class="value">${leadData.firstName} ${leadData.lastName}</span>
+      </div>
+      <div class="confirm-detail-row">
+        <span class="label">Phone</span>
+        <span class="value">${leadData.phone}</span>
+      </div>
+      <div class="confirm-detail-row">
+        <span class="label">Date</span>
+        <span class="value">${leadData.preferredDate}</span>
+      </div>
+      <div class="confirm-detail-row">
+        <span class="label">Time</span>
+        <span class="value">${leadData.preferredTime}</span>
+      </div>
+      <div class="confirm-detail-row">
+        <span class="label">Topic</span>
+        <span class="value">${leadData.topic || 'Life Insurance'}</span>
+      </div>
+    `;
+
+    showScreen('screen-confirm');
+  }
+
+  function restartApp() {
+    // Reset all state
+    Object.keys(leadData).forEach(k => leadData[k] = null);
+    leadData.source = 'Sarah AI Assistant';
+    leadData.smsConsent = 'no';
+    leadData.smsConsentText = '';
+    leadData.smsConsentTimestamp = '';
+    conversationStep = 0;
+    waitingForBooking = false;
+    extraQuestionsCount = 0;
+
+    // Clear chat
+    const msgs = document.getElementById('chatMessages');
+    const typing = document.getElementById('typingIndicator');
+    msgs.innerHTML = '';
+    msgs.appendChild(typing);
+
+    // Reset progress
+    updateProgress(1);
+
+    showScreen('screen-office');
+  }
+
+  // Init
+  updateProgress(1);
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{
+  "brand": "Evermore Life",
+  "domain": "https://evermorelife.org",
+  "pages": [
+    {
+      "name": "Home",
+      "path": "/",
+      "source": "snippets/home-copy.md",
+      "primaryCta": "/optin"
+    },
+    {
+      "name": "Opt-In",
+      "path": "/optin",
+      "source": "snippets/optin-copy.md",
+      "form": "Evermore Life Quote Request",
+      "a2pProofPage": true
+    },
+    {
+      "name": "Thank You",
+      "path": "/thank-you",
+      "source": "snippets/thank-you-copy.md",
+      "conversionPage": true
+    },
+    {
+      "name": "Privacy Policy",
+      "path": "/privacy",
+      "source": "snippets/privacy-copy.md",
+      "a2pRequired": true
+    },
+    {
+      "name": "Terms of Service",
+      "path": "/terms",
+      "source": "snippets/terms-copy.md",
+      "a2pRequired": true
+    }
+  ],
+  "form": {
+    "name": "Evermore Life Quote Request",
+    "redirect": "/thank-you",
+    "fields": [
+      { "label": "First Name", "type": "contact.first_name", "required": true },
+      { "label": "Last Name", "type": "contact.last_name", "required": true },
+      { "label": "Phone Number", "type": "contact.phone", "required": true },
+      { "label": "Email Address", "type": "contact.email", "required": false },
+      { "label": "Age", "type": "custom.number", "required": true },
+      { "label": "State", "type": "custom.dropdown", "required": true },
+      { "label": "Coverage Type Interested In", "type": "custom.dropdown", "required": false },
+      {
+        "label": "SMS Consent",
+        "type": "custom.checkbox",
+        "required": false,
+        "prechecked": false,
+        "copy": "Optional: I consent to receive SMS text messages from Evermore Life about my quote request, appointment reminders, and insurance information. Msg & data rates may apply. Message frequency varies. Reply STOP to opt out, HELP for help. Consent is not a condition of purchase."
+      }
+    ]
+  },
+  "workflow": {
+    "name": "Evermore Website Lead Intake",
+    "trigger": "Form Submitted: Evermore Life Quote Request",
+    "pipeline": "Evermore Life Sales",
+    "initialStage": "New Lead",
+    "tags": ["evermore-life-lead", "website-lead"],
+    "smsBeforeA2pApproval": false
+  },
+  "a2p": {
+    "optInUrl": "https://evermorelife.org/optin",
+    "privacyUrl": "https://evermorelife.org/privacy",
+    "termsUrl": "https://evermorelife.org/terms",
+    "useCase": "Requested life insurance quote follow-up and appointment reminders"
+  }
+}

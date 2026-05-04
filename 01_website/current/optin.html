@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get a Free Quote | Evermore Life</title>
+  <meta name="description" content="Get a free, no-obligation quote from Evermore Life. Final expense, term life, IUL, whole life, mortgage protection, and annuity options tailored to your needs." />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: #1a1a2e; background: #f7f9fc; }
+    nav {
+      background: #0d1b4b; padding: 16px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { color: #fff; font-size: 1.5rem; font-weight: 800; text-decoration: none; }
+    .nav-logo span { color: #c8a96e; }
+    .nav-back { color: #9aafce; text-decoration: none; font-size: 0.9rem; }
+    .nav-back:hover { color: #c8a96e; }
+
+    .page-wrap {
+      display: flex; min-height: calc(100vh - 65px);
+      align-items: stretch;
+    }
+
+    /* LEFT PANEL */
+    .left-panel {
+      background: linear-gradient(160deg, #0d1b4b 0%, #1a3070 100%);
+      color: #fff;
+      flex: 1;
+      padding: 70px 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .left-panel h1 { font-size: 2.2rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; }
+    .left-panel h1 span { color: #c8a96e; }
+    .left-panel p { color: #9aafce; font-size: 1rem; line-height: 1.7; margin-bottom: 36px; max-width: 420px; }
+    .trust-points { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .trust-points li { display: flex; align-items: flex-start; gap: 12px; font-size: 0.95rem; color: #cdd8ec; line-height: 1.5; }
+    .trust-points li .check { color: #c8a96e; font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
+    .carriers { margin-top: 40px; }
+    .carriers p { color: #6b7c99; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    .carrier-logos { display: flex; gap: 14px; flex-wrap: wrap; }
+    .carrier-pill {
+      background: rgba(255,255,255,0.08);
+      color: #9aafce;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    /* RIGHT PANEL - FORM */
+    .right-panel {
+      flex: 1;
+      padding: 60px 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f7f9fc;
+    }
+    .form-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 48px 40px;
+      box-shadow: 0 4px 30px rgba(13,27,75,0.10);
+      width: 100%;
+      max-width: 560px;
+    }
+    .form-card h2 { font-size: 1.5rem; font-weight: 800; color: #0d1b4b; margin-bottom: 6px; }
+    .form-card .sub { font-size: 0.9rem; color: #6b7c99; margin-bottom: 30px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 0.88rem; font-weight: 600; color: #0d1b4b; margin-bottom: 6px; }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid #d0d8e8;
+      border-radius: 8px;
+      font-size: 0.97rem;
+      color: #1a1a2e;
+      background: #fff;
+      transition: border-color 0.2s;
+      outline: none;
+      appearance: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus { border-color: #0d1b4b; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .consent-box {
+      background: #f0f5ff;
+      border: 1px solid #c8d8f0;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin: 20px 0;
+    }
+    .consent-check { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+    .consent-check input[type="checkbox"] { width: 17px; height: 17px; flex-shrink: 0; margin-top: 2px; accent-color: #0d1b4b; cursor: pointer; }
+    .consent-check label { font-size: 0.82rem; color: #3d4a5c; line-height: 1.5; cursor: pointer; }
+    .consent-check label a { color: #0d1b4b; font-weight: 700; }
+    .sms-disclosure {
+      font-size: 0.77rem;
+      color: #7a8ba0;
+      line-height: 1.5;
+    }
+    .sms-disclosure a { color: #0d1b4b; font-weight: 600; }
+
+    .submit-btn {
+      width: 100%;
+      background: #0d1b4b;
+      color: #fff;
+      border: none;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 4px;
+    }
+    .submit-btn:hover { background: #1a3070; transform: translateY(-1px); }
+    .form-footer { text-align: center; margin-top: 14px; font-size: 0.8rem; color: #9aafce; }
+    .ghl-main-form {
+      width: 100%;
+      min-height: 944px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .ghl-main-form iframe { display: block; min-height: 944px; }
+
+    /* THANK YOU STATE */
+    .thank-you { display: none; text-align: center; padding: 20px 0; }
+    .thank-you .icon { font-size: 3.5rem; margin-bottom: 16px; }
+    .thank-you h3 { font-size: 1.5rem; font-weight: 800; color: #0d1b4b; margin-bottom: 10px; }
+    .thank-you p { font-size: 0.95rem; color: #6b7c99; line-height: 1.6; }
+
+    footer {
+      background: #0a1238; color: #9aafce;
+      padding: 24px 40px; text-align: center; font-size: 0.82rem;
+    }
+    footer a { color: #c8a96e; text-decoration: none; margin: 0 8px; }
+
+    @media (max-width: 900px) {
+      .page-wrap { flex-direction: column; }
+      .left-panel { padding: 50px 28px; }
+      .right-panel { padding: 40px 20px; }
+      .form-card { padding: 36px 24px; }
+    }
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      nav { padding: 14px 20px; }
+      footer { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="https://evermorelife.org/home" class="nav-logo">Evermore <span>Life</span></a>
+  <a href="https://evermorelife.org/home" class="nav-back">← Back to Home</a>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <h1>Your Free Quote<br/><span>Takes 60 Seconds</span></h1>
+    <p>Tell us a little about yourself and a licensed Evermore Life agent will reach out with your best options — no pressure, no obligation.</p>
+    <ul class="trust-points">
+      <li><span class="check">✓</span> We compare 5 top-rated carriers to review your options</li>
+      <li><span class="check">✓</span> No medical exam required for many plans</li>
+      <li><span class="check">✓</span> Final expense, term, IUL, whole life, mortgage protection &amp; annuities</li>
+      <li><span class="check">✓</span> 100% free — no obligation to purchase</li>
+      <li><span class="check">✓</span> Licensed agents only, no high-pressure sales</li>
+    </ul>
+    <div class="carriers">
+      <p>Carriers we work with include</p>
+      <div class="carrier-logos">
+        <span class="carrier-pill">Mutual of Omaha</span>
+        <span class="carrier-pill">Ethos Life</span>
+        <span class="carrier-pill">American Amicable</span>
+        <span class="carrier-pill">Transamerica</span>
+        <span class="carrier-pill">Aetna</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="form-card">
+
+      <!-- FORM STATE -->
+      <div id="form-state">
+        <h2>Get Your Free Quote</h2>
+        <p class="sub">Fill out the form below — a licensed agent will be in touch shortly.</p>
+
+        <div class="ghl-main-form">
+          <iframe
+            src="https://api.leadconnectorhq.com/widget/form/jSPWmsXtRRndruYCzYsk"
+            style="width:100%;height:944px;border:none;border-radius:8px"
+            id="inline-jSPWmsXtRRndruYCzYsk"
+            data-layout="{'id':'INLINE'}"
+            data-trigger-type="alwaysShow"
+            data-trigger-value=""
+            data-activation-type="alwaysActivated"
+            data-activation-value=""
+            data-deactivation-type="neverDeactivate"
+            data-deactivation-value=""
+            data-form-name="Evermore Life Lead Form - Main Opt-In"
+            data-height="944"
+            data-layout-iframe-id="inline-jSPWmsXtRRndruYCzYsk"
+            data-form-id="jSPWmsXtRRndruYCzYsk"
+            title="Evermore Life Lead Form - Main Opt-In">
+          </iframe>
+        </div>
+      </div>
+
+      <!-- THANK YOU STATE -->
+      <div class="thank-you" id="thank-you">
+        <div class="icon">✅</div>
+        <h3>You're All Set!</h3>
+        <p>Thanks for reaching out. A licensed Evermore Life agent will contact you within 1 business day to discuss your coverage options.<br/><br/>In the meantime, feel free to <a href="https://evermorelife.org/home">explore our products</a>.</p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 Evermore Life. All rights reserved.</p>
+  <p style="margin-top:10px;">
+    Evermore Life LLC · 4539 N 22ND ST, STE R, Phoenix, Arizona 85016 ·
+    <a href="tel:+15055043101">+1 505-504-3101</a> ·
+    <a href="mailto:evermorelifeagent01@gmail.com">evermorelifeagent01@gmail.com</a>
+  </p>
+  <p style="margin-top:10px;">
+    <a href="https://evermorelife.org/home">Home</a>
+    <a href="https://evermorelife.org/privacypolicy">Privacy Policy</a>
+    <a href="https://evermorelife.org/terms">Terms of Service</a>
+  </p>
+</footer>
+
+<script src="https://link.msgsndr.com/js/form_embed.js"></script>
+</body>
+</html>

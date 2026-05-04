@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=5120, initial-scale=1.0">
+<title>EVERMORE LIFE — VISION PRO COMMAND FIELD</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --navy: #0D1B3E;
+    --gold: #C9A84C;
+    --gold-dim: #8B6E2A;
+    --gold-glow: rgba(201,168,76,0.15);
+    --bg: #05070E;
+    --bg2: #0A0D18;
+    --bg3: #0F1422;
+    --bg4: #141828;
+    --text: #C8D4F0;
+    --text-dim: #4A5878;
+    --text-bright: #E8F0FF;
+    --border: rgba(201,168,76,0.18);
+    --border-bright: rgba(201,168,76,0.4);
+    --cyan: #00F5FF;
+    --cyan-dim: rgba(0,245,255,0.15);
+    --green: #22C55E;
+    --lgreen: rgba(34,197,94,0.12);
+    --blue: #60A5FA;
+    --lblue: rgba(96,165,250,0.12);
+    --yellow: #C9A84C;
+    --lyellow: rgba(201,168,76,0.1);
+    --red: #F87171;
+    --lred: rgba(248,113,113,0.1);
+  }
+
+  html {
+    width: 5120px;
+    min-width: 5120px;
+    height: 1440px;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Courier New', monospace;
+  }
+
+  body {
+    width: 100%;
+    height: 1440px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* SCANLINES */
+  body::after {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:9999;
+    background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.025) 3px, rgba(0,0,0,0.025) 6px);
+  }
+
+  /* ═══ TOP BAR ═══ */
+  .topbar {
+    height: 88px;
+    min-height: 88px;
+    background: linear-gradient(135deg, #080D1A, #0D1530);
+    border-bottom: 1px solid var(--border-bright);
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    gap: 32px;
+    box-shadow: 0 2px 40px rgba(201,168,76,0.12);
+    flex-shrink: 0;
+  }
+  .topbar-logo {
+    font-size: 28px; font-weight: 900; letter-spacing: 0.3em;
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(201,168,76,0.5), 0 0 60px rgba(201,168,76,0.2);
+    white-space: nowrap;
+  }
+  .topbar-sub { font-size: 11px; letter-spacing: 0.18em; color: var(--text-dim); margin-top: 4px; }
+  .topbar-divider { width: 1px; height: 48px; background: var(--border); flex-shrink: 0; }
+  .topbar-stat {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 0 24px;
+  }
+  .stat-val { font-size: 22px; font-weight: 900; color: var(--gold); letter-spacing: 0.05em; }
+  .stat-label { font-size: 9px; letter-spacing: 0.15em; color: var(--text-dim); }
+  .topbar-spacer { flex: 1; }
+  .topbar-right { display: flex; align-items: center; gap: 16px; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 16px; border-radius: 3px;
+    font-size: 10px; font-weight: bold; letter-spacing: 0.12em; border: 1px solid;
+    white-space: nowrap;
+  }
+  .pill-live { background: var(--lgreen); border-color: var(--green); color: var(--green); }
+  .pill-kvn { background: var(--cyan-dim); border-color: rgba(0,245,255,0.4); color: var(--cyan); }
+  .pill-warn { background: var(--lyellow); border-color: var(--gold-dim); color: var(--gold); }
+  .blink { animation: blink 1.5s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+  .topbar-clock { font-size: 13px; color: var(--gold-dim); letter-spacing: 0.08em; text-align: right; line-height: 1.6; }
+
+  /* PROGRESS BAR */
+  .progress-bar-wrap {
+    height: 6px; flex-shrink: 0;
+    background: rgba(201,168,76,0.06);
+    border-bottom: 1px solid var(--border);
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    box-shadow: 0 0 12px rgba(201,168,76,0.5);
+    transition: width 0.6s;
+  }
+
+  /* ═══ MAIN GRID ═══ */
+  .main-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1100px 1fr 1380px;
+    gap: 0;
+    height: calc(1440px - 94px);
+    overflow: hidden;
+  }
+
+  /* ═══ PANEL BASE ═══ */
+  .panel {
+    display: flex; flex-direction: column;
+    border-right: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .panel:last-child { border-right: none; }
+  .panel-header {
+    padding: 14px 24px;
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    font-size: 10px; letter-spacing: 0.2em; color: var(--gold);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .panel-body { flex: 1; overflow-y: auto; padding: 16px 20px; }
+  .panel-body::-webkit-scrollbar { width: 3px; }
+  .panel-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* ═══ LEFT PANEL — MISSION CONTROL ═══ */
+  .left-panel { background: var(--bg2); }
+
+  /* KVN MINI CARD */
+  .kvn-mini {
+    background: linear-gradient(135deg, #070F18, #0A1525);
+    border: 1px solid rgba(0,245,255,0.2);
+    border-radius: 4px; padding: 14px 16px; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 14px;
+    box-shadow: 0 0 20px rgba(0,245,255,0.06);
+  }
+  .kvn-orb { width: 14px; height: 14px; background: var(--cyan); border-radius: 50%; box-shadow: 0 0 10px var(--cyan); animation: blink 2s infinite; flex-shrink: 0; }
+  .kvn-mini-name { font-size: 13px; font-weight: 900; letter-spacing: 0.2em; color: var(--cyan); }
+  .kvn-mini-url { font-size: 9px; color: #00A8B5; margin-top: 2px; }
+  .kvn-mini-url a { color: var(--cyan); text-decoration: none; }
+
+  /* SARAH MINI CARD */
+  .sarah-mini {
+    background: linear-gradient(135deg, #0A1520, #0D1B35);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 4px; padding: 14px 16px; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .sarah-orb { width: 14px; height: 14px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 10px var(--gold); animation: blink 2.5s infinite; flex-shrink: 0; }
+  .sarah-mini-name { font-size: 13px; font-weight: 900; letter-spacing: 0.18em; color: var(--gold); }
+  .sarah-mini-url { font-size: 9px; color: var(--gold-dim); margin-top: 2px; }
+  .sarah-mini-url a { color: var(--gold); text-decoration: none; }
+
+  /* STEP ROWS */
+  .step-section-label {
+    font-size: 9px; letter-spacing: 0.18em; color: var(--text-dim);
+    padding: 10px 0 6px; border-top: 1px solid rgba(201,168,76,0.08); margin-top: 4px;
+  }
+  .step-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 10px; border-radius: 4px; margin-bottom: 3px;
+    border: 1px solid transparent; cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .step-row:hover { background: var(--gold-glow); border-color: var(--border); }
+  .step-row.done { opacity: 0.55; }
+  .step-row.done .step-name { text-decoration: line-through; color: var(--text-dim); }
+  .step-row.active { background: var(--lblue); border-color: rgba(96,165,250,0.25); }
+  .step-num {
+    width: 26px; height: 26px; border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: bold; flex-shrink: 0; border: 1px solid;
+  }
+  .num-done { background: var(--lgreen); border-color: var(--green); color: var(--green); }
+  .num-active { background: var(--lblue); border-color: var(--blue); color: var(--blue); }
+  .num-pending { background: var(--lyellow); border-color: rgba(201,168,76,0.2); color: var(--gold-dim); }
+  .step-content { flex: 1; min-width: 0; }
+  .step-name { font-size: 12px; color: var(--text-bright); letter-spacing: 0.02em; line-height: 1.4; }
+  .step-sub { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+  .step-tag {
+    display: inline-block; font-size: 9px; letter-spacing: 0.1em;
+    padding: 2px 8px; border-radius: 2px; margin-top: 4px; font-weight: bold;
+  }
+  .tag-live { background: var(--lgreen); color: var(--green); }
+  .tag-ai { background: var(--cyan-dim); color: var(--cyan); }
+  .tag-active { background: var(--lblue); color: var(--blue); }
+  .tag-you { background: var(--lyellow); color: var(--gold); }
+
+  /* ═══ CENTER PANEL — EXECUTION HUB ═══ */
+  .center-panel { background: var(--bg); border-right: 1px solid var(--border); }
+  .center-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto 1fr;
+    gap: 16px;
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto;
+  }
+  .center-grid::-webkit-scrollbar { width: 3px; }
+  .center-grid::-webkit-scrollbar-thumb { background: var(--border); }
+
+  /* METRIC CARDS */
+  .metric-card {
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 4px;
+    padding: 18px 20px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .metric-card:hover { border-color: var(--gold); box-shadow: 0 0 16px var(--gold-glow); }
+  .metric-card.span2 { grid-column: span 2; }
+  .metric-label { font-size: 9px; letter-spacing: 0.18em; color: var(--text-dim); margin-bottom: 10px; }
+  .metric-value { font-size: 36px; font-weight: 900; color: var(--gold); line-height: 1; letter-spacing: -0.02em; }
+  .metric-value.cyan { color: var(--cyan); text-shadow: 0 0 15px rgba(0,245,255,0.3); }
+  .metric-value.green { color: var(--green); }
+  .metric-sub { font-size: 10px; color: var(--text-dim); margin-top: 6px; }
+  .metric-delta { font-size: 11px; color: var(--green); margin-top: 4px; font-weight: bold; }
+
+  /* FUNNEL VISUAL */
+  .funnel-card {
+    grid-column: span 2;
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 4px;
+    padding: 20px;
+  }
+  .funnel-stages { display: flex; gap: 8px; align-items: stretch; margin-top: 14px; }
+  .funnel-stage {
+    flex: 1; background: var(--bg4); border: 1px solid var(--border);
+    border-radius: 3px; padding: 14px 12px; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .funnel-stage::after {
+    content: '▶'; position: absolute; right: -14px; top: 50%;
+    transform: translateY(-50%); color: var(--text-dim); font-size: 12px; z-index: 2;
+  }
+  .funnel-stage:last-child::after { display: none; }
+  .funnel-stage-name { font-size: 9px; letter-spacing: 0.12em; color: var(--text-dim); margin-bottom: 8px; }
+  .funnel-stage-num { font-size: 24px; font-weight: 900; color: var(--gold); }
+  .funnel-stage-label { font-size: 9px; color: var(--text-dim); margin-top: 4px; }
+  .funnel-bar { height: 3px; background: var(--gold); border-radius: 2px; margin-top: 8px; box-shadow: 0 0 6px var(--gold); }
+
+  /* AD STATUS */
+  .ad-status-card {
+    grid-column: span 2;
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 4px;
+    padding: 18px 20px;
+  }
+  .ad-rows { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .ad-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: var(--bg4); border-radius: 3px; border: 1px solid rgba(201,168,76,0.08); }
+  .ad-status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot-pending { background: var(--gold-dim); }
+  .dot-ready { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .dot-live { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); animation: blink 2s infinite; }
+  .ad-name { font-size: 11px; color: var(--text); flex: 1; }
+  .ad-type { font-size: 9px; color: var(--text-dim); letter-spacing: 0.1em; }
+  .ad-cta { font-size: 9px; color: var(--gold-dim); }
+
+  /* INTEGRATION STATUS */
+  .integration-card {
+    grid-column: span 2;
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 4px;
+    padding: 18px 20px;
+  }
+  .int-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 12px; }
+  .int-item {
+    background: var(--bg4); border: 1px solid var(--border); border-radius: 3px;
+    padding: 12px; text-align: center;
+    transition: border-color 0.2s;
+  }
+  .int-item:hover { border-color: var(--gold); }
+  .int-icon { font-size: 20px; margin-bottom: 6px; }
+  .int-name { font-size: 9px; letter-spacing: 0.1em; color: var(--text-dim); margin-bottom: 4px; }
+  .int-status { font-size: 9px; font-weight: bold; }
+  .int-live { color: var(--green); }
+  .int-pending { color: var(--gold-dim); }
+  .int-building { color: var(--blue); }
+
+  /* ═══ RIGHT PANEL — INTELLIGENCE ═══ */
+  .right-panel { background: var(--bg2); display: flex; flex-direction: column; }
+
+  /* FILES */
+  .file-card {
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 3px;
+    padding: 11px 14px; margin-bottom: 7px;
+    display: flex; align-items: center; gap: 10px; cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .file-card:hover { border-color: var(--gold); box-shadow: 0 0 10px var(--gold-glow); }
+  .file-icon { font-size: 16px; flex-shrink: 0; width: 24px; text-align: center; }
+  .file-info { flex: 1; min-width: 0; }
+  .file-name { font-size: 11px; color: var(--gold); letter-spacing: 0.03em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .file-desc { font-size: 9px; color: var(--text-dim); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .file-st { font-size: 9px; font-weight: bold; flex-shrink: 0; }
+  .fst-live { color: var(--green); }
+  .fst-ready { color: var(--blue); }
+  .fst-ai { color: var(--cyan); }
+
+  /* NEXT ACTIONS */
+  .action-item {
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 3px;
+    padding: 12px 14px; margin-bottom: 7px;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .action-num { width: 20px; height: 20px; background: var(--lyellow); border: 1px solid rgba(201,168,76,0.3); border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: var(--gold); flex-shrink: 0; margin-top: 1px; }
+  .action-text { font-size: 11px; color: var(--text); line-height: 1.5; }
+  .action-sub { font-size: 9px; color: var(--text-dim); margin-top: 2px; }
+
+  /* RIGHT PANEL SPLIT */
+  .right-top { flex: 1; overflow: hidden; display: flex; flex-direction: column; border-bottom: 1px solid var(--border); }
+  .right-bottom { height: 420px; flex-shrink: 0; overflow: hidden; display: flex; flex-direction: column; }
+
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div>
+    <div class="topbar-logo">⬡ EVERMORE LIFE</div>
+    <div class="topbar-sub">MISSION COMMAND FIELD · VISION PRO ULTRAWIDE</div>
+  </div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-stat"><div class="stat-val" id="steps-done">3</div><div class="stat-label">STEPS DONE</div></div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-stat"><div class="stat-val" id="steps-left">7</div><div class="stat-label">REMAINING</div></div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-stat"><div class="stat-val">2</div><div class="stat-label">SYSTEMS LIVE</div></div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-stat"><div class="stat-val cyan" style="color:var(--cyan);text-shadow:0 0 10px var(--cyan);">0</div><div class="stat-label">LEADS TODAY</div></div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-stat"><div class="stat-val green" style="color:var(--green);">0</div><div class="stat-label">APPTS SET</div></div>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-right">
+    <span class="pill pill-kvn"><span class="blink">●</span> KVN ONLINE</span>
+    <span class="pill pill-live"><span class="blink">●</span> SARAH AI LIVE</span>
+    <span class="pill pill-warn">⚡ STEP 4 NEXT</span>
+    <div class="topbar-divider"></div>
+    <div class="topbar-clock" id="clock">--</div>
+  </div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar-wrap">
+  <div class="progress-bar-fill" id="prog-fill" style="width:30%"></div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="main-grid">
+
+  <!-- ═══ LEFT — MISSION CONTROL ═══ -->
+  <div class="panel left-panel">
+    <div class="panel-header">
+      <span>⬡ MISSION CONTROL — 10-STEP LAUNCH</span>
+      <span id="prog-pct" style="color:var(--text-dim);font-size:9px;">30% COMPLETE</span>
+    </div>
+    <div class="panel-body">
+
+      <div class="kvn-mini">
+        <div class="kvn-orb"></div>
+        <div>
+          <div class="kvn-mini-name">KVN ✓ ONLINE</div>
+          <div class="kvn-mini-url"><a href="https://kvn-agent.newmexicomarketingpartners.workers.dev" target="_blank">kvn-agent.newmexicomarketingpartners.workers.dev</a></div>
+        </div>
+      </div>
+
+      <div class="sarah-mini">
+        <div class="sarah-orb"></div>
+        <div>
+          <div class="sarah-mini-name">SARAH AI ✓ LIVE + AI-POWERED</div>
+          <div class="sarah-mini-url"><a href="https://sarah-evermore.newmexicomarketingpartners.workers.dev" target="_blank">sarah-evermore.newmexicomarketingpartners.workers.dev</a></div>
+        </div>
+      </div>
+
+      <div class="step-section-label">INFRASTRUCTURE</div>
+
+      <div class="step-row done" onclick="toggleStep(this,1)">
+        <div class="step-num num-done">✓</div>
+        <div class="step-content">
+          <div class="step-name">Deploy KVN to live URL</div>
+          <div class="step-sub">Cloudflare Workers · 3D robot agent</div>
+          <span class="step-tag tag-live">✓ LIVE</span>
+        </div>
+      </div>
+
+      <div class="step-row done" onclick="toggleStep(this,2)">
+        <div class="step-num num-done">✓</div>
+        <div class="step-content">
+          <div class="step-name">Deploy Sarah AI to live URL</div>
+          <div class="step-sub">Cloudflare Workers · prospect qualifier</div>
+          <span class="step-tag tag-live">✓ LIVE</span>
+        </div>
+      </div>
+
+      <div class="step-row done" onclick="toggleStep(this,3)">
+        <div class="step-num num-done">✓</div>
+        <div class="step-content">
+          <div class="step-name">Claude API hardwired into Sarah</div>
+          <div class="step-sub">Real AI responses · key locked in</div>
+          <span class="step-tag tag-ai">✓ AI POWERED</span>
+        </div>
+      </div>
+
+      <div class="step-section-label">CRM + TRACKING</div>
+
+      <div class="step-row active" onclick="toggleStep(this,4)">
+        <div class="step-num num-active">4</div>
+        <div class="step-content">
+          <div class="step-name">GoHighLevel — pipeline + webhook</div>
+          <div class="step-sub">Already have GHL · connect webhook URL</div>
+          <span class="step-tag tag-active">⟳ NEXT UP</span>
+        </div>
+      </div>
+
+      <div class="step-row" onclick="toggleStep(this,5)">
+        <div class="step-num num-pending">5</div>
+        <div class="step-content">
+          <div class="step-name">Wire GHL webhook into Sarah</div>
+          <div class="step-sub">Paste webhook URL into Sarah HTML</div>
+          <span class="step-tag tag-you">YOU DO IT</span>
+        </div>
+      </div>
+
+      <div class="step-row" onclick="toggleStep(this,6)">
+        <div class="step-num num-pending">6</div>
+        <div class="step-content">
+          <div class="step-name">Meta Pixel ID → install on Sarah + landing</div>
+          <div class="step-sub">Meta Events Manager · replace YOUR_PIXEL_ID</div>
+          <span class="step-tag tag-you">YOU DO IT</span>
+        </div>
+      </div>
+
+      <div class="step-section-label">ADS + CONTENT</div>
+
+      <div class="step-row" onclick="toggleStep(this,7)">
+        <div class="step-num num-pending">7</div>
+        <div class="step-content">
+          <div class="step-name">Meta Business Manager + campaigns</div>
+          <div class="step-sub">TOF/MOF/BOF per Funnel Playbook Tab 3</div>
+          <span class="step-tag tag-you">YOU DO IT</span>
+        </div>
+      </div>
+
+      <div class="step-row" onclick="toggleStep(this,8)">
+        <div class="step-num num-pending">8</div>
+        <div class="step-content">
+          <div class="step-name">Record Video Ad A (60-90 sec hero)</div>
+          <div class="step-sub">Script ready · Evermore_Video_Ad_Scripts.docx</div>
+          <span class="step-tag tag-you">YOU DO IT</span>
+        </div>
+      </div>
+
+      <div class="step-row" onclick="toggleStep(this,9)">
+        <div class="step-num num-pending">9</div>
+        <div class="step-content">
+          <div class="step-name">Generate ad images (AI prompts)</div>
+          <div class="step-sub">Funnel Playbook Tab 5 → Midjourney / DALL-E</div>
+          <span class="step-tag tag-you">YOU DO IT</span>
+        </div>
+      </div>
+
+      <div class="step-row" onclick="toggleStep(this,10)">
+        <div class="step-num num-pending">10</div>
+        <div class="step-content">
+          <div class="step-name">Privacy policy on landing page</div>
+          <div class="step-sub">Termly.io (free, 5 min) · footer link</div>
+          <span class="step-tag tag-you">YOU DO IT</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ CENTER — EXECUTION HUB ═══ -->
+  <div class="panel center-panel">
+    <div class="panel-header">
+      <span>⬡ EXECUTION HUB — METRICS · FUNNEL · ADS · INTEGRATIONS</span>
+      <span style="color:var(--text-dim);font-size:9px;">UPDATE DAILY</span>
+    </div>
+    <div class="center-grid">
+
+      <!-- METRICS ROW -->
+      <div class="metric-card">
+        <div class="metric-label">LEADS THIS WEEK</div>
+        <div class="metric-value">0</div>
+        <div class="metric-sub">Sarah AI conversations → booked</div>
+        <div class="metric-delta">▲ Start running ads to fill this</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">APPOINTMENTS SET</div>
+        <div class="metric-value green">0</div>
+        <div class="metric-sub">Confirmed calls with licensed agent</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">AD SPEND TODAY</div>
+        <div class="metric-value">$0</div>
+        <div class="metric-sub">Target: $50/day at launch</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">COST PER LEAD</div>
+        <div class="metric-value">—</div>
+        <div class="metric-sub">Target: under $12 CPL</div>
+      </div>
+
+      <!-- FUNNEL FLOW -->
+      <div class="funnel-card">
+        <div class="metric-label">AD FUNNEL — TOF → MOF → BOF → CLOSE</div>
+        <div class="funnel-stages">
+          <div class="funnel-stage">
+            <div class="funnel-stage-name">VIDEO VIEWS</div>
+            <div class="funnel-stage-num">—</div>
+            <div class="funnel-stage-label">TOF COLD</div>
+            <div class="funnel-bar" style="width:100%"></div>
+          </div>
+          <div class="funnel-stage">
+            <div class="funnel-stage-name">SARAH VISITS</div>
+            <div class="funnel-stage-num">—</div>
+            <div class="funnel-stage-label">TRAFFIC</div>
+            <div class="funnel-bar" style="width:60%"></div>
+          </div>
+          <div class="funnel-stage">
+            <div class="funnel-stage-name">CHATS STARTED</div>
+            <div class="funnel-stage-num">—</div>
+            <div class="funnel-stage-label">MOF ENGAGED</div>
+            <div class="funnel-bar" style="width:40%"></div>
+          </div>
+          <div class="funnel-stage">
+            <div class="funnel-stage-name">LEADS CAPTURED</div>
+            <div class="funnel-stage-num">—</div>
+            <div class="funnel-stage-label">QUALIFIED</div>
+            <div class="funnel-bar" style="width:25%"></div>
+          </div>
+          <div class="funnel-stage">
+            <div class="funnel-stage-name">APPTS BOOKED</div>
+            <div class="funnel-stage-num">—</div>
+            <div class="funnel-stage-label">BOF HOT</div>
+            <div class="funnel-bar" style="width:15%"></div>
+          </div>
+          <div class="funnel-stage">
+            <div class="funnel-stage-name">POLICIES CLOSED</div>
+            <div class="funnel-stage-num">—</div>
+            <div class="funnel-stage-label">REVENUE</div>
+            <div class="funnel-bar" style="width:8%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AD STATUS -->
+      <div class="ad-status-card">
+        <div class="metric-label">AD CREATIVE STATUS</div>
+        <div class="ad-rows">
+          <div class="ad-row"><div class="ad-status-dot dot-ready"></div><div class="ad-name">Video Ad A — Hero (60-90 sec)</div><div class="ad-type">TOF · COLD TRAFFIC</div><div class="ad-cta">Script Ready · Needs Recording</div></div>
+          <div class="ad-row"><div class="ad-status-dot dot-pending"></div><div class="ad-name">Video Ad B — 15-sec Retargeting</div><div class="ad-type">MOF · 15s VIEWERS</div><div class="ad-cta">Script Ready · After A is proven</div></div>
+          <div class="ad-row"><div class="ad-status-dot dot-pending"></div><div class="ad-name">Video Ad C — 50% Retargeting</div><div class="ad-type">MOF · 50% VIEWERS</div><div class="ad-cta">Script Ready · After A is proven</div></div>
+          <div class="ad-row"><div class="ad-status-dot dot-pending"></div><div class="ad-name">Video Ad D — 75% Retargeting</div><div class="ad-type">BOF · WARM</div><div class="ad-cta">Script Ready · After A is proven</div></div>
+          <div class="ad-row"><div class="ad-status-dot dot-pending"></div><div class="ad-name">Video Ad E — Direct Ask (BOF)</div><div class="ad-type">BOF · HOT</div><div class="ad-cta">Script Ready · After A is proven</div></div>
+          <div class="ad-row"><div class="ad-status-dot dot-ready"></div><div class="ad-name">10 × Image Ads — All copy + prompts ready</div><div class="ad-type">ALL STAGES</div><div class="ad-cta">Generate in Midjourney → Tab 5</div></div>
+        </div>
+      </div>
+
+      <!-- INTEGRATIONS -->
+      <div class="integration-card">
+        <div class="metric-label">SYSTEM INTEGRATIONS</div>
+        <div class="int-grid">
+          <div class="int-item"><div class="int-icon">🤖</div><div class="int-name">KVN</div><div class="int-status int-live">✓ LIVE</div></div>
+          <div class="int-item"><div class="int-icon">💼</div><div class="int-name">SARAH AI</div><div class="int-status int-live">✓ LIVE + AI</div></div>
+          <div class="int-item"><div class="int-icon">🧠</div><div class="int-name">CLAUDE API</div><div class="int-status int-live">✓ WIRED</div></div>
+          <div class="int-item"><div class="int-icon">☁️</div><div class="int-name">CLOUDFLARE</div><div class="int-status int-live">✓ DEPLOYED</div></div>
+          <div class="int-item"><div class="int-icon">⚙️</div><div class="int-name">GHL CRM</div><div class="int-status int-building">⟳ CONNECT</div></div>
+          <div class="int-item"><div class="int-icon">📱</div><div class="int-name">META PIXEL</div><div class="int-status int-pending">PENDING</div></div>
+          <div class="int-item"><div class="int-icon">📣</div><div class="int-name">META ADS</div><div class="int-status int-pending">PENDING</div></div>
+          <div class="int-item"><div class="int-icon">💬</div><div class="int-name">A2P SMS</div><div class="int-status int-pending">POST-LAUNCH</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ RIGHT — INTELLIGENCE ═══ -->
+  <div class="panel right-panel">
+
+    <!-- FILES -->
+    <div class="right-top">
+      <div class="panel-header">⬡ ALL DELIVERABLES — CLICK TO OPEN</div>
+      <div class="panel-body">
+        <div class="file-card" onclick="window.open('KVN.html')">
+          <div class="file-icon">🤖</div><div class="file-info"><div class="file-name">KVN.html</div><div class="file-desc">Internal AI agent — 3D robot, chat, daily mission</div></div><div class="file-st fst-live">LIVE</div>
+        </div>
+        <div class="file-card" onclick="window.open('Sarah_Evermore_AI.html')">
+          <div class="file-icon">💼</div><div class="file-info"><div class="file-name">Sarah_Evermore_AI.html</div><div class="file-desc">Virtual office AI — prospect chat + booking</div></div><div class="file-st fst-ai">AI ✓</div>
+        </div>
+        <div class="file-card" onclick="window.open('Evermore_Landing_Page.html')">
+          <div class="file-icon">🏠</div><div class="file-info"><div class="file-name">Evermore_Landing_Page.html</div><div class="file-desc">Marketing landing page — hero, stats, FAQ</div></div><div class="file-st fst-ready">READY</div>
+        </div>
+        <div class="file-card" onclick="window.open('Evermore_Meta_Funnel_Playbook.xlsx')">
+          <div class="file-icon">📊</div><div class="file-info"><div class="file-name">Evermore_Meta_Funnel_Playbook.xlsx</div><div class="file-desc">6 tabs: funnel, ad sets, scripts, image prompts, KPIs</div></div><div class="file-st fst-ready">READY</div>
+        </div>
+        <div class="file-card" onclick="window.open('Evermore_Video_Ad_Scripts.docx')">
+          <div class="file-icon">🎬</div><div class="file-info"><div class="file-name">Evermore_Video_Ad_Scripts.docx</div><div class="file-desc">5 teleprompter scripts — TOF through BOF</div></div><div class="file-st fst-ready">READY</div>
+        </div>
+        <div class="file-card" onclick="window.open('GHL_Setup_Guide.docx')">
+          <div class="file-icon">⚙️</div><div class="file-info"><div class="file-name">GHL_Setup_Guide.docx</div><div class="file-desc">Step-by-step GoHighLevel setup guide</div></div><div class="file-st fst-ready">READY</div>
+        </div>
+        <div class="file-card" onclick="window.open('GHL_SMS_Email_Templates.docx')">
+          <div class="file-icon">📱</div><div class="file-info"><div class="file-name">GHL_SMS_Email_Templates.docx</div><div class="file-desc">6 SMS + 3 email templates — copy-paste ready</div></div><div class="file-st fst-ready">READY</div>
+        </div>
+        <div class="file-card" onclick="window.open('Evermore_Implementation_Tracker.xlsx')">
+          <div class="file-icon">✅</div><div class="file-info"><div class="file-name">Evermore_Implementation_Tracker.xlsx</div><div class="file-desc">46-task master tracker — full status + instructions</div></div><div class="file-st fst-ready">READY</div>
+        </div>
+        <div class="file-card" onclick="window.open('Evermore_Life_Playbook.docx')">
+          <div class="file-icon">📋</div><div class="file-info"><div class="file-name">Evermore_Life_Playbook.docx</div><div class="file-desc">Master roadmap — all systems, status, next steps</div></div><div class="file-st fst-ready">READY</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEXT ACTIONS -->
+    <div class="right-bottom">
+      <div class="panel-header">⬡ IMMEDIATE NEXT ACTIONS</div>
+      <div class="panel-body">
+        <div class="action-item">
+          <div class="action-num">4</div>
+          <div><div class="action-text">Connect GHL webhook into Sarah</div><div class="action-sub">GHL → Settings → API → Inbound Webhook URL → paste into Sarah HTML at INTEGRATION POINT 2</div></div>
+        </div>
+        <div class="action-item">
+          <div class="action-num">5</div>
+          <div><div class="action-text">Get Meta Pixel ID + install</div><div class="action-sub">Meta Events Manager → create pixel → replace YOUR_PIXEL_ID in Sarah + landing page → redeploy</div></div>
+        </div>
+        <div class="action-item">
+          <div class="action-num">6</div>
+          <div><div class="action-text">Record Video Ad A on iPhone</div><div class="action-sub">Script is in Evermore_Video_Ad_Scripts.docx · Use teleprompter · Edit in CapCut (free)</div></div>
+        </div>
+        <div class="action-item">
+          <div class="action-num">7</div>
+          <div><div class="action-text">Set up Meta Business Manager</div><div class="action-sub">business.facebook.com · verify business · add payment · connect FB page · create first campaign</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// Clock
+function tick() {
+  const now = new Date();
+  document.getElementById('clock').innerHTML =
+    now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}) +
+    '<br>' + now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+tick(); setInterval(tick, 1000);
+
+// Steps
+const doneSteps = new Set([1,2,3]);
+function toggleStep(el, n) {
+  if (n <= 3) return; // lock completed steps
+  if (doneSteps.has(n)) { doneSteps.delete(n); el.classList.remove('done'); el.classList.add('active'); }
+  else { doneSteps.add(n); el.classList.add('done'); el.classList.remove('active'); }
+  const num = el.querySelector('.step-num');
+  if (doneSteps.has(n)) { num.className='step-num num-done'; num.textContent='✓'; }
+  else { num.className='step-num num-active'; num.textContent=n; }
+  updateProgress();
+}
+function updateProgress() {
+  const total = 10;
+  const done = doneSteps.size;
+  const pct = Math.round((done/total)*100);
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-pct').textContent = pct+'% COMPLETE';
+  document.getElementById('steps-done').textContent = done;
+  document.getElementById('steps-left').textContent = total - done;
+}
+</script>
+</body>
+</html>

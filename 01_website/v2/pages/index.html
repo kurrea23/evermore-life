@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evermore Life | Life Insurance, Mortgage Protection &amp; Annuities — Phoenix, AZ</title>
+  <meta name="description" content="Evermore Life is a licensed independent insurance brokerage in Phoenix, AZ. We shop top-rated carriers so you get the best rate on life insurance, mortgage protection, final expense, IUL, and annuities." />
+
+  <!-- Canonical & Open Graph -->
+  <link rel="canonical" href="https://evermorelife.org/" />
+  <meta property="og:title" content="Evermore Life | Life Insurance Made Simple" />
+  <meta property="og:description" content="Independent life insurance brokerage comparing top carriers for you. Final expense, term life, IUL, whole life, mortgage protection & annuities." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://evermorelife.org/" />
+
+  <!-- Shared Tokens + Base -->
+  <link rel="stylesheet" href="../shared/_tokens.css" />
+  <link rel="stylesheet" href="../shared/_base.css" />
+
+  <style>
+  /* ============================================================
+     PAGE-LEVEL STYLES — index.html
+     Sections: hero | trust-bar | products | data-viz |
+               how-it-works | why-us | cta
+     ============================================================ */
+
+  /* ── HERO BLOCK ── */
+  .hero {
+    background: linear-gradient(140deg, var(--navy-deep) 0%, var(--navy-mid) 55%, var(--navy) 100%);
+    color: var(--white);
+    padding: 100px var(--section-padding-x) 90px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 0%, rgba(200,169,110,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    background: rgba(200,169,110,0.15);
+    border: 1px solid rgba(200,169,110,0.35);
+    color: var(--gold);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: var(--radius-full);
+    margin-bottom: var(--space-6);
+  }
+  .hero h1 {
+    font-size: var(--font-size-5xl);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: var(--space-6);
+    max-width: 780px;
+    margin-inline: auto;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--gold);
+  }
+  .hero-sub {
+    font-size: var(--font-size-lg);
+    color: #c8ddf5;
+    max-width: 600px;
+    margin-inline: auto;
+    margin-bottom: var(--space-10);
+    line-height: 1.75;
+  }
+  .hero-btns {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-12);
+  }
+  .hero-carriers {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    opacity: 0.6;
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .hero-carriers span { font-weight: 700; color: var(--white); }
+
+  /* ── TRUST BAR BLOCK ── */
+  .trust-bar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 28px var(--section-padding-x);
+  }
+  .trust-bar-inner {
+    max-width: var(--max-width);
+    margin-inline: auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: var(--space-8);
+    flex-wrap: wrap;
+  }
+  .trust-item {
+    text-align: center;
+    flex: 1;
+    min-width: 120px;
+  }
+  .trust-num {
+    font-size: var(--font-size-3xl);
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: var(--space-1);
+  }
+  .trust-label {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .trust-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  /* ── PRODUCTS BLOCK ── */
+  .products-section {
+    background: var(--off-white);
+  }
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+    max-width: var(--max-width);
+    margin-inline: auto;
+  }
+  .product-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8) var(--space-6);
+    text-align: left;
+    transition: box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-base);
+  }
+  .product-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+    border-color: var(--gold);
+  }
+  .product-icon-wrap {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-md);
+    background: rgba(200,169,110,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-5);
+  }
+  .product-icon-wrap svg {
+    width: 26px;
+    height: 26px;
+    stroke: var(--gold);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .product-card h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: var(--space-3);
+  }
+  .product-card p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin-bottom: var(--space-5);
+  }
+  .product-link {
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    color: var(--gold);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: gap var(--transition-fast);
+  }
+  .product-card:hover .product-link { gap: 8px; }
+
+  @media (max-width: 900px) {
+    .products-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .products-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── DATA VIZ BLOCK ── */
+  .dataviz-section {
+    background: var(--navy);
+    padding: var(--section-padding-y) var(--section-padding-x);
+  }
+  .dataviz-section .section-title { color: var(--white); }
+  .dataviz-section .section-sub { color: var(--text-muted); }
+  .dataviz-section .section-label { color: var(--gold); }
+
+  .viz-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+    max-width: var(--max-width);
+    margin-inline: auto;
+  }
+  .viz-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(200,169,110,0.2);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    position: relative;
+    overflow: hidden;
+  }
+  .viz-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--chart-blue));
+  }
+  .viz-title {
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: var(--space-2);
+  }
+  .viz-subtitle {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    margin-bottom: var(--space-6);
+  }
+  canvas.viz-canvas {
+    width: 100% !important;
+    height: 220px !important;
+  }
+  .viz-legend {
+    display: flex;
+    gap: var(--space-5);
+    margin-top: var(--space-5);
+    flex-wrap: wrap;
+  }
+  .viz-legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 768px) {
+    .viz-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── HOW IT WORKS BLOCK ── */
+  .how-section { background: var(--off-white); }
+  .steps-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    max-width: 900px;
+    margin-inline: auto;
+    position: relative;
+  }
+  .steps-row::before {
+    content: '';
+    position: absolute;
+    top: 26px;
+    left: calc(12.5% + 26px);
+    right: calc(12.5% + 26px);
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--navy));
+    z-index: 0;
+  }
+  .step-item {
+    flex: 1;
+    text-align: center;
+    padding: 0 var(--space-4);
+    position: relative;
+    z-index: 1;
+  }
+  .step-num {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--gold);
+    font-size: var(--font-size-xl);
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-5);
+    border: 3px solid var(--gold);
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+  }
+  .step-item:hover .step-num {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 6px rgba(200,169,110,0.15);
+  }
+  .step-item h4 {
+    font-size: var(--font-size-base);
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: var(--space-2);
+  }
+  .step-item p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  @media (max-width: 640px) {
+    .steps-row {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-8);
+    }
+    .steps-row::before { display: none; }
+    .step-item { max-width: 280px; width: 100%; }
+  }
+
+  /* ── WHY US BLOCK ── */
+  .why-section { background: var(--white); }
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+    max-width: var(--max-width);
+    margin-inline: auto;
+  }
+  .why-card {
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    display: flex;
+    gap: var(--space-5);
+    align-items: flex-start;
+    transition: box-shadow var(--transition-base);
+  }
+  .why-card:hover { box-shadow: var(--shadow-md); }
+  .why-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: rgba(13,27,75,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .why-icon svg {
+    width: 22px; height: 22px;
+    stroke: var(--navy); fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .why-card h4 {
+    font-size: var(--font-size-base);
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: var(--space-2);
+  }
+  .why-card p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+  @media (max-width: 640px) {
+    .why-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── CTA BLOCK ── */
+  .cta-section {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    padding: var(--section-padding-y) var(--section-padding-x);
+    text-align: center;
+  }
+  .cta-section h2 {
+    font-size: var(--font-size-4xl);
+    font-weight: 900;
+    color: var(--navy);
+    margin-bottom: var(--space-4);
+    line-height: 1.1;
+  }
+  .cta-section p {
+    font-size: var(--font-size-lg);
+    color: rgba(13,27,75,0.78);
+    max-width: 540px;
+    margin-inline: auto;
+    margin-bottom: var(--space-8);
+    line-height: 1.7;
+  }
+  .cta-btns {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-6);
+  }
+  .cta-disclaimer {
+    font-size: var(--font-size-xs);
+    color: rgba(13,27,75,0.55);
+    max-width: 540px;
+    margin-inline: auto;
+    line-height: 1.6;
+  }
+  .cta-disclaimer a { color: rgba(13,27,75,0.7); font-weight: 700; }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     BLOCK: GLOBAL NAV (inject from shared/_nav.html)
+     ============================================================ -->
+<style>
+.site-nav {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--navy);
+  padding: 0 var(--section-padding-x);
+  height: 68px;
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+}
+.nav-logo { font-size: var(--font-size-xl); font-weight: 900; color: var(--white); letter-spacing: 0.5px; }
+.nav-logo span { color: var(--gold); }
+.nav-links { display: flex; align-items: center; gap: var(--space-8); }
+.nav-links a { color: var(--text-muted); font-size: var(--font-size-sm); font-weight: 500; transition: color var(--transition-fast); }
+.nav-links a:hover { color: var(--gold); }
+.nav-cta { background: var(--gold); color: var(--navy); padding: 10px 22px; border-radius: var(--radius-sm); font-size: var(--font-size-sm); font-weight: 800; transition: background var(--transition-fast); flex-shrink: 0; }
+.nav-cta:hover { background: var(--gold-dark); }
+.nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: var(--space-2); background: none; border: none; }
+.nav-toggle span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; }
+@media (max-width: 768px) {
+  .site-nav { padding: 0 20px; height: 60px; }
+  .nav-links { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--navy-deep); flex-direction: column; padding: var(--space-6); gap: var(--space-5); border-top: 1px solid rgba(255,255,255,0.08); box-shadow: var(--shadow-lg); }
+  .nav-links.open { display: flex; }
+  .nav-links a { font-size: var(--font-size-base); color: var(--white); }
+  .nav-toggle { display: flex; }
+  .nav-cta { font-size: 0.8rem; padding: 8px 16px; }
+}
+</style>
+<nav class="site-nav" role="navigation" aria-label="Main navigation">
+  <a href="/" class="nav-logo">Evermore <span>Life</span></a>
+  <ul class="nav-links" id="navLinks" role="list">
+    <li><a href="#products">Products</a></li>
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#why-us">Why Us</a></li>
+    <li><a href="optin.html">Get a Quote</a></li>
+  </ul>
+  <a href="optin.html" class="nav-cta" aria-label="Get a free quote">Free Quote →</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<!-- END BLOCK: GLOBAL NAV -->
+
+
+<!-- ============================================================
+     BLOCK: HERO
+     ============================================================ -->
+<section class="hero" aria-label="Hero">
+  <div class="hero-eyebrow">Licensed Independent Brokerage · Phoenix, AZ</div>
+  <h1>Protect What Matters Most.<br /><em>Life Insurance Made Simple.</em></h1>
+  <p class="hero-sub">
+    Final expense, term life, IUL, whole life, mortgage protection, and annuities —
+    we compare top carriers so you get the right coverage at the best rate.
+  </p>
+  <div class="hero-btns">
+    <a href="optin.html" class="btn btn-primary">Get My Free Quote →</a>
+    <a href="#products" class="btn btn-outline">See Coverage Options</a>
+  </div>
+  <div class="hero-carriers">
+    Carriers we work with: &nbsp;
+    <span>Mutual of Omaha</span> ·
+    <span>Ethos Life</span> ·
+    <span>American Amicable</span> ·
+    <span>Transamerica</span> ·
+    <span>Aetna</span>
+  </div>
+</section>
+<!-- END BLOCK: HERO -->
+
+
+<!-- ============================================================
+     BLOCK: TRUST BAR
+     ============================================================ -->
+<div class="trust-bar" role="region" aria-label="At a glance">
+  <div class="trust-bar-inner">
+    <div class="trust-item">
+      <div class="trust-num">A+</div>
+      <div class="trust-label">Carrier Ratings</div>
+    </div>
+    <div class="trust-divider" aria-hidden="true"></div>
+    <div class="trust-item">
+      <div class="trust-num">5+</div>
+      <div class="trust-label">Top-Rated Carriers</div>
+    </div>
+    <div class="trust-divider" aria-hidden="true"></div>
+    <div class="trust-item">
+      <div class="trust-num">100%</div>
+      <div class="trust-label">No-Obligation Quote</div>
+    </div>
+    <div class="trust-divider" aria-hidden="true"></div>
+    <div class="trust-item">
+      <div class="trust-num">Licensed</div>
+      <div class="trust-label">In Multiple States</div>
+    </div>
+    <div class="trust-divider" aria-hidden="true"></div>
+    <div class="trust-item">
+      <div class="trust-num">Free</div>
+      <div class="trust-label">Rate Comparison</div>
+    </div>
+  </div>
+</div>
+<!-- END BLOCK: TRUST BAR -->
+
+
+<!-- ============================================================
+     BLOCK: PRODUCTS
+     ============================================================ -->
+<section class="section products-section reveal" id="products" aria-label="Coverage solutions">
+  <p class="section-label">Coverage Solutions</p>
+  <h2 class="section-title">Protection for Every Stage of Life</h2>
+  <p class="section-sub">
+    Whether you need final expense coverage, income replacement, cash-value growth,
+    or retirement income — we find the right fit for your budget.
+  </p>
+  <div class="products-grid container">
+
+    <article class="product-card">
+      <div class="product-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3>Final Expense</h3>
+      <p>Affordable whole life coverage for end-of-life costs — no medical exam required. Protect your family from unexpected burial and funeral expenses.</p>
+      <a href="optin.html" class="product-link">Get a quote →</a>
+    </article>
+
+    <article class="product-card">
+      <div class="product-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <h3>Term Life Insurance</h3>
+      <p>Cost-effective coverage for income replacement during your working years. Simple, straightforward, and often the most affordable option.</p>
+      <a href="optin.html" class="product-link">Get a quote →</a>
+    </article>
+
+    <article class="product-card">
+      <div class="product-icon-wrap">
+        <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      </div>
+      <h3>Indexed Universal Life (IUL)</h3>
+      <p>Build tax-advantaged cash value linked to market index growth — with a 0% floor, so you never lose value in a down year. Ideal for retirement income.</p>
+      <a href="optin.html" class="product-link">Get a quote →</a>
+    </article>
+
+    <article class="product-card">
+      <div class="product-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </div>
+      <h3>Whole Life Insurance</h3>
+      <p>Permanent coverage that never expires with guaranteed cash value growth. A cornerstone of any long-term financial protection strategy.</p>
+      <a href="optin.html" class="product-link">Get a quote →</a>
+    </article>
+
+    <article class="product-card">
+      <div class="product-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <h3>Mortgage Protection</h3>
+      <p>Ensure your family can stay in their home if something happens to you. Pays off your balance so your loved ones never have to worry about the house.</p>
+      <a href="optin.html" class="product-link">Get a quote →</a>
+    </article>
+
+    <article class="product-card">
+      <div class="product-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 16l4-4 3 3 6-7"/></svg>
+      </div>
+      <h3>Annuities</h3>
+      <p>Create predictable retirement income and protect your savings from market volatility. Fixed and indexed annuity options available for long-term planning.</p>
+      <a href="optin.html" class="product-link">Get a quote →</a>
+    </article>
+
+  </div>
+</section>
+<!-- END BLOCK: PRODUCTS -->
+
+
+<!-- ============================================================
+     BLOCK: DATA VISUALIZATION
+     Educational animated charts — IUL Growth + Cost Comparison
+     ============================================================ -->
+<section class="dataviz-section reveal" id="how-money-works" aria-label="How life insurance works">
+  <p class="section-label">See It Clearly</p>
+  <h2 class="section-title" style="color:var(--white);">Understand Your Options at a Glance</h2>
+  <p class="section-sub">
+    These are illustrative models to help you understand how different products compare.
+    Your actual numbers will vary based on age, health, and coverage amount.
+  </p>
+
+  <div class="viz-grid">
+
+    <!-- Chart 1: IUL Cash Value Growth -->
+    <div class="viz-card">
+      <div class="viz-title">IUL Cash Value Growth vs. Traditional Savings</div>
+      <div class="viz-subtitle">Illustrative — $300/month contribution, 20-year window</div>
+      <canvas class="viz-canvas" id="chartIUL" aria-label="IUL cash value growth chart"></canvas>
+      <div class="viz-legend">
+        <div class="viz-legend-item">
+          <div class="legend-dot" style="background:var(--gold)"></div>
+          IUL Cash Value (tax-advantaged)
+        </div>
+        <div class="viz-legend-item">
+          <div class="legend-dot" style="background:var(--chart-blue)"></div>
+          Taxable Savings Account
+        </div>
+        <div class="viz-legend-item">
+          <div class="legend-dot" style="background:rgba(255,255,255,0.25)"></div>
+          Total Premiums Paid
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart 2: Monthly Cost by Product Type -->
+    <div class="viz-card">
+      <div class="viz-title">Estimated Monthly Premium by Coverage Type</div>
+      <div class="viz-subtitle">Illustrative — 45-year-old, non-smoker, $250,000 coverage</div>
+      <canvas class="viz-canvas" id="chartCost" aria-label="Monthly premium comparison chart"></canvas>
+      <div class="viz-legend">
+        <div class="viz-legend-item">
+          <div class="legend-dot" style="background:var(--gold)"></div>
+          Monthly premium estimate
+        </div>
+        <div class="viz-legend-item" style="font-style:italic; color:rgba(154,175,206,0.6);">
+          Actual rates vary — get a free quote for your personalized number.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<!-- END BLOCK: DATA VISUALIZATION -->
+
+
+<!-- ============================================================
+     BLOCK: HOW IT WORKS
+     ============================================================ -->
+<section class="section how-section reveal" id="how-it-works" aria-label="How the process works">
+  <p class="section-label">The Process</p>
+  <h2 class="section-title">Getting Covered Is Easier Than You Think</h2>
+  <p class="section-sub">We guide you through every step — no pressure, no obligation.</p>
+  <div class="steps-row">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <h4>Request a Quote</h4>
+      <p>Fill out our simple form — takes less than 60 seconds. No SSN or medical info required upfront.</p>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <h4>We Shop For You</h4>
+      <p>We compare rates from multiple A-rated carriers on your behalf — so you don't have to do the legwork.</p>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <h4>Review Your Options</h4>
+      <p>A licensed agent presents your best matches clearly. You ask questions, we answer — no jargon.</p>
+    </div>
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <h4>Get Covered</h4>
+      <p>Apply with guidance. Many policies activate quickly after carrier approval and first premium.</p>
+    </div>
+  </div>
+</section>
+<!-- END BLOCK: HOW IT WORKS -->
+
+
+<!-- ============================================================
+     BLOCK: WHY US
+     ============================================================ -->
+<section class="section why-section reveal" id="why-us" aria-label="Why choose Evermore Life">
+  <p class="section-label">Why Evermore Life</p>
+  <h2 class="section-title">We Work For You, Not the Carriers</h2>
+  <p class="section-sub">As an independent brokerage, our only loyalty is finding you the best coverage at the best price.</p>
+  <div class="why-grid container">
+
+    <div class="why-card">
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div>
+        <h4>Independent Brokers</h4>
+        <p>We're not captive agents for any single carrier. That means unbiased advice and access to more products at competitive rates.</p>
+      </div>
+    </div>
+
+    <div class="why-card">
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div>
+        <h4>No Medical Exam Options</h4>
+        <p>Many of our final expense and simplified-issue plans require no physical exam. Get covered fast, even with pre-existing conditions.</p>
+      </div>
+    </div>
+
+    <div class="why-card">
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div>
+        <h4>Transparent Pricing</h4>
+        <p>No hidden fees. No surprises. We show you exactly what you're paying for before you sign anything.</p>
+      </div>
+    </div>
+
+    <div class="why-card">
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <div>
+        <h4>Licensed Professionals</h4>
+        <p>Every Evermore Life agent is fully licensed, trained, and committed to finding the right coverage for your unique situation.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+<!-- END BLOCK: WHY US -->
+
+
+<!-- ============================================================
+     BLOCK: CTA / OPT-IN
+     ============================================================ -->
+<section class="cta-section reveal" id="get-quote" aria-label="Get a free quote">
+  <h2>Get Your Free,<br />No-Obligation Quote</h2>
+  <p>Tell us a little about yourself and a licensed Evermore Life agent will reach out — no pressure, no commitment.</p>
+  <div class="cta-btns">
+    <a href="optin.html" class="btn btn-navy">Request My Free Quote →</a>
+    <a href="tel:+15055043101" class="btn" style="background:transparent;border:2px solid var(--navy);color:var(--navy);">
+      Call Us: (505) 504-3101
+    </a>
+  </div>
+  <p class="cta-disclaimer">
+    A licensed agent may contact you by phone or email regarding your request.
+    You can request a quote without agreeing to receive text messages.
+    View our <a href="privacy.html">Privacy Policy</a> and <a href="terms.html">Terms of Service</a>.
+  </p>
+</section>
+<!-- END BLOCK: CTA -->
+
+
+<!-- ============================================================
+     BLOCK: GLOBAL FOOTER (inject from shared/_footer.html)
+     ============================================================ -->
+<style>
+.site-footer { background: var(--navy-deep); color: var(--text-muted); padding: 60px var(--section-padding-x) 32px; }
+.footer-grid { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1.4fr; gap: 40px; max-width: var(--max-width); margin-inline: auto; margin-bottom: 48px; }
+.footer-brand-name { font-size: var(--font-size-2xl); font-weight: 900; color: var(--white); margin-bottom: var(--space-3); }
+.footer-brand-name span { color: var(--gold); }
+.footer-tagline { font-size: var(--font-size-sm); color: var(--text-muted); line-height: 1.65; max-width: 260px; margin-bottom: var(--space-5); }
+.footer-license { font-size: var(--font-size-xs); color: rgba(154,175,206,0.6); line-height: 1.6; max-width: 280px; }
+.footer-col-title { font-size: var(--font-size-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gold); margin-bottom: var(--space-5); }
+.footer-col a, .footer-col p { display: block; font-size: var(--font-size-sm); color: var(--text-muted); margin-bottom: var(--space-3); line-height: 1.5; transition: color var(--transition-fast); }
+.footer-col a:hover { color: var(--gold); }
+.footer-bottom { max-width: var(--max-width); margin-inline: auto; padding-top: var(--space-6); border-top: 1px solid rgba(255,255,255,0.07); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4); font-size: var(--font-size-xs); color: rgba(154,175,206,0.55); }
+.footer-bottom a { color: rgba(154,175,206,0.55); transition: color var(--transition-fast); }
+.footer-bottom a:hover { color: var(--gold); }
+.footer-legal-links { display: flex; gap: var(--space-5); flex-wrap: wrap; }
+@media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 540px) { .footer-grid { grid-template-columns: 1fr; } .site-footer { padding: 48px 20px 28px; } }
+</style>
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">Evermore <span>Life</span></div>
+      <p class="footer-tagline">Independent life insurance brokerage helping families protect what matters most.</p>
+      <p class="footer-license">Evermore Life LLC is a licensed independent insurance agency. We represent multiple carriers and are not captive to any single insurer. Products and availability vary by state.</p>
+    </div>
+    <div>
+      <p class="footer-col-title">Products</p>
+      <div class="footer-col">
+        <a href="#products">Final Expense</a>
+        <a href="#products">Term Life</a>
+        <a href="#products">Indexed Universal Life</a>
+        <a href="#products">Whole Life</a>
+        <a href="#products">Mortgage Protection</a>
+        <a href="#products">Annuities</a>
+      </div>
+    </div>
+    <div>
+      <p class="footer-col-title">Company</p>
+      <div class="footer-col">
+        <a href="#why-us">About Us</a>
+        <a href="optin.html">Get a Quote</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="optin.html">Opt-In / Opt-Out</a>
+      </div>
+    </div>
+    <div>
+      <p class="footer-col-title">Contact</p>
+      <div class="footer-col">
+        <p>Evermore Life LLC<br>4539 N 22nd St, Ste R<br>Phoenix, AZ 85016</p>
+        <a href="tel:+15055043101">+1 (505) 504-3101</a>
+        <a href="mailto:evermorelifeagent01@gmail.com">evermorelifeagent01@gmail.com</a>
+        <a href="optin.html">Request a Callback</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Evermore Life LLC. All rights reserved.</span>
+    <div class="footer-legal-links">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="optin.html">Opt-In / Opt-Out</a>
+    </div>
+  </div>
+</footer>
+<!-- END BLOCK: GLOBAL FOOTER -->
+
+
+<!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+
+<!-- Chart.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<script>
+/* ── Scroll reveal ── */
+(function() {
+  var els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('visible'); });
+    return;
+  }
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(function(el) { obs.observe(el); });
+})();
+
+/* ── Nav hamburger ── */
+(function() {
+  var toggle = document.getElementById('navToggle');
+  var links  = document.getElementById('navLinks');
+  if (!toggle || !links) return;
+  toggle.addEventListener('click', function() {
+    var open = links.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open);
+  });
+  links.querySelectorAll('a').forEach(function(a) {
+    a.addEventListener('click', function() {
+      links.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+})();
+
+/* ── Chart 1: IUL Cash Value Growth ── */
+(function() {
+  var ctx = document.getElementById('chartIUL');
+  if (!ctx) return;
+
+  // Animate in when visible
+  var chartInstance = null;
+  var observer = new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting && !chartInstance) {
+      drawIUL();
+      observer.disconnect();
+    }
+  }, { threshold: 0.3 });
+  observer.observe(ctx);
+
+  function drawIUL() {
+    var years = [];
+    var premiums = [], iulValues = [], savingsValues = [];
+    var monthlyContrib = 300;
+    var annualContrib  = monthlyContrib * 12;
+
+    for (var y = 0; y <= 20; y++) {
+      years.push('Yr ' + y);
+      var totalPremium = annualContrib * y;
+      // IUL: ~6.5% avg credited (floor 0%), tax-advantaged compounding
+      var iul = y === 0 ? 0 : (annualContrib * (Math.pow(1.065, y) - 1) / 0.065) * 0.88;
+      // Taxable savings: ~4.8% after ~22% tax drag
+      var sav = y === 0 ? 0 : annualContrib * (Math.pow(1.036, y) - 1) / 0.036;
+      premiums.push(Math.round(totalPremium));
+      iulValues.push(Math.round(iul));
+      savingsValues.push(Math.round(sav));
+    }
+
+    chartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: years,
+        datasets: [
+          {
+            label: 'IUL Cash Value',
+            data: iulValues,
+            borderColor: 'rgba(200,169,110,1)',
+            backgroundColor: 'rgba(200,169,110,0.12)',
+            fill: true,
+            tension: 0.4,
+            borderWidth: 2.5,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+          },
+          {
+            label: 'Taxable Savings',
+            data: savingsValues,
+            borderColor: 'rgba(96,165,250,0.85)',
+            backgroundColor: 'rgba(96,165,250,0.06)',
+            fill: true,
+            tension: 0.4,
+            borderWidth: 2,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+          },
+          {
+            label: 'Total Premiums Paid',
+            data: premiums,
+            borderColor: 'rgba(255,255,255,0.25)',
+            backgroundColor: 'transparent',
+            fill: false,
+            tension: 0,
+            borderWidth: 1.5,
+            borderDash: [4, 4],
+            pointRadius: 0,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 1800, easing: 'easeInOutQuart' },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(9,18,56,0.95)',
+            titleColor: '#c8a96e',
+            bodyColor: '#9aafce',
+            padding: 12,
+            callbacks: {
+              label: function(ctx) {
+                return ' $' + ctx.parsed.y.toLocaleString();
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: 'rgba(154,175,206,0.6)', font: { size: 10 }, maxTicksLimit: 6 },
+            grid: { color: 'rgba(255,255,255,0.04)' }
+          },
+          y: {
+            ticks: {
+              color: 'rgba(154,175,206,0.6)',
+              font: { size: 10 },
+              callback: function(v) { return '$' + (v/1000).toFixed(0) + 'k'; }
+            },
+            grid: { color: 'rgba(255,255,255,0.06)' }
+          }
+        }
+      }
+    });
+  }
+})();
+
+/* ── Chart 2: Monthly Premium Comparison ── */
+(function() {
+  var ctx = document.getElementById('chartCost');
+  if (!ctx) return;
+
+  var chartInstance = null;
+  var observer = new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting && !chartInstance) {
+      drawCost();
+      observer.disconnect();
+    }
+  }, { threshold: 0.3 });
+  observer.observe(ctx);
+
+  function drawCost() {
+    var labels   = ['Final Expense\n$25k', 'Term Life\n$250k', 'Whole Life\n$250k', 'IUL\n$250k', 'Mortgage\nProtection'];
+    var values   = [48, 32, 285, 310, 55];
+    var barColors = [
+      'rgba(200,169,110,0.85)',
+      'rgba(96,165,250,0.85)',
+      'rgba(52,211,153,0.85)',
+      'rgba(200,169,110,0.55)',
+      'rgba(96,165,250,0.55)'
+    ];
+
+    chartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Final Expense', 'Term Life', 'Whole Life', 'IUL', 'Mortgage Prot.'],
+        datasets: [{
+          data: values,
+          backgroundColor: barColors,
+          borderColor: barColors.map(function(c) { return c.replace('0.85', '1').replace('0.55', '0.8'); }),
+          borderWidth: 1,
+          borderRadius: 6,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+          duration: 1600,
+          delay: function(ctx) { return ctx.dataIndex * 120; },
+          easing: 'easeOutQuart'
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(9,18,56,0.95)',
+            titleColor: '#c8a96e',
+            bodyColor: '#9aafce',
+            padding: 12,
+            callbacks: {
+              label: function(ctx) {
+                return ' ~$' + ctx.parsed.y + '/mo (illustrative)';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: 'rgba(154,175,206,0.7)', font: { size: 10 } },
+            grid: { display: false }
+          },
+          y: {
+            ticks: {
+              color: 'rgba(154,175,206,0.6)',
+              font: { size: 10 },
+              callback: function(v) { return '$' + v + '/mo'; }
+            },
+            grid: { color: 'rgba(255,255,255,0.06)' }
+          }
+        }
+      }
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

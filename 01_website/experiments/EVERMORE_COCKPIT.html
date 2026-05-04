@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVERMORE LIFE — MISSION COCKPIT</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --navy: #0D1B3E;
+    --gold: #C9A84C;
+    --gold-dim: #8B6E2A;
+    --bg: #07090F;
+    --bg2: #0D1020;
+    --bg3: #131830;
+    --text: #D0D8F0;
+    --text-dim: #5A6888;
+    --border: rgba(201,168,76,0.2);
+    --green: #1E7E34;
+    --lgreen: #0A3A14;
+    --yellow: #C9A84C;
+    --lyellow: #2A1F05;
+    --blue: #1A4A8A;
+    --lblue: #0A1530;
+    --red: #8A1A1A;
+    --lred: #2A0808;
+    --cyan: #00f5ff;
+    --orange: #F97316;
+    --lorange: #1f0d00;
+  }
+  html, body { width:100%; min-height:100vh; background:var(--bg); color:var(--text); font-family: 'Courier New', monospace; }
+
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:999;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  }
+
+  /* HEADER */
+  .cockpit-header {
+    background: linear-gradient(135deg, var(--navy), #0a1428);
+    border-bottom: 2px solid var(--gold);
+    padding: 16px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 4px 30px rgba(201,168,76,0.15);
+  }
+  .cockpit-title { font-size: 20px; font-weight:900; letter-spacing:0.25em; color:var(--gold); text-shadow:0 0 20px rgba(201,168,76,0.4); }
+  .cockpit-sub { font-size:9px; letter-spacing:0.15em; color:var(--text-dim); margin-top:3px; }
+  .cockpit-time { font-size:11px; color:var(--gold-dim); letter-spacing:0.1em; text-align:right; }
+  .status-pill { display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:3px; font-size:10px; font-weight:bold; letter-spacing:0.1em; border:1px solid; }
+  .pill-live { background:var(--lgreen); border-color:var(--green); color:#4ade80; }
+  .pill-building { background:var(--lblue); border-color:var(--blue); color:#60a5fa; }
+  .pill-waiting { background:var(--lorange); border-color:var(--orange); color:var(--orange); }
+  .blink { animation: blink 1.2s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* STAT BAR */
+  .stat-bar {
+    background:var(--bg2); border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:0;
+  }
+  .stat-item {
+    flex:1; padding:10px 20px; text-align:center;
+    border-right:1px solid var(--border);
+  }
+  .stat-item:last-child { border-right:none; }
+  .stat-val { font-size:22px; font-weight:900; color:var(--gold); line-height:1; }
+  .stat-val.cyan { color:var(--cyan); text-shadow:0 0 10px var(--cyan); }
+  .stat-val.green { color:#4ade80; }
+  .stat-val.blue { color:#60a5fa; }
+  .stat-val.orange { color:var(--orange); text-shadow:0 0 10px var(--orange); }
+
+  .stat-lbl { font-size:8px; letter-spacing:0.15em; color:var(--text-dim); margin-top:3px; }
+
+  /* PROGRESS BAR */
+  .progress-section { height:5px; background:rgba(201,168,76,0.1); }
+  .progress-fill { height:100%; background:linear-gradient(90deg,var(--gold-dim),var(--gold)); box-shadow:0 0 8px rgba(201,168,76,0.4); transition:width 0.6s; }
+
+  /* MAIN LAYOUT */
+  .main-layout { display:grid; grid-template-columns:320px 1fr 320px; min-height:calc(100vh - 130px); }
+  @media(max-width:1100px) { .main-layout { grid-template-columns:1fr; } }
+
+  /* PANEL COMMON */
+  .panel { padding:20px; border-right:1px solid var(--border); overflow-y:auto; }
+  .panel:last-child { border-right:none; }
+  .panel-title { font-size:9px; letter-spacing:0.2em; color:var(--gold); margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+
+  /* AGENT CARDS */
+  .agent-card {
+    border-radius:4px; padding:12px 14px; margin-bottom:10px;
+    display:flex; align-items:center; gap:12px;
+  }
+  .agent-card.kvn { background:linear-gradient(135deg,#070f15,#0a1520); border:1px solid rgba(0,245,255,0.25); box-shadow:0 0 15px rgba(0,245,255,0.06); }
+  .agent-card.sarah { background:linear-gradient(135deg,#150f00,#1a1200); border:1px solid rgba(201,168,76,0.3); box-shadow:0 0 15px rgba(201,168,76,0.06); }
+  .agent-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .dot-cyan { background:var(--cyan); box-shadow:0 0 6px var(--cyan); animation:blink 2s infinite; }
+  .dot-gold { background:var(--gold); box-shadow:0 0 6px var(--gold); animation:blink 2.5s infinite; }
+  .agent-name { font-size:12px; font-weight:900; letter-spacing:0.15em; }
+  .agent-name.cyan { color:var(--cyan); }
+  .agent-name.gold { color:var(--gold); }
+  .agent-url { font-size:9px; color:var(--text-dim); margin-top:2px; }
+  .agent-url a { color:inherit; text-decoration:none; }
+  .agent-url a:hover { color:var(--gold); }
+
+  /* STEPS */
+  .step-row {
+    display:flex; align-items:flex-start; gap:10px;
+    padding:10px 8px; border-radius:4px; margin-bottom:3px;
+    border:1px solid transparent; cursor:pointer;
+    transition:background 0.15s, border-color 0.15s;
+  }
+  .step-row:hover { background:rgba(201,168,76,0.04); border-color:var(--border); }
+  .step-row.done { opacity:0.6; }
+  .step-row.done .step-name { text-decoration:line-through; color:var(--text-dim); }
+  .step-row.active { background:rgba(26,74,138,0.15); border-color:rgba(96,165,250,0.25); }
+  .step-row.waiting { background:rgba(249,115,22,0.07); border-color:rgba(249,115,22,0.25); }
+  .step-row.locked { cursor:default; opacity:0.7; }
+  .step-num { width:24px; height:24px; border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:bold; flex-shrink:0; border:1px solid; }
+  .num-done { background:var(--lgreen); border-color:var(--green); color:#4ade80; }
+  .num-active { background:var(--lblue); border-color:var(--blue); color:#60a5fa; }
+  .num-pending { background:rgba(201,168,76,0.08); border-color:rgba(201,168,76,0.2); color:var(--gold-dim); }
+  .num-waiting { background:var(--lorange); border-color:var(--orange); color:var(--orange); }
+  .step-content { flex:1; }
+  .step-name { font-size:11px; color:var(--text); letter-spacing:0.02em; line-height:1.4; }
+  .step-detail { font-size:9px; color:var(--text-dim); margin-top:2px; }
+  .step-tag { display:inline-block; font-size:8px; letter-spacing:0.1em; padding:2px 6px; border-radius:2px; margin-top:3px; font-weight:bold; }
+  .tag-done { background:var(--lgreen); color:#4ade80; }
+  .tag-you { background:var(--lyellow); color:var(--gold); }
+  .tag-building { background:var(--lblue); color:#60a5fa; }
+  .tag-live { background:#0A2A0A; color:#4ade80; border:1px solid #1E7E34; }
+  .tag-active { background:#0a1a2a; color:#60a5fa; border:1px solid #1a4a8a; }
+  .tag-human { background:#2A1F05; color:var(--gold); border:1px solid var(--gold-dim); }
+  .tag-ai { background:#0a1a2a; color:var(--cyan); border:1px solid #1a4a8a; }
+  .tag-waiting { background:var(--lorange); color:var(--orange); border:1px solid var(--orange); }
+  .who-row { display:flex; gap:4px; margin-top:4px; flex-wrap:wrap; }
+  .who-pill { font-size:7px; letter-spacing:0.12em; padding:1px 5px; border-radius:2px; font-weight:bold; }
+  .who-human { background:#2A1F05; color:var(--gold); }
+  .who-ai { background:#0a1a2a; color:var(--cyan); }
+
+  /* ROOMS SECTION */
+  .rooms-grid { display:grid; grid-template-columns:1fr; gap:8px; margin-bottom:12px; }
+  .room-card {
+    background:linear-gradient(135deg, #0a1530, #131830);
+    border:1px solid rgba(0,245,255,0.25);
+    border-radius:5px; padding:12px 14px; cursor:pointer;
+    transition:border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+  }
+  .room-card:hover { border-color:var(--cyan); box-shadow:0 0 14px rgba(0,245,255,0.18); transform:translateY(-1px); }
+  .room-card.spec { border-color:rgba(201,168,76,0.3); }
+  .room-card.spec:hover { border-color:var(--gold); box-shadow:0 0 14px rgba(201,168,76,0.2); }
+  .room-name { font-size:11px; font-weight:900; letter-spacing:0.15em; color:var(--cyan); }
+  .room-card.spec .room-name { color:var(--gold); }
+  .room-step { font-size:8px; letter-spacing:0.15em; color:var(--text-dim); margin-top:2px; }
+  .room-desc { font-size:9px; color:var(--text); margin-top:6px; line-height:1.4; }
+  .room-actions { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+  .room-act { font-size:8px; letter-spacing:0.1em; padding:3px 7px; border-radius:2px; background:rgba(0,245,255,0.08); color:var(--cyan); border:1px solid rgba(0,245,255,0.2); text-decoration:none; }
+  .room-card.spec .room-act { background:rgba(201,168,76,0.08); color:var(--gold); border-color:rgba(201,168,76,0.2); }
+  .room-act:hover { background:rgba(0,245,255,0.18); }
+
+  .section-label { font-size:8px; letter-spacing:0.2em; color:var(--text-dim); padding:8px 0 4px; border-bottom:1px solid rgba(201,168,76,0.1); margin-bottom:6px; }
+
+  /* CENTER PANEL */
+  .center-panel { padding:20px; border-right:1px solid var(--border); }
+
+  /* METRIC CARDS */
+  .metrics-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+  .metric-card { background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:14px; text-align:center; }
+  .metric-val { font-size:28px; font-weight:900; color:var(--gold); line-height:1; }
+  .metric-val.cyan { color:var(--cyan); }
+  .metric-val.green { color:#4ade80; }
+  .metric-val.orange { color:var(--orange); }
+  .metric-lbl { font-size:9px; letter-spacing:0.12em; color:var(--text-dim); margin-top:4px; }
+  .metric-sub { font-size:8px; color:var(--text-dim); margin-top:2px; opacity:0.6; }
+
+  /* ALERT CARD */
+  .alert-card { background:linear-gradient(135deg,#1f0d00,#2a1400); border:1px solid rgba(249,115,22,0.4); border-radius:4px; padding:12px 14px; margin-bottom:12px; }
+  .alert-title { font-size:9px; letter-spacing:0.15em; color:var(--orange); font-weight:bold; margin-bottom:6px; }
+  .alert-body { font-size:10px; color:var(--text); line-height:1.5; }
+
+  /* FUNNEL */
+  .funnel-title { font-size:9px; letter-spacing:0.2em; color:var(--gold); margin-bottom:10px; }
+  .funnel-stage { margin-bottom:8px; }
+  .funnel-row { display:flex; align-items:center; gap:10px; margin-bottom:3px; }
+  .funnel-label { font-size:10px; color:var(--text); width:120px; flex-shrink:0; }
+  .funnel-bar-track { flex:1; height:6px; background:rgba(201,168,76,0.1); border-radius:3px; }
+  .funnel-bar-fill { height:100%; border-radius:3px; transition:width 0.8s; }
+  .funnel-count { font-size:10px; color:var(--text-dim); width:50px; text-align:right; flex-shrink:0; }
+  .funnel-pct { font-size:9px; color:var(--text-dim); width:35px; text-align:right; flex-shrink:0; }
+
+  /* AD STATUS */
+  .ad-title { font-size:9px; letter-spacing:0.2em; color:var(--gold); margin:16px 0 10px; }
+  .ad-row { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:3px; background:var(--bg3); border:1px solid var(--border); margin-bottom:6px; }
+  .ad-name { font-size:10px; color:var(--text); flex:1; }
+  .ad-badge { font-size:8px; font-weight:bold; letter-spacing:0.1em; padding:2px 7px; border-radius:2px; }
+  .badge-pending { background:var(--lyellow); color:var(--gold); }
+  .badge-building { background:var(--lblue); color:#60a5fa; }
+  .badge-live { background:var(--lgreen); color:#4ade80; }
+  .badge-blocked { background:var(--lorange); color:var(--orange); }
+
+  /* RIGHT PANEL */
+  .right-panel { padding:20px; }
+
+  /* INTEGRATIONS */
+  .integrations-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
+  .int-card { background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:10px 12px; }
+  .int-name { font-size:10px; color:var(--text); margin-bottom:4px; }
+  .int-status { font-size:8px; font-weight:bold; letter-spacing:0.1em; }
+  .is-live { color:#4ade80; }
+  .is-pending { color:var(--gold); }
+  .is-building { color:#60a5fa; }
+  .is-waiting { color:var(--orange); }
+
+  /* FILES */
+  .file-card {
+    background:var(--bg3); border:1px solid var(--border); border-radius:4px;
+    padding:10px 12px; margin-bottom:6px;
+    display:flex; align-items:center; gap:10px; cursor:pointer;
+    transition:border-color 0.15s, box-shadow 0.15s;
+  }
+  .file-card:hover { border-color:var(--gold); box-shadow:0 0 10px rgba(201,168,76,0.08); }
+  .file-icon { font-size:16px; flex-shrink:0; }
+  .file-info { flex:1; }
+  .file-name { font-size:10px; color:var(--gold); letter-spacing:0.04em; }
+  .file-desc { font-size:8px; color:var(--text-dim); margin-top:1px; }
+  .file-status { font-size:8px; font-weight:bold; letter-spacing:0.08em; }
+  .fs-ready { color:#4ade80; }
+  .fs-live { color:#4ade80; }
+  .fs-building { color:#60a5fa; }
+
+  /* NEXT ACTIONS */
+  .next-title { font-size:9px; letter-spacing:0.2em; color:var(--gold); margin:16px 0 10px; }
+  .action-card { background:rgba(26,74,138,0.1); border:1px solid rgba(96,165,250,0.2); border-radius:4px; padding:10px 12px; margin-bottom:6px; }
+  .action-card.urgent { background:rgba(249,115,22,0.07); border-color:rgba(249,115,22,0.3); }
+  .action-card.done-card { background:rgba(10,58,20,0.2); border-color:rgba(74,222,128,0.2); opacity:0.7; }
+  .action-num { font-size:8px; color:#60a5fa; letter-spacing:0.1em; margin-bottom:3px; }
+  .action-num.orange { color:var(--orange); }
+  .action-num.green { color:#4ade80; }
+  .action-text { font-size:10px; color:var(--text); line-height:1.4; }
+
+  /* FOOTER */
+  footer { padding:12px 28px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background:var(--bg2); }
+  .footer-note { font-size:8px; color:var(--text-dim); letter-spacing:0.1em; }
+  .footer-ver { font-size:8px; color:var(--gold-dim); letter-spacing:0.1em; }
+
+  /* TIKTOK SECTION */
+  .tiktok-card {
+    background:linear-gradient(135deg,#0d0020,#1a0030);
+    border:1px solid rgba(105,0,255,0.35);
+    border-radius:4px; padding:12px 14px; margin-bottom:10px;
+  }
+  .tiktok-title { font-size:9px; letter-spacing:0.2em; color:#a78bfa; margin-bottom:8px; }
+  .tiktok-row { display:flex; justify-content:space-between; font-size:10px; color:var(--text); margin-bottom:4px; }
+  .tiktok-val { color:#a78bfa; font-weight:bold; }
+</style>
+<meta http-equiv="refresh" content="60">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="cockpit-header">
+  <div>
+    <div class="cockpit-title">⬡ EVERMORE LIFE — MISSION COCKPIT</div>
+    <div class="cockpit-sub">FINAL EXPENSE FUNNEL · SITE LIVE · A2P DAY 2 PENDING · ACTIVE FOCUS: GHL WORKFLOW → FAKE LEAD TEST → CF TOKEN · LAB TOMORROW</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span class="status-pill pill-waiting"><span class="blink">●</span> A2P PENDING · DAY 2</span>
+    <div class="cockpit-time" id="clock">--</div>
+  </div>
+</div>
+
+<!-- STAT BAR -->
+<div class="stat-bar">
+  <div class="stat-item">
+    <div class="stat-val green" id="stat-done">6</div>
+    <div class="stat-lbl">STEPS DONE</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-val blue" id="stat-left">4</div>
+    <div class="stat-lbl">STEPS LEFT</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-val orange">DAY 2</div>
+    <div class="stat-lbl">A2P WAIT · OF ~7</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-val green">0</div>
+    <div class="stat-lbl">LEADS TODAY</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-val cyan">MAY 5</div>
+    <div class="stat-lbl">LAB · 11:15 AM QUEST</div>
+  </div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-section"><div class="progress-fill" id="prog-fill" style="width:60%"></div></div>
+
+<!-- MAIN 3-COLUMN LAYOUT -->
+<div class="main-layout">
+
+  <!-- LEFT: AGENTS + STEPS -->
+  <div class="panel">
+    <div class="panel-title">⬡ AGENTS STATUS</div>
+
+    <div class="agent-card kvn">
+      <div class="agent-dot dot-cyan"></div>
+      <div style="flex:1;">
+        <div class="agent-name cyan">KVN · DEPLOYED</div>
+        <div class="agent-url">🔗 <a href="https://kvn-agent.newmexicomarketingpartners.workers.dev" target="_blank">kvn-agent.workers.dev</a></div>
+      </div>
+      <span class="status-pill pill-building" style="font-size:8px;">VERIFY</span>
+    </div>
+
+    <div class="agent-card sarah">
+      <div class="agent-dot dot-gold"></div>
+      <div style="flex:1;">
+        <div class="agent-name gold">SARAH · DEPLOYED</div>
+        <div class="agent-url">🔗 <a href="https://sarah-evermore.newmexicomarketingpartners.workers.dev" target="_blank">sarah-evermore.workers.dev</a></div>
+      </div>
+      <span class="status-pill pill-live" style="font-size:8px;">✓ LIVE</span>
+    </div>
+
+    <div style="font-size:8px;color:var(--text-dim);letter-spacing:0.06em;line-height:1.5;margin:4px 2px 0;">
+      Website live at <strong style="color:var(--cyan);">evermorelife.org</strong> · All 5 routes confirmed.
+    </div>
+
+    <div class="panel-title" style="margin-top:18px;">⬡ 10-STEP LAUNCH SEQUENCE</div>
+    <div style="font-size:8px;color:var(--text-dim);letter-spacing:0.08em;margin:-6px 0 10px;">
+      MISSION: GHL workflow live → A2P approved → ads up → bookings → sales
+    </div>
+
+    <div class="section-label">CODE + COMPLIANCE (✓ DONE)</div>
+
+    <div class="step-row done locked">
+      <div class="step-num num-done">✓</div>
+      <div class="step-content">
+        <div class="step-name">Codex security + compliance hardening</div>
+        <div class="step-detail">Secrets removed, SMS consent + STOP/HELP, privacy/terms updated</div>
+        <span class="step-tag tag-done">✓ DONE</span>
+      </div>
+    </div>
+
+    <div class="step-row done locked">
+      <div class="step-num num-done">✓</div>
+      <div class="step-content">
+        <div class="step-name">GHL launch kit shipped</div>
+        <div class="step-detail">Form map, workflow blueprint, A2P pack, runbook</div>
+        <span class="step-tag tag-done">✓ DONE</span>
+      </div>
+    </div>
+
+    <div class="step-row done locked">
+      <div class="step-num num-done">✓</div>
+      <div class="step-content">
+        <div class="step-name">Form approach decided: native GHL form</div>
+        <div class="step-detail">Worker relay parked for later API-level routing</div>
+        <span class="step-tag tag-done">✓ LOCKED</span>
+      </div>
+    </div>
+
+    <div class="step-row done locked">
+      <div class="step-num num-done">✓</div>
+      <div class="step-content">
+        <div class="step-name">Local pages QA + lead-payload fields</div>
+        <div class="step-detail">UTM/source/page/referrer wired, alert-on-missing-webhook</div>
+        <span class="step-tag tag-done">✓ DONE</span>
+      </div>
+    </div>
+
+    <div class="section-label">GHL BUILD (✓ LIVE)</div>
+
+    <div class="step-row done locked">
+      <div class="step-num num-done">✓</div>
+      <div class="step-content">
+        <div class="step-name">Build native GHL form + 5 pages</div>
+        <div class="step-detail">evermorelife.org/home · /optin · /thankyou · /privacypolicy · /terms — ALL LIVE</div>
+        <span class="step-tag tag-done">✓ LIVE ON evermorelife.org</span>
+      </div>
+    </div>
+
+    <div class="step-row done locked">
+      <div class="step-num num-done">✓</div>
+      <div class="step-content">
+        <div class="step-name">A2P compliance patched + submitted May 3</div>
+        <div class="step-detail">Custom website form opt-in path · Low Volume Mixed campaign · Awaiting TCR approval</div>
+        <span class="step-tag tag-done">✓ SUBMITTED</span>
+      </div>
+    </div>
+
+    <div class="section-label">WORKFLOW + TEST (YOUR FOCUS TODAY)</div>
+
+    <div class="step-row active" data-num="7" onclick="toggleStep(this)">
+      <div class="step-num num-active">7</div>
+      <div class="step-content">
+        <div class="step-name">Build GHL workflow — NO SMS yet</div>
+        <div class="step-detail">Automation → Workflows → "Evermore Website Lead Intake" · Form 10 + Main Opt-In triggers · Tag, Notify, Opportunity, Email, Task · Blueprint at form-workflow-next-steps.md</div>
+        <div class="who-row"><span class="who-pill who-human">HUMAN</span><span class="who-pill who-ai">AI: blueprint ready</span></div>
+        <span class="step-tag tag-active">⟳ TODAY — CALENDAR: 9:00–10:30 AM</span>
+      </div>
+    </div>
+
+    <div class="step-row active" data-num="8" onclick="toggleStep(this)">
+      <div class="step-num num-active">8</div>
+      <div class="step-content">
+        <div class="step-name">Fake-lead test + publish workflow</div>
+        <div class="step-detail">Submit test lead · Confirm: contact, tags, opportunity, internal email, confirmation email, call task · Screenshot opt-in page · Publish workflow when all pass</div>
+        <div class="who-row"><span class="who-pill who-human">HUMAN ONLY</span></div>
+        <span class="step-tag tag-active">⟳ TODAY — CALENDAR: 11:00 AM–12:00 PM</span>
+      </div>
+    </div>
+
+    <div class="step-row active" data-num="9a" onclick="toggleStep(this)">
+      <div class="step-num num-active">🔐</div>
+      <div class="step-content">
+        <div class="step-name">Rotate Cloudflare API Token</div>
+        <div class="step-detail">dash.cloudflare.com → Profile → API Tokens · Revoke old token · Create new scoped token · Update wrangler locally · DO NOT paste into HTML</div>
+        <div class="who-row"><span class="who-pill who-human">HUMAN ONLY</span></div>
+        <span class="step-tag tag-active">⟳ TODAY — CALENDAR: 1:00–1:30 PM</span>
+      </div>
+    </div>
+
+    <div class="section-label">A2P APPROVAL → ADS → SALES</div>
+
+    <div class="step-row waiting locked">
+      <div class="step-num num-waiting">⏳</div>
+      <div class="step-content">
+        <div class="step-name">A2P 10DLC approval + enable SMS</div>
+        <div class="step-detail">Submitted May 3 · Check GHL May 6 + May 8 · When approved: flip SMS ON in workflow, test send to your phone</div>
+        <span class="step-tag tag-waiting">WAITING ON CARRIER · DAY 2 OF ~7</span>
+      </div>
+    </div>
+
+    <div class="step-row" data-num="10" onclick="toggleStep(this)">
+      <div class="step-num num-pending">10</div>
+      <div class="step-content">
+        <div class="step-name">Install Meta Pixel → launch test ad → first sale</div>
+        <div class="step-detail">wire_pixel.sh · small budget, 2-3 creatives, financial special category · Call new leads &lt; 5 min</div>
+        <span class="step-tag tag-you">AFTER A2P APPROVAL</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CENTER: ALERTS + METRICS + FUNNEL + ADS -->
+  <div class="center-panel">
+
+    <!-- ALERT: TODAY'S PRIORITIES -->
+    <div class="alert-card">
+      <div class="alert-title">📅 MAY 4, 2026 — 3 CRITICAL ACTIONS (STILL OPEN IF NOT DONE)</div>
+      <div class="alert-body">
+        <strong style="color:var(--orange);">9:00–10:30 AM</strong> — Build GHL Workflow "Evermore Website Lead Intake" (no SMS) · blueprint at form-workflow-next-steps.md<br>
+        <strong style="color:var(--orange);">11:00 AM–12:00 PM</strong> — Submit fake test lead from evermorelife.org/optin · verify all 9 checklist items · publish workflow<br>
+        <strong style="color:var(--orange);">1:00–1:30 PM</strong> — Rotate Cloudflare API Token · dash.cloudflare.com → Profile → API Tokens<br>
+        <span style="font-size:9px;color:var(--text-dim);">▸ Ethos masterclass every Wednesday 10AM PT — optional training · TikTok Shop active (lucidus23) — weekly report received</span>
+      </div>
+    </div>
+
+    <!-- TOMORROW ALERT -->
+    <div class="alert-card" style="border-color:rgba(96,165,250,0.4);background:linear-gradient(135deg,#0a1530,#0d1a2a);">
+      <div class="alert-title" style="color:#60a5fa;">🧬 TOMORROW MAY 5 — FUNCTION HEALTH LAB VISIT · 11:15 AM</div>
+      <div class="alert-body">Quest Diagnostics · 9445 E Ironwood Square Dr #110, Scottsdale AZ 85258 · Confirmed on calendar. Allow 30 min buffer. Nothing to prepare — just show up fasted if required.</div>
+    </div>
+
+    <!-- INTEGRITY LEAD CARRY-FORWARD -->
+    <div class="alert-card" style="border-color:rgba(201,168,76,0.3);background:linear-gradient(135deg,#1a1200,#2a1c00);">
+      <div class="alert-title" style="color:var(--gold);">🎯 INTEGRITY CONNECT · ZIP 85260 LEAD — CHECK STATUS</div>
+      <div class="alert-body">Ethos Fresh Abandon Cart Insurance Lead (Cherry Pick) · Received May 3. Internet lead — call within 5 min of claiming, 3 attempts in 24h. Log in and claim if available. Aged lead order #5344651 also delivered May 2. Credit for prior order approved May 1.</div>
+    </div>
+
+    <div class="panel-title">⬡ LIVE METRICS</div>
+
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-val cyan" id="m-leads">0</div>
+        <div class="metric-lbl">LEADS CAPTURED</div>
+        <div class="metric-sub">LIFETIME</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val green" id="m-appts">0</div>
+        <div class="metric-lbl">APPOINTMENTS</div>
+        <div class="metric-sub">BOOKED</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">$0</div>
+        <div class="metric-lbl">AD SPEND</div>
+        <div class="metric-sub">THIS MONTH</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val orange">~5d</div>
+        <div class="metric-lbl">A2P ETA</div>
+        <div class="metric-sub">CHECK MAY 6 &amp; 8</div>
+      </div>
+    </div>
+
+    <!-- TIKTOK SHOP INTEL -->
+    <div class="tiktok-card">
+      <div class="tiktok-title">⬡ TIKTOK SHOP · lucidus23 · WEEK 04/26–05/02</div>
+      <div class="tiktok-row"><span>Weekly Report</span><span class="tiktok-val">✓ RECEIVED</span></div>
+      <div class="tiktok-row"><span>Shop Status</span><span class="tiktok-val">ACTIVE</span></div>
+      <div style="font-size:9px;color:var(--text-dim);margin-top:6px;">Open TikTok Shop Seller Center for full metrics. Weekly report emailed May 4 — check for GMV, orders, and improvement opportunities flagged by TikTok.</div>
+    </div>
+
+    <!-- LIVE SITE ROUTES -->
+    <div class="funnel-title">⬡ LIVE SITE ROUTES — evermorelife.org</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px;">
+      <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.3);border-radius:3px;padding:8px 10px;">
+        <div style="font-size:9px;color:#4ade80;font-weight:bold;">✓ LIVE</div>
+        <div style="font-size:10px;color:var(--text);margin-top:2px;">/home</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.3);border-radius:3px;padding:8px 10px;">
+        <div style="font-size:9px;color:#4ade80;font-weight:bold;">✓ LIVE</div>
+        <div style="font-size:10px;color:var(--text);margin-top:2px;">/optin</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.3);border-radius:3px;padding:8px 10px;">
+        <div style="font-size:9px;color:#4ade80;font-weight:bold;">✓ LIVE</div>
+        <div style="font-size:10px;color:var(--text);margin-top:2px;">/thankyou</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.3);border-radius:3px;padding:8px 10px;">
+        <div style="font-size:9px;color:#4ade80;font-weight:bold;">✓ LIVE</div>
+        <div style="font-size:10px;color:var(--text);margin-top:2px;">/privacypolicy</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.3);border-radius:3px;padding:8px 10px;grid-column:span 2;">
+        <div style="font-size:9px;color:#4ade80;font-weight:bold;">✓ LIVE</div>
+        <div style="font-size:10px;color:var(--text);margin-top:2px;">/terms</div>
+      </div>
+    </div>
+
+    <div class="funnel-title">⬡ FUNNEL FLOW (TARGETS — ADS NOT LIVE YET)</div>
+
+    <div class="funnel-stage">
+      <div class="funnel-row">
+        <div class="funnel-label">Ad Impressions</div>
+        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:100%;background:linear-gradient(90deg,#1a4a8a,#60a5fa);"></div></div>
+        <div class="funnel-count">—</div>
+        <div class="funnel-pct">100%</div>
+      </div>
+    </div>
+    <div class="funnel-stage">
+      <div class="funnel-row">
+        <div class="funnel-label">Link Clicks</div>
+        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:8%;background:linear-gradient(90deg,#1a5a3a,#4ade80);"></div></div>
+        <div class="funnel-count">—</div>
+        <div class="funnel-pct">~8%</div>
+      </div>
+    </div>
+    <div class="funnel-stage">
+      <div class="funnel-row">
+        <div class="funnel-label">Page Visits</div>
+        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:6%;background:linear-gradient(90deg,#2a1f05,#C9A84C);"></div></div>
+        <div class="funnel-count">—</div>
+        <div class="funnel-pct">~6%</div>
+      </div>
+    </div>
+    <div class="funnel-stage">
+      <div class="funnel-row">
+        <div class="funnel-label">Sarah Chats</div>
+        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:4%;background:linear-gradient(90deg,#0a1520,#00f5ff);"></div></div>
+        <div class="funnel-count">—</div>
+        <div class="funnel-pct">~4%</div>
+      </div>
+    </div>
+    <div class="funnel-stage">
+      <div class="funnel-row">
+        <div class="funnel-label">Leads Captured</div>
+        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:3%;background:linear-gradient(90deg,#1a4a8a,#60a5fa);"></div></div>
+        <div class="funnel-count">—</div>
+        <div class="funnel-pct">~3%</div>
+      </div>
+    </div>
+    <div class="funnel-stage">
+      <div class="funnel-row">
+        <div class="funnel-label">Appts Booked</div>
+        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:1.5%;background:linear-gradient(90deg,#0A3A14,#4ade80);"></div></div>
+        <div class="funnel-count">—</div>
+        <div class="funnel-pct">~1.5%</div>
+      </div>
+    </div>
+
+    <div class="ad-title">⬡ AD CREATIVE STATUS · BLOCKED ON A2P</div>
+
+    <div class="ad-row">
+      <div class="ad-name">Ad A — Hero Video (60-90 sec)</div>
+      <div class="ad-badge badge-blocked">BLOCKED · AWAIT A2P</div>
+    </div>
+    <div class="ad-row">
+      <div class="ad-name">Ad B — Problem/Solution (30 sec)</div>
+      <div class="ad-badge badge-blocked">BLOCKED · AWAIT A2P</div>
+    </div>
+    <div class="ad-row">
+      <div class="ad-name">Ad C — Testimonial Style (45 sec)</div>
+      <div class="ad-badge badge-pending">PENDING RECORD</div>
+    </div>
+    <div class="ad-row">
+      <div class="ad-name">Ad D — Direct Response (15 sec)</div>
+      <div class="ad-badge badge-pending">PENDING RECORD</div>
+    </div>
+    <div class="ad-row">
+      <div class="ad-name">Static Image Ad — Peace of Mind</div>
+      <div class="ad-badge badge-building">PROMPTS READY</div>
+    </div>
+    <div class="ad-row">
+      <div class="ad-name">Carousel Ad — 3-Frame Story</div>
+      <div class="ad-badge badge-building">PROMPTS READY</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: ROOMS + INTEGRATIONS + FILES + NEXT ACTIONS -->
+  <div class="right-panel">
+    <div class="panel-title">⬡ ROOMS — CLICK TO ENTER</div>
+
+    <div class="rooms-grid">
+      <div class="room-card" onclick="enterRoom(event, 'A2P_REGISTRATION')">
+        <div class="room-name">📡 A2P REGISTRATION</div>
+        <div class="room-step">SUBMITTED MAY 3 · DAY 2 · CHECK GHL MAY 6</div>
+        <div class="room-desc">Campaign submitted in GHL. Low Volume Mixed. Opt-in URL: evermorelife.org/optin. When approved: flip SMS ON in workflow and run live test to your phone. DO NOT change any A2P-related copy while under review.</div>
+        <div class="room-actions">
+          <a class="room-act" href="../rooms/A2P_REGISTRATION/" onclick="event.stopPropagation();">📂 OPEN FOLDER</a>
+          <a class="room-act" href="../rooms/A2P_REGISTRATION/HELPERS.md" onclick="event.stopPropagation();">🤖 REJECTION HELP</a>
+        </div>
+      </div>
+
+      <div class="room-card spec" onclick="enterRoom(event, 'KEVIN_V2')">
+        <div class="room-name">🧑‍✈️ KEVIN V2 — UPGRADE</div>
+        <div class="room-step">PARALLEL TRACK · SPEC ONLY · BUILD AFTER A2P</div>
+        <div class="room-desc">V2 spec: PBR materials, lipsync, gaze, voice. Build after A2P cleared.</div>
+        <div class="room-actions">
+          <a class="room-act" href="../rooms/KEVIN_V2/SPEC.md" onclick="event.stopPropagation();">📄 READ SPEC</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-title">⬡ INTEGRATIONS</div>
+
+    <div class="integrations-grid">
+      <div class="int-card">
+        <div class="int-name">evermorelife.org</div>
+        <div class="int-status is-live">✓ LIVE (5 ROUTES)</div>
+      </div>
+      <div class="int-card">
+        <div class="int-name">GHL Forms</div>
+        <div class="int-status is-live">✓ EMBEDDED</div>
+      </div>
+      <div class="int-card">
+        <div class="int-name">GHL Workflow</div>
+        <div class="int-status is-building">⟳ BUILD TODAY</div>
+      </div>
+      <div class="int-card">
+        <div class="int-name">A2P 10DLC</div>
+        <div class="int-status is-waiting">⏳ DAY 2 · PENDING TCR</div>
+      </div>
+      <div class="int-card">
+        <div class="int-name">Cloudflare Workers</div>
+        <div class="int-status is-live">✓ DEPLOYED</div>
+      </div>
+      <div class="int-card">
+        <div class="int-name">CF Token Rotation</div>
+        <div class="int-status is-waiting">⚠ TODAY 1PM — DO IT</div>
+      </div>
+      <div class="int-card">
+        <div class="int-name">Claude API</div>
+        <div class="int-status is-live">✓ WIRED</div>
+      </div>
+      <div class="int-card">
+        <div class="int-name">TikTok Shop</div>
+        <div class="int-status is-live">✓ ACTIVE · lucidus23</div>
+      </div>
+      <div class="int-card">
+        <div class="int-name">Meta Pixel</div>
+        <div class="int-status is-waiting">⏳ AFTER A2P</div>
+      </div>
+      <div class="int-card">
+        <div class="int-name">Meta Ads</div>
+        <div class="int-status is-waiting">⏳ AFTER A2P</div>
+      </div>
+      <div class="int-card">
+        <div class="int-name">Ethos Masterclass</div>
+        <div class="int-status is-pending">WED 10AM PT — OPTIONAL</div>
+      </div>
+      <div class="int-card">
+        <div class="int-name">GHL Calendar</div>
+        <div class="int-status is-pending">⏳ END GOAL</div>
+      </div>
+    </div>
+
+    <div class="panel-title">⬡ WORKFLOW BLUEPRINT — WHAT TO BUILD</div>
+
+    <div class="file-card" onclick="window.open('../../02_ghl/launch_kit/form-workflow-next-steps.md')">
+      <div class="file-icon">🔁</div>
+      <div class="file-info">
+        <div class="file-name">form-workflow-next-steps.md</div>
+        <div class="file-desc">Exact workflow steps — triggers, actions, no SMS branch</div>
+      </div>
+      <div class="file-status fs-ready">✓ USE THIS</div>
+    </div>
+
+    <div class="file-card" onclick="window.open('../../02_ghl/launch_kit/workflow-blueprint.md')">
+      <div class="file-icon">📋</div>
+      <div class="file-info">
+        <div class="file-name">workflow-blueprint.md</div>
+        <div class="file-desc">Full workflow blueprint — reference</div>
+      </div>
+      <div class="file-status fs-ready">✓ READY</div>
+    </div>
+
+    <div class="file-card" onclick="window.open('../../02_ghl/launch_kit/test-checklist.md')">
+      <div class="file-icon">✅</div>
+      <div class="file-info">
+        <div class="file-name">test-checklist.md</div>
+        <div class="file-desc">9-point checklist for fake-lead test</div>
+      </div>
+      <div class="file-status fs-ready">✓ READY</div>
+    </div>
+
+    <div class="file-card" onclick="window.open('../../02_ghl/launch_kit/chatgpt-handoff-a2p-update.md')">
+      <div class="file-icon">📡</div>
+      <div class="file-info">
+        <div class="file-name">chatgpt-handoff-a2p-update.md</div>
+        <div class="file-desc">A2P submission log — what was submitted May 3</div>
+      </div>
+      <div class="file-status fs-live">✓ LOGGED</div>
+    </div>
+
+    <div class="file-card" onclick="window.open('../../02_ghl/launch_kit/a2p-messaging-use-case-paste.md')">
+      <div class="file-icon">💬</div>
+      <div class="file-info">
+        <div class="file-name">a2p-messaging-use-case-paste.md</div>
+        <div class="file-desc">A2P messaging copy — do NOT change while under review</div>
+      </div>
+      <div class="file-status fs-ready">⚠ FREEZE</div>
+    </div>
+
+    <div class="next-title">⬡ BATTLE PLAN — MAY 4–8, 2026</div>
+
+    <div class="action-card urgent">
+      <div class="action-num orange">TODAY · 9:00 AM — STEP 7 (IF NOT DONE)</div>
+      <div class="action-text">Build "Evermore Website Lead Intake" in GHL → Automation → Workflows. Triggers: Form 10 + Main Opt-In. Actions: Tag, Internal Notify, Create Opportunity, Confirmation Email, Wait 1d, Call Task. NO SMS. Save Draft.</div>
+    </div>
+    <div class="action-card urgent">
+      <div class="action-num orange">TODAY · 11:00 AM — STEP 8 (IF NOT DONE)</div>
+      <div class="action-text">Submit test lead from evermorelife.org/optin. Verify all 9 checklist items. If all pass → Publish workflow. Screenshot opt-in page with form + SMS consent + privacy/terms links.</div>
+    </div>
+    <div class="action-card urgent">
+      <div class="action-num orange">TODAY · 1:00 PM — SECURITY (IF NOT DONE)</div>
+      <div class="action-text">dash.cloudflare.com → Profile → API Tokens. Revoke old exposed token. Create new scoped token. Update wrangler locally. DO NOT paste token into any HTML.</div>
+    </div>
+    <div class="action-card">
+      <div class="action-num">TODAY ANYTIME — INTEGRITY CONNECT</div>
+      <div class="action-text">ZIP 85260 Cherry Pick lead (Ethos Abandon Cart) still in queue. Log in, claim if available, call within 5 min of claiming. 3 attempts required in 24h.</div>
+    </div>
+    <div class="action-card" style="background:rgba(10,58,20,0.15);border-color:rgba(96,165,250,0.25);">
+      <div class="action-num" style="color:#60a5fa;">TOMORROW MAY 5 — LAB VISIT · 11:15 AM</div>
+      <div class="action-text">Function Health lab at Quest · 9445 E Ironwood Square Dr #110, Scottsdale AZ 85258. Confirmed on Google Calendar. Allow 30 min travel buffer.</div>
+    </div>
+    <div class="action-card">
+      <div class="action-num">MAY 6 — A2P CHECK · 9:00 AM · CALENDARED</div>
+      <div class="action-text">GHL → Settings → Phone Numbers → A2P 10DLC. Day 4 since submission. If approved: flip SMS ON in workflow + test send to own phone. If pending: wait for May 8 check.</div>
+    </div>
+    <div class="action-card">
+      <div class="action-num">MAY 8 — A2P CHECK · 9:00 AM · CALENDARED</div>
+      <div class="action-text">Second A2P check. Day 6. If approved: SMS live. If rejected: use HELPERS.md. If still pending: escalate with GHL support and recheck May 10.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- WHAT CHANGED TODAY + STOP CONDITIONS -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--border);background:var(--bg2);">
+  <div style="padding:18px 24px;border-right:1px solid var(--border);">
+    <div class="panel-title" style="margin-bottom:10px;">⬡ MAY 4, 2026 — TODAY'S STATUS + RECENT HISTORY</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;font-size:10px;color:var(--text);line-height:1.55;">
+      <div><span style="color:#4ade80;">✓</span> evermorelife.org LIVE — all 5 routes confirmed (email log May 3)</div>
+      <div><span style="color:#4ade80;">✓</span> A2P 10DLC submitted May 3 — Day 2 of ~7 wait</div>
+      <div><span style="color:#4ade80;">✓</span> GHL workflow blueprint + checklist in place — ready to build</div>
+      <div><span style="color:#4ade80;">✓</span> Calendar: workflow build (9am), lead test (11am), CF token (1pm)</div>
+      <div><span style="color:#4ade80;">✓</span> Function Health lab TOMORROW May 5 · 11:15 AM · Quest Scottsdale</div>
+      <div><span style="color:#4ade80;">✓</span> Integrity lead order #5344651 delivered · Credit approved May 1</div>
+      <div><span style="color:#4ade80;">✓</span> TikTok Shop active (lucidus23) · Weekly report received May 4</div>
+      <div><span style="color:#4ade80;">✓</span> Ethos masterclass: Wednesdays 10AM PT (confirmed email today)</div>
+      <div><span style="color:var(--orange);">🔥</span> Step 7: Build GHL Workflow — DUE TODAY</div>
+      <div><span style="color:var(--orange);">🔥</span> Step 8: Fake Lead Test + Publish — DUE TODAY</div>
+      <div><span style="color:var(--orange);">⚠</span> CF Token Rotation — DUE TODAY 1PM</div>
+      <div><span style="color:var(--orange);">🎯</span> Integrity Cherry Pick ZIP 85260 — CLAIM TODAY</div>
+      <div><span style="color:#60a5fa;">📡</span> A2P check calendared: May 6 + May 8 (confirmed in calendar)</div>
+      <div><span style="color:#60a5fa;">🏦</span> BOA card unlocked + travel notification processed (routine)</div>
+    </div>
+    <div style="margin-top:12px;font-size:9px;color:var(--text-dim);letter-spacing:0.05em;line-height:1.5;">
+      MAY 3: Site live, A2P submitted, workflow blueprint filed, email log sent to self. MAY 4 (TODAY): Build workflow → test lead → rotate CF token → claim Integrity lead. MAY 5: Lab visit 11:15 AM. MAY 6 + 8: A2P checks. When A2P clears: flip SMS ON → launch ads.
+    </div>
+  </div>
+
+  <div style="padding:18px 24px;">
+    <div class="panel-title" style="margin-bottom:10px;color:#F87171;">⬡ STOP CONDITIONS · DO NOT TOUCH WHILE A2P PENDING</div>
+    <div style="display:grid;grid-template-columns:1fr;gap:6px;font-size:10px;color:var(--text);line-height:1.55;">
+      <div style="padding:7px 10px;background:var(--lred);border:1px solid rgba(248,113,113,0.3);border-radius:3px;">
+        <span style="color:#F87171;font-weight:bold;">⚠ FREEZE</span> Do NOT change the A2P wording, opt-in URL, Privacy Policy, Terms, or SMS consent language
+      </div>
+      <div style="padding:7px 10px;background:var(--lred);border:1px solid rgba(248,113,113,0.3);border-radius:3px;">
+        <span style="color:#F87171;font-weight:bold;">⚠ HOLD</span> Do NOT send any marketing SMS until A2P is approved by TCR
+      </div>
+      <div style="padding:7px 10px;background:var(--lred);border:1px solid rgba(248,113,113,0.3);border-radius:3px;">
+        <span style="color:#F87171;font-weight:bold;">⚠ WAIT</span> Do NOT launch paid ads before: workflow built, lead test passes, A2P approved
+      </div>
+      <div style="padding:7px 10px;background:var(--lred);border:1px solid rgba(248,113,113,0.3);border-radius:3px;">
+        <span style="color:#F87171;font-weight:bold;">⚠ SECURITY</span> Rotate old Cloudflare token TODAY — do NOT paste any token into browser HTML
+      </div>
+      <div style="padding:7px 10px;background:var(--lred);border:1px solid rgba(248,113,113,0.3);border-radius:3px;">
+        <span style="color:#F87171;font-weight:bold;">⚠ HOLD</span> Do NOT add separate promotional/marketing SMS checkbox until A2P campaign review ends
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-note">EVERMORE LIFE LLC · FINAL EXPENSE DIVISION · <span id="last-update">--</span></div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="footer-ver" id="prog-label">v4.1 · MAY 4 · WORKFLOW DAY · A2P DAY 2 · 60% COMPLETE</div>
+    <button onclick="location.reload()" style="background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:'Courier New',monospace;font-size:9px;letter-spacing:0.1em;padding:4px 14px;border-radius:3px;cursor:pointer;">↺ REFRESH</button>
+  </div>
+</footer>
+
+<script>
+// Clock
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}) + ' · ' + now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+updateClock();
+document.getElementById('last-update').textContent = 'UPDATED MAY 4 EVENING · AUTO-REFRESHED BY COWORK';
+setInterval(updateClock, 1000);
+
+function enterRoom(e, roomName) {
+  if (e && e.target && e.target.classList && e.target.classList.contains('enter-room-btn')) return;
+  if (e && e.target && e.target.classList && e.target.classList.contains('room-act')) return;
+  window.open('../rooms/' + roomName + '/', '_blank');
+}
+
+function toggleStep(el) {
+  if (el.classList.contains('locked') || el.classList.contains('waiting')) return;
+  el.classList.toggle('done');
+  const num = el.querySelector('.step-num');
+  const tag = el.querySelector('.step-tag');
+  const origNum = el.dataset.num || num.textContent;
+  el.dataset.num = origNum;
+
+  if (el.classList.contains('done')) {
+    num.className = 'step-num num-done';
+    num.textContent = '✓';
+    if (tag) { tag.className = 'step-tag tag-done'; tag.textContent = '✓ DONE'; }
+  } else {
+    num.className = 'step-num num-active';
+    num.textContent = origNum;
+    if (tag) { tag.className = 'step-tag tag-active'; tag.textContent = '⟳ TODAY'; }
+  }
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = 10;
+  const lockedDone = 6; // steps 1-6 done
+  const toggleDone = document.querySelectorAll('.step-row:not(.locked):not(.waiting).done').length;
+  const done = lockedDone + toggleDone;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-left').textContent = total - done;
+  document.getElementById('prog-label').textContent = 'v4.1 · MAY 4 · WORKFLOW DAY · A2P DAY 2 · ' + pct + '% COMPLETE';
+}
+</script>
+</body>
+</html>

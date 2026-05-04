@@ -1,0 +1,73 @@
+/* Optional Evermore styling for GHL page-level custom CSS.
+   Use only if the native builder needs a light brand pass. */
+
+:root {
+  --evermore-navy: #0d1b4b;
+  --evermore-blue: #1b2e5e;
+  --evermore-gold: #c8943a;
+  --evermore-cream: #faf7f1;
+  --evermore-text: #202533;
+  --evermore-muted: #657086;
+}
+
+.evermore-section {
+  padding: 72px 24px;
+}
+
+.evermore-container {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.evermore-eyebrow {
+  color: var(--evermore-gold);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.evermore-hero {
+  background: linear-gradient(135deg, var(--evermore-navy), var(--evermore-blue));
+  color: #fff;
+}
+
+.evermore-hero h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(40px, 7vw, 76px);
+  line-height: 1.02;
+  letter-spacing: 0;
+  margin: 0 0 20px;
+}
+
+.evermore-hero p,
+.evermore-disclosure {
+  line-height: 1.7;
+}
+
+.evermore-button {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 22px;
+  border-radius: 6px;
+  background: var(--evermore-gold);
+  color: var(--evermore-navy);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.evermore-card {
+  border: 1px solid #e5dfd4;
+  border-radius: 8px;
+  background: #fff;
+  padding: 24px;
+}
+
+.evermore-disclosure {
+  color: var(--evermore-muted);
+  font-size: 13px;
+}
+

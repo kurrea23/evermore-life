@@ -1,0 +1,130 @@
+<style>
+  .evermore-thankyou,
+  .evermore-thankyou * {
+    box-sizing: border-box;
+  }
+
+  .evermore-thankyou {
+    width: 100%;
+    min-height: 680px;
+    padding: 72px 24px;
+    display: grid;
+    place-items: center;
+    font-family: "DM Sans", Arial, sans-serif;
+    color: #ffffff;
+    background: linear-gradient(135deg, #0d1b4b, #1b2e5e);
+    text-align: center;
+  }
+
+  .evermore-thankyou__inner {
+    width: min(760px, 100%);
+  }
+
+  .evermore-thankyou__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 32px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .evermore-thankyou__mark {
+    width: 34px;
+    height: 34px;
+    border: 2px solid #c8943a;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: #c8943a;
+    font-family: Georgia, serif;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .evermore-thankyou__eyebrow {
+    color: #c8943a;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .evermore-thankyou h1 {
+    color: #ffffff;
+    font-family: Georgia, serif;
+    font-size: clamp(2.4rem, 7vw, 4.6rem);
+    line-height: 1.02;
+    letter-spacing: 0;
+    margin: 0 0 22px;
+  }
+
+  .evermore-thankyou p {
+    max-width: 620px;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: clamp(1rem, 2.4vw, 1.22rem);
+    line-height: 1.7;
+  }
+
+  .evermore-thankyou__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 34px;
+  }
+
+  .evermore-thankyou__btn {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 22px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 800;
+  }
+
+  .evermore-thankyou__btn-primary {
+    background: #c8943a;
+    color: #0d1b4b;
+  }
+
+  .evermore-thankyou__btn-secondary {
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    color: #ffffff;
+  }
+
+  .evermore-thankyou__small {
+    margin-top: 26px;
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 0.86rem;
+  }
+</style>
+
+<section class="evermore-thankyou">
+  <div class="evermore-thankyou__inner">
+    <div class="evermore-thankyou__brand">
+      <span class="evermore-thankyou__mark">E</span>
+      Evermore Life
+    </div>
+    <div class="evermore-thankyou__eyebrow">Request Received</div>
+    <h1>You're all set.</h1>
+    <p>A licensed Evermore Life agent will review your request and reach out shortly. Keep an eye on your phone and email so we can help you compare your best coverage options.</p>
+    <div class="evermore-thankyou__actions">
+      <a class="evermore-thankyou__btn evermore-thankyou__btn-primary" href="https://evermorelife.org/home">Back to Home</a>
+      <a class="evermore-thankyou__btn evermore-thankyou__btn-secondary" href="mailto:evermorelifeagent01@gmail.com?subject=Evermore%20Life%20Quote%20Request">Email Evermore Life</a>
+    </div>
+    <p class="evermore-thankyou__small">SMS messages are sent only when you opt in. Reply STOP to opt out or HELP for help. Message and data rates may apply.</p>
+    <p class="evermore-thankyou__small">Evermore Life LLC · 4539 N 22ND ST, STE R, Phoenix, Arizona 85016 · <a href="tel:+15055043101">+1 505-504-3101</a> · <a href="mailto:evermorelifeagent01@gmail.com">evermorelifeagent01@gmail.com</a></p>
+  </div>
+</section>
+
+<script>
+  if (typeof fbq !== "undefined") fbq("track", "Lead", { content_name: "Evermore Thank You Page" });
+  if (typeof gtag !== "undefined") gtag("event", "generate_lead", { event_category: "Lead", event_label: "Evermore Thank You Page" });
+</script>

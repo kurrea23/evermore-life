@@ -1,0 +1,1 @@
+../../../04_tools/scripts/deploy_kvn.sh

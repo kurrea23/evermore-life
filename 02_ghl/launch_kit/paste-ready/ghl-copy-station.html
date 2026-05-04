@@ -1,0 +1,1316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evermore GHL Copy Station</title>
+<style>
+  :root { --navy:#0d1b4b; --blue:#1a3070; --gold:#c8a96e; --ink:#172033; --muted:#607086; --line:#dfe6f2; --paper:#f7f9fc; --ok:#15803d; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; color:var(--ink); background:var(--paper); }
+  header { background:linear-gradient(135deg, var(--navy), var(--blue)); color:white; padding:28px 24px; }
+  header .wrap, main { width:min(1120px, calc(100% - 32px)); margin:0 auto; }
+  h1 { margin:0 0 8px; font-size:clamp(1.7rem, 3vw, 2.6rem); letter-spacing:0; }
+  header p { margin:0; color:rgba(255,255,255,.78); line-height:1.5; }
+  main { padding:24px 0 48px; }
+  .notice { background:#fff8e7; border:1px solid #f2d48b; border-radius:8px; padding:14px 16px; margin-bottom:18px; line-height:1.5; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; }
+  .card { background:white; border:1px solid var(--line); border-radius:8px; padding:18px; box-shadow:0 8px 24px rgba(13,27,75,.06); }
+  .card h2 { margin:0 0 8px; font-size:1.1rem; color:var(--navy); }
+  .meta { display:grid; gap:6px; margin:12px 0; color:var(--muted); font-size:.92rem; }
+  .meta b { color:var(--ink); }
+  .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+  button, a.button { appearance:none; border:0; border-radius:7px; padding:11px 14px; font-weight:800; cursor:pointer; text-decoration:none; font-size:.94rem; }
+  button.copy { background:var(--navy); color:white; }
+  a.button { background:#edf3ff; color:var(--navy); border:1px solid #c7d7f7; }
+  button.preview { background:#f5f7fb; color:var(--ink); border:1px solid var(--line); }
+  textarea { width:100%; height:160px; margin-top:12px; border:1px solid var(--line); border-radius:7px; padding:10px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:.78rem; line-height:1.45; color:#233; background:#fbfcff; display:none; }
+  .status { min-height:22px; margin-top:10px; font-size:.9rem; color:var(--ok); font-weight:700; }
+  .footer { margin-top:24px; color:var(--muted); font-size:.9rem; line-height:1.5; }
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>Evermore GHL Copy Station</h1><p>Click a page, paste into the matching GoHighLevel custom HTML block, save, then preview. For A2P, put the chat widget only on pages that do not collect phone numbers.</p></div></header>
+<main>
+  <div class="notice"><b>Use this order:</b> Home, Opt In, Terms, Privacy Policy, Thank You. For the custom A2P path, remove the chat widget from Body Tracking and do not add it to these pages. The working public routes are <b>/home</b>, <b>/optin</b>, <b>/terms</b>, <b>/privacypolicy</b>, and <b>/thankyou</b>.</div>
+  <div class="grid">
+    <section class="card">
+      <h2>Home</h2>
+      <div class="meta"><div><b>GHL step:</b> Home</div><div><b>Route:</b> https://evermorelife.org/home</div><div>Fixes Free Quote links to /optin and policy links to live routes.</div></div>
+      <div class="actions">
+        <button class="copy" data-copy="code-home" data-label="Home">Copy Home Code</button>
+        <a class="button" href="https://evermorelife.org/home" target="_blank" rel="noopener">Open Live</a>
+        <button class="preview" data-toggle="code-home">Show Code</button>
+      </div>
+      <textarea id="code-home" spellcheck="false">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8" /&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+  &lt;title&gt;Evermore Life | Life Insurance, Mortgage Protection &amp;amp; Annuities&lt;/title&gt;
+  &lt;meta name="description" content="Evermore Life provides life insurance, final expense, term life, IUL, whole life, mortgage protection, and annuity solutions to protect your family's future. Get a free quote today." /&gt;
+  &lt;style&gt;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: #1a1a2e; background: #fff; }
+
+    /* NAV */
+    nav {
+      background: #0d1b4b;
+      padding: 16px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo { color: #fff; font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; text-decoration: none; }
+    .nav-logo span { color: #c8a96e; }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { color: #cdd3e0; text-decoration: none; font-size: 0.95rem; transition: color 0.2s; }
+    .nav-links a:hover { color: #c8a96e; }
+    .nav-cta {
+      background: #c8a96e;
+      color: #0d1b4b;
+      padding: 10px 22px;
+      border-radius: 6px;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: #b8934f; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #0d1b4b 0%, #1a3070 60%, #0d1b4b 100%);
+      color: #fff;
+      padding: 90px 40px 80px;
+      text-align: center;
+    }
+    .hero h1 { font-size: 3rem; font-weight: 900; line-height: 1.15; margin-bottom: 20px; }
+    .hero h1 span { color: #c8a96e; }
+    .hero p { font-size: 1.2rem; color: #c8ddf5; max-width: 620px; margin: 0 auto 36px; line-height: 1.7; }
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: #c8a96e;
+      color: #0d1b4b;
+      padding: 16px 36px;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-primary:hover { background: #b8934f; transform: translateY(-2px); }
+    .btn-secondary {
+      background: transparent;
+      color: #fff;
+      padding: 16px 36px;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-decoration: none;
+      border: 2px solid #c8a96e;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: #c8a96e; color: #0d1b4b; }
+
+    /* TRUST BAR */
+    .trust-bar {
+      background: #f7f9fc;
+      padding: 24px 40px;
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #e0e6ef;
+    }
+    .trust-item { text-align: center; }
+    .trust-item .num { font-size: 2rem; font-weight: 900; color: #0d1b4b; }
+    .trust-item .lbl { font-size: 0.82rem; color: #6b7c99; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* PRODUCTS */
+    .section { padding: 70px 40px; }
+    .section-title { text-align: center; font-size: 2rem; font-weight: 800; color: #0d1b4b; margin-bottom: 12px; }
+    .section-sub { text-align: center; color: #6b7c99; font-size: 1rem; max-width: 560px; margin: 0 auto 50px; line-height: 1.6; }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px; max-width: 1080px; margin: 0 auto; }
+    .product-card {
+      background: #fff;
+      border: 1px solid #e0e6ef;
+      border-radius: 14px;
+      padding: 36px 28px;
+      text-align: center;
+      transition: box-shadow 0.2s, transform 0.2s;
+      cursor: default;
+    }
+    .product-card:hover { box-shadow: 0 8px 32px rgba(13,27,75,0.12); transform: translateY(-4px); }
+    .product-icon { margin-bottom: 16px; display: flex; align-items: center; justify-content: center; }
+    .product-icon svg { width: 44px; height: 44px; color: #c8a96e; stroke: #c8a96e; }
+    .product-card h3 { font-size: 1.15rem; font-weight: 800; color: #0d1b4b; margin-bottom: 10px; }
+    .product-card p { color: #6b7c99; font-size: 0.92rem; line-height: 1.6; }
+
+    /* WHY */
+    .why-section { background: #0d1b4b; color: #fff; }
+    .why-section .section-title { color: #fff; }
+    .why-section .section-sub { color: #9aafce; }
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; max-width: 1080px; margin: 0 auto; }
+    .why-card { background: rgba(255,255,255,0.06); border-radius: 12px; padding: 28px 24px; border: 1px solid rgba(200,169,110,0.25); }
+    .why-card h4 { font-size: 1rem; font-weight: 700; color: #c8a96e; margin-bottom: 10px; }
+    .why-card p { font-size: 0.9rem; color: #9aafce; line-height: 1.6; }
+
+    /* HOW IT WORKS */
+    .steps-grid { display: flex; gap: 0; max-width: 900px; margin: 0 auto; align-items: flex-start; flex-wrap: wrap; justify-content: center; }
+    .step { text-align: center; flex: 1; min-width: 180px; padding: 10px 20px; }
+    .step-num { width: 52px; height: 52px; border-radius: 50%; background: #0d1b4b; color: #c8a96e; font-size: 1.4rem; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+    .step h4 { font-size: 1rem; font-weight: 700; color: #0d1b4b; margin-bottom: 8px; }
+    .step p { font-size: 0.88rem; color: #6b7c99; line-height: 1.5; }
+
+    /* OPTIN SECTION */
+    .optin-section {
+      background: linear-gradient(135deg, #c8a96e 0%, #b8934f 100%);
+      padding: 70px 40px;
+      text-align: center;
+      color: #0d1b4b;
+    }
+    .optin-section h2 { font-size: 2.2rem; font-weight: 900; margin-bottom: 14px; }
+    .optin-section p { font-size: 1.05rem; margin-bottom: 30px; max-width: 540px; margin-left: auto; margin-right: auto; opacity: 0.85; line-height: 1.6; }
+    .optin-form { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; max-width: 560px; margin: 0 auto 16px; }
+    .optin-form input {
+      padding: 14px 18px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      flex: 1;
+      min-width: 200px;
+      outline: none;
+    }
+    .optin-form button {
+      background: #0d1b4b;
+      color: #fff;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .optin-form button:hover { background: #1a3070; }
+    .inline-consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      max-width: 560px;
+      margin: 0 auto 14px;
+      text-align: left;
+      color: rgba(13,27,75,0.75);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+    .inline-consent input { margin-top: 3px; flex: 0 0 auto; accent-color: #0d1b4b; }
+    .inline-consent a { color: #0d1b4b; font-weight: 700; }
+    .optin-disclaimer { font-size: 0.75rem; color: rgba(13,27,75,0.65); max-width: 540px; margin: 0 auto; line-height: 1.5; }
+    .ghl-form-frame {
+      width: min(620px, 100%);
+      min-height: 606px;
+      margin: 0 auto 18px;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 8px 28px rgba(13,27,75,0.14);
+    }
+    .ghl-form-frame iframe { display: block; min-height: 606px; }
+
+    /* FOOTER */
+    footer {
+      background: #0a1238;
+      color: #9aafce;
+      padding: 50px 40px 30px;
+    }
+    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 36px; margin-bottom: 40px; }
+    .footer-col h5 { color: #c8a96e; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+    .footer-col p, .footer-col a { font-size: 0.88rem; color: #9aafce; text-decoration: none; display: block; margin-bottom: 8px; line-height: 1.5; }
+    .footer-col a:hover { color: #c8a96e; }
+    .footer-brand { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 10px; }
+    .footer-brand span { color: #c8a96e; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 22px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 0.8rem; }
+    .footer-bottom a { color: #9aafce; text-decoration: none; }
+    .footer-bottom a:hover { color: #c8a96e; }
+
+    @media (max-width: 700px) {
+      .hero h1 { font-size: 2rem; }
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .trust-bar { gap: 30px; }
+      .section { padding: 50px 20px; }
+      .optin-section { padding: 50px 20px; }
+      footer { padding: 40px 20px 24px; }
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;!-- NAV --&gt;
+&lt;nav&gt;
+  &lt;a href="https://evermorelife.org/home" class="nav-logo"&gt;Evermore &lt;span&gt;Life&lt;/span&gt;&lt;/a&gt;
+  &lt;ul class="nav-links"&gt;
+    &lt;li&gt;&lt;a href="#products"&gt;Products&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#how"&gt;How It Works&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#why"&gt;Why Us&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="https://evermorelife.org/optin"&gt;Get a Quote&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;a href="https://evermorelife.org/optin" class="nav-cta"&gt;Free Quote →&lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;!-- HERO --&gt;
+&lt;section class="hero"&gt;
+  &lt;h1&gt;Protect What Matters Most&lt;br /&gt;&lt;span&gt;Life Insurance Made Simple&lt;/span&gt;&lt;/h1&gt;
+  &lt;p&gt;Final expense, term life, indexed universal life, whole life, mortgage protection, and annuity options tailored to you and your family. We compare top carriers so you can review options quickly.&lt;/p&gt;
+  &lt;div class="hero-btns"&gt;
+    &lt;a href="https://evermorelife.org/optin" class="btn-primary"&gt;Get My Free Quote&lt;/a&gt;
+    &lt;a href="#products" class="btn-secondary"&gt;See Our Plans&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;!-- TRUST BAR --&gt;
+&lt;div class="trust-bar"&gt;
+  &lt;div class="trust-item"&gt;&lt;div class="num"&gt;A+&lt;/div&gt;&lt;div class="lbl"&gt;Carrier Ratings&lt;/div&gt;&lt;/div&gt;
+  &lt;div class="trust-item"&gt;&lt;div class="num"&gt;5&lt;/div&gt;&lt;div class="lbl"&gt;Top-Rated Carriers&lt;/div&gt;&lt;/div&gt;
+  &lt;div class="trust-item"&gt;&lt;div class="num"&gt;100%&lt;/div&gt;&lt;div class="lbl"&gt;No-Obligation Quote&lt;/div&gt;&lt;/div&gt;
+  &lt;div class="trust-item"&gt;&lt;div class="num"&gt;24/7&lt;/div&gt;&lt;div class="lbl"&gt;Support Available&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- PRODUCTS --&gt;
+&lt;section class="section" id="products"&gt;
+  &lt;h2 class="section-title"&gt;Coverage Solutions for Every Stage of Life&lt;/h2&gt;
+  &lt;p class="section-sub"&gt;Whether you're looking for final expense coverage, a term policy, cash-value life insurance, mortgage protection, or annuity guidance, we help you review options that fit your goals and budget.&lt;/p&gt;
+  &lt;div class="products-grid"&gt;
+    &lt;div class="product-card"&gt;
+      &lt;div class="product-icon"&gt;
+        &lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"&gt;&lt;path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/&gt;&lt;/svg&gt;
+      &lt;/div&gt;
+      &lt;h3&gt;Final Expense&lt;/h3&gt;
+      &lt;p&gt;Affordable whole life coverage to handle end-of-life costs — no medical exam required. Protect your family from unexpected burial and funeral expenses.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="product-card"&gt;
+      &lt;div class="product-icon"&gt;
+        &lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"&gt;&lt;path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/&gt;&lt;circle cx="9" cy="7" r="4"/&gt;&lt;path d="M23 21v-2a4 4 0 00-3-3.87"/&gt;&lt;path d="M16 3.13a4 4 0 010 7.75"/&gt;&lt;/svg&gt;
+      &lt;/div&gt;
+      &lt;h3&gt;Term Life Insurance&lt;/h3&gt;
+      &lt;p&gt;Get cost-effective coverage for income replacement and providing for your family during your working years.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="product-card"&gt;
+      &lt;div class="product-icon"&gt;
+        &lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"&gt;&lt;polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/&gt;&lt;polyline points="17 6 23 6 23 12"/&gt;&lt;/svg&gt;
+      &lt;/div&gt;
+      &lt;h3&gt;Indexed Universal Life (IUL)&lt;/h3&gt;
+      &lt;p&gt;Build tax-advantaged cash value tied to market index growth — with downside protection. A powerful tool for retirement income and legacy planning.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="product-card"&gt;
+      &lt;div class="product-icon"&gt;
+        &lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"&gt;&lt;path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/&gt;&lt;/svg&gt;
+      &lt;/div&gt;
+      &lt;h3&gt;Whole Life Insurance&lt;/h3&gt;
+      &lt;p&gt;Permanent coverage that never expires with guaranteed cash value growth. A cornerstone of any long-term financial protection strategy.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="product-card"&gt;
+      &lt;div class="product-icon"&gt;
+        &lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"&gt;&lt;path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/&gt;&lt;polyline points="9 22 9 12 15 12 15 22"/&gt;&lt;/svg&gt;
+      &lt;/div&gt;
+      &lt;h3&gt;Mortgage Protection&lt;/h3&gt;
+      &lt;p&gt;Ensure your family can stay in their home if something happens to you. Pays off your balance so your loved ones never lose the house.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="product-card"&gt;
+      &lt;div class="product-icon"&gt;
+        &lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"&gt;&lt;path d="M3 3v18h18"/&gt;&lt;path d="M7 16l4-4 3 3 6-7"/&gt;&lt;path d="M14 8h6v6"/&gt;&lt;/svg&gt;
+      &lt;/div&gt;
+      &lt;h3&gt;Annuities&lt;/h3&gt;
+      &lt;p&gt;Explore retirement income and accumulation options designed to help protect savings, create predictable income, and support long-term planning.&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;!-- HOW IT WORKS --&gt;
+&lt;section class="section" id="how" style="background:#f7f9fc;"&gt;
+  &lt;h2 class="section-title"&gt;How It Works&lt;/h2&gt;
+  &lt;p class="section-sub"&gt;Getting covered is easier than you think. We guide you every step of the way.&lt;/p&gt;
+  &lt;div class="steps-grid"&gt;
+    &lt;div class="step"&gt;
+      &lt;div class="step-num"&gt;1&lt;/div&gt;
+      &lt;h4&gt;Request a Quote&lt;/h4&gt;
+      &lt;p&gt;Fill out our simple form — takes less than 60 seconds.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="step"&gt;
+      &lt;div class="step-num"&gt;2&lt;/div&gt;
+      &lt;h4&gt;We Shop For You&lt;/h4&gt;
+      &lt;p&gt;Our agents compare rates from Mutual of Omaha, Ethos Life, American Amicable, Transamerica, and Aetna on your behalf.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="step"&gt;
+      &lt;div class="step-num"&gt;3&lt;/div&gt;
+      &lt;h4&gt;Pick Your Plan&lt;/h4&gt;
+      &lt;p&gt;We present your best options — you choose what fits your budget.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="step"&gt;
+      &lt;div class="step-num"&gt;4&lt;/div&gt;
+      &lt;h4&gt;Get Covered&lt;/h4&gt;
+      &lt;p&gt;Apply with guidance. Many policies can move quickly after carrier approval and first premium.&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;!-- WHY US --&gt;
+&lt;section class="section why-section" id="why"&gt;
+  &lt;h2 class="section-title"&gt;Why Choose Evermore Life?&lt;/h2&gt;
+  &lt;p class="section-sub"&gt;We're independent brokers — our loyalty is to you, not the carriers.&lt;/p&gt;
+  &lt;div class="why-grid"&gt;
+    &lt;div class="why-card"&gt;
+      &lt;h4&gt;Independent Brokers&lt;/h4&gt;
+      &lt;p&gt;We work for you, not the insurance companies. That means unbiased advice and access to the widest range of products.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="why-card"&gt;
+      &lt;h4&gt;No Medical Exam Options&lt;/h4&gt;
+      &lt;p&gt;Many of our final expense and simplified-issue plans require no physical exam — get covered fast even with health conditions.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="why-card"&gt;
+      &lt;h4&gt;Transparent Pricing&lt;/h4&gt;
+      &lt;p&gt;No hidden fees. No surprises. We show you exactly what you're paying and what you're getting before you sign anything.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="why-card"&gt;
+      &lt;h4&gt;Licensed Professionals&lt;/h4&gt;
+      &lt;p&gt;Every agent at Evermore Life is fully licensed and trained to find the right coverage for your unique situation.&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;!-- OPT-IN CTA --&gt;
+&lt;section class="optin-section" id="contact"&gt;
+  &lt;h2&gt;Get Your Free, No-Obligation Quote&lt;/h2&gt;
+  &lt;p&gt;Enter your name and phone number and a licensed Evermore Life agent will reach out to you — no pressure, no obligation.&lt;/p&gt;
+  &lt;div class="ghl-form-frame"&gt;
+    &lt;iframe
+      src="https://api.leadconnectorhq.com/widget/form/e8RIDTdhAVlc6CT9Zfj5"
+      style="width:100%;height:606px;border:none;border-radius:8px"
+      id="inline-e8RIDTdhAVlc6CT9Zfj5"
+      data-layout="{'id':'INLINE'}"
+      data-trigger-type="alwaysShow"
+      data-trigger-value=""
+      data-activation-type="alwaysActivated"
+      data-activation-value=""
+      data-deactivation-type="neverDeactivate"
+      data-deactivation-value=""
+      data-form-name="Form 10"
+      data-height="606"
+      data-layout-iframe-id="inline-e8RIDTdhAVlc6CT9Zfj5"
+      data-form-id="e8RIDTdhAVlc6CT9Zfj5"
+      title="Form 10"&gt;
+    &lt;/iframe&gt;
+  &lt;/div&gt;
+  &lt;p class="optin-disclaimer"&gt;
+    You can request a quote without agreeing to text messages. A licensed agent may contact you by phone or email about your request. View our &lt;a href="https://evermorelife.org/privacypolicy" style="color:#0d1b4b;font-weight:700;"&gt;Privacy Policy&lt;/a&gt; and &lt;a href="https://evermorelife.org/terms" style="color:#0d1b4b;font-weight:700;"&gt;Terms of Service&lt;/a&gt;.
+  &lt;/p&gt;
+&lt;/section&gt;
+
+&lt;!-- FOOTER --&gt;
+&lt;footer&gt;
+  &lt;div class="footer-grid"&gt;
+    &lt;div class="footer-col"&gt;
+      &lt;div class="footer-brand"&gt;Evermore &lt;span&gt;Life&lt;/span&gt;&lt;/div&gt;
+      &lt;p&gt;Independent life insurance brokerage helping families protect what matters most.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="footer-col"&gt;
+      &lt;h5&gt;Products&lt;/h5&gt;
+      &lt;a href="#products"&gt;Final Expense&lt;/a&gt;
+      &lt;a href="#products"&gt;Term Life&lt;/a&gt;
+      &lt;a href="#products"&gt;IUL&lt;/a&gt;
+      &lt;a href="#products"&gt;Whole Life&lt;/a&gt;
+      &lt;a href="#products"&gt;Mortgage Protection&lt;/a&gt;
+      &lt;a href="#products"&gt;Annuities&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="footer-col"&gt;
+      &lt;h5&gt;Company&lt;/h5&gt;
+      &lt;a href="#why"&gt;About Us&lt;/a&gt;
+      &lt;a href="https://evermorelife.org/optin"&gt;Get a Quote&lt;/a&gt;
+      &lt;a href="https://evermorelife.org/privacypolicy"&gt;Privacy Policy&lt;/a&gt;
+      &lt;a href="https://evermorelife.org/terms"&gt;Terms of Service&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class="footer-col"&gt;
+      &lt;h5&gt;Contact&lt;/h5&gt;
+      &lt;p&gt;
+        Evermore Life LLC&lt;br&gt;
+        4539 N 22ND ST, STE R,&lt;br&gt;
+        Phoenix, Arizona 85016&lt;br&gt;
+        Phone: &lt;a href="tel:+15055043101"&gt;+1 505-504-3101&lt;/a&gt;
+      &lt;/p&gt;
+      &lt;a href="mailto:evermorelifeagent01@gmail.com"&gt;evermorelifeagent01@gmail.com&lt;/a&gt;
+      &lt;a href="https://evermorelife.org/optin"&gt;Request a Callback&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="footer-bottom"&gt;
+    &lt;span&gt;© 2026 Evermore Life. All rights reserved.&lt;/span&gt;
+    &lt;span&gt;
+      &lt;a href="https://evermorelife.org/privacypolicy"&gt;Privacy Policy&lt;/a&gt; &amp;nbsp;|&amp;nbsp;
+      &lt;a href="https://evermorelife.org/terms"&gt;Terms of Service&lt;/a&gt; &amp;nbsp;|&amp;nbsp;
+      &lt;a href="https://evermorelife.org/optin"&gt;Opt-In / Opt-Out&lt;/a&gt;
+    &lt;/span&gt;
+  &lt;/div&gt;
+&lt;/footer&gt;
+
+&lt;script src="https://link.msgsndr.com/js/form_embed.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</textarea>
+      <div class="status" id="status-home"></div>
+    </section>
+    <section class="card">
+      <h2>Opt In</h2>
+      <div class="meta"><div><b>GHL step:</b> Opt In</div><div><b>Route:</b> https://evermorelife.org/optin</div><div>Main lead capture page with the embedded GHL opt-in form.</div></div>
+      <div class="actions">
+        <button class="copy" data-copy="code-optin" data-label="Opt In">Copy Opt In Code</button>
+        <a class="button" href="https://evermorelife.org/optin" target="_blank" rel="noopener">Open Live</a>
+        <button class="preview" data-toggle="code-optin">Show Code</button>
+      </div>
+      <textarea id="code-optin" spellcheck="false">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8" /&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+  &lt;title&gt;Get a Free Quote | Evermore Life&lt;/title&gt;
+  &lt;meta name="description" content="Get a free, no-obligation quote from Evermore Life. Final expense, term life, IUL, whole life, mortgage protection, and annuity options tailored to your needs." /&gt;
+  &lt;style&gt;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: #1a1a2e; background: #f7f9fc; }
+    nav {
+      background: #0d1b4b; padding: 16px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { color: #fff; font-size: 1.5rem; font-weight: 800; text-decoration: none; }
+    .nav-logo span { color: #c8a96e; }
+    .nav-back { color: #9aafce; text-decoration: none; font-size: 0.9rem; }
+    .nav-back:hover { color: #c8a96e; }
+
+    .page-wrap {
+      display: flex; min-height: calc(100vh - 65px);
+      align-items: stretch;
+    }
+
+    /* LEFT PANEL */
+    .left-panel {
+      background: linear-gradient(160deg, #0d1b4b 0%, #1a3070 100%);
+      color: #fff;
+      flex: 1;
+      padding: 70px 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .left-panel h1 { font-size: 2.2rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; }
+    .left-panel h1 span { color: #c8a96e; }
+    .left-panel p { color: #9aafce; font-size: 1rem; line-height: 1.7; margin-bottom: 36px; max-width: 420px; }
+    .trust-points { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .trust-points li { display: flex; align-items: flex-start; gap: 12px; font-size: 0.95rem; color: #cdd8ec; line-height: 1.5; }
+    .trust-points li .check { color: #c8a96e; font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
+    .carriers { margin-top: 40px; }
+    .carriers p { color: #6b7c99; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    .carrier-logos { display: flex; gap: 14px; flex-wrap: wrap; }
+    .carrier-pill {
+      background: rgba(255,255,255,0.08);
+      color: #9aafce;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    /* RIGHT PANEL - FORM */
+    .right-panel {
+      flex: 1;
+      padding: 60px 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f7f9fc;
+    }
+    .form-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 48px 40px;
+      box-shadow: 0 4px 30px rgba(13,27,75,0.10);
+      width: 100%;
+      max-width: 560px;
+    }
+    .form-card h2 { font-size: 1.5rem; font-weight: 800; color: #0d1b4b; margin-bottom: 6px; }
+    .form-card .sub { font-size: 0.9rem; color: #6b7c99; margin-bottom: 30px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 0.88rem; font-weight: 600; color: #0d1b4b; margin-bottom: 6px; }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid #d0d8e8;
+      border-radius: 8px;
+      font-size: 0.97rem;
+      color: #1a1a2e;
+      background: #fff;
+      transition: border-color 0.2s;
+      outline: none;
+      appearance: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus { border-color: #0d1b4b; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .consent-box {
+      background: #f0f5ff;
+      border: 1px solid #c8d8f0;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin: 20px 0;
+    }
+    .consent-check { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+    .consent-check input[type="checkbox"] { width: 17px; height: 17px; flex-shrink: 0; margin-top: 2px; accent-color: #0d1b4b; cursor: pointer; }
+    .consent-check label { font-size: 0.82rem; color: #3d4a5c; line-height: 1.5; cursor: pointer; }
+    .consent-check label a { color: #0d1b4b; font-weight: 700; }
+    .sms-disclosure {
+      font-size: 0.77rem;
+      color: #7a8ba0;
+      line-height: 1.5;
+    }
+    .sms-disclosure a { color: #0d1b4b; font-weight: 600; }
+
+    .submit-btn {
+      width: 100%;
+      background: #0d1b4b;
+      color: #fff;
+      border: none;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 4px;
+    }
+    .submit-btn:hover { background: #1a3070; transform: translateY(-1px); }
+    .form-footer { text-align: center; margin-top: 14px; font-size: 0.8rem; color: #9aafce; }
+    .ghl-main-form {
+      width: 100%;
+      min-height: 944px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .ghl-main-form iframe { display: block; min-height: 944px; }
+
+    /* THANK YOU STATE */
+    .thank-you { display: none; text-align: center; padding: 20px 0; }
+    .thank-you .icon { font-size: 3.5rem; margin-bottom: 16px; }
+    .thank-you h3 { font-size: 1.5rem; font-weight: 800; color: #0d1b4b; margin-bottom: 10px; }
+    .thank-you p { font-size: 0.95rem; color: #6b7c99; line-height: 1.6; }
+
+    footer {
+      background: #0a1238; color: #9aafce;
+      padding: 24px 40px; text-align: center; font-size: 0.82rem;
+    }
+    footer a { color: #c8a96e; text-decoration: none; margin: 0 8px; }
+
+    @media (max-width: 900px) {
+      .page-wrap { flex-direction: column; }
+      .left-panel { padding: 50px 28px; }
+      .right-panel { padding: 40px 20px; }
+      .form-card { padding: 36px 24px; }
+    }
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      nav { padding: 14px 20px; }
+      footer { padding: 20px; }
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;nav&gt;
+  &lt;a href="https://evermorelife.org/home" class="nav-logo"&gt;Evermore &lt;span&gt;Life&lt;/span&gt;&lt;/a&gt;
+  &lt;a href="https://evermorelife.org/home" class="nav-back"&gt;← Back to Home&lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;div class="page-wrap"&gt;
+
+  &lt;!-- LEFT PANEL --&gt;
+  &lt;div class="left-panel"&gt;
+    &lt;h1&gt;Your Free Quote&lt;br/&gt;&lt;span&gt;Takes 60 Seconds&lt;/span&gt;&lt;/h1&gt;
+    &lt;p&gt;Tell us a little about yourself and a licensed Evermore Life agent will reach out with your best options — no pressure, no obligation.&lt;/p&gt;
+    &lt;ul class="trust-points"&gt;
+      &lt;li&gt;&lt;span class="check"&gt;✓&lt;/span&gt; We compare 5 top-rated carriers to review your options&lt;/li&gt;
+      &lt;li&gt;&lt;span class="check"&gt;✓&lt;/span&gt; No medical exam required for many plans&lt;/li&gt;
+      &lt;li&gt;&lt;span class="check"&gt;✓&lt;/span&gt; Final expense, term, IUL, whole life, mortgage protection &amp;amp; annuities&lt;/li&gt;
+      &lt;li&gt;&lt;span class="check"&gt;✓&lt;/span&gt; 100% free — no obligation to purchase&lt;/li&gt;
+      &lt;li&gt;&lt;span class="check"&gt;✓&lt;/span&gt; Licensed agents only, no high-pressure sales&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;div class="carriers"&gt;
+      &lt;p&gt;Carriers we work with include&lt;/p&gt;
+      &lt;div class="carrier-logos"&gt;
+        &lt;span class="carrier-pill"&gt;Mutual of Omaha&lt;/span&gt;
+        &lt;span class="carrier-pill"&gt;Ethos Life&lt;/span&gt;
+        &lt;span class="carrier-pill"&gt;American Amicable&lt;/span&gt;
+        &lt;span class="carrier-pill"&gt;Transamerica&lt;/span&gt;
+        &lt;span class="carrier-pill"&gt;Aetna&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- RIGHT PANEL --&gt;
+  &lt;div class="right-panel"&gt;
+    &lt;div class="form-card"&gt;
+
+      &lt;!-- FORM STATE --&gt;
+      &lt;div id="form-state"&gt;
+        &lt;h2&gt;Get Your Free Quote&lt;/h2&gt;
+        &lt;p class="sub"&gt;Fill out the form below — a licensed agent will be in touch shortly.&lt;/p&gt;
+
+        &lt;div class="ghl-main-form"&gt;
+          &lt;iframe
+            src="https://api.leadconnectorhq.com/widget/form/jSPWmsXtRRndruYCzYsk"
+            style="width:100%;height:944px;border:none;border-radius:8px"
+            id="inline-jSPWmsXtRRndruYCzYsk"
+            data-layout="{'id':'INLINE'}"
+            data-trigger-type="alwaysShow"
+            data-trigger-value=""
+            data-activation-type="alwaysActivated"
+            data-activation-value=""
+            data-deactivation-type="neverDeactivate"
+            data-deactivation-value=""
+            data-form-name="Evermore Life Lead Form - Main Opt-In"
+            data-height="944"
+            data-layout-iframe-id="inline-jSPWmsXtRRndruYCzYsk"
+            data-form-id="jSPWmsXtRRndruYCzYsk"
+            title="Evermore Life Lead Form - Main Opt-In"&gt;
+          &lt;/iframe&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- THANK YOU STATE --&gt;
+      &lt;div class="thank-you" id="thank-you"&gt;
+        &lt;div class="icon"&gt;✅&lt;/div&gt;
+        &lt;h3&gt;You're All Set!&lt;/h3&gt;
+        &lt;p&gt;Thanks for reaching out. A licensed Evermore Life agent will contact you within 1 business day to discuss your coverage options.&lt;br/&gt;&lt;br/&gt;In the meantime, feel free to &lt;a href="https://evermorelife.org/home"&gt;explore our products&lt;/a&gt;.&lt;/p&gt;
+      &lt;/div&gt;
+
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;footer&gt;
+  &lt;p&gt;© 2026 Evermore Life. All rights reserved.&lt;/p&gt;
+  &lt;p style="margin-top:10px;"&gt;
+    Evermore Life LLC · 4539 N 22ND ST, STE R, Phoenix, Arizona 85016 ·
+    &lt;a href="tel:+15055043101"&gt;+1 505-504-3101&lt;/a&gt; ·
+    &lt;a href="mailto:evermorelifeagent01@gmail.com"&gt;evermorelifeagent01@gmail.com&lt;/a&gt;
+  &lt;/p&gt;
+  &lt;p style="margin-top:10px;"&gt;
+    &lt;a href="https://evermorelife.org/home"&gt;Home&lt;/a&gt;
+    &lt;a href="https://evermorelife.org/privacypolicy"&gt;Privacy Policy&lt;/a&gt;
+    &lt;a href="https://evermorelife.org/terms"&gt;Terms of Service&lt;/a&gt;
+  &lt;/p&gt;
+&lt;/footer&gt;
+
+&lt;script src="https://link.msgsndr.com/js/form_embed.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</textarea>
+      <div class="status" id="status-optin"></div>
+    </section>
+    <section class="card">
+      <h2>Terms</h2>
+      <div class="meta"><div><b>GHL step:</b> Terms of Service</div><div><b>Route:</b> https://evermorelife.org/terms</div><div>GHL-safe snippet with mortgage protection, annuity, STOP/HELP, and correct privacy route.</div></div>
+      <div class="actions">
+        <button class="copy" data-copy="code-terms" data-label="Terms">Copy Terms Code</button>
+        <a class="button" href="https://evermorelife.org/terms" target="_blank" rel="noopener">Open Live</a>
+        <button class="preview" data-toggle="code-terms">Show Code</button>
+      </div>
+      <textarea id="code-terms" spellcheck="false">&lt;style&gt;
+.evermore-terms, .evermore-terms * { box-sizing: border-box; margin: 0; padding: 0; }
+    .evermore-terms { font-family: 'Segoe UI', Arial, sans-serif; color: #1a1a2e; background: #fff; }
+    .evermore-terms nav {
+      background: #0d1b4b; padding: 16px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .evermore-terms .nav-logo { color: #fff; font-size: 1.5rem; font-weight: 800; text-decoration: none; }
+    .evermore-terms .nav-logo span { color: #c8a96e; }
+    .evermore-terms .nav-cta {
+      background: #c8a96e; color: #0d1b4b; padding: 10px 22px;
+      border-radius: 6px; font-weight: 700; text-decoration: none; font-size: 0.9rem;
+    }
+    .evermore-terms .page-header {
+      background: linear-gradient(135deg, #0d1b4b 0%, #1a3070 100%);
+      color: #fff; padding: 60px 40px 50px; text-align: center;
+    }
+    .evermore-terms .page-header h1 { font-size: 2.4rem; font-weight: 900; }
+    .evermore-terms .page-header p { color: #9aafce; margin-top: 10px; font-size: 0.95rem; }
+    .evermore-terms .content { max-width: 820px; margin: 0 auto; padding: 60px 30px 80px; }
+    .evermore-terms .content h2 { font-size: 1.3rem; font-weight: 800; color: #0d1b4b; margin: 36px 0 12px; }
+    .evermore-terms .content p { font-size: 0.97rem; color: #3d4a5c; line-height: 1.75; margin-bottom: 14px; }
+    .evermore-terms .content ul { margin: 10px 0 14px 24px; }
+    .evermore-terms .content ul li { font-size: 0.97rem; color: #3d4a5c; line-height: 1.75; margin-bottom: 6px; }
+    .evermore-terms .content a { color: #0d1b4b; font-weight: 600; }
+    .evermore-terms .highlight-box {
+      background: #f0f5ff; border-left: 4px solid #c8a96e;
+      padding: 18px 22px; border-radius: 6px; margin: 20px 0;
+    }
+    .evermore-terms .highlight-box p { margin: 0; font-size: 0.93rem; color: #3d4a5c; }
+.evermore-terms footer {
+      background: #0a1238; color: #9aafce;
+      padding: 30px 40px; text-align: center; font-size: 0.85rem;
+    }
+.evermore-terms footer a { color: #c8a96e; text-decoration: none; margin: 0 10px; }
+    @media (max-width: 600px) {
+      .evermore-terms .page-header h1 { font-size: 1.8rem; }
+      .evermore-terms .content { padding: 40px 20px 60px; }
+  .evermore-terms nav { padding: 14px 20px; }
+    }
+  &lt;/style&gt;
+
+
+&lt;section class="evermore-terms"&gt;
+&lt;nav&gt;
+  &lt;a href="https://evermorelife.org/home" class="nav-logo"&gt;Evermore &lt;span&gt;Life&lt;/span&gt;&lt;/a&gt;
+  &lt;a href="https://evermorelife.org/optin" class="nav-cta"&gt;Free Quote →&lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;div class="page-header"&gt;
+  &lt;h1&gt;Terms of Service&lt;/h1&gt;
+  &lt;p&gt;Effective Date: May 2, 2026 &amp;nbsp;|&amp;nbsp; Last Updated: May 2, 2026&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="content"&gt;
+
+  &lt;div class="highlight-box"&gt;
+    &lt;p&gt;Please read these Terms of Service carefully before using our website or services. By accessing &lt;strong&gt;evermorelife.org&lt;/strong&gt; or submitting your information, you agree to be bound by these terms.&lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;h2&gt;1. Acceptance of Terms&lt;/h2&gt;
+  &lt;p&gt;These Terms of Service ("Terms") govern your use of the Evermore Life website located at &lt;strong&gt;evermorelife.org&lt;/strong&gt; and all related services offered by Evermore Life ("Company," "we," "our," or "us"). By using our website or services — including submitting any form, requesting a quote, or communicating with our agents — you agree to these Terms. If you do not agree, please do not use our website or services.&lt;/p&gt;
+
+  &lt;h2&gt;2. Description of Services&lt;/h2&gt;
+  &lt;p&gt;Evermore Life is an independent insurance brokerage. We provide education, quote request support, and licensed-agent follow-up for insurance and retirement-income products that may include:&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Life insurance quotes and product comparisons, including final expense, term life, whole life, and indexed universal life (IUL)&lt;/li&gt;
+    &lt;li&gt;Mortgage protection coverage designed to help families protect a home loan or household income after a qualifying death&lt;/li&gt;
+    &lt;li&gt;Annuity education and referral support for people reviewing retirement income, accumulation, and asset-protection options&lt;/li&gt;
+    &lt;li&gt;Connection to licensed insurance agents who can assist with applications&lt;/li&gt;
+    &lt;li&gt;General insurance education and informational resources&lt;/li&gt;
+    &lt;li&gt;SMS and phone-based communication regarding coverage options&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;p&gt;We are a broker, not an insurer, bank, investment adviser, law firm, or tax adviser. All insurance and annuity products are issued by licensed, third-party carriers. Coverage, pricing, availability, guarantees, surrender periods, riders, fees, and benefits are subject to carrier approval, underwriting, product terms, state availability, and the specific contract or policy issued by the carrier.&lt;/p&gt;
+
+  &lt;h2&gt;3. Eligibility&lt;/h2&gt;
+  &lt;p&gt;You must be at least 18 years of age to use our services. By using our website, you represent that you are 18 or older and have the legal capacity to enter into a binding agreement.&lt;/p&gt;
+
+  &lt;h2&gt;4. Communications Consent — SMS &amp;amp; Phone&lt;/h2&gt;
+  &lt;p&gt;If you voluntarily check an SMS consent box on one of our forms, you expressly consent to receive text messages from Evermore Life. Submitting a quote request does not require SMS consent, and you may request information by phone or email without agreeing to text messages.&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;SMS text messages regarding your quote request, appointment reminders, and insurance options&lt;/li&gt;
+    &lt;li&gt;Outbound calls from licensed agents&lt;/li&gt;
+    &lt;li&gt;Follow-up communications related to your inquiry&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;p&gt;This consent is not a condition of purchasing any product or service. You may opt out of SMS messages at any time by replying &lt;strong&gt;STOP&lt;/strong&gt;. You may opt out of phone calls by requesting removal during any call or by emailing &lt;a href="mailto:evermorelifeagent01@gmail.com"&gt;evermorelifeagent01@gmail.com&lt;/a&gt;.&lt;/p&gt;
+  &lt;p&gt;Message and data rates may apply. Message frequency varies. For assistance, reply &lt;strong&gt;HELP&lt;/strong&gt; or contact &lt;a href="mailto:evermorelifeagent01@gmail.com"&gt;evermorelifeagent01@gmail.com&lt;/a&gt;. Carriers are not liable for delayed or undelivered messages. Your use of SMS communications is also governed by our &lt;a href="https://evermorelife.org/privacypolicy"&gt;Privacy Policy&lt;/a&gt;.&lt;/p&gt;
+
+  &lt;h2&gt;5. No Insurance Advice or Guarantee&lt;/h2&gt;
+  &lt;p&gt;The content on our website is for general informational purposes only and does not constitute individualized insurance, financial, investment, tax, or legal advice. Information about life insurance, mortgage protection, IUL, whole life, final expense, term life, or annuities is educational and should be reviewed with a properly licensed professional before you make a purchase or replacement decision.&lt;/p&gt;
+  &lt;p&gt;Quotes and illustrations are estimates only. They are not offers, contracts, approvals, guarantees of coverage, guarantees of premium, guarantees of income, or promises of investment performance. Final eligibility, rates, benefits, exclusions, contestability periods, surrender charges, rider availability, and policy or contract terms are determined by the issuing carrier and the documents you receive from that carrier.&lt;/p&gt;
+
+  &lt;h2&gt;6. Annuity and Retirement Income Disclosures&lt;/h2&gt;
+  &lt;p&gt;Annuities are insurance products and may not be suitable for everyone. Annuity guarantees are backed by the claims-paying ability of the issuing insurance company. Some annuities may include surrender charges, market value adjustments, caps, spreads, participation rates, rider fees, withdrawal limits, tax consequences, and other restrictions. You should review all product materials and consult qualified tax, legal, or financial professionals before purchasing, exchanging, or replacing an annuity or life insurance product.&lt;/p&gt;
+
+  &lt;h2&gt;7. User Responsibilities&lt;/h2&gt;
+  &lt;p&gt;When using our website or services, you agree to:&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Provide accurate, truthful, and complete information on all forms and applications.&lt;/li&gt;
+    &lt;li&gt;Not use our services for any unlawful or fraudulent purpose.&lt;/li&gt;
+    &lt;li&gt;Not attempt to interfere with, disrupt, or gain unauthorized access to our website or systems.&lt;/li&gt;
+    &lt;li&gt;Not transmit any harmful, offensive, or inappropriate content through our communication channels.&lt;/li&gt;
+  &lt;/ul&gt;
+
+  &lt;h2&gt;8. Intellectual Property&lt;/h2&gt;
+  &lt;p&gt;All content on our website — including text, graphics, logos, images, and software — is the property of Evermore Life or its licensors and is protected by applicable intellectual property laws. You may not reproduce, distribute, or create derivative works without our express written permission.&lt;/p&gt;
+
+  &lt;h2&gt;9. Third-Party Links and Services&lt;/h2&gt;
+  &lt;p&gt;Our website may contain links to third-party websites or use third-party service providers (such as CRM platforms and analytics tools). We are not responsible for the content, accuracy, or practices of any third-party site or service. Your use of third-party services is governed by their respective terms and policies.&lt;/p&gt;
+
+  &lt;h2&gt;10. Disclaimer of Warranties&lt;/h2&gt;
+  &lt;p&gt;Our website and services are provided "as is" and "as available" without warranties of any kind, express or implied. We do not warrant that our website will be uninterrupted, error-free, or free of viruses or other harmful components. We disclaim all implied warranties, including those of merchantability, fitness for a particular purpose, and non-infringement.&lt;/p&gt;
+
+  &lt;h2&gt;11. Limitation of Liability&lt;/h2&gt;
+  &lt;p&gt;To the maximum extent permitted by law, Evermore Life and its officers, agents, employees, and partners shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of our website or services — even if we have been advised of the possibility of such damages. Our total liability for any claim shall not exceed one hundred dollars (<textarea id="code-terms" spellcheck="false">00).&lt;/p&gt;
+
+  &lt;h2&gt;12. Indemnification&lt;/h2&gt;
+  &lt;p&gt;You agree to indemnify and hold harmless Evermore Life and its officers, employees, agents, and partners from any claims, liabilities, damages, costs, or expenses (including attorneys' fees) arising out of your use of our services, your violation of these Terms, or your violation of any third-party rights.&lt;/p&gt;
+
+  &lt;h2&gt;13. Privacy&lt;/h2&gt;
+  &lt;p&gt;Your use of our services is also governed by our &lt;a href="https://evermorelife.org/privacypolicy"&gt;Privacy Policy&lt;/a&gt;, which is incorporated into these Terms by reference. Please review our Privacy Policy to understand our data practices.&lt;/p&gt;
+
+  &lt;h2&gt;14. Governing Law&lt;/h2&gt;
+  &lt;p&gt;These Terms shall be governed by and construed in accordance with the laws of the State of New Mexico, without regard to its conflict of law provisions. Any disputes arising under these Terms shall be subject to the exclusive jurisdiction of the courts located in New Mexico.&lt;/p&gt;
+
+  &lt;h2&gt;15. Changes to Terms&lt;/h2&gt;
+  &lt;p&gt;We reserve the right to update or modify these Terms at any time. Changes will be posted on this page with an updated effective date. Your continued use of our website or services after any changes constitutes your acceptance of the revised Terms.&lt;/p&gt;
+
+  &lt;h2&gt;16. Contact Us&lt;/h2&gt;
+  &lt;p&gt;If you have any questions about these Terms of Service, please contact us:&lt;/p&gt;
+  &lt;p&gt;
+    &lt;strong&gt;Evermore Life LLC&lt;/strong&gt;&lt;br /&gt;
+    4539 N 22ND ST, STE R,&lt;br /&gt;
+    Phoenix, Arizona 85016&lt;br /&gt;
+    Phone: &lt;a href="tel:+15055043101"&gt;+1 505-504-3101&lt;/a&gt;&lt;br /&gt;
+    Email: &lt;a href="mailto:evermorelifeagent01@gmail.com"&gt;evermorelifeagent01@gmail.com&lt;/a&gt;&lt;br /&gt;
+    Website: &lt;a href="https://evermorelife.org/home"&gt;evermorelife.org/home&lt;/a&gt;
+  &lt;/p&gt;
+
+&lt;/div&gt;
+
+&lt;footer&gt;
+  &lt;p&gt;© 2026 Evermore Life. All rights reserved.&lt;/p&gt;
+  &lt;p style="margin-top:12px;"&gt;
+    &lt;a href="https://evermorelife.org/home"&gt;Home&lt;/a&gt;
+    &lt;a href="https://evermorelife.org/privacypolicy"&gt;Privacy Policy&lt;/a&gt;
+    &lt;a href="https://evermorelife.org/terms"&gt;Terms of Service&lt;/a&gt;
+    &lt;a href="https://evermorelife.org/optin"&gt;Opt-In / Opt-Out&lt;/a&gt;
+  &lt;/p&gt;
+&lt;/footer&gt;
+&lt;/section&gt;
+</textarea>
+      <div class="status" id="status-terms"></div>
+    </section>
+    <section class="card">
+      <h2>Privacy Policy</h2>
+      <div class="meta"><div><b>GHL step:</b> Privacy policy</div><div><b>Route:</b> https://evermorelife.org/privacypolicy</div><div>GHL-safe snippet with SMS opt-in non-sharing language and correct email.</div></div>
+      <div class="actions">
+        <button class="copy" data-copy="code-privacy" data-label="Privacy Policy">Copy Privacy Policy Code</button>
+        <a class="button" href="https://evermorelife.org/privacypolicy" target="_blank" rel="noopener">Open Live</a>
+        <button class="preview" data-toggle="code-privacy">Show Code</button>
+      </div>
+      <textarea id="code-privacy" spellcheck="false">&lt;style&gt;
+  .evermore-policy,
+  .evermore-policy * {
+    box-sizing: border-box;
+  }
+
+  .evermore-policy {
+    width: 100%;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #1a1a2e;
+    background: #ffffff;
+  }
+
+  .evermore-policy__nav {
+    background: #0d1b4b;
+    padding: 16px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .evermore-policy__logo {
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .evermore-policy__logo span {
+    color: #c8a96e;
+  }
+
+  .evermore-policy__cta {
+    background: #c8a96e;
+    color: #0d1b4b;
+    padding: 10px 22px;
+    border-radius: 6px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .evermore-policy__header {
+    background: linear-gradient(135deg, #0d1b4b 0%, #1a3070 100%);
+    color: #ffffff;
+    padding: 60px 40px 50px;
+    text-align: center;
+  }
+
+  .evermore-policy__header h1 {
+    color: #ffffff;
+    font-size: 2.4rem;
+    font-weight: 900;
+    margin: 0;
+  }
+
+  .evermore-policy__header p {
+    color: #9aafce;
+    margin: 10px 0 0;
+    font-size: 0.95rem;
+  }
+
+  .evermore-policy__content {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 60px 30px 80px;
+  }
+
+  .evermore-policy__content h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #0d1b4b;
+    margin: 36px 0 12px;
+  }
+
+  .evermore-policy__content p {
+    font-size: 0.97rem;
+    color: #3d4a5c;
+    line-height: 1.75;
+    margin: 0 0 14px;
+  }
+
+  .evermore-policy__content ul {
+    margin: 10px 0 14px 24px;
+  }
+
+  .evermore-policy__content li {
+    font-size: 0.97rem;
+    color: #3d4a5c;
+    line-height: 1.75;
+    margin-bottom: 6px;
+  }
+
+  .evermore-policy__content a {
+    color: #0d1b4b;
+    font-weight: 600;
+  }
+
+  .evermore-policy__highlight {
+    background: #f0f5ff;
+    border-left: 4px solid #c8a96e;
+    padding: 18px 22px;
+    border-radius: 6px;
+    margin: 20px 0;
+  }
+
+  .evermore-policy__highlight p {
+    margin: 0;
+    font-size: 0.93rem;
+    color: #3d4a5c;
+  }
+
+  .evermore-policy__footer {
+    background: #0a1238;
+    color: #9aafce;
+    padding: 30px 40px;
+    text-align: center;
+    font-size: 0.85rem;
+  }
+
+  .evermore-policy__footer a {
+    color: #c8a96e;
+    text-decoration: none;
+    margin: 0 10px;
+  }
+
+  @media (max-width: 600px) {
+    .evermore-policy__nav {
+      padding: 14px 20px;
+    }
+
+    .evermore-policy__header h1 {
+      font-size: 1.8rem;
+    }
+
+    .evermore-policy__content {
+      padding: 40px 20px 60px;
+    }
+  }
+&lt;/style&gt;
+
+&lt;section class="evermore-policy"&gt;
+  &lt;nav class="evermore-policy__nav"&gt;
+    &lt;a href="https://evermorelife.org/home" class="evermore-policy__logo"&gt;Evermore &lt;span&gt;Life&lt;/span&gt;&lt;/a&gt;
+    &lt;a href="https://evermorelife.org/optin" class="evermore-policy__cta"&gt;Free Quote&lt;/a&gt;
+  &lt;/nav&gt;
+
+  &lt;header class="evermore-policy__header"&gt;
+    &lt;h1&gt;Privacy Policy&lt;/h1&gt;
+    &lt;p&gt;Effective Date: May 2, 2026 | Last Updated: May 2, 2026&lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;div class="evermore-policy__content"&gt;
+    &lt;div class="evermore-policy__highlight"&gt;
+      &lt;p&gt;&lt;strong&gt;Summary:&lt;/strong&gt; Evermore Life collects your information to provide insurance quotes and communicate with you. We do not sell your personal information. SMS consent is optional, separate from quote requests, and you can opt out of text messages at any time by replying STOP.&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;h2&gt;1. Who We Are&lt;/h2&gt;
+    &lt;p&gt;Evermore Life ("we," "our," or "us") is an independent insurance brokerage operating at &lt;strong&gt;evermorelife.org&lt;/strong&gt;. We help individuals and families review life insurance, final expense, term life, indexed universal life (IUL), whole life, mortgage protection, and annuity options. Our contact email is &lt;a href="mailto:evermorelifeagent01@gmail.com"&gt;evermorelifeagent01@gmail.com&lt;/a&gt;.&lt;/p&gt;
+
+    &lt;h2&gt;2. Information We Collect&lt;/h2&gt;
+    &lt;p&gt;We collect the following categories of personal information:&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Contact Information:&lt;/strong&gt; Name, phone number, email address, and mailing address.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Health and Insurance Information:&lt;/strong&gt; Date of birth, health history, coverage needs, and beneficiary details, only when needed to generate an insurance quote.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Usage Data:&lt;/strong&gt; IP address, browser type, pages visited, and time spent on our website through cookies and analytics tools.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Communication Records:&lt;/strong&gt; Records of calls, texts, emails, and form submissions with our agents.&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;h2&gt;3. How We Use Your Information&lt;/h2&gt;
+    &lt;p&gt;We use the information we collect for the following purposes:&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;To provide, process, and fulfill insurance quote requests.&lt;/li&gt;
+      &lt;li&gt;To communicate with you by phone, email, or SMS text message regarding your quote, policy options, and account.&lt;/li&gt;
+      &lt;li&gt;To send informational and promotional communications about our products and services when permitted.&lt;/li&gt;
+      &lt;li&gt;To comply with applicable legal, regulatory, and licensing requirements.&lt;/li&gt;
+      &lt;li&gt;To improve our website, services, marketing, and lead response process.&lt;/li&gt;
+      &lt;li&gt;To detect fraud and protect the security of our systems.&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;h2&gt;4. SMS / Text Message Communications&lt;/h2&gt;
+    &lt;p&gt;If you voluntarily check an SMS consent box on one of our forms, you expressly consent to receive SMS text messages from Evermore Life, including responses to your quote request, follow-up from licensed agents, appointment reminders, and information about coverage options related to your inquiry.&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Message frequency may vary.&lt;/strong&gt; Message and data rates may apply depending on your carrier plan.&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;To opt out:&lt;/strong&gt; Reply &lt;strong&gt;STOP&lt;/strong&gt; to any text message at any time. After opting out, you may receive one final confirmation message and will receive no further texts from us unless you opt in again.&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;For help:&lt;/strong&gt; Reply &lt;strong&gt;HELP&lt;/strong&gt; to any message or contact us at &lt;a href="mailto:evermorelifeagent01@gmail.com"&gt;evermorelifeagent01@gmail.com&lt;/a&gt;.&lt;/p&gt;
+    &lt;p&gt;We do not share, sell, rent, or use your mobile phone number for any purpose other than the communications described above. Your opt-in to SMS is not a condition of purchasing any insurance product or service.&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;SMS consent data:&lt;/strong&gt; All categories above exclude text messaging originator opt-in data and consent. SMS opt-in data and consent will not be shared with third parties or marketers for their own marketing or promotional purposes.&lt;/p&gt;
+
+    &lt;h2&gt;5. How We Share Your Information&lt;/h2&gt;
+    &lt;p&gt;We do &lt;strong&gt;not sell&lt;/strong&gt; your personal information. We may share your information in the following limited circumstances:&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Insurance Carriers:&lt;/strong&gt; To obtain quotes and process applications on your behalf, with your authorization.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Service Providers:&lt;/strong&gt; Trusted vendors who assist with technology, CRM, marketing, communications, hosting, analytics, and advertising. These providers may process information only as needed to provide services to Evermore Life.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Legal Requirements:&lt;/strong&gt; If required by law, court order, subpoena, regulation, or government request.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Business Transfers:&lt;/strong&gt; In connection with a merger, acquisition, restructuring, or sale of assets, subject to appropriate notice where required.&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;h2&gt;6. Cookies and Tracking Technologies&lt;/h2&gt;
+    &lt;p&gt;We use cookies and similar tracking technologies to analyze traffic, improve user experience, and support our marketing efforts. You may control cookie preferences through your browser settings. Disabling cookies may affect some website functionality.&lt;/p&gt;
+
+    &lt;h2&gt;7. Data Retention&lt;/h2&gt;
+    &lt;p&gt;We retain personal information for as long as necessary to fulfill the purposes described in this policy, comply with legal obligations, resolve disputes, support carrier or regulatory requirements, and enforce our agreements. Typically, this may mean retaining contact and quote data for up to seven years.&lt;/p&gt;
+
+    &lt;h2&gt;8. Your Rights and Choices&lt;/h2&gt;
+    &lt;p&gt;Depending on your state of residence, you may have the right to access, correct, delete, or receive a copy of your personal information, subject to legal retention obligations and verification requirements. You may opt out of marketing communications at any time by replying STOP to SMS, clicking unsubscribe in emails, or contacting us directly.&lt;/p&gt;
+    &lt;p&gt;To exercise any of these rights, contact us at &lt;a href="mailto:evermorelifeagent01@gmail.com"&gt;evermorelifeagent01@gmail.com&lt;/a&gt;. We will respond to verified requests within 30 days where required by law.&lt;/p&gt;
+
+    &lt;h2&gt;9. Children's Privacy&lt;/h2&gt;
+    &lt;p&gt;Our website and services are not directed to children under the age of 13. We do not knowingly collect personal information from children. If you believe we have inadvertently collected information from a child, please contact us immediately.&lt;/p&gt;
+
+    &lt;h2&gt;10. Security&lt;/h2&gt;
+    &lt;p&gt;We use reasonable administrative, technical, and physical safeguards to protect personal information from unauthorized access, use, or disclosure. However, no method of transmission over the internet or electronic storage is completely secure.&lt;/p&gt;
+
+    &lt;h2&gt;11. Third-Party Links&lt;/h2&gt;
+    &lt;p&gt;Our website may contain links to third-party websites. We are not responsible for the privacy practices, security, or content of those sites. Please review the privacy policies of any third-party site you visit.&lt;/p&gt;
+
+    &lt;h2&gt;12. Changes to This Policy&lt;/h2&gt;
+    &lt;p&gt;We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated effective date. Your continued use of our website or services after changes constitutes acceptance of the updated policy.&lt;/p&gt;
+
+    &lt;h2&gt;13. Contact Us&lt;/h2&gt;
+    &lt;p&gt;If you have any questions, concerns, or requests regarding this Privacy Policy, please contact us:&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Evermore Life LLC&lt;/strong&gt;&lt;br&gt;4539 N 22ND ST, STE R,&lt;br&gt;Phoenix, Arizona 85016&lt;br&gt;Phone: &lt;a href="tel:+15055043101"&gt;+1 505-504-3101&lt;/a&gt;&lt;br&gt;Email: &lt;a href="mailto:evermorelifeagent01@gmail.com"&gt;evermorelifeagent01@gmail.com&lt;/a&gt;&lt;br&gt;Website: &lt;a href="https://evermorelife.org/home"&gt;evermorelife.org/home&lt;/a&gt;&lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;footer class="evermore-policy__footer"&gt;
+    &lt;p&gt;© 2026 Evermore Life. All rights reserved.&lt;/p&gt;
+    &lt;p style="margin-top:12px;"&gt;
+      &lt;a href="https://evermorelife.org/home"&gt;Home&lt;/a&gt;
+      &lt;a href="https://evermorelife.org/privacypolicy"&gt;Privacy Policy&lt;/a&gt;
+      &lt;a href="https://evermorelife.org/terms"&gt;Terms of Service&lt;/a&gt;
+      &lt;a href="https://evermorelife.org/optin"&gt;Opt-In / Opt-Out&lt;/a&gt;
+    &lt;/p&gt;
+  &lt;/footer&gt;&lt;/section&gt;
+</textarea>
+      <div class="status" id="status-privacy"></div>
+    </section>
+    <section class="card">
+      <h2>Thank You</h2>
+      <div class="meta"><div><b>GHL step:</b> Thank You</div><div><b>Route:</b> https://evermorelife.org/thankyou</div><div>GHL-safe snippet with Back to Home and email actions.</div></div>
+      <div class="actions">
+        <button class="copy" data-copy="code-thankyou" data-label="Thank You">Copy Thank You Code</button>
+        <a class="button" href="https://evermorelife.org/thankyou" target="_blank" rel="noopener">Open Live</a>
+        <button class="preview" data-toggle="code-thankyou">Show Code</button>
+      </div>
+      <textarea id="code-thankyou" spellcheck="false">&lt;style&gt;
+  .evermore-thankyou,
+  .evermore-thankyou * {
+    box-sizing: border-box;
+  }
+
+  .evermore-thankyou {
+    width: 100%;
+    min-height: 680px;
+    padding: 72px 24px;
+    display: grid;
+    place-items: center;
+    font-family: "DM Sans", Arial, sans-serif;
+    color: #ffffff;
+    background: linear-gradient(135deg, #0d1b4b, #1b2e5e);
+    text-align: center;
+  }
+
+  .evermore-thankyou__inner {
+    width: min(760px, 100%);
+  }
+
+  .evermore-thankyou__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 32px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .evermore-thankyou__mark {
+    width: 34px;
+    height: 34px;
+    border: 2px solid #c8943a;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: #c8943a;
+    font-family: Georgia, serif;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .evermore-thankyou__eyebrow {
+    color: #c8943a;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .evermore-thankyou h1 {
+    color: #ffffff;
+    font-family: Georgia, serif;
+    font-size: clamp(2.4rem, 7vw, 4.6rem);
+    line-height: 1.02;
+    letter-spacing: 0;
+    margin: 0 0 22px;
+  }
+
+  .evermore-thankyou p {
+    max-width: 620px;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: clamp(1rem, 2.4vw, 1.22rem);
+    line-height: 1.7;
+  }
+
+  .evermore-thankyou__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 34px;
+  }
+
+  .evermore-thankyou__btn {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 22px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 800;
+  }
+
+  .evermore-thankyou__btn-primary {
+    background: #c8943a;
+    color: #0d1b4b;
+  }
+
+  .evermore-thankyou__btn-secondary {
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    color: #ffffff;
+  }
+
+  .evermore-thankyou__small {
+    margin-top: 26px;
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 0.86rem;
+  }
+&lt;/style&gt;
+
+&lt;section class="evermore-thankyou"&gt;
+  &lt;div class="evermore-thankyou__inner"&gt;
+    &lt;div class="evermore-thankyou__brand"&gt;
+      &lt;span class="evermore-thankyou__mark"&gt;E&lt;/span&gt;
+      Evermore Life
+    &lt;/div&gt;
+    &lt;div class="evermore-thankyou__eyebrow"&gt;Request Received&lt;/div&gt;
+    &lt;h1&gt;You're all set.&lt;/h1&gt;
+    &lt;p&gt;A licensed Evermore Life agent will review your request and reach out shortly. Keep an eye on your phone and email so we can help you compare your best coverage options.&lt;/p&gt;
+    &lt;div class="evermore-thankyou__actions"&gt;
+      &lt;a class="evermore-thankyou__btn evermore-thankyou__btn-primary" href="https://evermorelife.org/home"&gt;Back to Home&lt;/a&gt;
+      &lt;a class="evermore-thankyou__btn evermore-thankyou__btn-secondary" href="mailto:evermorelifeagent01@gmail.com?subject=Evermore%20Life%20Quote%20Request"&gt;Email Evermore Life&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;p class="evermore-thankyou__small"&gt;SMS messages are sent only when you opt in. Reply STOP to opt out or HELP for help. Message and data rates may apply.&lt;/p&gt;
+    &lt;p class="evermore-thankyou__small"&gt;Evermore Life LLC · 4539 N 22ND ST, STE R, Phoenix, Arizona 85016 · &lt;a href="tel:+15055043101"&gt;+1 505-504-3101&lt;/a&gt; · &lt;a href="mailto:evermorelifeagent01@gmail.com"&gt;evermorelifeagent01@gmail.com&lt;/a&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;script&gt;
+  if (typeof fbq !== "undefined") fbq("track", "Lead", { content_name: "Evermore Thank You Page" });
+  if (typeof gtag !== "undefined") gtag("event", "generate_lead", { event_category: "Lead", event_label: "Evermore Thank You Page" });
+&lt;/script&gt;
+</textarea>
+      <div class="status" id="status-thankyou"></div>
+    </section>
+  </div>
+  <p class="footer">If a copy button is blocked by the browser, click Show Code, select the code box, press Cmd+A, then Cmd+C.</p>
+</main>
+<script>
+  async function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  }
+  document.querySelectorAll('[data-copy]').forEach(button => {
+    button.addEventListener('click', async () => {
+      const id = button.getAttribute('data-copy');
+      const label = button.getAttribute('data-label');
+      const code = document.getElementById(id).value;
+      const status = document.getElementById('status-' + id.replace('code-', ''));
+      try {
+        const ok = await copyText(code);
+        status.textContent = ok ? label + ' code copied. Paste it in GHL with Cmd+V.' : 'Copy blocked. Use Show Code, Cmd+A, Cmd+C.';
+      } catch (err) {
+        status.textContent = 'Copy blocked. Use Show Code, Cmd+A, Cmd+C.';
+      }
+    });
+  });
+  document.querySelectorAll('[data-toggle]').forEach(button => {
+    button.addEventListener('click', () => {
+      const box = document.getElementById(button.getAttribute('data-toggle'));
+      const show = box.style.display !== 'block';
+      box.style.display = show ? 'block' : 'none';
+      button.textContent = show ? 'Hide Code' : 'Show Code';
+      if (show) box.scrollIntoView({ block: 'nearest' });
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunrise Final Expense | Arizona Life Insurance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<style>
+  :root {
+    --navy: #1B2E5E;
+    --navy-dark: #111D3F;
+    --navy-light: #243d7a;
+    --gold: #C8943A;
+    --gold-light: #E0AD56;
+    --gold-pale: #FBF0DC;
+    --cream: #FAF7F1;
+    --cream-dark: #F2EDE3;
+    --text: #1C1C1E;
+    --text-muted: #555F70;
+    --white: #FFFFFF;
+    --border: #DDD5C8;
+    --success: #2E7D52;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    font-size: 18px;
+    color: var(--text);
+    background: var(--cream);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--cream); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .fade-up { animation: fadeUp 0.7s ease forwards; }
+  .fade-up-2 { animation: fadeUp 0.7s 0.15s ease both; }
+  .fade-up-3 { animation: fadeUp 0.7s 0.3s ease both; }
+  .fade-up-4 { animation: fadeUp 0.7s 0.45s ease both; }
+
+  /* Utility */
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+  .section { padding: 96px 0; }
+  .section-sm { padding: 64px 0; }
+
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.2; }
+  h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); }
+  h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); }
+  h3 { font-size: 1.35rem; }
+
+  p { line-height: 1.75; color: var(--text-muted); }
+
+  .btn {
+    display: inline-block;
+    padding: 16px 36px;
+    border-radius: 6px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .btn-gold {
+    background: var(--gold);
+    color: var(--white);
+    box-shadow: 0 4px 20px rgba(200,148,58,0.35);
+  }
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200,148,58,0.45); }
+  .btn-navy {
+    background: var(--navy);
+    color: var(--white);
+  }
+  .btn-navy:hover { background: var(--navy-light); transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--navy);
+    border: 2px solid var(--navy);
+  }
+  .btn-outline:hover { background: var(--navy); color: var(--white); }
+
+  /* Nav */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .nav-inner {
+    max-width: 1140px;
+    margin: 0 auto;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  .nav-logo-icon {
+    width: 44px;
+    height: 44px;
+    background: var(--navy);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .nav-logo-text .brand { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--navy); line-height: 1.1; }
+  .nav-logo-text .sub { font-size: 0.72rem; font-weight: 500; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; }
+  .nav-phone {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--navy);
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  .nav-phone:hover { color: var(--gold); }
+  .nav-cta { display: flex; align-items: center; gap: 16px; }
+
+  @media (max-width: 640px) {
+    .nav-cta .btn { display: none; }
+    .nav-phone-label { display: none; }
+  }
+
+  /* Hero */
+  .hero {
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+    padding: 80px 0 100px;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 70% 50%, rgba(200,148,58,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 80% at 10% 80%, rgba(100,140,255,0.08) 0%, transparent 60%);
+  }
+  /* Subtle texture */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 64px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(200,148,58,0.2);
+    border: 1px solid rgba(200,148,58,0.4);
+    color: var(--gold-light);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+  }
+  .hero h1 { color: var(--white); margin-bottom: 20px; }
+  .hero h1 em { color: var(--gold-light); font-style: normal; }
+  .hero-sub {
+    color: rgba(255,255,255,0.72);
+    font-size: 1.15rem;
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+  .hero-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .hero-bullets li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255,255,255,0.85);
+    font-size: 1rem;
+  }
+  .check-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .hero-phone {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255,255,255,0.65);
+    font-size: 0.92rem;
+  }
+  .hero-phone a { color: var(--gold-light); font-weight: 600; text-decoration: none; }
+  .hero-phone a:hover { text-decoration: underline; }
+
+  /* Lead Form Card */
+  .lead-form-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 40px 36px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+  }
+  .lead-form-card h3 {
+    font-family: var(--font-display);
+    color: var(--navy);
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+  }
+  .lead-form-card .sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 28px; }
+  .form-field { margin-bottom: 16px; }
+  .form-field label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+  .form-field input, .form-field select {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--text);
+    background: var(--cream);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    -webkit-appearance: none;
+  }
+  .form-field input:focus, .form-field select:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(200,148,58,0.18);
+    background: var(--white);
+  }
+  .form-field input.error { border-color: #C0392B; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-submit { width: 100%; padding: 16px; font-size: 1.05rem; margin-top: 8px; border-radius: 8px; }
+  .form-disclaimer { font-size: 0.72rem; color: var(--text-muted); text-align: center; margin-top: 12px; line-height: 1.5; }
+  .form-success {
+    text-align: center;
+    padding: 24px 0;
+  }
+  .form-success .check-big {
+    width: 64px; height: 64px;
+    background: var(--success);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+  }
+  .form-success h3 { color: var(--success); margin-bottom: 8px; }
+  .form-success p { font-size: 0.95rem; }
+
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .lead-form-card { max-width: 480px; margin: 0 auto; }
+  }
+
+  /* Trust Bar */
+  .trust-bar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 0;
+  }
+  .trust-items {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+  }
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  .trust-item svg { color: var(--gold); flex-shrink: 0; }
+
+  /* Section Headers */
+  .section-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .section-header { margin-bottom: 56px; }
+  .section-header h2 { margin-bottom: 14px; color: var(--navy); }
+  .section-header p { max-width: 600px; font-size: 1.05rem; }
+  .section-header.center { text-align: center; }
+  .section-header.center p { margin: 0 auto; }
+
+  /* Benefits */
+  .benefits { background: var(--cream); }
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+  .benefit-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 36px 32px;
+    transition: box-shadow 0.25s, transform 0.25s;
+  }
+  .benefit-card:hover { box-shadow: 0 12px 40px rgba(27,46,94,0.12); transform: translateY(-4px); }
+  .benefit-icon {
+    width: 54px; height: 54px;
+    background: var(--gold-pale);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 22px;
+  }
+  .benefit-card h3 { color: var(--navy); margin-bottom: 10px; }
+  .benefit-card p { font-size: 0.95rem; }
+
+  @media (max-width: 768px) {
+    .benefits-grid { grid-template-columns: 1fr; }
+  }
+  @media (min-width: 640px) and (max-width: 768px) {
+    .benefits-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* How It Works */
+  .how-it-works { background: var(--navy); }
+  .how-it-works .section-label { color: var(--gold-light); }
+  .how-it-works .section-header h2 { color: var(--white); }
+  .how-it-works .section-header p { color: rgba(255,255,255,0.65); }
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    position: relative;
+  }
+  .steps-grid::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: calc(16.66% + 16px);
+    right: calc(16.66% + 16px);
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%);
+    opacity: 0.4;
+  }
+  .step {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 40px 32px;
+    position: relative;
+    text-align: center;
+  }
+  .step-number {
+    width: 54px; height: 54px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--white);
+    margin: 0 auto 24px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 4px 20px rgba(200,148,58,0.4);
+  }
+  .step h3 { color: var(--white); margin-bottom: 12px; }
+  .step p { color: rgba(255,255,255,0.65); font-size: 0.95rem; }
+
+  @media (max-width: 768px) {
+    .steps-grid { grid-template-columns: 1fr; }
+    .steps-grid::before { display: none; }
+  }
+
+  /* Coverage */
+  .coverage { background: var(--cream-dark); }
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+  .plan-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 32px;
+    text-align: center;
+    transition: box-shadow 0.25s, transform 0.25s;
+    position: relative;
+  }
+  .plan-card:hover { box-shadow: 0 16px 50px rgba(27,46,94,0.14); transform: translateY(-4px); }
+  .plan-card.featured {
+    border-color: var(--gold);
+    box-shadow: 0 8px 40px rgba(200,148,58,0.2);
+    transform: scale(1.03);
+  }
+  .plan-card.featured:hover { transform: scale(1.03) translateY(-4px); }
+  .plan-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gold);
+    color: var(--white);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+  .plan-name {
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .plan-amount {
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .plan-amount span { font-size: 1rem; font-weight: 400; color: var(--text-muted); }
+  .plan-rate { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 28px; }
+  .plan-features {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .plan-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+  }
+  .plan-features li::before {
+    content: '';
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--gold-pale);
+    border: 1.5px solid var(--gold);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='8' viewBox='0 0 10 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 4l2.5 2.5L9 1' stroke='%23C8943A' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  .plan-cta { width: 100%; }
+
+  @media (max-width: 768px) {
+    .plans-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+    .plan-card.featured { transform: scale(1); }
+  }
+
+  /* Testimonials */
+  .testimonials { background: var(--white); }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .testimonial-card {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 36px 32px;
+    position: relative;
+  }
+  .quote-mark {
+    font-family: var(--font-display);
+    font-size: 5rem;
+    color: var(--gold);
+    line-height: 0.7;
+    margin-bottom: 16px;
+    opacity: 0.4;
+  }
+  .testimonial-text {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--text);
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .author-avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--white);
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .author-name { font-weight: 600; color: var(--navy); font-size: 0.95rem; }
+  .author-detail { font-size: 0.8rem; color: var(--text-muted); }
+  .stars { color: var(--gold); font-size: 1rem; margin-bottom: 4px; }
+
+  @media (max-width: 768px) {
+    .testimonials-grid { grid-template-columns: 1fr; }
+  }
+
+  /* FAQ */
+  .faq { background: var(--cream); }
+  .faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+  .faq-item {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .faq-question {
+    width: 100%;
+    text-align: left;
+    padding: 24px 28px;
+    background: none;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--navy);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    transition: background 0.15s;
+  }
+  .faq-question:hover { background: var(--cream); }
+  .faq-chevron {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--gold-pale);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.25s, background 0.2s;
+  }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); background: var(--gold); }
+  .faq-item.open .faq-chevron svg { stroke: white; }
+  .faq-answer {
+    padding: 0 28px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.25s;
+    font-size: 0.98rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+  }
+  .faq-item.open .faq-answer { max-height: 400px; padding: 0 28px 24px; }
+
+  /* Bottom CTA */
+  .bottom-cta {
+    background: var(--navy);
+    padding: 100px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .bottom-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 80% at 50% 100%, rgba(200,148,58,0.15) 0%, transparent 70%);
+  }
+  .bottom-cta-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 64px;
+    align-items: center;
+  }
+  .bottom-cta h2 { color: var(--white); margin-bottom: 16px; }
+  .bottom-cta p { color: rgba(255,255,255,0.65); font-size: 1.05rem; margin-bottom: 36px; }
+  .cta-contact {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .cta-phone-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .cta-phone-icon {
+    width: 44px; height: 44px;
+    background: rgba(200,148,58,0.2);
+    border: 1px solid rgba(200,148,58,0.4);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cta-phone-label { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
+  .cta-phone-number { font-size: 1.3rem; font-weight: 700; color: var(--white); text-decoration: none; }
+  .cta-phone-number:hover { color: var(--gold-light); }
+
+  @media (max-width: 900px) {
+    .bottom-cta-inner { grid-template-columns: 1fr; }
+  }
+
+  /* Footer */
+  footer {
+    background: var(--navy-dark);
+    padding: 48px 0 32px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .footer-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    text-align: center;
+  }
+  .footer-logo-text .brand { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--white); }
+  .footer-logo-text .sub { font-size: 0.7rem; font-weight: 600; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; }
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.88rem; transition: color 0.15s; }
+  .footer-links a:hover { color: var(--gold-light); }
+  .footer-disclaimer {
+    max-width: 820px;
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.3);
+    line-height: 1.7;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 24px;
+  }
+
+  /* Scroll reveal (simple) */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Tweaks panel */
+  #tweaks-panel {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 280px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.18);
+    z-index: 9999;
+    font-family: var(--font-body);
+    display: none;
+  }
+  #tweaks-panel.visible { display: block; }
+  .tweaks-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .tweaks-header h4 { font-size: 0.95rem; font-weight: 600; color: var(--navy); }
+  .tweaks-close { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.2rem; line-height: 1; }
+  .tweaks-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 16px; }
+  .tweak-row label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .tweak-options { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tweak-opt {
+    padding: 6px 12px;
+    border-radius: 100px;
+    border: 1.5px solid var(--border);
+    background: var(--cream);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text);
+    transition: all 0.15s;
+  }
+  .tweak-opt.active, .tweak-opt:hover { border-color: var(--gold); background: var(--gold-pale); color: var(--navy); }
+  .tweak-color-row { display: flex; gap: 8px; }
+  .tweak-color-swatch {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .tweak-color-swatch.active { border-color: var(--navy); transform: scale(1.2); }
+</style>
+</head>
+<body>
+
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+// ─── Icons ───────────────────────────────────────────────────────────────────
+const SunIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+);
+const PhoneIcon = ({ size = 20 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 .99h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+  </svg>
+);
+const ShieldIcon = () => (
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+  </svg>
+);
+const HeartIcon = () => (
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+  </svg>
+);
+const DollarIcon = () => (
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+  </svg>
+);
+const CheckIcon = ({ white }) => (
+  <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+    <path d="M1 5l3 3 7-7" stroke={white ? "#fff" : "#C8943A"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+const ChevronIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#C8943A" strokeWidth="2" strokeLinecap="round">
+    <path d="M2 5l5 5 5-5"/>
+  </svg>
+);
+const StarIcon = () => <span style={{color:'var(--gold)'}}>★</span>;
+const ClockIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+  </svg>
+);
+const MapIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+  </svg>
+);
+const AwardIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+  </svg>
+);
+const UserIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+  </svg>
+);
+
+// ─── Lead Form ────────────────────────────────────────────────────────────────
+function LeadForm({ compact }) {
+  const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', email: '', age: '', coverage: '' });
+  const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const validate = () => {
+    const e = {};
+    if (!form.firstName.trim()) e.firstName = true;
+    if (!form.lastName.trim()) e.lastName = true;
+    if (!form.phone.match(/^\(?\d{3}\)?[\s\-]?\d{3}[\s\-]?\d{4}$/)) e.phone = true;
+    if (!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) e.email = true;
+    if (!form.age) e.age = true;
+    return e;
+  };
+
+  const handleSubmit = (ev) => {
+    ev.preventDefault();
+    const e = validate();
+    setErrors(e);
+    if (Object.keys(e).length === 0) {
+      setLoading(true);
+      setTimeout(() => {
+        window.location.href = `Thank You.html?name=${encodeURIComponent(form.firstName)}`;
+      }, 900);
+    }
+  };
+
+  if (submitted) return (
+    <div className="form-success">
+      <div className="check-big"><CheckIcon white /></div>
+      <h3 style={{fontFamily:'var(--font-display)',color:'#2E7D52'}}>You're All Set!</h3>
+      <p>A licensed Arizona agent will call you within <strong>15 minutes</strong> during business hours.</p>
+      <p style={{fontSize:'0.82rem',marginTop:8,color:'var(--text-muted)'}}>Check your email for a confirmation.</p>
+    </div>
+  );
+
+  return (
+    <form onSubmit={handleSubmit} noValidate>
+      <div className="form-row">
+        <div className="form-field">
+          <label>First Name</label>
+          <input type="text" placeholder="Mary" className={errors.firstName ? 'error' : ''} value={form.firstName} onChange={e => setForm({...form, firstName: e.target.value})} />
+        </div>
+        <div className="form-field">
+          <label>Last Name</label>
+          <input type="text" placeholder="Johnson" className={errors.lastName ? 'error' : ''} value={form.lastName} onChange={e => setForm({...form, lastName: e.target.value})} />
+        </div>
+      </div>
+      <div className="form-field">
+        <label>Phone Number</label>
+        <input type="tel" placeholder="(602) 555-0100" className={errors.phone ? 'error' : ''} value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
+      </div>
+      <div className="form-field">
+        <label>Email Address</label>
+        <input type="email" placeholder="mary@example.com" className={errors.email ? 'error' : ''} value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
+      </div>
+      <div className="form-row">
+        <div className="form-field">
+          <label>Age</label>
+          <select className={errors.age ? 'error' : ''} value={form.age} onChange={e => setForm({...form, age: e.target.value})}>
+            <option value="">Select...</option>
+            {Array.from({length:36},(_,i)=>i+50).map(a=><option key={a} value={a}>{a}</option>)}
+          </select>
+        </div>
+        <div className="form-field">
+          <label>Coverage Amount</label>
+          <select value={form.coverage} onChange={e => setForm({...form, coverage: e.target.value})}>
+            <option value="">Any amount</option>
+            <option value="5000">$5,000</option>
+            <option value="10000">$10,000</option>
+            <option value="15000">$15,000</option>
+            <option value="20000">$20,000</option>
+            <option value="25000">$25,000</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" className="btn btn-gold form-submit" disabled={loading}>
+        {loading ? 'Submitting...' : 'Get My Free Quote →'}
+      </button>
+      <p className="form-disclaimer">
+        By submitting, you agree to be contacted by a licensed insurance agent. No obligation. We never sell your information.
+      </p>
+    </form>
+  );
+}
+
+// ─── FAQ ─────────────────────────────────────────────────────────────────────
+const faqs = [
+  { q: "Do I need a medical exam to qualify?", a: "No medical exam is required. Most final expense plans in Arizona offer simplified or guaranteed issue underwriting — you simply answer a few basic health questions, and coverage can begin immediately." },
+  { q: "What ages are eligible?", a: "Our final expense plans are available to Arizona residents ages 50 through 85. Coverage is available regardless of prior health conditions for many of our guaranteed acceptance plans." },
+  { q: "How quickly does coverage start?", a: "Coverage typically begins the same day your first premium is paid. Your family is protected from day one — no waiting for paperwork to process." },
+  { q: "What can the benefit be used for?", a: "The benefit is paid directly to your named beneficiary with no restrictions. It can cover funeral costs, outstanding medical bills, credit card debt, rent, or anything else your family needs." },
+  { q: "Will my premiums increase as I age?", a: "No. Your rate is locked in at the time of enrollment and will never increase due to age or changes in health. Your benefit amount also remains fixed for life." },
+  { q: "Can my coverage be cancelled by the insurance company?", a: "Your policy cannot be cancelled as long as premiums are paid. This is a guaranteed renewable policy — the insurance company cannot drop you regardless of how many claims are filed." },
+];
+
+function FAQ() {
+  const [open, setOpen] = useState(null);
+  return (
+    <div className="faq-list">
+      {faqs.map((f, i) => (
+        <div key={i} className={`faq-item${open === i ? ' open' : ''}`}>
+          <button className="faq-question" onClick={() => setOpen(open === i ? null : i)}>
+            {f.q}
+            <span className="faq-chevron"><ChevronIcon /></span>
+          </button>
+          <div className="faq-answer">{f.a}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── Tweaks Panel ─────────────────────────────────────────────────────────────
+function TweaksPanel({ visible, onClose }) {
+  const [accent, setAccent] = useState('gold');
+  const [ctaText, setCtaText] = useState('Get My Free Quote →');
+  const [heroStyle, setHeroStyle] = useState('dark');
+
+  const accents = [
+    { key: 'gold', color: '#C8943A' },
+    { key: 'teal', color: '#1E7B7B' },
+    { key: 'wine', color: '#7B2D3E' },
+    { key: 'sage', color: '#4A6741' },
+  ];
+
+  useEffect(() => {
+    const colorMap = { gold: '#C8943A', teal: '#1E7B7B', wine: '#7B2D3E', sage: '#4A6741' };
+    const lightMap = { gold: '#E0AD56', teal: '#35A0A0', wine: '#9E3F55', sage: '#6A8D60' };
+    const paleMap  = { gold: '#FBF0DC', teal: '#DCF3F3', wine: '#F3DCE1', sage: '#E1EBE0' };
+    document.documentElement.style.setProperty('--gold', colorMap[accent]);
+    document.documentElement.style.setProperty('--gold-light', lightMap[accent]);
+    document.documentElement.style.setProperty('--gold-pale', paleMap[accent]);
+  }, [accent]);
+
+  useEffect(() => {
+    const heroEl = document.querySelector('.hero');
+    if (!heroEl) return;
+    heroEl.style.background = heroStyle === 'dark' ? 'var(--navy)' : '#FAF7F1';
+    const h1 = heroEl.querySelector('h1');
+    if (h1) h1.style.color = heroStyle === 'dark' ? 'white' : 'var(--navy)';
+    const sub = heroEl.querySelector('.hero-sub');
+    if (sub) sub.style.color = heroStyle === 'dark' ? 'rgba(255,255,255,0.72)' : 'var(--text-muted)';
+  }, [heroStyle]);
+
+  useEffect(() => {
+    document.querySelectorAll('.form-submit').forEach(btn => { btn.textContent = ctaText; });
+  }, [ctaText]);
+
+  if (!visible) return null;
+  return (
+    <div id="tweaks-panel" className="visible">
+      <div className="tweaks-header">
+        <h4>Tweaks</h4>
+        <button className="tweaks-close" onClick={onClose}>✕</button>
+      </div>
+      <div className="tweaks-body">
+        <div className="tweak-row">
+          <label>Accent Color</label>
+          <div className="tweak-color-row">
+            {accents.map(a => (
+              <div key={a.key} className={`tweak-color-swatch${accent === a.key ? ' active' : ''}`}
+                style={{background: a.color}} onClick={() => setAccent(a.key)} title={a.key} />
+            ))}
+          </div>
+        </div>
+        <div className="tweak-row">
+          <label>Hero Background</label>
+          <div className="tweak-options">
+            {['dark','light'].map(opt => (
+              <button key={opt} className={`tweak-opt${heroStyle === opt ? ' active' : ''}`} onClick={() => setHeroStyle(opt)}>
+                {opt === 'dark' ? 'Dark Navy' : 'Light Cream'}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="tweak-row">
+          <label>CTA Button Text</label>
+          <div className="tweak-options">
+            {['Get My Free Quote →', 'Get a Free Rate', 'See My Options', 'Apply Now →'].map(opt => (
+              <button key={opt} className={`tweak-opt${ctaText === opt ? ' active' : ''}`} onClick={() => setCtaText(opt)}>
+                {opt}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── App ──────────────────────────────────────────────────────────────────────
+function App() {
+  const [tweaksVisible, setTweaksVisible] = useState(false);
+
+  useEffect(() => {
+    // Tweaks protocol
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === '__activate_edit_mode') setTweaksVisible(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweaksVisible(false);
+    });
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  const handleTweaksClose = () => {
+    setTweaksVisible(false);
+    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+  };
+
+  return (
+    <>
+      {/* ── Navigation ── */}
+      <nav>
+        <div className="nav-inner">
+          <a href="#" className="nav-logo">
+            <div className="nav-logo-icon">
+              <SunIcon style={{color:'var(--gold-light)'}} />
+            </div>
+            <div className="nav-logo-text">
+              <div className="brand">Sunrise Final Expense</div>
+              <div className="sub">Licensed in Arizona</div>
+            </div>
+          </a>
+          <div className="nav-cta">
+            <a href="tel:+16025550100" className="nav-phone">
+              <PhoneIcon size={18} />
+              <span className="nav-phone-label">(602) 555-0100</span>
+            </a>
+            <a href="#get-quote" className="btn btn-gold" style={{padding:'11px 24px',fontSize:'0.92rem'}}>
+              Free Quote
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      {/* ── Hero ── */}
+      <section className="hero" data-screen-label="Hero">
+        <div className="hero-inner">
+          <div>
+            <div className="hero-badge fade-up">
+              <span>★</span> Arizona's Most Trusted Final Expense Provider
+            </div>
+            <h1 className="fade-up-2">
+              Protect Your Family.<br/>
+              <em>Leave Nothing Behind.</em>
+            </h1>
+            <p className="hero-sub fade-up-3">
+              Final expense life insurance designed for Arizona seniors — guaranteed acceptance, locked-in rates, and coverage starting at just pennies a day. No medical exam. No surprises.
+            </p>
+            <ul className="hero-bullets fade-up-3">
+              <li><span className="check-icon"><CheckIcon white /></span>Coverage from $5,000 to $50,000</li>
+              <li><span className="check-icon"><CheckIcon white /></span>Guaranteed acceptance — ages 50 to 85</li>
+              <li><span className="check-icon"><CheckIcon white /></span>Rates never increase, coverage never expires</li>
+              <li><span className="check-icon"><CheckIcon white /></span>Benefits paid directly to your family in days</li>
+            </ul>
+            <div className="hero-phone fade-up-4">
+              <PhoneIcon size={16} />
+              <span>Prefer to call? <a href="tel:+16025550100">(602) 555-0100</a> — Mon–Fri 8am–7pm AZ time</span>
+            </div>
+          </div>
+
+          <div className="lead-form-card fade-up-3" id="get-quote">
+            <h3>Get Your Free Quote</h3>
+            <p className="sub">Takes less than 2 minutes. No obligation.</p>
+            <LeadForm />
+          </div>
+        </div>
+      </section>
+
+      {/* ── Trust Bar ── */}
+      <div className="trust-bar" data-screen-label="Trust Bar">
+        <div className="container">
+          <div className="trust-items">
+            <div className="trust-item"><MapIcon /><span>Licensed in Arizona</span></div>
+            <div className="trust-item"><UserIcon /><span>Proudly Serving Arizona Seniors</span></div>
+            <div className="trust-item"><AwardIcon /><span>A+ Rated Carriers</span></div>
+            <div className="trust-item"><ShieldIcon style={{width:18,height:18}} /><span>No Medical Exam Required</span></div>
+            <div className="trust-item"><ClockIcon /><span>Coverage Starts Same Day</span></div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Benefits ── */}
+      <section className="section benefits" data-screen-label="Benefits">
+        <div className="container">
+          <div className="section-header reveal">
+            <div className="section-label">Why Final Expense Insurance</div>
+            <h2>Give Your Family Peace of Mind</h2>
+            <p>Funeral costs average $9,000–$12,000 in Arizona and continue to rise. A final expense policy ensures your loved ones are never left with unexpected financial burdens during one of life's hardest moments.</p>
+          </div>
+          <div className="benefits-grid">
+            {[
+              { Icon: ShieldIcon, title: 'Guaranteed Acceptance', desc: 'No medical exams. No lengthy applications. If you\'re between 50 and 85 and live in Arizona, you qualify — regardless of your health history.' },
+              { Icon: DollarIcon, title: 'Affordable, Locked-In Rates', desc: 'Your monthly premium is set the day you enroll and will never increase. Coverage you can rely on, at a price that fits a fixed income.' },
+              { Icon: HeartIcon, title: 'Benefits Paid Fast', desc: 'Claims are typically paid within 24–48 hours of approval, directly to your beneficiary — so your family can focus on what matters, not paperwork.' },
+            ].map(({ Icon, title, desc }, i) => (
+              <div key={i} className="benefit-card reveal">
+                <div className="benefit-icon"><Icon /></div>
+                <h3>{title}</h3>
+                <p>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Qualify Banner ── */}
+      <section style={{background:'var(--gold)',padding:'56px 0'}} data-screen-label="Qualify Banner">
+        <div className="container">
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:40,flexWrap:'wrap'}}>
+            <div>
+              <div style={{fontSize:'0.75rem',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',color:'rgba(255,255,255,0.75)',marginBottom:8}}>Healthy? You Deserve Better Rates</div>
+              <h2 style={{color:'var(--white)',fontFamily:'var(--font-display)',fontSize:'clamp(1.5rem,3vw,2.2rem)',marginBottom:12}}>See Which Carrier You Qualify For</h2>
+              <p style={{color:'rgba(255,255,255,0.85)',maxWidth:520,fontSize:'1rem',lineHeight:1.7}}>We shop <strong>Mutual of Omaha, Ethos, American Amicable, Transamerica &amp; Aetna</strong> — your health profile unlocks your lowest possible rate. Find out where you stand in minutes.</p>
+            </div>
+            <a href="#get-quote" className="btn" style={{background:'var(--white)',color:'var(--gold)',fontWeight:700,fontSize:'1.05rem',padding:'18px 40px',borderRadius:8,boxShadow:'0 8px 32px rgba(0,0,0,0.15)',whiteSpace:'nowrap',flexShrink:0}}>
+              ✓ See If I Qualify
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── How It Works ── */}
+      <section className="section how-it-works" data-screen-label="How It Works">
+        <div className="container">
+          <div className="section-header center reveal">
+            <div className="section-label">Simple Process</div>
+            <h2>Coverage in 3 Easy Steps</h2>
+            <p style={{color:'rgba(255,255,255,0.65)'}}>We make protecting your family as simple as possible. No complicated paperwork, no doctors visits.</p>
+          </div>
+          <div className="steps-grid">
+            {[
+              { n: '1', title: 'Get a Free Quote', desc: 'Fill out the short form above or call us. A licensed Arizona agent reviews your needs and finds the best plan options for your budget.' },
+              { n: '2', title: 'Choose Your Plan', desc: 'Pick the coverage amount that fits your needs — from $5,000 to $25,000. Your agent walks you through every option with zero pressure.' },
+              { n: '3', title: 'Coverage Starts Today', desc: 'Once you\'re enrolled, coverage begins immediately. Your family is protected from the very first day, for life.' },
+            ].map(({ n, title, desc }, i) => (
+              <div key={i} className="step reveal">
+                <div className="step-number">{n}</div>
+                <h3>{title}</h3>
+                <p>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Coverage Plans ── */}
+      <section className="section coverage" data-screen-label="Coverage Plans">
+        <div className="container">
+          <div className="section-header center reveal">
+            <div className="section-label">Coverage Options</div>
+            <h2>Plans for Every Budget</h2>
+            <p>All plans include locked-in rates, no medical exam, and same-day coverage. Rates shown are illustrative estimates for a healthy 60-year-old Arizona resident.</p>
+          </div>
+          <div className="plans-grid">
+            {[
+              {
+                name: 'Essential', amount: '$10,000', rate: 'Rate based on age & health',
+                features: ['Funeral & burial costs', 'Outstanding medical bills', 'Guaranteed acceptance', 'No medical exam', 'Rate locked for life'],
+                cta: 'Get This Plan', featured: false,
+              },
+              {
+                name: 'Most Popular', amount: '$15,000', rate: 'Rate based on age & health', badge: 'Most Popular',
+                features: ['Everything in Essential', 'Credit card & loan payoff', 'Family living expenses', 'Cash value accumulation', '24-hr claim payout'],
+                cta: 'Get This Plan', featured: true,
+              },
+              {
+                name: 'Complete', amount: '$25,000', rate: 'Rate based on age & health',
+                features: ['Everything in Popular', 'Estate & legal expenses', 'Charitable giving option', 'Accelerated death benefit', 'Priority claim processing'],
+                cta: 'Get This Plan', featured: false,
+              },
+            ].map((plan, i) => (
+              <div key={i} className={`plan-card reveal${plan.featured ? ' featured' : ''}`}>
+                {plan.badge && <div className="plan-badge">{plan.badge}</div>}
+                <div className="plan-name">{plan.name}</div>
+                <div className="plan-amount">{plan.amount}<span> coverage</span></div>
+                <div className="plan-rate">{plan.rate}</div>
+                <ul className="plan-features">
+                  {plan.features.map((f, j) => <li key={j}>{f}</li>)}
+                </ul>
+                <a href="#get-quote" className={`btn plan-cta ${plan.featured ? 'btn-gold' : 'btn-outline'}`}>{plan.cta}</a>
+              </div>
+            ))}
+          </div>
+          <p style={{textAlign:'center',fontSize:'0.78rem',marginTop:32,color:'var(--text-muted)'}}>
+            * Rates are estimates and vary by age, health, and carrier. A licensed agent will provide your exact rate.
+          </p>
+        </div>
+      </section>
+
+      {/* ── Testimonials ── */}
+      <section className="section testimonials" data-screen-label="Testimonials">
+        <div className="container">
+          <div className="section-header center reveal">
+            <div className="section-label">Real Stories</div>
+            <h2>Arizona Families We've Protected</h2>
+          </div>
+          <div className="testimonials-grid">
+            {[
+              { init: 'DM', name: 'Dorothy M.', detail: 'Mesa, AZ · Age 67', text: "I called expecting a complicated process and was shocked by how easy it was. My agent was patient, explained everything clearly, and I had coverage the same afternoon. I sleep better knowing my kids won't face a big bill." },
+              { init: 'RK', name: 'Robert K.', detail: 'Tucson, AZ · Age 71', text: "After my wife passed and we saw how expensive everything was, I knew I needed to act. Sunrise took care of everything in one phone call. My premium is less than my cable bill and it will never go up." },
+              { init: 'PT', name: 'Patricia T.', detail: 'Scottsdale, AZ · Age 63', text: "I was worried my health history would disqualify me. It didn't matter at all. I got approved for $20,000 of coverage with no exam. My son cried when I told him — he said it was the most thoughtful thing I've ever done." },
+            ].map((t, i) => (
+              <div key={i} className="testimonial-card reveal">
+                <div className="quote-mark">"</div>
+                <div className="stars"><StarIcon /><StarIcon /><StarIcon /><StarIcon /><StarIcon /></div>
+                <p className="testimonial-text">{t.text}</p>
+                <div className="testimonial-author">
+                  <div className="author-avatar">{t.init}</div>
+                  <div>
+                    <div className="author-name">{t.name}</div>
+                    <div className="author-detail">{t.detail}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="section faq" data-screen-label="FAQ">
+        <div className="container">
+          <div className="section-header center reveal">
+            <div className="section-label">Common Questions</div>
+            <h2>Answers You Can Trust</h2>
+            <p>Still have questions? Call us at <a href="tel:+16025550100" style={{color:'var(--gold)',fontWeight:600,textDecoration:'none'}}>(602) 555-0100</a> — a licensed Arizona agent will give you a straight answer, no sales pressure.</p>
+          </div>
+          <FAQ />
+        </div>
+      </section>
+
+      {/* ── Bottom CTA ── */}
+      <section className="bottom-cta" data-screen-label="Bottom CTA">
+        <div className="container">
+          <div className="bottom-cta-inner">
+            <div>
+              <div className="section-label" style={{color:'var(--gold-light)'}}>Don't Wait</div>
+              <h2>Your Family Deserves This Protection</h2>
+              <p>Every day without coverage is a day your family carries unnecessary risk. A licensed Arizona agent is standing by — get your free quote in under 2 minutes.</p>
+              <div className="cta-contact">
+                <div className="cta-phone-block">
+                  <div className="cta-phone-icon"><PhoneIcon size={18} /></div>
+                  <div>
+                    <div className="cta-phone-label">Call us now</div>
+                    <a href="tel:+16025550100" className="cta-phone-number">(602) 555-0100</a>
+                  </div>
+                </div>
+                <span style={{color:'rgba(255,255,255,0.3)'}}>or</span>
+                <a href="#get-quote" className="btn btn-gold">Fill Out the Form Above</a>
+              </div>
+            </div>
+            <div className="lead-form-card">
+              <h3>Request a Free Quote</h3>
+              <p className="sub">A licensed AZ agent calls within 15 minutes.</p>
+              <LeadForm />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer>
+        <div className="container">
+          <div className="footer-inner">
+            <div className="footer-logo-text">
+              <div className="brand">Sunrise Final Expense</div>
+              <div className="sub">Licensed in the State of Arizona</div>
+            </div>
+            <div className="footer-links">
+              <a href="#">Privacy Policy</a>
+              <a href="#">Terms of Service</a>
+              <a href="#">Do Not Sell My Info</a>
+              <a href="#">Accessibility</a>
+              <a href="tel:+16025550100">(602) 555-0100</a>
+            </div>
+            <div className="footer-disclaimer">
+              Sunrise Final Expense is a licensed insurance agency operating in the State of Arizona. License #[AZ-XXXXXXXX]. Final expense insurance products are underwritten by third-party carriers. Coverage amounts, premiums, and eligibility vary by carrier and individual health profile. The information on this page is for illustrative purposes only and does not constitute a binding insurance quote or guarantee of coverage. Not affiliated with any government agency. © 2026 Sunrise Final Expense. All rights reserved.
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <TweaksPanel visible={tweaksVisible} onClose={handleTweaksClose} />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+<div id="root"></div>
+
+</body>
+</html>

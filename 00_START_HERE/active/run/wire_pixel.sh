@@ -1,0 +1,1 @@
+../../../04_tools/scripts/wire_pixel.sh

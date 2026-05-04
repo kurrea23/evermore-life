@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evermore Life — Legacy Campaign Cockpit</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1f2d;
+    --navy-light: #152b3e;
+    --navy-mid: #1a3549;
+    --forest: #0a1a0f;
+    --gold: #c9a84c;
+    --gold-light: #e0c06e;
+    --gold-dim: #8a6d2e;
+    --gold-glow: rgba(201,168,76,0.15);
+    --cream: #f5f0e8;
+    --cream-dim: #bfb89a;
+    --cream-muted: rgba(245,240,232,0.6);
+    --red: #e05252;
+    --green: #4caf7a;
+    --amber: #e6a832;
+    --border: rgba(201,168,76,0.2);
+    --border-strong: rgba(201,168,76,0.4);
+    --text-primary: #f5f0e8;
+    --text-secondary: rgba(245,240,232,0.7);
+    --text-muted: rgba(245,240,232,0.4);
+    --surface: rgba(255,255,255,0.04);
+    --surface-hover: rgba(255,255,255,0.07);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--navy);
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.6;
+  }
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    padding: 48px 0 36px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  .header-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--amber);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(230,168,50,0.6); }
+    50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(230,168,50,0); }
+  }
+
+  .header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: var(--cream);
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+
+  .header h1 span {
+    color: var(--gold);
+  }
+
+  .header-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--cream-dim);
+    margin-bottom: 16px;
+  }
+
+  .header-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── SECTION LABELS ── */
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 16px;
+  }
+
+  .section {
+    margin-bottom: 48px;
+  }
+
+  /* ── STATUS BAR ── */
+  .status-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .status-tile {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    user-select: none;
+  }
+
+  .status-tile:hover {
+    background: var(--surface-hover);
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+  }
+
+  .status-tile.active-gold {
+    border-color: var(--gold);
+    background: var(--gold-glow);
+  }
+
+  .status-tile-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .status-tile-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-red { background: var(--red); }
+  .dot-amber { background: var(--amber); animation: pulse 2s infinite; }
+  .dot-green { background: var(--green); }
+  .dot-gold { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+
+  /* ── STORY PIPELINE ── */
+  .story-scroll {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold-dim) transparent;
+  }
+
+  .story-card {
+    flex: 0 0 240px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.25s ease;
+    cursor: default;
+  }
+
+  .story-card:hover {
+    background: var(--surface-hover);
+    border-color: var(--border-strong);
+    transform: translateY(-3px);
+  }
+
+  .story-card.hero {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.06);
+  }
+
+  .story-card.hero:hover {
+    background: rgba(201,168,76,0.1);
+  }
+
+  .story-card-tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    display: inline-block;
+  }
+
+  .tag-hero { background: var(--gold); color: var(--navy); }
+  .tag-brand { background: rgba(245,240,232,0.15); color: var(--cream); }
+  .tag-month2 { background: rgba(76,175,122,0.2); color: #4caf7a; }
+  .tag-month3 { background: rgba(138,109,46,0.3); color: var(--gold-light); }
+
+  .story-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--cream);
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .story-card-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+
+  .status-badge {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+
+  .badge-pending { background: rgba(224,82,82,0.15); color: var(--red); border: 1px solid rgba(224,82,82,0.3); }
+  .badge-progress { background: rgba(230,168,50,0.15); color: var(--amber); border: 1px solid rgba(230,168,50,0.3); }
+  .badge-live { background: rgba(76,175,122,0.15); color: var(--green); border: 1px solid rgba(76,175,122,0.3); }
+  .badge-complete { background: rgba(201,168,76,0.2); color: var(--gold); border: 1px solid rgba(201,168,76,0.4); }
+
+  .btn-script {
+    width: 100%;
+    padding: 8px 12px;
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    color: var(--gold);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-script:hover {
+    background: var(--gold-glow);
+    border-color: var(--gold);
+  }
+
+  /* ── CONTENT CALENDAR ── */
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  .week-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .week-block.done {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.04);
+  }
+
+  .week-header {
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+
+  .week-header:hover { background: var(--surface-hover); }
+
+  .week-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    background: transparent;
+  }
+
+  .week-block.done .week-checkbox {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+
+  .week-checkbox-mark {
+    color: var(--navy);
+    font-size: 11px;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .week-block.done .week-checkbox-mark { opacity: 1; }
+
+  .week-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--cream);
+    flex: 1;
+  }
+
+  .week-chevron {
+    font-size: 10px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+  }
+
+  .week-block.expanded .week-chevron { transform: rotate(180deg); }
+
+  .week-tasks {
+    display: none;
+    padding: 0 18px 16px;
+    border-top: 1px solid var(--border);
+    margin-top: 0;
+  }
+
+  .week-block.expanded .week-tasks { display: block; }
+
+  .week-task-item {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(245,240,232,0.06);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .week-task-item::before {
+    content: '›';
+    color: var(--gold-dim);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .week-task-item:last-child { border-bottom: none; }
+
+  /* ── FUNNEL FLOW ── */
+  .funnel-flow {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 32px 24px 24px;
+  }
+
+  .funnel-nodes {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    margin-bottom: 28px;
+    padding-bottom: 4px;
+  }
+
+  .funnel-node {
+    flex: 0 0 auto;
+    background: var(--surface-hover);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-align: center;
+    min-width: 90px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .funnel-node:hover {
+    border-color: var(--gold-dim);
+    color: var(--cream);
+  }
+
+  .funnel-node.active {
+    border-color: var(--gold);
+    background: var(--gold-glow);
+    color: var(--gold-light);
+    box-shadow: 0 0 16px rgba(201,168,76,0.2);
+  }
+
+  .funnel-node-sub {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .funnel-node.active .funnel-node-sub { color: var(--gold-dim); }
+
+  .funnel-arrow {
+    font-size: 16px;
+    color: var(--border-strong);
+    flex-shrink: 0;
+    padding: 0 4px;
+  }
+
+  .funnel-paths {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .path-card {
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid;
+  }
+
+  .path-card.path-a {
+    background: rgba(201,168,76,0.07);
+    border-color: rgba(201,168,76,0.35);
+  }
+
+  .path-card.path-b {
+    background: rgba(245,240,232,0.04);
+    border-color: rgba(245,240,232,0.15);
+  }
+
+  .path-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .path-card.path-a .path-label { color: var(--gold); }
+  .path-card.path-b .path-label { color: var(--cream-dim); }
+
+  .path-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .path-card.path-a .path-name { color: var(--gold-light); }
+  .path-card.path-b .path-name { color: var(--cream); }
+
+  .path-detail {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ── AI TOOLKIT ── */
+  .toolkit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    transition: all 0.2s;
+  }
+
+  .tool-card:hover {
+    background: var(--surface-hover);
+    border-color: var(--border-strong);
+  }
+
+  .tool-card.connected {
+    border-color: rgba(76,175,122,0.4);
+    background: rgba(76,175,122,0.05);
+  }
+
+  .tool-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--cream);
+    margin-bottom: 4px;
+  }
+
+  .tool-use {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+
+  .tool-toggle {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 1px solid;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+    display: inline-block;
+    user-select: none;
+  }
+
+  .tool-toggle.not-setup {
+    color: var(--text-muted);
+    border-color: var(--border);
+  }
+
+  .tool-toggle.not-setup:hover {
+    color: var(--cream);
+    border-color: var(--border-strong);
+  }
+
+  .tool-toggle.connected {
+    color: var(--green);
+    border-color: rgba(76,175,122,0.4);
+    background: rgba(76,175,122,0.1);
+  }
+
+  /* ── METRICS ── */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+  }
+
+  .metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 16px;
+    text-align: center;
+    transition: all 0.2s;
+  }
+
+  .metric-card:hover {
+    background: var(--surface-hover);
+    border-color: var(--border-strong);
+  }
+
+  .metric-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .metric-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 300;
+    color: var(--gold-light);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .metric-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .metric-btn {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--gold);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    line-height: 1;
+    padding-bottom: 1px;
+  }
+
+  .metric-btn:hover {
+    background: var(--gold-glow);
+    border-color: var(--gold);
+  }
+
+  /* ── QUICK LINKS ── */
+  .links-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .quick-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--cream-dim);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 400;
+    transition: all 0.2s;
+  }
+
+  .quick-link:hover {
+    background: var(--gold-glow);
+    border-color: var(--gold);
+    color: var(--gold-light);
+  }
+
+  .quick-link-icon {
+    font-size: 14px;
+    opacity: 0.7;
+  }
+
+  /* ── NOTES ── */
+  .notes-area {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+  }
+
+  .notes-input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .notes-textarea {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 10px 14px;
+    color: var(--cream);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    resize: none;
+    height: 44px;
+    transition: border-color 0.2s, height 0.2s;
+    outline: none;
+    line-height: 1.5;
+  }
+
+  .notes-textarea:focus {
+    border-color: var(--gold-dim);
+    height: 88px;
+  }
+
+  .notes-textarea::placeholder { color: var(--text-muted); }
+
+  .notes-save-btn {
+    padding: 10px 20px;
+    background: var(--gold-glow);
+    border: 1px solid var(--gold);
+    border-radius: 6px;
+    color: var(--gold);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    align-self: flex-start;
+  }
+
+  .notes-save-btn:hover {
+    background: rgba(201,168,76,0.25);
+    box-shadow: 0 0 12px rgba(201,168,76,0.2);
+  }
+
+  .notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .note-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(245,240,232,0.07);
+    border-radius: 6px;
+    padding: 12px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .note-timestamp {
+    font-size: 11px;
+    color: var(--gold-dim);
+    white-space: nowrap;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .note-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    flex: 1;
+    line-height: 1.5;
+  }
+
+  .notes-clear {
+    margin-top: 14px;
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid rgba(224,82,82,0.3);
+    border-radius: 6px;
+    color: rgba(224,82,82,0.6);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .notes-clear:hover {
+    border-color: var(--red);
+    color: var(--red);
+    background: rgba(224,82,82,0.07);
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 20, 30, 0.88);
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: #0f2438;
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    max-width: 560px;
+    width: 100%;
+    padding: 36px;
+    position: relative;
+    box-shadow: 0 0 60px rgba(201,168,76,0.12);
+    animation: modalIn 0.25s ease;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.96) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    font-size: 20px;
+    color: var(--text-muted);
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    padding: 4px 8px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .modal-close:hover { color: var(--cream); }
+
+  .modal-tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 12px;
+  }
+
+  .modal h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 20px;
+    line-height: 1.15;
+  }
+
+  .modal-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 20px;
+  }
+
+  .modal-summary-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 10px;
+  }
+
+  .modal-summary {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--cream-dim);
+    line-height: 1.65;
+  }
+
+  .modal-tagline {
+    margin-top: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--gold);
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── DIVIDER ── */
+  .gold-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+    margin: 40px 0;
+    opacity: 0.5;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .footer-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .footer-text span {
+    color: var(--gold-dim);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .container { padding: 0 16px 60px; }
+    .funnel-paths { grid-template-columns: 1fr; }
+    .footer { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .notes-input-row { flex-direction: column; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ── HEADER ── -->
+  <header class="header">
+    <div class="header-eyebrow">
+      <div class="pulse-dot"></div>
+      Campaign in Production
+    </div>
+    <h1>Evermore <span>Life</span></h1>
+    <div class="header-tagline">"Your legacy doesn't end. It grows."</div>
+    <div class="header-meta" id="today-date">Legacy Campaign Cockpit &nbsp;·&nbsp; Loading...</div>
+  </header>
+
+  <!-- ── CAMPAIGN STATUS BAR ── -->
+  <section class="section">
+    <div class="section-label">Campaign Status</div>
+    <div class="status-bar" id="status-bar">
+      <div class="status-tile" data-status="1" onclick="cycleStatus(this)">
+        <div class="status-tile-label">Pre-Production</div>
+        <div class="status-tile-value">
+          <div class="status-dot dot-amber"></div>
+          <span>In Progress</span>
+        </div>
+      </div>
+      <div class="status-tile" data-status="0" onclick="cycleStatus(this)">
+        <div class="status-tile-label">Content Creation</div>
+        <div class="status-tile-value">
+          <div class="status-dot dot-red"></div>
+          <span>Not Started</span>
+        </div>
+      </div>
+      <div class="status-tile" data-status="0" onclick="cycleStatus(this)">
+        <div class="status-tile-label">Distribution</div>
+        <div class="status-tile-value">
+          <div class="status-dot dot-red"></div>
+          <span>Not Started</span>
+        </div>
+      </div>
+      <div class="status-tile" data-status="0" onclick="cycleStatus(this)">
+        <div class="status-tile-label">Funnel Live</div>
+        <div class="status-tile-value">
+          <div class="status-dot dot-red"></div>
+          <span>Not Started</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="gold-divider"></div>
+
+  <!-- ── STORY PIPELINE ── -->
+  <section class="section">
+    <div class="section-label">Story Pipeline</div>
+    <div class="story-scroll">
+
+      <div class="story-card hero">
+        <span class="story-card-tag tag-hero">★ Hero</span>
+        <h3>Soccer Dad</h3>
+        <div class="story-card-sub">Primary story · 5-min cinematic</div>
+        <div class="status-badge badge-progress">In Production</div>
+        <button class="btn-script" onclick="openModal('soccer-dad')">View Script ›</button>
+      </div>
+
+      <div class="story-card">
+        <span class="story-card-tag tag-brand">Brand</span>
+        <h3>Tree &amp; Acorn</h3>
+        <div class="story-card-sub">Brand identity spot · 60s</div>
+        <div class="status-badge badge-pending">Not Started</div>
+        <button class="btn-script" onclick="openModal('tree-acorn')">View Script ›</button>
+      </div>
+
+      <div class="story-card">
+        <span class="story-card-tag tag-month2">Month 2</span>
+        <h3>The Chef</h3>
+        <div class="story-card-sub">Short form · 60–90s</div>
+        <div class="status-badge badge-pending">Not Started</div>
+        <button class="btn-script" onclick="openModal('the-chef')">View Script ›</button>
+      </div>
+
+      <div class="story-card">
+        <span class="story-card-tag tag-month2">Month 2</span>
+        <h3>Graduation Day</h3>
+        <div class="story-card-sub">Short form · 60–90s</div>
+        <div class="status-badge badge-pending">Not Started</div>
+        <button class="btn-script" onclick="openModal('graduation')">View Script ›</button>
+      </div>
+
+      <div class="story-card">
+        <span class="story-card-tag tag-month3">Month 3</span>
+        <h3>Wedding Day</h3>
+        <div class="story-card-sub">Short form · 60–90s</div>
+        <div class="status-badge badge-pending">Not Started</div>
+        <button class="btn-script" onclick="openModal('wedding')">View Script ›</button>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="gold-divider"></div>
+
+  <!-- ── CONTENT CALENDAR ── -->
+  <section class="section">
+    <div class="section-label">Content Calendar</div>
+    <div class="calendar-grid">
+
+      <div class="week-block" id="week-1">
+        <div class="week-header" onclick="toggleWeek('week-1')">
+          <div class="week-checkbox" onclick="toggleWeekDone(event,'week-1')"><span class="week-checkbox-mark">✓</span></div>
+          <div class="week-title">Week 1</div>
+          <div class="week-chevron">▼</div>
+        </div>
+        <div class="week-tasks">
+          <div class="week-task-item">Finalize all 5 story scripts</div>
+          <div class="week-task-item">Generate storyboards in Midjourney</div>
+          <div class="week-task-item">Submit prompts to Sora / Runway ML</div>
+          <div class="week-task-item">Record voiceovers via ElevenLabs</div>
+          <div class="week-task-item">Create HeyGen spokesperson intro</div>
+        </div>
+      </div>
+
+      <div class="week-block" id="week-2">
+        <div class="week-header" onclick="toggleWeek('week-2')">
+          <div class="week-checkbox" onclick="toggleWeekDone(event,'week-2')"><span class="week-checkbox-mark">✓</span></div>
+          <div class="week-title">Week 2</div>
+          <div class="week-chevron">▼</div>
+        </div>
+        <div class="week-tasks">
+          <div class="week-task-item">Cut short-form clips (30–60s) from each story</div>
+          <div class="week-task-item">Add captions in CapCut</div>
+          <div class="week-task-item">Post to TikTok (3×/week)</div>
+          <div class="week-task-item">Post to Instagram Reels (3×/week)</div>
+          <div class="week-task-item">Upload to YouTube Shorts</div>
+          <div class="week-task-item">Launch boosted posts via Meta Ads Manager</div>
+        </div>
+      </div>
+
+      <div class="week-block" id="week-3">
+        <div class="week-header" onclick="toggleWeek('week-3')">
+          <div class="week-checkbox" onclick="toggleWeekDone(event,'week-3')"><span class="week-checkbox-mark">✓</span></div>
+          <div class="week-title">Week 3</div>
+          <div class="week-chevron">▼</div>
+        </div>
+        <div class="week-tasks">
+          <div class="week-task-item">Install Meta Pixel on all pages</div>
+          <div class="week-task-item">Build 75%+ video view custom audience</div>
+          <div class="week-task-item">Create lookalike audiences (1%, 2%)</div>
+          <div class="week-task-item">Launch retargeting ad sets</div>
+          <div class="week-task-item">A/B test 2 ad creatives per story</div>
+          <div class="week-task-item">Review analytics — cut low performers</div>
+        </div>
+      </div>
+
+      <div class="week-block" id="week-4">
+        <div class="week-header" onclick="toggleWeek('week-4')">
+          <div class="week-checkbox" onclick="toggleWeekDone(event,'week-4')"><span class="week-checkbox-mark">✓</span></div>
+          <div class="week-title">Week 4</div>
+          <div class="week-chevron">▼</div>
+        </div>
+        <div class="week-tasks">
+          <div class="week-task-item">Publish Soccer Dad hero video (5-min full cut)</div>
+          <div class="week-task-item">Launch FUNNEL_PAGE.html live</div>
+          <div class="week-task-item">Connect Sarah AI to GoHighLevel</div>
+          <div class="week-task-item">Test full funnel end-to-end (click → appt)</div>
+          <div class="week-task-item">Send launch email to warm list</div>
+          <div class="week-task-item">Document week-1 metrics baseline</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="gold-divider"></div>
+
+  <!-- ── FUNNEL FLOW ── -->
+  <section class="section">
+    <div class="section-label">Funnel Flow</div>
+    <div class="funnel-flow">
+      <div class="funnel-nodes" id="funnel-nodes">
+        <div class="funnel-node active" data-idx="0" onclick="toggleFunnelNode(this)">
+          Short Video
+          <div class="funnel-node-sub">30–90s</div>
+        </div>
+        <div class="funnel-arrow">→</div>
+        <div class="funnel-node active" data-idx="1" onclick="toggleFunnelNode(this)">
+          75%+ Watch
+          <div class="funnel-node-sub">Trigger</div>
+        </div>
+        <div class="funnel-arrow">→</div>
+        <div class="funnel-node" data-idx="2" onclick="toggleFunnelNode(this)">
+          Retarget
+          <div class="funnel-node-sub">Meta Ads</div>
+        </div>
+        <div class="funnel-arrow">→</div>
+        <div class="funnel-node" data-idx="3" onclick="toggleFunnelNode(this)">
+          Hero Video
+          <div class="funnel-node-sub">5 min</div>
+        </div>
+        <div class="funnel-arrow">→</div>
+        <div class="funnel-node" data-idx="4" onclick="toggleFunnelNode(this)">
+          Landing Page
+          <div class="funnel-node-sub">Funnel Page</div>
+        </div>
+        <div class="funnel-arrow">→</div>
+        <div class="funnel-node" data-idx="5" onclick="toggleFunnelNode(this)">
+          Sarah AI
+          <div class="funnel-node-sub">GHL Bot</div>
+        </div>
+        <div class="funnel-arrow">→</div>
+        <div class="funnel-node" data-idx="6" onclick="toggleFunnelNode(this)">
+          Appointment
+          <div class="funnel-node-sub">Booked</div>
+        </div>
+        <div class="funnel-arrow">→</div>
+        <div class="funnel-node" data-idx="7" onclick="toggleFunnelNode(this)">
+          Coverage
+          <div class="funnel-node-sub">Policy Sold</div>
+        </div>
+      </div>
+
+      <div class="funnel-paths">
+        <div class="path-card path-a">
+          <div class="path-label">Path A — Gold</div>
+          <div class="path-name">Protective Parent</div>
+          <div class="path-detail">TikTok &amp; Facebook → Term / IUL</div>
+        </div>
+        <div class="path-card path-b">
+          <div class="path-label">Path B — Cream</div>
+          <div class="path-name">Adult Child</div>
+          <div class="path-detail">Facebook → Final Expense</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="gold-divider"></div>
+
+  <!-- ── AI PRODUCTION TOOLKIT ── -->
+  <section class="section">
+    <div class="section-label">AI Production Toolkit</div>
+    <div class="toolkit-grid">
+
+      <div class="tool-card" id="tool-0">
+        <div class="tool-name">Sora / Runway</div>
+        <div class="tool-use">Cinematic video generation from text prompts</div>
+        <span class="tool-toggle not-setup" onclick="toggleTool(0)">Not Set Up</span>
+      </div>
+
+      <div class="tool-card" id="tool-1">
+        <div class="tool-name">HeyGen</div>
+        <div class="tool-use">Spokesperson &amp; talking head video creation</div>
+        <span class="tool-toggle not-setup" onclick="toggleTool(1)">Not Set Up</span>
+      </div>
+
+      <div class="tool-card" id="tool-2">
+        <div class="tool-name">ElevenLabs</div>
+        <div class="tool-use">Voiceover generation — warm, natural AI voices</div>
+        <span class="tool-toggle not-setup" onclick="toggleTool(2)">Not Set Up</span>
+      </div>
+
+      <div class="tool-card" id="tool-3">
+        <div class="tool-name">Midjourney</div>
+        <div class="tool-use">Storyboard frames &amp; scene concept art</div>
+        <span class="tool-toggle not-setup" onclick="toggleTool(3)">Not Set Up</span>
+      </div>
+
+      <div class="tool-card" id="tool-4">
+        <div class="tool-name">CapCut / Premiere</div>
+        <div class="tool-use">Final edit, color grade, captions &amp; export</div>
+        <span class="tool-toggle not-setup" onclick="toggleTool(4)">Not Set Up</span>
+      </div>
+
+      <div class="tool-card" id="tool-5">
+        <div class="tool-name">Meta Ads Manager</div>
+        <div class="tool-use">Distribution, retargeting &amp; audience building</div>
+        <span class="tool-toggle not-setup" onclick="toggleTool(5)">Not Set Up</span>
+      </div>
+
+      <div class="tool-card" id="tool-6">
+        <div class="tool-name">GoHighLevel + Sarah</div>
+        <div class="tool-use">Funnel CRM &amp; AI appointment setter bot</div>
+        <span class="tool-toggle not-setup" onclick="toggleTool(6)">Not Set Up</span>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="gold-divider"></div>
+
+  <!-- ── KEY METRICS ── -->
+  <section class="section">
+    <div class="section-label">Key Metrics</div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Videos Published</div>
+        <div class="metric-value" id="m0">0</div>
+        <div class="metric-controls">
+          <button class="metric-btn" onclick="changeMetric(0,-1)">−</button>
+          <button class="metric-btn" onclick="changeMetric(0,1)">+</button>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Total Views</div>
+        <div class="metric-value" id="m1">0</div>
+        <div class="metric-controls">
+          <button class="metric-btn" onclick="changeMetric(1,-100)">−</button>
+          <button class="metric-btn" onclick="changeMetric(1,100)">+</button>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">75%+ Completions</div>
+        <div class="metric-value" id="m2">0</div>
+        <div class="metric-controls">
+          <button class="metric-btn" onclick="changeMetric(2,-10)">−</button>
+          <button class="metric-btn" onclick="changeMetric(2,10)">+</button>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Website Sessions</div>
+        <div class="metric-value" id="m3">0</div>
+        <div class="metric-controls">
+          <button class="metric-btn" onclick="changeMetric(3,-10)">−</button>
+          <button class="metric-btn" onclick="changeMetric(3,10)">+</button>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Sarah AI Conversations</div>
+        <div class="metric-value" id="m4">0</div>
+        <div class="metric-controls">
+          <button class="metric-btn" onclick="changeMetric(4,-1)">−</button>
+          <button class="metric-btn" onclick="changeMetric(4,1)">+</button>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Appointments Set</div>
+        <div class="metric-value" id="m5">0</div>
+        <div class="metric-controls">
+          <button class="metric-btn" onclick="changeMetric(5,-1)">−</button>
+          <button class="metric-btn" onclick="changeMetric(5,1)">+</button>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Policies Sold</div>
+        <div class="metric-value" id="m6">0</div>
+        <div class="metric-controls">
+          <button class="metric-btn" onclick="changeMetric(6,-1)">−</button>
+          <button class="metric-btn" onclick="changeMetric(6,1)">+</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="gold-divider"></div>
+
+  <!-- ── QUICK LINKS ── -->
+  <section class="section">
+    <div class="section-label">Quick Links</div>
+    <div class="links-grid">
+      <a class="quick-link" href="./NARRATIVE_BIBLE.md"><span class="quick-link-icon">📖</span> Narrative Bible</a>
+      <a class="quick-link" href="./SOCCER_DAD_SCRIPT.md"><span class="quick-link-icon">⚽</span> Soccer Dad Script</a>
+      <a class="quick-link" href="./SHORT_FORM_HOOKS.md"><span class="quick-link-icon">🎣</span> Short Form Hooks</a>
+      <a class="quick-link" href="./AI_VIDEO_PROMPTS.md"><span class="quick-link-icon">🤖</span> AI Video Prompts</a>
+      <a class="quick-link" href="./EXECUTION_PLAN.md"><span class="quick-link-icon">🗂</span> Execution Plan</a>
+      <a class="quick-link" href="./RETARGETING_MAP.md"><span class="quick-link-icon">🎯</span> Retargeting Map</a>
+      <a class="quick-link" href="./COMPLIANCE_CHECKLIST.md"><span class="quick-link-icon">✅</span> Compliance Checklist</a>
+      <a class="quick-link" href="./PRODUCTION_CHECKLIST.md"><span class="quick-link-icon">🎬</span> Production Checklist</a>
+      <a class="quick-link" href="./FUNNEL_PAGE.html"><span class="quick-link-icon">🔗</span> Funnel Page (preview)</a>
+    </div>
+  </section>
+
+  <div class="gold-divider"></div>
+
+  <!-- ── NOTES INBOX ── -->
+  <section class="section">
+    <div class="section-label">Inbox / Notes</div>
+    <div class="notes-area">
+      <div class="notes-input-row">
+        <textarea class="notes-textarea" id="notes-input" placeholder="Type a note, idea, or next step…" onkeydown="handleNoteKey(event)"></textarea>
+        <button class="notes-save-btn" onclick="saveNote()">Save Note</button>
+      </div>
+      <div class="notes-list" id="notes-list"></div>
+      <button class="notes-clear" onclick="clearNotes()" style="display:none;" id="clear-btn">Clear All Notes</button>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="footer-text">Evermore Life <span>Legacy Campaign</span> v1.0</div>
+    <div class="footer-text">Last Updated: <span>2026-05-03</span></div>
+    <div class="footer-text">Built with <span>Claude</span></div>
+  </footer>
+
+</div>
+
+<!-- ── MODALS ── -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-content">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="modal-tag" id="modal-tag"></div>
+    <h2 id="modal-title"></h2>
+    <div class="modal-divider"></div>
+    <div class="modal-summary-label">Story Summary</div>
+    <div class="modal-summary" id="modal-summary"></div>
+    <div class="modal-tagline" id="modal-tagline"></div>
+  </div>
+</div>
+
+<script>
+  // ── DATE ──
+  const d = new Date();
+  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  document.getElementById('today-date').innerHTML =
+    'Legacy Campaign Cockpit &nbsp;·&nbsp; ' + d.toLocaleDateString('en-US', opts);
+
+  // ── STATUS TILES ──
+  const statusStates = [
+    { label: 'Not Started', dot: 'dot-red' },
+    { label: 'In Progress', dot: 'dot-amber' },
+    { label: 'Live', dot: 'dot-green' },
+    { label: 'Complete', dot: 'dot-gold' }
+  ];
+
+  function cycleStatus(tile) {
+    let s = parseInt(tile.dataset.status);
+    s = (s + 1) % 4;
+    tile.dataset.status = s;
+    const state = statusStates[s];
+    tile.querySelector('.status-dot').className = 'status-dot ' + state.dot;
+    tile.querySelector('.status-tile-value span').textContent = state.label;
+    tile.classList.toggle('active-gold', s === 3);
+  }
+
+  // ── WEEK CALENDAR ──
+  function toggleWeek(id) {
+    document.getElementById(id).classList.toggle('expanded');
+  }
+
+  function toggleWeekDone(e, id) {
+    e.stopPropagation();
+    document.getElementById(id).classList.toggle('done');
+  }
+
+  // ── FUNNEL NODES ──
+  function toggleFunnelNode(node) {
+    node.classList.toggle('active');
+  }
+
+  // ── AI TOOLKIT TOGGLES ──
+  const toolStates = [false,false,false,false,false,false,false];
+  function toggleTool(i) {
+    toolStates[i] = !toolStates[i];
+    const card = document.getElementById('tool-'+i);
+    const btn = card.querySelector('.tool-toggle');
+    if (toolStates[i]) {
+      btn.className = 'tool-toggle connected';
+      btn.textContent = '● Connected';
+      card.classList.add('connected');
+    } else {
+      btn.className = 'tool-toggle not-setup';
+      btn.textContent = 'Not Set Up';
+      card.classList.remove('connected');
+    }
+  }
+
+  // ── METRICS ──
+  const metrics = [0,0,0,0,0,0,0];
+  function changeMetric(i, delta) {
+    metrics[i] = Math.max(0, metrics[i] + delta);
+    const el = document.getElementById('m'+i);
+    el.textContent = metrics[i].toLocaleString();
+  }
+
+  // ── MODALS ──
+  const scripts = {
+    'soccer-dad': {
+      tag: '★ Hero Story · Primary Campaign Film',
+      title: 'Soccer Dad',
+      summary: 'A father sacrifices his own soccer dreams to work double-shift jobs and support his family. His son inherits the gift — the same first touch, the same fire in his eyes. Years later, the son wins a professional award on the field that was meant for his father. In his moment of triumph, he runs through the crowd. Finds his dad. Holds him.',
+      tagline: '"Your legacy moves on."'
+    },
+    'tree-acorn': {
+      tag: 'Brand Identity Spot · 60s',
+      title: 'Tree & Acorn',
+      summary: 'A great oak grows tall — wide branches, deep roots, decades of quiet strength. An acorn drops from its canopy, falls into the earth. Time passes. Seasons change. A new tree rises from the same ground. Small at first, then reaching. The Evermore Life logo appears against the sky.',
+      tagline: '"Legacy is nature\'s promise."'
+    },
+    'the-chef': {
+      tag: 'Month 2 · Short Film · 60–90s',
+      title: 'The Chef',
+      summary: 'A father and his young daughter spend Sunday mornings in the kitchen — flour on the counter, old music on the radio, a recipe card worn soft at the edges. She grows up. She opens her own restaurant. On the menu, in careful handwriting, one dish carries his name.',
+      tagline: '"What you teach lives on."'
+    },
+    'graduation': {
+      tag: 'Month 2 · Short Film · 60–90s',
+      title: 'Graduation Day',
+      summary: 'A single mother works double shifts — hospital scrubs, dark circles, a photo of her daughter taped inside her locker. She never misses a parent-teacher night. Years later, her daughter walks across a stage and receives her medical degree. The mother sits in the front row — not tired now. Beaming.',
+      tagline: '"Every sacrifice becomes a story."'
+    },
+    'wedding': {
+      tag: 'Month 3 · Short Film · 60–90s',
+      title: 'Wedding Day',
+      summary: 'A father with an early-stage illness fights through the symptoms he refuses to name. He has one wish: to walk his daughter down the aisle. His final expense policy was already in place — quietly, without burdening anyone. On the wedding day, the family celebrates fully, without shadow. He dances.',
+      tagline: '"Give them a day they\'ll never forget."'
+    }
+  };
+
+  function openModal(key) {
+    const s = scripts[key];
+    document.getElementById('modal-tag').textContent = s.tag;
+    document.getElementById('modal-title').textContent = s.title;
+    document.getElementById('modal-summary').textContent = s.summary;
+    document.getElementById('modal-tagline').textContent = s.tagline;
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('modal-overlay')) {
+      document.getElementById('modal-overlay').classList.remove('open');
+    }
+  }
+
+  function closeModalDirect() {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.getElementById('modal-overlay').classList.remove('open');
+  });
+
+  // ── NOTES ──
+  let notes = [];
+
+  function handleNoteKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      saveNote();
+    }
+  }
+
+  function saveNote() {
+    const input = document.getElementById('notes-input');
+    const text = input.value.trim();
+    if (!text) return;
+    const now = new Date();
+    const ts = now.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' ' +
+               now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    notes.unshift({ text, ts });
+    input.value = '';
+    renderNotes();
+  }
+
+  function clearNotes() {
+    notes = [];
+    renderNotes();
+  }
+
+  function renderNotes() {
+    const list = document.getElementById('notes-list');
+    const clearBtn = document.getElementById('clear-btn');
+    list.innerHTML = notes.map(n =>
+      `<div class="note-item">
+        <div class="note-timestamp">${n.ts}</div>
+        <div class="note-text">${n.text}</div>
+      </div>`
+    ).join('');
+    clearBtn.style.display = notes.length > 0 ? 'inline-block' : 'none';
+  }
+</script>
+
+</body>
+</html>
