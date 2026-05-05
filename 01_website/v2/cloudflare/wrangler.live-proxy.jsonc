@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  "name": "evermore-life-live",
+  "main": "./evermore-live-proxy.js",
+  "compatibility_date": "2026-05-05",
+  "routes": [
+    {
+      "pattern": "evermorelife.org/*",
+      "zone_name": "evermorelife.org"
+    },
+    {
+      "pattern": "www.evermorelife.org/*",
+      "zone_name": "evermorelife.org"
+    }
+  ]
+}
