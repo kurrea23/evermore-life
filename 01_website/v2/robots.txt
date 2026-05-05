@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://kurrea23.github.io/evermore-life/01_website/v2/sitemap.xml
+Sitemap: https://evermorelife.org/01_website/v2/sitemap.xml

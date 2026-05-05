@@ -16,7 +16,7 @@ can be patched independently without breaking the whole page.
 4. Converts visitors to quote requests via GHL embedded form
 
 **GitHub repo:** `https://github.com/kurrea23/evermore-life`
-**Live site (GitHub Pages):** `https://kurrea23.github.io/evermore-life/01_website/v2/pages/index.html`
+**Live site (GitHub Pages):** `https://evermorelife.org/`
 **Brand domain (eventually points here):** `https://evermorelife.org`
 
 ---
@@ -152,7 +152,7 @@ Create `01_website/v2/robots.txt`:
 ```
 User-agent: *
 Allow: /
-Sitemap: https://kurrea23.github.io/evermore-life/01_website/v2/sitemap.xml
+Sitemap: https://evermorelife.org/01_website/v2/sitemap.xml
 ```
 
 ---
