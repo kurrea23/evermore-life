@@ -171,29 +171,6 @@
     border: none;
   }
 
-  .form-consent {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-3);
-    margin-top: var(--space-5);
-    padding: var(--space-4);
-    background: var(--off-white);
-    border-radius: var(--radius-md);
-  }
-  .form-consent input[type="checkbox"] {
-    margin-top: 3px;
-    flex-shrink: 0;
-    width: 16px;
-    height: 16px;
-    accent-color: var(--navy);
-  }
-  .form-consent label {
-    font-size: var(--font-size-xs);
-    color: var(--text-secondary);
-    line-height: 1.6;
-  }
-  .form-consent a { color: var(--navy); font-weight: 700; }
-
   .form-disclaimer {
     font-size: var(--font-size-xs);
     color: var(--text-secondary);
@@ -431,20 +408,9 @@
         </iframe>
       </div>
 
-      <!-- SMS Consent (A2P required) -->
-      <div class="form-consent">
-        <input type="checkbox" id="smsConsent" name="smsConsent" />
-        <label for="smsConsent">
-          By checking this box, I agree to receive text messages from Evermore Life LLC at the number provided.
-          Message and data rates may apply. Reply STOP to opt out at any time.
-          Consent is not a condition of purchase. View our
-          <a href="privacy.html">Privacy Policy</a> and <a href="terms.html">Terms of Service</a>.
-        </label>
-      </div>
-
       <p class="form-disclaimer">
-        You may request a quote without consenting to text messages. A licensed agent may contact
-        you by phone or email regarding your inquiry. Evermore Life LLC · 4539 N 22nd St, Ste R,
+        You may request a quote without agreeing to receive text messages. A licensed agent may contact
+        you by phone or email regarding your request. Evermore Life LLC · 4539 N 22nd St, Ste R,
         Phoenix, AZ 85016 · <a href="tel:+15055043101">(505) 504-3101</a>
       </p>
     </div>
@@ -499,7 +465,7 @@
         <a href="optin.html">Get a Quote</a>
         <a href="privacy.html">Privacy Policy</a>
         <a href="terms.html">Terms of Service</a>
-        <a href="optin.html">Opt-In / Opt-Out</a>
+        <a href="optin.html">Quote &amp; SMS Consent</a>
       </div>
     </div>
     <div>
@@ -517,7 +483,7 @@
     <div class="footer-legal-links">
       <a href="privacy.html">Privacy Policy</a>
       <a href="terms.html">Terms of Service</a>
-      <a href="optin.html">Opt-In / Opt-Out</a>
+      <a href="optin.html">Quote &amp; SMS Consent</a>
     </div>
   </div>
 </footer>
