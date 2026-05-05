@@ -889,8 +889,8 @@
 <style>
 .site-footer { background: var(--navy-deep); color: var(--text-muted); padding: 60px var(--section-padding-x) 32px; }
 .footer-grid { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1.4fr; gap: 40px; max-width: var(--max-width); margin-inline: auto; margin-bottom: 48px; }
-.footer-brand-name { font-size: var(--font-size-2xl); font-weight: 900; color: var(--white); margin-bottom: var(--space-3); }
-.footer-brand-name span { color: var(--gold); }
+.footer-brand-logo { display: inline-flex; align-items: center; width: min(260px, 100%); margin-bottom: var(--space-4); }
+.footer-brand-logo img { display: block; width: 100%; height: auto; object-fit: contain; object-position: left center; filter: drop-shadow(0 0 10px rgba(200,169,110,0.16)); }
 .footer-tagline { font-size: var(--font-size-sm); color: var(--text-muted); line-height: 1.65; max-width: 260px; margin-bottom: var(--space-5); }
 .footer-license { font-size: var(--font-size-xs); color: rgba(154,175,206,0.6); line-height: 1.6; max-width: 280px; }
 .footer-col-title { font-size: var(--font-size-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gold); margin-bottom: var(--space-5); }
@@ -906,7 +906,9 @@
 <footer class="site-footer" role="contentinfo">
   <div class="footer-grid">
     <div>
-      <div class="footer-brand-name">Evermore <span>Life</span></div>
+      <a href="index.html" class="footer-brand-logo" aria-label="Evermore Life home">
+        <img src="../assets/evermorelife-llc-logo-nav.png" alt="Evermore Life LLC" />
+      </a>
       <p class="footer-tagline">Independent life insurance brokerage helping families protect what matters most.</p>
       <p class="footer-license">Evermore Life LLC is a licensed independent insurance agency. We represent multiple carriers and are not captive to any single insurer. Products and availability vary by state.</p>
     </div>

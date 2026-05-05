@@ -17,13 +17,20 @@
   margin-inline: auto;
   margin-bottom: 48px;
 }
-.footer-brand-name {
-  font-size: var(--font-size-2xl);
-  font-weight: 900;
-  color: var(--white);
-  margin-bottom: var(--space-3);
+.footer-brand-logo {
+  display: inline-flex;
+  align-items: center;
+  width: min(260px, 100%);
+  margin-bottom: var(--space-4);
 }
-.footer-brand-name span { color: var(--gold); }
+.footer-brand-logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: left center;
+  filter: drop-shadow(0 0 10px rgba(200,169,110,0.16));
+}
 .footer-tagline {
   font-size: var(--font-size-sm);
   color: var(--text-muted);
@@ -87,7 +94,9 @@
 
     <!-- Brand -->
     <div>
-      <div class="footer-brand-name">Evermore <span>Life</span></div>
+      <a href="index.html" class="footer-brand-logo" aria-label="Evermore Life home">
+        <img src="../assets/evermorelife-llc-logo-nav.png" alt="Evermore Life LLC" />
+      </a>
       <p class="footer-tagline">Independent life insurance brokerage helping families protect what matters most.</p>
       <p class="footer-license">
         Evermore Life LLC is a licensed independent insurance agency.
