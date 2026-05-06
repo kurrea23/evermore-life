@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>EVERMORE LIFE — MISSION COCKPIT v6</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --navy: #0D1B3E; --gold: #C9A84C; --gold-dim: #8B6E2A;
+    --bg: #07090F; --bg2: #0D1020; --bg3: #131830; --text: #D0D8F0; --text-dim: #5A6888;
+    --border: rgba(201,168,76,0.2); --green: #1E7E34; --lgreen: #0A3A14;
+    --yellow: #C9A84C; --lyellow: #2A1F05; --blue: #1A4A8A; --lblue: #0A1530;
+    --red: #8A1A1A; --lred: #2A0808; --cyan: #00f5ff; --orange: #F97316; --lorange: #1f0d00;
+  }
+  html, body { width:100%; min-height:100vh; background:var(--bg); color:var(--text); font-family:'Courier New',monospace; }
+  body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:999;
+    background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px); }
+
+  /* ─── HEADER ─── */
+  .cockpit-header { background:linear-gradient(135deg,var(--navy),#0a1428); border-bottom:2px solid var(--gold);
+    padding:14px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    box-shadow:0 4px 30px rgba(201,168,76,0.15); position:sticky; top:0; z-index:100; }
+  .cockpit-title { font-size:18px; font-weight:900; letter-spacing:0.25em; color:var(--gold); text-shadow:0 0 20px rgba(201,168,76,0.4); }
+  .cockpit-sub { font-size:8px; letter-spacing:0.12em; color:var(--text-dim); margin-top:3px; }
+  .cockpit-time { font-size:10px; color:var(--gold-dim); letter-spacing:0.1em; text-align:right; }
+  .status-pill { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:3px; font-size:9px; font-weight:bold; letter-spacing:0.1em; border:1px solid; }
+  .pill-live { background:var(--lgreen); border-color:var(--green); color:#4ade80; }
+  .pill-building { background:var(--lblue); border-color:var(--blue); color:#60a5fa; }
+  .pill-waiting { background:var(--lorange); border-color:var(--orange); color:var(--orange); }
+  .pill-alert { background:var(--lred); border-color:#F87171; color:#F87171; }
+  .blink { animation:blink 1.2s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* ─── NAV TABS ─── */
+  .nav-tabs { background:var(--bg2); border-bottom:1px solid var(--border); display:flex; overflow-x:auto; scrollbar-width:none; gap:0; }
+  .nav-tabs::-webkit-scrollbar { display:none; }
+  .nav-tab { padding:10px 18px; font-size:9px; letter-spacing:0.15em; color:var(--text-dim); cursor:pointer;
+    border-bottom:2px solid transparent; border-right:1px solid var(--border); white-space:nowrap; transition:all 0.15s; }
+  .nav-tab:hover { color:var(--gold); background:rgba(201,168,76,0.04); }
+  .nav-tab.active { color:var(--gold); border-bottom-color:var(--gold); background:rgba(201,168,76,0.06); }
+
+  /* ─── STAT BAR ─── */
+  .stat-bar { background:var(--bg2); border-bottom:1px solid var(--border); display:flex; overflow-x:auto; }
+  .stat-item { flex:1; min-width:90px; padding:10px 14px; text-align:center; border-right:1px solid var(--border); }
+  .stat-item:last-child { border-right:none; }
+  .stat-val { font-size:20px; font-weight:900; color:var(--gold); line-height:1; }
+  .stat-val.cyan { color:var(--cyan); text-shadow:0 0 10px var(--cyan); }
+  .stat-val.green { color:#4ade80; }
+  .stat-val.blue { color:#60a5fa; }
+  .stat-val.orange { color:var(--orange); }
+  .stat-val.red { color:#F87171; }
+  .stat-lbl { font-size:7px; letter-spacing:0.12em; color:var(--text-dim); margin-top:3px; }
+  .progress-section { height:4px; background:rgba(201,168,76,0.1); }
+  .progress-fill { height:100%; background:linear-gradient(90deg,var(--gold-dim),var(--gold)); box-shadow:0 0 8px rgba(201,168,76,0.4); transition:width 0.6s; }
+
+  /* ─── PAGE VIEWS ─── */
+  .page-view { display:none; }
+  .page-view.active { display:block; }
+
+  /* ─── MAIN COCKPIT LAYOUT ─── */
+  .main-layout { display:grid; grid-template-columns:300px 1fr 300px; min-height:calc(100vh - 180px); }
+  @media(max-width:900px) { .main-layout { grid-template-columns:1fr; } }
+
+  .panel { padding:18px; border-right:1px solid var(--border); overflow-y:auto; }
+  .panel:last-child { border-right:none; }
+  .panel-title { font-size:9px; letter-spacing:0.2em; color:var(--gold); margin-bottom:12px; padding-bottom:7px; border-bottom:1px solid var(--border); }
+  .section-label { font-size:7px; letter-spacing:0.2em; color:var(--text-dim); padding:7px 0 4px; border-bottom:1px solid rgba(201,168,76,0.1); margin-bottom:5px; }
+
+  /* ─── AGENT CARDS ─── */
+  .agent-card { border-radius:4px; padding:11px 13px; margin-bottom:9px; display:flex; align-items:flex-start; gap:11px; }
+  .agent-card.kvn { background:linear-gradient(135deg,#070f15,#0a1520); border:1px solid rgba(0,245,255,0.25); }
+  .agent-card.sarah { background:linear-gradient(135deg,#150f00,#1a1200); border:1px solid rgba(201,168,76,0.3); }
+  .agent-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; margin-top:3px; }
+  .dot-cyan { background:var(--cyan); box-shadow:0 0 6px var(--cyan); animation:blink 2s infinite; }
+  .dot-gold { background:var(--gold); box-shadow:0 0 6px var(--gold); animation:blink 2.5s infinite; }
+  .dot-red { background:#F87171; box-shadow:0 0 6px #F87171; animation:blink 1.5s infinite; }
+  .agent-name { font-size:11px; font-weight:900; letter-spacing:0.15em; }
+  .agent-name.cyan { color:var(--cyan); }
+  .agent-name.gold { color:var(--gold); }
+  .agent-name.red { color:#F87171; }
+  .agent-url { font-size:8px; color:var(--text-dim); margin-top:2px; }
+  .agent-url a { color:inherit; text-decoration:none; }
+  .agent-url a:hover { color:var(--gold); }
+  .agent-note { font-size:8px; color:var(--orange); margin-top:4px; line-height:1.4; }
+
+  /* ─── STEP ROWS ─── */
+  .step-row { display:flex; align-items:flex-start; gap:9px; padding:9px 7px; border-radius:4px; margin-bottom:4px;
+    border:1px solid transparent; transition:background 0.15s, border-color 0.15s; }
+  .step-row.clickable { cursor:pointer; }
+  .step-row.clickable:hover { background:rgba(201,168,76,0.04); border-color:var(--border); }
+  .step-row.done { opacity:0.65; }
+  .step-row.done .step-name { text-decoration:line-through; color:var(--text-dim); }
+  .step-row.active { background:rgba(26,74,138,0.12); border-color:rgba(96,165,250,0.2); }
+  .step-row.waiting { background:rgba(249,115,22,0.06); border-color:rgba(249,115,22,0.2); }
+  .step-row.blocked { background:rgba(248,113,113,0.06); border-color:rgba(248,113,113,0.25); }
+  .step-num { width:22px; height:22px; border-radius:3px; display:flex; align-items:center; justify-content:center;
+    font-size:9px; font-weight:bold; flex-shrink:0; border:1px solid; margin-top:1px; }
+  .num-done { background:var(--lgreen); border-color:var(--green); color:#4ade80; }
+  .num-active { background:var(--lblue); border-color:var(--blue); color:#60a5fa; }
+  .num-pending { background:rgba(201,168,76,0.08); border-color:rgba(201,168,76,0.2); color:var(--gold-dim); }
+  .num-waiting { background:var(--lorange); border-color:var(--orange); color:var(--orange); }
+  .num-blocked { background:var(--lred); border-color:#F87171; color:#F87171; }
+  .step-content { flex:1; min-width:0; }
+  .step-name { font-size:10px; color:var(--text); letter-spacing:0.02em; line-height:1.4; }
+  .step-detail { font-size:8px; color:var(--text-dim); margin-top:2px; line-height:1.4; }
+  .step-tag { display:inline-block; font-size:7px; letter-spacing:0.1em; padding:2px 5px; border-radius:2px; margin-top:3px; font-weight:bold; }
+  .tag-done { background:var(--lgreen); color:#4ade80; }
+  .tag-active { background:#0a1a2a; color:#60a5fa; border:1px solid #1a4a8a; }
+  .tag-waiting { background:var(--lorange); color:var(--orange); border:1px solid var(--orange); }
+  .tag-blocked { background:var(--lred); color:#F87171; border:1px solid #F87171; }
+  .tag-you { background:var(--lyellow); color:var(--gold); }
+  .who-row { display:flex; gap:4px; margin-top:3px; flex-wrap:wrap; }
+  .who-pill { font-size:6px; letter-spacing:0.12em; padding:1px 4px; border-radius:2px; font-weight:bold; }
+  .who-human { background:#2A1F05; color:var(--gold); }
+  .who-ai { background:#0a1a2a; color:var(--cyan); }
+
+  /* ─── UPDATE NOTE SYSTEM ─── */
+  .step-actions { display:flex; gap:5px; margin-top:5px; align-items:center; flex-wrap:wrap; }
+  .btn-note { font-size:7px; letter-spacing:0.1em; padding:2px 7px; border-radius:2px; cursor:pointer;
+    background:rgba(201,168,76,0.08); color:var(--gold-dim); border:1px solid rgba(201,168,76,0.2);
+    font-family:'Courier New',monospace; transition:all 0.15s; }
+  .btn-note:hover { background:rgba(201,168,76,0.18); color:var(--gold); }
+  .btn-done-toggle { font-size:7px; letter-spacing:0.1em; padding:2px 7px; border-radius:2px; cursor:pointer;
+    background:rgba(26,74,138,0.15); color:#60a5fa; border:1px solid rgba(96,165,250,0.25);
+    font-family:'Courier New',monospace; transition:all 0.15s; }
+  .btn-done-toggle:hover { background:rgba(26,74,138,0.3); }
+  .update-log { margin-top:6px; padding:6px 8px; background:rgba(201,168,76,0.04); border:1px solid rgba(201,168,76,0.12); border-radius:3px; }
+  .update-entry { font-size:8px; color:var(--text); line-height:1.5; padding:3px 0; border-bottom:1px solid rgba(201,168,76,0.08); }
+  .update-entry:last-child { border-bottom:none; }
+  .update-ts { color:var(--gold-dim); font-size:7px; margin-right:5px; }
+  .update-input-wrap { margin-top:5px; display:none; }
+  .update-input-wrap.open { display:flex; gap:5px; }
+  .update-input { flex:1; background:var(--bg); border:1px solid var(--border); color:var(--text);
+    font-family:'Courier New',monospace; font-size:9px; padding:4px 7px; border-radius:2px; outline:none; }
+  .update-input:focus { border-color:var(--gold); }
+  .btn-save-note { font-size:8px; padding:4px 10px; background:var(--lyellow); color:var(--gold);
+    border:1px solid var(--gold-dim); border-radius:2px; cursor:pointer; font-family:'Courier New',monospace; }
+  .btn-cancel-note { font-size:8px; padding:4px 8px; background:transparent; color:var(--text-dim);
+    border:1px solid rgba(255,255,255,0.1); border-radius:2px; cursor:pointer; font-family:'Courier New',monospace; }
+
+  /* ─── CENTER PANEL ─── */
+  .center-panel { padding:18px; border-right:1px solid var(--border); }
+  .alert-card { border-radius:4px; padding:11px 13px; margin-bottom:10px; }
+  .alert-title { font-size:8px; letter-spacing:0.15em; color:var(--orange); font-weight:bold; margin-bottom:5px; }
+  .alert-body { font-size:9px; color:var(--text); line-height:1.55; }
+
+  /* ─── METRICS ─── */
+  .metrics-row { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:14px; }
+  .metric-card { background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:12px; text-align:center; }
+  .metric-val { font-size:26px; font-weight:900; color:var(--gold); line-height:1; }
+  .metric-val.cyan { color:var(--cyan); }
+  .metric-val.green { color:#4ade80; }
+  .metric-val.orange { color:var(--orange); }
+  .metric-val.red { color:#F87171; }
+  .metric-lbl { font-size:8px; letter-spacing:0.12em; color:var(--text-dim); margin-top:3px; }
+  .metric-sub { font-size:7px; color:var(--text-dim); margin-top:1px; opacity:0.6; }
+
+  /* ─── INTEGRATIONS ─── */
+  .integrations-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:14px; }
+  .int-card { background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:9px 11px; }
+  .int-name { font-size:9px; color:var(--text); margin-bottom:3px; }
+  .int-status { font-size:7px; font-weight:bold; letter-spacing:0.1em; }
+  .is-live { color:#4ade80; } .is-pending { color:var(--gold); } .is-building { color:#60a5fa; }
+  .is-waiting { color:var(--orange); } .is-alert { color:#F87171; }
+
+  /* ─── ROOMS ─── */
+  .room-card { background:linear-gradient(135deg,#0a1530,#131830); border:1px solid rgba(0,245,255,0.22);
+    border-radius:5px; padding:11px 13px; margin-bottom:8px; cursor:pointer; transition:all 0.15s; }
+  .room-card:hover { border-color:var(--cyan); box-shadow:0 0 12px rgba(0,245,255,0.15); transform:translateY(-1px); }
+  .room-card.spec { border-color:rgba(201,168,76,0.28); }
+  .room-card.spec:hover { border-color:var(--gold); box-shadow:0 0 12px rgba(201,168,76,0.18); }
+  .room-card.blocked-card { border-color:rgba(248,113,113,0.3); background:linear-gradient(135deg,#1a0808,#200a0a); }
+  .room-card.blocked-card:hover { border-color:#F87171; box-shadow:0 0 12px rgba(248,113,113,0.18); }
+  .room-name { font-size:10px; font-weight:900; letter-spacing:0.15em; color:var(--cyan); }
+  .room-card.spec .room-name { color:var(--gold); }
+  .room-card.blocked-card .room-name { color:#F87171; }
+  .room-step { font-size:7px; letter-spacing:0.15em; color:var(--text-dim); margin-top:2px; }
+  .room-desc { font-size:8px; color:var(--text); margin-top:5px; line-height:1.4; }
+  .room-actions { display:flex; gap:5px; margin-top:7px; flex-wrap:wrap; }
+  .room-act { font-size:7px; letter-spacing:0.1em; padding:3px 7px; border-radius:2px;
+    background:rgba(0,245,255,0.07); color:var(--cyan); border:1px solid rgba(0,245,255,0.18); text-decoration:none; }
+  .room-card.spec .room-act { background:rgba(201,168,76,0.07); color:var(--gold); border-color:rgba(201,168,76,0.18); }
+  .room-act:hover { background:rgba(0,245,255,0.18); }
+
+  /* ─── ACTION CARDS ─── */
+  .next-title { font-size:8px; letter-spacing:0.2em; color:var(--gold); margin:14px 0 9px; }
+  .action-card { background:rgba(26,74,138,0.09); border:1px solid rgba(96,165,250,0.18); border-radius:4px; padding:9px 11px; margin-bottom:5px; }
+  .action-card.urgent { background:rgba(249,115,22,0.06); border-color:rgba(249,115,22,0.28); }
+  .action-card.done-card { background:rgba(10,58,20,0.18); border-color:rgba(74,222,128,0.18); opacity:0.7; }
+  .action-card.red-alert { background:rgba(248,113,113,0.06); border-color:rgba(248,113,113,0.35); }
+  .action-num { font-size:7px; color:#60a5fa; letter-spacing:0.1em; margin-bottom:2px; }
+  .action-num.orange { color:var(--orange); }
+  .action-num.green { color:#4ade80; }
+  .action-num.red { color:#F87171; }
+  .action-text { font-size:9px; color:var(--text); line-height:1.45; }
+
+  /* ─── PROJECT COCKPITS PAGE ─── */
+  .projects-page { padding:20px; }
+  .project-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:10px; }
+  .project-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px; }
+  .project-card { background:var(--bg3); border:1px solid var(--border); border-radius:5px; overflow:hidden; }
+  .project-card-header { padding:13px 15px; display:flex; align-items:center; gap:10px; cursor:pointer;
+    background:linear-gradient(135deg,var(--bg3),var(--bg2)); border-bottom:1px solid var(--border); transition:background 0.15s; }
+  .project-card-header:hover { background:linear-gradient(135deg,rgba(201,168,76,0.06),var(--bg2)); }
+  .project-name { font-size:11px; font-weight:900; letter-spacing:0.15em; flex:1; }
+  .project-progress-pill { font-size:8px; font-weight:bold; letter-spacing:0.1em; padding:3px 8px; border-radius:10px; }
+  .progress-pct { font-size:8px; color:var(--text-dim); letter-spacing:0.1em; }
+  .project-expand-icon { font-size:10px; color:var(--text-dim); transition:transform 0.2s; }
+  .project-body { padding:14px 15px; display:none; }
+  .project-body.open { display:block; }
+  .project-desc { font-size:9px; color:var(--text-dim); line-height:1.5; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  .project-blocker { background:linear-gradient(135deg,#1f0d00,#2a1200); border:1px solid rgba(249,115,22,0.35);
+    border-radius:3px; padding:8px 10px; margin-bottom:10px; font-size:8px; color:var(--orange); line-height:1.55; }
+  .project-blocker strong { color:#F87171; }
+
+  /* ─── PROJECT STEPS ─── */
+  .proj-step { display:flex; align-items:flex-start; gap:8px; padding:8px 6px; border-radius:3px; margin-bottom:3px;
+    border:1px solid transparent; transition:all 0.15s; }
+  .proj-step.clickable { cursor:pointer; }
+  .proj-step.clickable:hover { background:rgba(201,168,76,0.04); border-color:var(--border); }
+  .proj-step.done { opacity:0.6; }
+  .proj-step.done .proj-step-name { text-decoration:line-through; color:var(--text-dim); }
+  .proj-step-num { width:20px; height:20px; border-radius:2px; display:flex; align-items:center; justify-content:center;
+    font-size:8px; font-weight:bold; flex-shrink:0; border:1px solid; margin-top:1px; }
+  .proj-step-content { flex:1; min-width:0; }
+  .proj-step-name { font-size:9px; color:var(--text); line-height:1.4; }
+  .proj-step-detail { font-size:7px; color:var(--text-dim); margin-top:2px; line-height:1.4; }
+  .proj-step-actions { display:flex; gap:4px; margin-top:4px; flex-wrap:wrap; align-items:center; }
+
+  /* ─── ADD PROJECT ITEM ─── */
+  .add-item-row { display:flex; gap:6px; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
+  .add-item-input { flex:1; background:var(--bg); border:1px solid var(--border); color:var(--text);
+    font-family:'Courier New',monospace; font-size:9px; padding:5px 8px; border-radius:2px; outline:none; }
+  .add-item-input:focus { border-color:var(--gold); }
+  .btn-add-item { font-size:8px; padding:5px 12px; background:var(--lyellow); color:var(--gold);
+    border:1px solid var(--gold-dim); border-radius:2px; cursor:pointer; font-family:'Courier New',monospace; white-space:nowrap; }
+
+  /* ─── COMPLETION CONFIRM MODAL ─── */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal-box { background:var(--bg2); border:1px solid var(--gold); border-radius:6px; padding:22px 24px; max-width:380px; width:90%; }
+  .modal-title { font-size:12px; font-weight:900; letter-spacing:0.15em; color:var(--gold); margin-bottom:10px; }
+  .modal-body { font-size:10px; color:var(--text); line-height:1.55; margin-bottom:14px; }
+  .modal-note-label { font-size:8px; letter-spacing:0.1em; color:var(--text-dim); margin-bottom:5px; }
+  .modal-note-input { width:100%; background:var(--bg); border:1px solid var(--border); color:var(--text);
+    font-family:'Courier New',monospace; font-size:9px; padding:6px 9px; border-radius:2px; outline:none; margin-bottom:12px; resize:vertical; min-height:60px; }
+  .modal-note-input:focus { border-color:var(--gold); }
+  .modal-btns { display:flex; gap:8px; justify-content:flex-end; }
+  .btn-modal-confirm { font-size:9px; padding:6px 16px; background:var(--lgreen); color:#4ade80;
+    border:1px solid var(--green); border-radius:3px; cursor:pointer; font-family:'Courier New',monospace; letter-spacing:0.1em; }
+  .btn-modal-cancel { font-size:9px; padding:6px 14px; background:transparent; color:var(--text-dim);
+    border:1px solid rgba(255,255,255,0.15); border-radius:3px; cursor:pointer; font-family:'Courier New',monospace; }
+
+  /* ─── HOW TO ACCESS PAGE ─── */
+  .access-page { padding:24px; max-width:760px; }
+  .access-section { background:var(--bg3); border:1px solid var(--border); border-radius:5px; padding:18px; margin-bottom:14px; }
+  .access-section h3 { font-size:10px; letter-spacing:0.2em; color:var(--gold); margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  .access-step { display:flex; gap:10px; padding:8px 0; border-bottom:1px solid rgba(201,168,76,0.08); font-size:9px; color:var(--text); line-height:1.5; }
+  .access-step:last-child { border-bottom:none; }
+  .access-num { width:20px; height:20px; border-radius:2px; background:var(--lyellow); border:1px solid var(--gold-dim);
+    color:var(--gold); display:flex; align-items:center; justify-content:center; font-size:8px; font-weight:bold; flex-shrink:0; }
+  .code-block { background:var(--bg); border:1px solid rgba(201,168,76,0.2); border-radius:3px; padding:8px 11px;
+    font-size:8px; color:var(--cyan); letter-spacing:0.05em; margin:6px 0; overflow-x:auto; white-space:pre; }
+
+  /* ─── FOOTER ─── */
+  footer { padding:11px 20px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background:var(--bg2); flex-wrap:wrap; gap:8px; }
+  .footer-note { font-size:7px; color:var(--text-dim); letter-spacing:0.1em; }
+  .footer-ver { font-size:7px; color:var(--gold-dim); letter-spacing:0.1em; }
+
+  /* ─── MISC ─── */
+  .gh-warn { background:linear-gradient(135deg,#0a0a20,#12122a); border:1px solid rgba(96,165,250,0.28);
+    border-radius:4px; padding:9px 11px; margin-bottom:7px; font-size:8px; color:#60a5fa; line-height:1.5; }
+  .funnel-title { font-size:8px; letter-spacing:0.2em; color:var(--gold); margin-bottom:9px; }
+  .funnel-row { display:flex; align-items:center; gap:9px; margin-bottom:6px; }
+  .funnel-label { font-size:9px; color:var(--text); width:110px; flex-shrink:0; }
+  .funnel-bar-track { flex:1; height:5px; background:rgba(201,168,76,0.1); border-radius:3px; }
+  .funnel-bar-fill { height:100%; border-radius:3px; }
+  .funnel-count { font-size:9px; color:var(--text-dim); width:40px; text-align:right; flex-shrink:0; }
+  .ad-title { font-size:8px; letter-spacing:0.2em; color:var(--gold); margin:14px 0 9px; }
+  .ad-row { display:flex; align-items:center; gap:9px; padding:7px 9px; border-radius:3px; background:var(--bg3); border:1px solid var(--border); margin-bottom:5px; }
+  .ad-name { font-size:9px; color:var(--text); flex:1; }
+  .ad-badge { font-size:7px; font-weight:bold; letter-spacing:0.1em; padding:2px 6px; border-radius:2px; }
+  .badge-pending { background:var(--lyellow); color:var(--gold); }
+  .badge-building { background:var(--lblue); color:#60a5fa; }
+  .badge-live { background:var(--lgreen); color:#4ade80; }
+  .badge-blocked { background:var(--lorange); color:var(--orange); }
+  .tiktok-card { background:linear-gradient(135deg,#0d0020,#1a0030); border:1px solid rgba(105,0,255,0.3); border-radius:4px; padding:11px 13px; margin-bottom:9px; }
+  .tiktok-title { font-size:8px; letter-spacing:0.2em; color:#a78bfa; margin-bottom:7px; }
+  .tiktok-row { display:flex; justify-content:space-between; font-size:9px; color:var(--text); margin-bottom:3px; }
+  .tiktok-val { color:#a78bfa; font-weight:bold; }
+  .file-card { background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:9px 11px; margin-bottom:5px;
+    display:flex; align-items:center; gap:9px; cursor:pointer; transition:all 0.15s; }
+  .file-card:hover { border-color:var(--gold); }
+  .file-icon { font-size:14px; flex-shrink:0; }
+  .file-info { flex:1; }
+  .file-name { font-size:9px; color:var(--gold); }
+  .file-desc { font-size:7px; color:var(--text-dim); margin-top:1px; }
+  .file-status { font-size:7px; font-weight:bold; }
+  .fs-ready { color:#4ade80; } .fs-live { color:#4ade80; } .fs-building { color:#60a5fa; }
+
+  /* ─── MOBILE ─── */
+  @media(max-width:600px) {
+    .cockpit-title { font-size:13px; }
+    .metrics-row { grid-template-columns:1fr 1fr; }
+    .integrations-grid { grid-template-columns:1fr 1fr; }
+    .main-layout { grid-template-columns:1fr; }
+    .project-grid { grid-template-columns:1fr; }
+  }
+</style>
+<meta http-equiv="refresh" content="300">
+</head>
+<body>
+
+<!-- CONFIRMATION MODAL -->
+<div class="modal-overlay" id="completeModal">
+  <div class="modal-box">
+    <div class="modal-title">✓ MARK AS COMPLETE</div>
+    <div class="modal-body" id="modalItemName">Are you sure this step is done?</div>
+    <div class="modal-note-label">COMPLETION NOTE (optional — what got done, any context):</div>
+    <textarea class="modal-note-input" id="modalNoteInput" placeholder="e.g. Completed May 6 — GHL workflow built, test lead passed all 9 checks, published."></textarea>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" onclick="closeModal()">CANCEL</button>
+      <button class="btn-modal-confirm" onclick="confirmComplete()">✓ MARK DONE</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="cockpit-header">
+  <div>
+    <div class="cockpit-title">⬡ EVERMORE LIFE — MISSION COCKPIT</div>
+    <div class="cockpit-sub">FINAL EXPENSE FUNNEL · v6.0 · A2P BLOCKED ON IRS/CP575 · KEVIN NOT YET DEPLOYED · UPDATES PERSIST LOCALLY</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span class="status-pill pill-alert"><span class="blink">●</span> A2P: IRS BLOCKER</span>
+    <span class="status-pill pill-alert"><span class="blink">●</span> KVN: NOT DEPLOYED</span>
+    <span class="status-pill pill-waiting"><span class="blink">●</span> MACU PAYMENT RETURNED</span>
+    <div class="cockpit-time" id="clock">--</div>
+  </div>
+</div>
+
+<!-- NAV TABS -->
+<div class="nav-tabs">
+  <div class="nav-tab active" onclick="switchTab('main')">⬡ MAIN COCKPIT</div>
+  <div class="nav-tab" onclick="switchTab('projects')">📁 PROJECTS</div>
+  <div class="nav-tab" onclick="switchTab('access')">📡 ACCESS FROM ANYWHERE</div>
+</div>
+
+<!-- STAT BAR -->
+<div class="stat-bar">
+  <div class="stat-item"><div class="stat-val green" id="stat-done">6</div><div class="stat-lbl">STEPS DONE</div></div>
+  <div class="stat-item"><div class="stat-val blue" id="stat-left">4</div><div class="stat-lbl">REMAINING</div></div>
+  <div class="stat-item"><div class="stat-val red">⚠</div><div class="stat-lbl">A2P BLOCKED</div></div>
+  <div class="stat-item"><div class="stat-val orange">⚠</div><div class="stat-lbl">KVN DOWN</div></div>
+  <div class="stat-item"><div class="stat-val cyan" id="proj-count">3</div><div class="stat-lbl">ACTIVE PROJECTS</div></div>
+</div>
+<div class="progress-section"><div class="progress-fill" id="prog-fill" style="width:60%"></div></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  PAGE: MAIN COCKPIT                                    -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page-view active" id="page-main">
+<div class="main-layout">
+
+  <!-- LEFT: AGENTS + 10-STEP SEQUENCE -->
+  <div class="panel">
+    <div class="panel-title">⬡ AGENTS STATUS</div>
+
+    <!-- KVN — NOT DEPLOYED -->
+    <div class="agent-card kvn">
+      <div class="agent-dot dot-red"></div>
+      <div style="flex:1;">
+        <div class="agent-name red">KVN · NOT DEPLOYED</div>
+        <div class="agent-url">workers.dev — BLANK · NO RESPONSE</div>
+        <div class="agent-note">⚠ workers.dev URL is returning blank. KVN V2 upgrade needs to be pushed. See PROJECTS → KEVIN V2.</div>
+      </div>
+      <span class="status-pill pill-alert" style="font-size:7px;">⚠ DOWN</span>
+    </div>
+
+    <!-- SARAH — LIVE -->
+    <div class="agent-card sarah">
+      <div class="agent-dot dot-gold"></div>
+      <div style="flex:1;">
+        <div class="agent-name gold">SARAH · DEPLOYED</div>
+        <div class="agent-url">🔗 <a href="https://sarah-evermore.newmexicomarketingpartners.workers.dev" target="_blank">sarah-evermore.workers.dev</a></div>
+      </div>
+      <span class="status-pill pill-live" style="font-size:7px;">✓ LIVE</span>
+    </div>
+
+    <div class="gh-warn">ℹ️ <strong>GitHub Pages CI failures are harmless</strong> — site served via Cloudflare Pages + Worker. evermorelife.org is LIVE through that path. GH CI emails = noise.</div>
+
+    <div class="panel-title" style="margin-top:12px;">⬡ 10-STEP LAUNCH SEQUENCE</div>
+    <div style="font-size:7px;color:var(--text-dim);letter-spacing:0.08em;margin:-4px 0 8px;">CLICK STEPS TO LOG UPDATES · CLICK ✓ DONE TO MARK COMPLETE</div>
+
+    <div class="section-label">CODE + COMPLIANCE (✓ CONFIRMED DONE)</div>
+
+    <div class="step-row done" id="step-1">
+      <div class="step-num num-done">✓</div>
+      <div class="step-content">
+        <div class="step-name">Codex security + compliance hardening</div>
+        <div class="step-detail">Secrets removed, SMS consent + STOP/HELP, privacy/terms updated</div>
+        <span class="step-tag tag-done">✓ DONE</span>
+        <div id="log-step-1" class="update-log" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="step-row done" id="step-2">
+      <div class="step-num num-done">✓</div>
+      <div class="step-content">
+        <div class="step-name">GHL launch kit shipped</div>
+        <div class="step-detail">Form map, workflow blueprint, A2P pack, runbook</div>
+        <span class="step-tag tag-done">✓ DONE</span>
+        <div id="log-step-2" class="update-log" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="step-row done" id="step-3">
+      <div class="step-num num-done">✓</div>
+      <div class="step-content">
+        <div class="step-name">Form approach decided: native GHL form</div>
+        <div class="step-detail">Worker relay parked for later API-level routing</div>
+        <span class="step-tag tag-done">✓ LOCKED</span>
+        <div id="log-step-3" class="update-log" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="step-row done" id="step-4">
+      <div class="step-num num-done">✓</div>
+      <div class="step-content">
+        <div class="step-name">Local pages QA + lead-payload fields</div>
+        <div class="step-detail">UTM/source/page/referrer wired, alert-on-missing-webhook</div>
+        <span class="step-tag tag-done">✓ DONE</span>
+        <div id="log-step-4" class="update-log" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="section-label">GHL BUILD (✓ LIVE)</div>
+
+    <div class="step-row done" id="step-5">
+      <div class="step-num num-done">✓</div>
+      <div class="step-content">
+        <div class="step-name">Build native GHL form + 5 pages</div>
+        <div class="step-detail">evermorelife.org via CF Pages — /home · /optin · /thankyou · /privacypolicy · /terms — ALL LIVE</div>
+        <span class="step-tag tag-done">✓ LIVE</span>
+        <div id="log-step-5" class="update-log" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="step-row done" id="step-6">
+      <div class="step-num num-done">✓</div>
+      <div class="step-content">
+        <div class="step-name">A2P compliance patched + submitted May 3</div>
+        <div class="step-detail">Submitted — now BLOCKED. IRS shows old company name. Need CP575 form + update IRS → then resubmit to GHL/TCR.</div>
+        <span class="step-tag tag-blocked">⚠ BLOCKED — SEE A2P PROJECT</span>
+        <div id="log-step-6" class="update-log" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="section-label">WORKFLOW + TEST (ACTION NEEDED)</div>
+
+    <div class="step-row active clickable" id="step-7" data-key="step-7">
+      <div class="step-num num-active">7</div>
+      <div class="step-content">
+        <div class="step-name">Build GHL workflow — NO SMS yet</div>
+        <div class="step-detail">Automation → Workflows → "Evermore Website Lead Intake" · Form 10 + Main Opt-In triggers · Tag, Notify, Opportunity, Email, Task · Blueprint at form-workflow-next-steps.md</div>
+        <div class="who-row"><span class="who-pill who-human">HUMAN</span><span class="who-pill who-ai">AI: blueprint ready</span></div>
+        <span class="step-tag tag-active">⟳ COMPLETE NOW</span>
+        <div class="step-actions">
+          <button class="btn-done-toggle" onclick="openModal('step-7','Build GHL workflow')">✓ MARK DONE</button>
+          <button class="btn-note" onclick="toggleNoteInput('step-7')">+ ADD UPDATE</button>
+        </div>
+        <div class="update-input-wrap" id="input-step-7">
+          <input class="update-input" id="text-step-7" placeholder="Type update (e.g. started workflow build, 50% done)..." onkeydown="if(event.key==='Enter')saveNote('step-7')">
+          <button class="btn-save-note" onclick="saveNote('step-7')">SAVE</button>
+          <button class="btn-cancel-note" onclick="toggleNoteInput('step-7')">✕</button>
+        </div>
+        <div id="log-step-7" class="update-log" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="step-row active clickable" id="step-8" data-key="step-8">
+      <div class="step-num num-active">8</div>
+      <div class="step-content">
+        <div class="step-name">Fake-lead test + publish workflow</div>
+        <div class="step-detail">Submit test lead · Confirm: contact, tags, opportunity, internal email, confirmation email, call task · Publish workflow when all pass</div>
+        <div class="who-row"><span class="who-pill who-human">HUMAN ONLY</span></div>
+        <span class="step-tag tag-active">⟳ AFTER STEP 7</span>
+        <div class="step-actions">
+          <button class="btn-done-toggle" onclick="openModal('step-8','Fake-lead test + publish workflow')">✓ MARK DONE</button>
+          <button class="btn-note" onclick="toggleNoteInput('step-8')">+ ADD UPDATE</button>
+        </div>
+        <div class="update-input-wrap" id="input-step-8">
+          <input class="update-input" id="text-step-8" placeholder="Type update..." onkeydown="if(event.key==='Enter')saveNote('step-8')">
+          <button class="btn-save-note" onclick="saveNote('step-8')">SAVE</button>
+          <button class="btn-cancel-note" onclick="toggleNoteInput('step-8')">✕</button>
+        </div>
+        <div id="log-step-8" class="update-log" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="step-row active clickable" id="step-9" data-key="step-9">
+      <div class="step-num num-active">🔐</div>
+      <div class="step-content">
+        <div class="step-name">Rotate Cloudflare API Token</div>
+        <div class="step-detail">dash.cloudflare.com → Profile → API Tokens · Revoke old token · Create new scoped token · Update wrangler locally · DO NOT paste into HTML</div>
+        <div class="who-row"><span class="who-pill who-human">HUMAN ONLY</span></div>
+        <span class="step-tag tag-active">⟳ SECURITY — DO NOW</span>
+        <div class="step-actions">
+          <button class="btn-done-toggle" onclick="openModal('step-9','Rotate Cloudflare API Token')">✓ MARK DONE</button>
+          <button class="btn-note" onclick="toggleNoteInput('step-9')">+ ADD UPDATE</button>
+        </div>
+        <div class="update-input-wrap" id="input-step-9">
+          <input class="update-input" id="text-step-9" placeholder="Type update..." onkeydown="if(event.key==='Enter')saveNote('step-9')">
+          <button class="btn-save-note" onclick="saveNote('step-9')">SAVE</button>
+          <button class="btn-cancel-note" onclick="toggleNoteInput('step-9')">✕</button>
+        </div>
+        <div id="log-step-9" class="update-log" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="section-label">A2P → ADS → SALES (BLOCKED ON IRS)</div>
+
+    <div class="step-row blocked" id="step-10a">
+      <div class="step-num num-blocked">⚠</div>
+      <div class="step-content">
+        <div class="step-name">A2P 10DLC — BLOCKED ON IRS NAME MISMATCH</div>
+        <div class="step-detail">Submitted May 3 · REJECTED — IRS record shows old company name. Need: CP575 form from IRS + update IRS with new company name → resubmit to GHL. Spoke with GHL today — confirmed paperwork needed. See PROJECTS → A2P.</div>
+        <span class="step-tag tag-blocked">BLOCKED · IRS UPDATE REQUIRED</span>
+        <div class="step-actions">
+          <button class="btn-note" onclick="toggleNoteInput('step-10a')">+ ADD UPDATE</button>
+        </div>
+        <div class="update-input-wrap" id="input-step-10a">
+          <input class="update-input" id="text-step-10a" placeholder="e.g. Requested CP575 from IRS, waiting..." onkeydown="if(event.key==='Enter')saveNote('step-10a')">
+          <button class="btn-save-note" onclick="saveNote('step-10a')">SAVE</button>
+          <button class="btn-cancel-note" onclick="toggleNoteInput('step-10a')">✕</button>
+        </div>
+        <div id="log-step-10a" class="update-log" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="step-row" id="step-10">
+      <div class="step-num num-pending">10</div>
+      <div class="step-content">
+        <div class="step-name">Install Meta Pixel → launch test ad → first sale</div>
+        <div class="step-detail">wire_pixel.sh · small budget, 2-3 creatives, financial special category · Call new leads &lt; 5 min</div>
+        <span class="step-tag tag-you">AFTER A2P APPROVAL</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CENTER: ALERTS + METRICS + FUNNEL + ADS -->
+  <div class="center-panel">
+
+    <!-- A2P BLOCKER ALERT — RED -->
+    <div class="alert-card" style="border:1px solid rgba(248,113,113,0.5);background:linear-gradient(135deg,#200808,#2a0a0a);">
+      <div class="alert-title" style="color:#F87171;">🚨 A2P BLOCKED — IRS COMPANY NAME MISMATCH</div>
+      <div class="alert-body">
+        A2P 10DLC registration is blocked because the IRS record still shows the <strong style="color:#F87171;">old company name</strong>. When you changed the company name, the IRS was not updated.<br><br>
+        <strong style="color:var(--orange);">WHAT YOU NEED:</strong><br>
+        1. Get the <strong style="color:#60a5fa;">CP575 form</strong> from the IRS (EIN confirmation letter with new/correct company name)<br>
+        2. If IRS still shows old name → update IRS with new legal company name<br>
+        3. Submit all updated paperwork to Go High Level<br>
+        4. GHL confirmed today this is the blocker — must be resolved before A2P can clear.<br><br>
+        <strong style="color:var(--orange);">IRS contact:</strong> 1-800-829-4933 · Mon–Fri 7AM–7PM local time
+      </div>
+    </div>
+
+    <!-- KVN ALERT -->
+    <div class="alert-card" style="border:1px solid rgba(248,113,113,0.4);background:linear-gradient(135deg,#1a0808,#200a0a);">
+      <div class="alert-title" style="color:#F87171;">🚨 KVN NOT DEPLOYED — workers.dev IS BLANK</div>
+      <div class="alert-body">
+        Checked workers.dev — blank, no response. KVN is NOT deployed. Need to push the <strong style="color:#60a5fa;">KVN V2 upgrade</strong>. See PROJECTS tab → KEVIN V2 for the full build checklist. This is a parallel track to A2P — can be worked on simultaneously.
+      </div>
+    </div>
+
+    <!-- MACU ALERT -->
+    <div class="alert-card" style="border:1px solid rgba(248,113,113,0.4);background:linear-gradient(135deg,#1a0a08,#200d0a);">
+      <div class="alert-title" style="color:#F87171;">🚨 MACU CONSUMER LOAN PAYMENT RETURNED (XXXX6402)</div>
+      <div class="alert-body">Mountain America Credit Union: payment for Consumer Loan XXXX6402 was returned. Log in to macu.com → update payment method or retry now. Avoid late fees / delinquency.</div>
+    </div>
+
+    <div class="panel-title">⬡ LIVE METRICS</div>
+    <div class="metrics-row">
+      <div class="metric-card"><div class="metric-val cyan" id="m-leads">0</div><div class="metric-lbl">LEADS CAPTURED</div><div class="metric-sub">LIFETIME</div></div>
+      <div class="metric-card"><div class="metric-val green" id="m-appts">0</div><div class="metric-lbl">APPOINTMENTS</div><div class="metric-sub">BOOKED</div></div>
+      <div class="metric-card"><div class="metric-val">$0</div><div class="metric-lbl">AD SPEND</div><div class="metric-sub">THIS MONTH</div></div>
+      <div class="metric-card"><div class="metric-val orange">BLOCKED</div><div class="metric-lbl">A2P STATUS</div><div class="metric-sub">IRS UPDATE NEEDED</div></div>
+    </div>
+
+    <div class="tiktok-card">
+      <div class="tiktok-title">⬡ TIKTOK SHOP · lucidus23 · ACTIVE</div>
+      <div class="tiktok-row"><span>Weekly Report</span><span class="tiktok-val">✓ RECEIVED MAY 4</span></div>
+      <div class="tiktok-row"><span>Shop Status</span><span class="tiktok-val">ACTIVE</span></div>
+      <div style="font-size:8px;color:var(--text-dim);margin-top:5px;">Open TikTok Shop Seller Center for full metrics. Check GMV, orders, and improvement opportunities flagged in the May 4 weekly report.</div>
+    </div>
+
+    <div class="funnel-title">⬡ LIVE SITE — evermorelife.org (CF Pages)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:14px;">
+      <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.28);border-radius:3px;padding:7px 9px;"><div style="font-size:8px;color:#4ade80;font-weight:bold;">✓ LIVE</div><div style="font-size:9px;color:var(--text);margin-top:1px;">/home</div></div>
+      <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.28);border-radius:3px;padding:7px 9px;"><div style="font-size:8px;color:#4ade80;font-weight:bold;">✓ LIVE</div><div style="font-size:9px;color:var(--text);margin-top:1px;">/optin</div></div>
+      <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.28);border-radius:3px;padding:7px 9px;"><div style="font-size:8px;color:#4ade80;font-weight:bold;">✓ LIVE</div><div style="font-size:9px;color:var(--text);margin-top:1px;">/thankyou</div></div>
+      <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.28);border-radius:3px;padding:7px 9px;"><div style="font-size:8px;color:#4ade80;font-weight:bold;">✓ LIVE</div><div style="font-size:9px;color:var(--text);margin-top:1px;">/privacypolicy</div></div>
+      <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.28);border-radius:3px;padding:7px 9px;grid-column:span 2;"><div style="font-size:8px;color:#4ade80;font-weight:bold;">✓ LIVE</div><div style="font-size:9px;color:var(--text);margin-top:1px;">/terms</div></div>
+    </div>
+
+    <div class="funnel-title">⬡ FUNNEL FLOW (TARGETS — ADS BLOCKED ON A2P)</div>
+    <div class="funnel-row"><div class="funnel-label">Ad Impressions</div><div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:100%;background:linear-gradient(90deg,#1a4a8a,#60a5fa);"></div></div><div class="funnel-count">—</div></div>
+    <div class="funnel-row"><div class="funnel-label">Link Clicks</div><div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:8%;background:linear-gradient(90deg,#1a5a3a,#4ade80);"></div></div><div class="funnel-count">~8%</div></div>
+    <div class="funnel-row"><div class="funnel-label">Page Visits</div><div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:6%;background:linear-gradient(90deg,#2a1f05,#C9A84C);"></div></div><div class="funnel-count">~6%</div></div>
+    <div class="funnel-row"><div class="funnel-label">Sarah Chats</div><div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:4%;background:linear-gradient(90deg,#0a1520,#00f5ff);"></div></div><div class="funnel-count">~4%</div></div>
+    <div class="funnel-row"><div class="funnel-label">Leads Captured</div><div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:3%;background:linear-gradient(90deg,#1a4a8a,#60a5fa);"></div></div><div class="funnel-count">~3%</div></div>
+    <div class="funnel-row"><div class="funnel-label">Appts Booked</div><div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:1.5%;background:linear-gradient(90deg,#0A3A14,#4ade80);"></div></div><div class="funnel-count">~1.5%</div></div>
+
+    <div class="ad-title">⬡ AD CREATIVE STATUS · BLOCKED ON A2P</div>
+    <div class="ad-row"><div class="ad-name">Ad A — Hero Video (60-90 sec)</div><div class="ad-badge badge-blocked">BLOCKED · A2P</div></div>
+    <div class="ad-row"><div class="ad-name">Ad B — Problem/Solution (30 sec)</div><div class="ad-badge badge-blocked">BLOCKED · A2P</div></div>
+    <div class="ad-row"><div class="ad-name">Ad C — Testimonial Style (45 sec)</div><div class="ad-badge badge-pending">PENDING RECORD</div></div>
+    <div class="ad-row"><div class="ad-name">Ad D — Direct Response (15 sec)</div><div class="ad-badge badge-pending">PENDING RECORD</div></div>
+    <div class="ad-row"><div class="ad-name">Static Image — Peace of Mind</div><div class="ad-badge badge-building">PROMPTS READY</div></div>
+    <div class="ad-row"><div class="ad-name">Carousel Ad — 3-Frame Story</div><div class="ad-badge badge-building">PROMPTS READY</div></div>
+  </div>
+
+  <!-- RIGHT: ROOMS + INTEGRATIONS + FILES + ACTIONS -->
+  <div class="right-panel">
+    <div class="panel-title">⬡ ROOMS — CLICK TO ENTER</div>
+
+    <div class="room-card blocked-card">
+      <div class="room-name">📡 A2P REGISTRATION — BLOCKED</div>
+      <div class="room-step">BLOCKED ON IRS NAME MISMATCH · MUST UPDATE IRS + GET CP575 FIRST</div>
+      <div class="room-desc">Submitted May 3 but blocked — IRS shows old company name. New company name must be updated with IRS. Get CP575 EIN letter. Submit to GHL. Only then will A2P clear and SMS go live. GHL confirmed this today.</div>
+      <div class="room-actions">
+        <a class="room-act" style="color:#F87171;border-color:rgba(248,113,113,0.3);" href="#">📋 A2P PROJECT →</a>
+      </div>
+    </div>
+
+    <div class="room-card spec" onclick="switchTab('projects')">
+      <div class="room-name">🧑‍✈️ KEVIN V2 — NEEDS PUSH</div>
+      <div class="room-step">workers.dev IS BLANK · PUSH KVN V2 UPGRADE · SEE PROJECTS</div>
+      <div class="room-desc">KVN is not deployed. workers.dev returns blank. V2 spec: PBR materials, lipsync, gaze, voice. Three.js + Ready Player Me. Parallel track — work on while A2P is resolving.</div>
+      <div class="room-actions">
+        <span class="room-act" style="cursor:pointer;">📁 GO TO PROJECTS →</span>
+      </div>
+    </div>
+
+    <div class="panel-title">⬡ INTEGRATIONS</div>
+    <div class="integrations-grid">
+      <div class="int-card"><div class="int-name">evermorelife.org</div><div class="int-status is-live">✓ LIVE (CF PAGES)</div></div>
+      <div class="int-card"><div class="int-name">GHL Forms</div><div class="int-status is-live">✓ EMBEDDED</div></div>
+      <div class="int-card"><div class="int-name">GHL Workflow</div><div class="int-status is-building">⟳ COMPLETE IF OPEN</div></div>
+      <div class="int-card"><div class="int-name">A2P 10DLC</div><div class="int-status is-alert">⚠ BLOCKED · IRS</div></div>
+      <div class="int-card"><div class="int-name">KVN Agent</div><div class="int-status is-alert">⚠ NOT DEPLOYED</div></div>
+      <div class="int-card"><div class="int-name">Sarah Agent</div><div class="int-status is-live">✓ LIVE</div></div>
+      <div class="int-card"><div class="int-name">Cloudflare Workers</div><div class="int-status is-live">✓ DEPLOYED</div></div>
+      <div class="int-card"><div class="int-name">CF Token Rotation</div><div class="int-status is-waiting">⚠ DO NOW</div></div>
+      <div class="int-card"><div class="int-name">GitHub Pages CI</div><div class="int-status is-building">⚠ FAILS = NORMAL</div></div>
+      <div class="int-card"><div class="int-name">Claude API</div><div class="int-status is-live">✓ WIRED</div></div>
+      <div class="int-card"><div class="int-name">TikTok Shop</div><div class="int-status is-live">✓ ACTIVE</div></div>
+      <div class="int-card"><div class="int-name">Meta Pixel / Ads</div><div class="int-status is-waiting">⏳ AFTER A2P</div></div>
+      <div class="int-card"><div class="int-name">MACU XXXX6402</div><div class="int-status is-alert">🚨 PAYMENT RETURNED</div></div>
+      <div class="int-card"><div class="int-name">IRS / EIN</div><div class="int-status is-alert">⚠ NAME UPDATE NEEDED</div></div>
+    </div>
+
+    <div class="panel-title">⬡ WORKFLOW BLUEPRINT</div>
+    <div class="file-card" onclick="window.open('../../02_ghl/launch_kit/form-workflow-next-steps.md')"><div class="file-icon">🔁</div><div class="file-info"><div class="file-name">form-workflow-next-steps.md</div><div class="file-desc">Exact workflow steps — triggers, actions, no SMS</div></div><div class="file-status fs-ready">✓ USE THIS</div></div>
+    <div class="file-card" onclick="window.open('../../02_ghl/launch_kit/workflow-blueprint.md')"><div class="file-icon">📋</div><div class="file-info"><div class="file-name">workflow-blueprint.md</div><div class="file-desc">Full blueprint — reference</div></div><div class="file-status fs-ready">✓ READY</div></div>
+    <div class="file-card" onclick="window.open('../../02_ghl/launch_kit/test-checklist.md')"><div class="file-icon">✅</div><div class="file-info"><div class="file-name">test-checklist.md</div><div class="file-desc">9-point checklist for fake-lead test</div></div><div class="file-status fs-ready">✓ READY</div></div>
+
+    <div class="next-title">⬡ BATTLE PLAN — NOW</div>
+    <div class="action-card red-alert"><div class="action-num red">🚨 PRIORITY 1 — IRS / A2P UNBLOCK</div><div class="action-text">Call IRS: 1-800-829-4933. Get CP575 EIN letter with correct company name. If IRS shows old name, update it. Once you have the CP575 and corrected IRS record, submit all docs to GHL. This unblocks SMS + ads.</div></div>
+    <div class="action-card red-alert"><div class="action-num red">🚨 PRIORITY 2 — PUSH KVN V2</div><div class="action-text">workers.dev is blank. Push the Kevin V2 upgrade. Go to PROJECTS tab for the step-by-step build checklist. Three.js + Ready Player Me path is recommended.</div></div>
+    <div class="action-card urgent"><div class="action-num orange">OPEN — STEPS 7 + 8 — GHL WORKFLOW</div><div class="action-text">Build "Evermore Website Lead Intake" in GHL → Automation → Workflows. Submit test lead, verify 9 checklist items, publish when all pass.</div></div>
+    <div class="action-card urgent"><div class="action-num orange">OPEN — CF TOKEN ROTATION — SECURITY</div><div class="action-text">dash.cloudflare.com → Profile → API Tokens. Revoke old exposed token. Create new scoped token. Update wrangler locally.</div></div>
+    <div class="action-card red-alert"><div class="action-num red">🚨 MACU LOAN XXXX6402</div><div class="action-text">Log in to macu.com. Payment returned for Consumer Loan. Update payment source or manually pay to avoid late fees.</div></div>
+    <div class="action-card"><div class="action-num">ANYTIME — INTEGRITY CONNECT · ZIP 85260</div><div class="action-text">Cherry Pick lead (Ethos Abandon Cart) may still be in queue. Log in, claim, call within 5 min. 3 attempts required in 24h.</div></div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  PAGE: PROJECTS                                        -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page-view" id="page-projects">
+<div class="projects-page">
+  <div class="project-header">
+    <div>
+      <div class="panel-title" style="margin-bottom:3px;">⬡ PROJECT COCKPITS</div>
+      <div style="font-size:8px;color:var(--text-dim);letter-spacing:0.1em;">EACH PROJECT HAS ITS OWN CHECKLIST · MARK DONE TO PROGRESS · ADD UPDATES AT ANY TIME · ITEMS ONLY REMOVED WHEN MARKED COMPLETE</div>
+    </div>
+    <button class="btn-add-item" onclick="addProject()" style="padding:7px 14px;">+ NEW PROJECT</button>
+  </div>
+
+  <div class="project-grid" id="projectGrid">
+
+    <!-- PROJECT 1: A2P / IRS -->
+    <div class="project-card" id="proj-a2p">
+      <div class="project-card-header" onclick="toggleProject('a2p')">
+        <div>
+          <div class="project-name" style="color:#F87171;">📡 A2P REGISTRATION — IRS BLOCKER</div>
+          <div style="font-size:7px;color:var(--text-dim);letter-spacing:0.1em;margin-top:2px;">BLOCKED · CANNOT SMS OR RUN ADS UNTIL RESOLVED</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="project-progress-pill" style="background:rgba(248,113,113,0.12);color:#F87171;border:1px solid rgba(248,113,113,0.3);" id="pill-a2p">0 / 6 DONE</span>
+          <span class="project-expand-icon" id="icon-a2p">▼</span>
+        </div>
+      </div>
+      <div class="project-body" id="body-a2p">
+        <div class="project-desc">A2P 10DLC SMS registration submitted May 3 but BLOCKED. When you changed company names, the IRS record was not updated. GHL/TCR is seeing a name mismatch on the EIN. Must update IRS → get CP575 → submit to GHL. No SMS, no ads until this clears.</div>
+        <div class="project-blocker">
+          <strong>🚨 ROOT CAUSE:</strong> IRS shows old company name. New company name was never registered with IRS after name change.<br><br>
+          <strong>WHAT YOU NEED:</strong> CP575 form (EIN confirmation letter) showing correct/new company name. If IRS still has old name, you must update it first.<br><br>
+          <strong>IRS HOTLINE:</strong> 1-800-829-4933 · Mon–Fri 7AM–7PM local time
+        </div>
+        <div id="steps-a2p"></div>
+        <div class="add-item-row">
+          <input class="add-item-input" id="newtask-a2p" placeholder="Add a new to-do for this project..." onkeydown="if(event.key==='Enter')addProjectTask('a2p')">
+          <button class="btn-add-item" onclick="addProjectTask('a2p')">+ ADD</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 2: KEVIN V2 -->
+    <div class="project-card" id="proj-kevin">
+      <div class="project-card-header" onclick="toggleProject('kevin')">
+        <div>
+          <div class="project-name" style="color:var(--cyan);">🧑‍✈️ KEVIN V2 — UPGRADE + DEPLOY</div>
+          <div style="font-size:7px;color:var(--text-dim);letter-spacing:0.1em;margin-top:2px;">workers.dev BLANK · PUSH V2 · PARALLEL TO A2P</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="project-progress-pill" style="background:rgba(0,245,255,0.08);color:var(--cyan);border:1px solid rgba(0,245,255,0.2);" id="pill-kevin">0 / 5 DONE</span>
+          <span class="project-expand-icon" id="icon-kevin">▼</span>
+        </div>
+      </div>
+      <div class="project-body" id="body-kevin">
+        <div class="project-desc">KVN (the avatar agent on workers.dev) is not deployed — going to the URL returns blank. Need to push the KVN V2 upgrade. V2 spec: PBR materials, lipsync, gaze tracking, voice. Recommended path: Three.js + Ready Player Me. This is a parallel track — work on it while A2P IRS stuff is resolving.</div>
+        <div id="steps-kevin"></div>
+        <div class="add-item-row">
+          <input class="add-item-input" id="newtask-kevin" placeholder="Add a new to-do for this project..." onkeydown="if(event.key==='Enter')addProjectTask('kevin')">
+          <button class="btn-add-item" onclick="addProjectTask('kevin')">+ ADD</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 3: GHL WORKFLOW -->
+    <div class="project-card" id="proj-ghl">
+      <div class="project-card-header" onclick="toggleProject('ghl')">
+        <div>
+          <div class="project-name" style="color:var(--gold);">⚙️ GHL WORKFLOW BUILD</div>
+          <div style="font-size:7px;color:var(--text-dim);letter-spacing:0.1em;margin-top:2px;">STEPS 7 + 8 · DO NOW WHILE A2P RESOLVES</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="project-progress-pill" style="background:rgba(201,168,76,0.08);color:var(--gold);border:1px solid rgba(201,168,76,0.2);" id="pill-ghl">0 / 4 DONE</span>
+          <span class="project-expand-icon" id="icon-ghl">▼</span>
+        </div>
+      </div>
+      <div class="project-body" id="body-ghl">
+        <div class="project-desc">Build the GHL "Evermore Website Lead Intake" workflow. No SMS yet (waiting on A2P). Triggers: Form 10 + Main Opt-In. Actions: Tag, Notify, Opportunity, Email, Task. Blueprint in form-workflow-next-steps.md. Then run test lead, verify 9 items, publish.</div>
+        <div id="steps-ghl"></div>
+        <div class="add-item-row">
+          <input class="add-item-input" id="newtask-ghl" placeholder="Add a new to-do for this project..." onkeydown="if(event.key==='Enter')addProjectTask('ghl')">
+          <button class="btn-add-item" onclick="addProjectTask('ghl')">+ ADD</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  PAGE: ACCESS FROM ANYWHERE                            -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page-view" id="page-access">
+<div class="access-page">
+  <div class="panel-title" style="margin-bottom:16px;">📡 HOW TO ACCESS THE COCKPIT FROM ANYWHERE (PHONE, IPAD, ANY DEVICE)</div>
+
+  <div class="access-section">
+    <h3>OPTION 1 — DEPLOY TO CLOUDFLARE PAGES (RECOMMENDED · FREE · PRIVATE URL)</h3>
+    <p style="font-size:9px;color:var(--text-dim);margin-bottom:12px;line-height:1.5;">This gives you a real URL like <span style="color:var(--cyan);">cockpit.evermorelife.org</span> or <span style="color:var(--cyan);">evermore-cockpit.pages.dev</span> that you can open on your phone from anywhere. Takes about 10 minutes to set up.</p>
+    <div class="access-step"><div class="access-num">1</div><div>Go to <strong style="color:var(--gold);">dash.cloudflare.com</strong> → Pages → Create a project → Upload files. Upload this HTML file. Cloudflare will give you a URL ending in <span style="color:var(--cyan);">.pages.dev</span></div></div>
+    <div class="access-step"><div class="access-num">2</div><div>Or connect your GitHub repo — Cloudflare watches the repo and auto-deploys every time you save a new version. This is the best option.</div></div>
+    <div class="access-step"><div class="access-num">3</div><div>To use your own subdomain like <span style="color:var(--cyan);">cockpit.evermorelife.org</span> — go to Pages → Custom Domains → add it. Takes 2 minutes since evermorelife.org is already on Cloudflare.</div></div>
+    <div class="access-step"><div class="access-num">4</div><div>Open on your phone: go to <strong style="color:var(--gold);">cockpit.evermorelife.org</strong> in Safari or Chrome. Add it to your Home Screen (Share → Add to Home Screen) for a one-tap app-like icon.</div></div>
+    <div class="code-block">suggested URL: cockpit.evermorelife.org
+file to deploy: EVERMORE_COCKPIT.html → rename to index.html
+cloudflare pages: free tier, auto-deploys from GitHub
+time to set up: ~10 minutes</div>
+  </div>
+
+  <div class="access-section">
+    <h3>OPTION 2 — GITHUB PAGES (ALSO FREE · ALSO WORKS)</h3>
+    <div class="access-step"><div class="access-num">1</div><div>In your GitHub repo (the EVERMORE-LIFE one), rename this file to <span style="color:var(--cyan);">cockpit.html</span> and push it.</div></div>
+    <div class="access-step"><div class="access-num">2</div><div>Enable GitHub Pages: Settings → Pages → Source → main branch. The cockpit becomes available at <span style="color:var(--cyan);">yourusername.github.io/EVERMORE-LIFE/cockpit.html</span></div></div>
+    <div class="access-step"><div class="access-num">3</div><div>Note: GitHub Pages CI failures you're already seeing in email are harmless — the main site runs on Cloudflare Pages. But the cockpit file itself can be served separately.</div></div>
+  </div>
+
+  <div class="access-section">
+    <h3>OPTION 3 — QUICK SHARE WITH COWORK (ALREADY WORKS NOW)</h3>
+    <div class="access-step"><div class="access-num">1</div><div>In Cowork (where we're building this), use the <strong style="color:var(--gold);">"Present Files"</strong> feature to open the cockpit in your browser right now.</div></div>
+    <div class="access-step"><div class="access-num">2</div><div>This works on your local machine only. For phone access from anywhere, use Option 1 (Cloudflare Pages).</div></div>
+  </div>
+
+  <div class="access-section">
+    <h3>ABOUT UPDATES — HOW THE "MEMORY" WORKS</h3>
+    <p style="font-size:9px;color:var(--text);line-height:1.55;margin-bottom:8px;">The cockpit uses <strong style="color:var(--gold);">localStorage</strong> — your browser's built-in memory — to save your checkmarks and update notes. Here's what that means:</p>
+    <div class="access-step"><div class="access-num">✓</div><div><strong style="color:#4ade80;">What persists:</strong> Every time you mark something done or add an update note, it saves instantly in the browser. Refresh the page — it's still there.</div></div>
+    <div class="access-step"><div class="access-num">✓</div><div><strong style="color:#4ade80;">What updates:</strong> The cockpit auto-refreshes every 5 minutes. When I (Claude) update the HTML file with new tasks or status changes, those appear on next refresh.</div></div>
+    <div class="access-step"><div class="access-num">⚠</div><div><strong style="color:var(--orange);">What doesn't sync:</strong> If you open the cockpit on your phone AND your laptop, the checkmarks on your phone won't show on your laptop yet (localStorage is per-device). For cross-device sync, we'd need to add a small Cloudflare D1 database backend — possible to add later.</div></div>
+    <div class="access-step"><div class="access-num">ℹ</div><div><strong style="color:#60a5fa;">Workflow:</strong> You add updates + check things done on your device. I update the HTML with new tasks and context based on what you tell me. The cockpit grows and evolves with the project.</div></div>
+  </div>
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-note">EVERMORE LIFE LLC · FINAL EXPENSE DIVISION · <span id="last-update">--</span></div>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+    <div class="footer-ver" id="prog-label">v6.0 · MAY 5 · A2P BLOCKED · KVN DOWN · UPDATES PERSIST</div>
+    <button onclick="location.reload()" style="background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:'Courier New',monospace;font-size:8px;letter-spacing:0.1em;padding:4px 12px;border-radius:3px;cursor:pointer;">↺ REFRESH</button>
+    <button onclick="clearAllData()" style="background:transparent;border:1px solid rgba(248,113,113,0.3);color:rgba(248,113,113,0.6);font-family:'Courier New',monospace;font-size:7px;letter-spacing:0.1em;padding:4px 10px;border-radius:3px;cursor:pointer;">⚠ RESET ALL</button>
+  </div>
+</footer>
+
+<script>
+// ─── CLOCK ───
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}) +
+    ' · ' + now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+updateClock();
+setInterval(updateClock, 1000);
+document.getElementById('last-update').textContent = 'v6.0 · AUTO-REFRESH 5MIN · UPDATES SAVED LOCALLY';
+
+// ─── TAB SWITCHING ───
+function switchTab(tab) {
+  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  const tabs = ['main','projects','access'];
+  const idx = tabs.indexOf(tab);
+  document.querySelectorAll('.nav-tab')[idx].classList.add('active');
+}
+
+// ─── STEP DONE / NOTES (MAIN COCKPIT) ───
+const STORAGE_KEY = 'evermore_cockpit_v6';
+
+function getStorage() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; }
+}
+function setStorage(data) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+}
+
+// Modal state
+let _modalKey = null;
+let _modalName = null;
+
+function openModal(key, name) {
+  _modalKey = key;
+  _modalName = name;
+  document.getElementById('modalItemName').textContent = 'Mark as DONE: "' + name + '"';
+  document.getElementById('modalNoteInput').value = '';
+  document.getElementById('completeModal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('completeModal').classList.remove('open');
+  _modalKey = null;
+}
+function confirmComplete() {
+  if (!_modalKey) return;
+  const note = document.getElementById('modalNoteInput').value.trim();
+  const data = getStorage();
+  if (!data[_modalKey]) data[_modalKey] = { done: false, notes: [] };
+  data[_modalKey].done = true;
+  if (note) {
+    data[_modalKey].notes.push({ ts: fmtNow(), text: '✓ COMPLETED: ' + note });
+  } else {
+    data[_modalKey].notes.push({ ts: fmtNow(), text: '✓ Marked complete.' });
+  }
+  setStorage(data);
+  applyStepState(_modalKey, data[_modalKey]);
+  updateProgress();
+  closeModal();
+}
+
+function toggleNoteInput(key) {
+  const wrap = document.getElementById('input-' + key);
+  if (!wrap) return;
+  wrap.classList.toggle('open');
+  if (wrap.classList.contains('open')) {
+    const inp = document.getElementById('text-' + key);
+    if (inp) inp.focus();
+  }
+}
+
+function saveNote(key) {
+  const inp = document.getElementById('text-' + key);
+  if (!inp) return;
+  const text = inp.value.trim();
+  if (!text) return;
+  const data = getStorage();
+  if (!data[key]) data[key] = { done: false, notes: [] };
+  data[key].notes.push({ ts: fmtNow(), text: text });
+  setStorage(data);
+  renderLog(key, data[key].notes);
+  inp.value = '';
+  toggleNoteInput(key);
+}
+
+function fmtNow() {
+  const now = new Date();
+  return now.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' ' +
+    now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+}
+
+function renderLog(key, notes) {
+  const logEl = document.getElementById('log-' + key);
+  if (!logEl) return;
+  if (!notes || notes.length === 0) { logEl.style.display = 'none'; logEl.innerHTML = ''; return; }
+  logEl.style.display = 'block';
+  logEl.innerHTML = notes.map(n =>
+    '<div class="update-entry"><span class="update-ts">' + n.ts + '</span>' + escHtml(n.text) + '</div>'
+  ).join('');
+}
+
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function applyStepState(key, state) {
+  const row = document.getElementById(key);
+  if (!row) return;
+  if (state && state.done) {
+    row.classList.add('done');
+    row.classList.remove('active','waiting','blocked','clickable');
+    const num = row.querySelector('.step-num');
+    if (num) { num.className = 'step-num num-done'; num.textContent = '✓'; }
+    const tag = row.querySelector('.step-tag');
+    if (tag) { tag.className = 'step-tag tag-done'; tag.textContent = '✓ DONE'; }
+    const acts = row.querySelector('.step-actions');
+    if (acts) {
+      const doneBtn = acts.querySelector('.btn-done-toggle');
+      if (doneBtn) doneBtn.style.display = 'none';
+    }
+  }
+  if (state && state.notes) renderLog(key, state.notes);
+}
+
+// ─── INIT MAIN STEPS FROM STORAGE ───
+function initMainSteps() {
+  const data = getStorage();
+  const interactiveSteps = ['step-7','step-8','step-9','step-10a'];
+  interactiveSteps.forEach(key => {
+    if (data[key]) applyStepState(key, data[key]);
+    else renderLog(key, []);
+  });
+  updateProgress();
+}
+
+function updateProgress() {
+  const data = getStorage();
+  const lockedDone = 6;
+  const toggleDone = ['step-7','step-8','step-9'].filter(k => data[k] && data[k].done).length;
+  const total = 10;
+  const done = lockedDone + toggleDone;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-left').textContent = total - done;
+  document.getElementById('prog-label').textContent = 'v6.0 · ' + pct + '% COMPLETE · A2P BLOCKED · KVN DOWN';
+}
+
+// ─── PROJECT COCKPITS ───
+const DEFAULT_PROJECTS = {
+  a2p: [
+    { id: 'a2p-1', text: 'Call IRS at 1-800-829-4933 to confirm current company name on file', done: false, notes: [] },
+    { id: 'a2p-2', text: 'If IRS shows old name — submit name change / correction with IRS', done: false, notes: [] },
+    { id: 'a2p-3', text: 'Get CP575 form (EIN confirmation letter) showing correct new company name', done: false, notes: [] },
+    { id: 'a2p-4', text: 'Gather all updated company paperwork (articles of incorporation, etc.)', done: false, notes: [] },
+    { id: 'a2p-5', text: 'Submit CP575 + updated docs to Go High Level support', done: false, notes: [] },
+    { id: 'a2p-6', text: 'After GHL confirms — check A2P/10DLC status in GHL → Settings → Phone Numbers', done: false, notes: [] },
+  ],
+  kevin: [
+    { id: 'kevin-1', text: 'Verify workers.dev URL — confirm it returns blank (not a 404)', done: false, notes: [] },
+    { id: 'kevin-2', text: 'Set up Three.js + Ready Player Me avatar base for V2', done: false, notes: [] },
+    { id: 'kevin-3', text: 'Add PBR materials, lipsync, gaze tracking, and voice to KVN', done: false, notes: [] },
+    { id: 'kevin-4', text: 'Deploy KVN V2 to Cloudflare Workers (workers.dev)', done: false, notes: [] },
+    { id: 'kevin-5', text: 'Test KVN V2 — verify voice, lipsync, and gaze all working on workers.dev', done: false, notes: [] },
+  ],
+  ghl: [
+    { id: 'ghl-1', text: 'GHL → Automation → Workflows → Create "Evermore Website Lead Intake"', done: false, notes: [] },
+    { id: 'ghl-2', text: 'Add triggers: Form 10 + Main Opt-In form. Add actions: Tag, Notify, Opportunity, Email, Task (no SMS yet)', done: false, notes: [] },
+    { id: 'ghl-3', text: 'Submit test lead from evermorelife.org/optin and verify all 9 checklist items in test-checklist.md', done: false, notes: [] },
+    { id: 'ghl-4', text: 'Publish workflow after all 9 items pass', done: false, notes: [] },
+  ],
+};
+
+function getProjStorage() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY + '_projects')) || {}; } catch(e) { return {}; }
+}
+function setProjStorage(data) {
+  try { localStorage.setItem(STORAGE_KEY + '_projects', JSON.stringify(data)); } catch(e) {}
+}
+
+function getProjectSteps(projId) {
+  const stored = getProjStorage();
+  if (stored[projId]) return stored[projId];
+  return JSON.parse(JSON.stringify(DEFAULT_PROJECTS[projId] || []));
+}
+
+function saveProjectSteps(projId, steps) {
+  const stored = getProjStorage();
+  stored[projId] = steps;
+  setProjStorage(stored);
+  updateProjectPill(projId, steps);
+}
+
+function updateProjectPill(projId, steps) {
+  const pill = document.getElementById('pill-' + projId);
+  if (!pill) return;
+  const done = steps.filter(s => s.done).length;
+  pill.textContent = done + ' / ' + steps.length + ' DONE';
+}
+
+function renderProjectSteps(projId) {
+  const steps = getProjectSteps(projId);
+  const container = document.getElementById('steps-' + projId);
+  if (!container) return;
+  container.innerHTML = '';
+  steps.forEach((step, idx) => {
+    const div = document.createElement('div');
+    div.className = 'proj-step clickable' + (step.done ? ' done' : '');
+    div.id = 'pstep-' + step.id;
+
+    const numColors = step.done
+      ? 'background:var(--lgreen);border-color:var(--green);color:#4ade80;'
+      : 'background:rgba(201,168,76,0.08);border-color:rgba(201,168,76,0.2);color:var(--gold-dim);';
+    const numText = step.done ? '✓' : (idx + 1);
+
+    let notesHtml = '';
+    if (step.notes && step.notes.length > 0) {
+      notesHtml = '<div class="update-log" style="margin-top:5px;">' +
+        step.notes.map(n => '<div class="update-entry"><span class="update-ts">' + n.ts + '</span>' + escHtml(n.text) + '</div>').join('') +
+        '</div>';
+    }
+
+    div.innerHTML = `
+      <div class="proj-step-num" style="${numColors}">${numText}</div>
+      <div class="proj-step-content">
+        <div class="proj-step-name">${escHtml(step.text)}</div>
+        ${notesHtml}
+        <div class="proj-step-actions" style="margin-top:5px;">
+          ${!step.done ? `<button class="btn-done-toggle" style="font-size:7px;padding:2px 7px;" onclick="markProjDone('${projId}','${step.id}')">✓ DONE</button>` : '<span style="font-size:7px;color:#4ade80;">✓ COMPLETE</span>'}
+          <button class="btn-note" style="font-size:7px;padding:2px 7px;" onclick="toggleProjNote('${step.id}')">+ UPDATE</button>
+        </div>
+        <div class="update-input-wrap" id="pinput-${step.id}">
+          <input class="update-input" id="ptext-${step.id}" placeholder="Add update..." onkeydown="if(event.key==='Enter')saveProjNote('${projId}','${step.id}')">
+          <button class="btn-save-note" onclick="saveProjNote('${projId}','${step.id}')">SAVE</button>
+          <button class="btn-cancel-note" onclick="toggleProjNote('${step.id}')">✕</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+  updateProjectPill(projId, steps);
+}
+
+function toggleProjNote(stepId) {
+  const wrap = document.getElementById('pinput-' + stepId);
+  if (!wrap) return;
+  wrap.classList.toggle('open');
+  if (wrap.classList.contains('open')) {
+    const inp = document.getElementById('ptext-' + stepId);
+    if (inp) inp.focus();
+  }
+}
+
+function saveProjNote(projId, stepId) {
+  const inp = document.getElementById('ptext-' + stepId);
+  if (!inp) return;
+  const text = inp.value.trim();
+  if (!text) return;
+  const steps = getProjectSteps(projId);
+  const step = steps.find(s => s.id === stepId);
+  if (!step) return;
+  if (!step.notes) step.notes = [];
+  step.notes.push({ ts: fmtNow(), text: text });
+  saveProjectSteps(projId, steps);
+  renderProjectSteps(projId);
+}
+
+function markProjDone(projId, stepId) {
+  const note = prompt('Optional: add a completion note (what got done, any context):');
+  const steps = getProjectSteps(projId);
+  const step = steps.find(s => s.id === stepId);
+  if (!step) return;
+  step.done = true;
+  if (!step.notes) step.notes = [];
+  step.notes.push({ ts: fmtNow(), text: '✓ COMPLETED' + (note ? ': ' + note : '.') });
+  saveProjectSteps(projId, steps);
+  renderProjectSteps(projId);
+}
+
+function addProjectTask(projId) {
+  const inp = document.getElementById('newtask-' + projId);
+  if (!inp) return;
+  const text = inp.value.trim();
+  if (!text) return;
+  const steps = getProjectSteps(projId);
+  const newId = projId + '-' + Date.now();
+  steps.push({ id: newId, text: text, done: false, notes: [] });
+  saveProjectSteps(projId, steps);
+  renderProjectSteps(projId);
+  inp.value = '';
+}
+
+function addProject() {
+  alert('To add a new project, tell Claude what it is and I\'ll add it to the cockpit with a proper checklist. You can also type individual tasks into any existing project using the + ADD field.');
+}
+
+function toggleProject(projId) {
+  const body = document.getElementById('body-' + projId);
+  const icon = document.getElementById('icon-' + projId);
+  if (!body) return;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open');
+  if (icon) icon.textContent = isOpen ? '▼' : '▲';
+  if (!isOpen) renderProjectSteps(projId);
+}
+
+// ─── CLEAR ALL ───
+function clearAllData() {
+  if (confirm('Reset ALL saved checkmarks and notes? This cannot be undone.')) {
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(STORAGE_KEY + '_projects');
+    location.reload();
+  }
+}
+
+// ─── INIT ───
+initMainSteps();
+// Pre-render project pills
+['a2p','kevin','ghl'].forEach(id => updateProjectPill(id, getProjectSteps(id)));
+</script>
+</body>
+</html>
