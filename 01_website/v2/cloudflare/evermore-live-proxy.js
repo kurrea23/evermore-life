@@ -110,6 +110,10 @@ async function serveCockpitV2(request) {
 
   const headers = responseHeaders(response.headers, { html: true });
   headers.set("cache-control", "public, max-age=60, s-maxage=300");
+  headers.delete("content-security-policy");
+  headers.delete("cross-origin-resource-policy");
+  headers.delete("x-frame-options");
+  headers.delete("x-xss-protection");
   return new Response(await response.text(), {
     status: 200,
     headers,
