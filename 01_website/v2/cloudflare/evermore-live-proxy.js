@@ -1,5 +1,7 @@
 const PAGES_ORIGIN = "evermore-life.pages.dev";
 const APEX_HOST = "evermorelife.org";
+const COCKPIT_V2_RAW_URL =
+  "https://raw.githubusercontent.com/kurrea23/evermore-life/main/01_website/experiments/EVERMORE_COCKPIT_v2.html";
 
 const CLEAN_REDIRECTS = new Map([
   ["/index.html", "/"],
@@ -10,6 +12,8 @@ const CLEAN_REDIRECTS = new Map([
   ["/terms.html", "/terms"],
   ["/thank-you.html", "/thank-you"],
   ["/404.html", "/404"],
+  ["/cockpit-v2.html", "/cockpit-v2"],
+  ["/v2-cockpit", "/cockpit-v2"],
   ["/01_website/v2/pages", "/"],
   ["/01_website/v2/pages/", "/"],
   ["/01_website/v2/pages/index", "/"],
@@ -51,6 +55,10 @@ export default {
       return Response.redirect(incomingUrl.toString(), 302);
     }
 
+    if (incomingUrl.pathname === "/cockpit-v2") {
+      return serveCockpitV2(request);
+    }
+
     const upstreamUrl = new URL(request.url);
     upstreamUrl.protocol = "https:";
     upstreamUrl.hostname = PAGES_ORIGIN;
@@ -84,6 +92,29 @@ export default {
     });
   },
 };
+
+async function serveCockpitV2(request) {
+  const upstreamRequest = new Request(COCKPIT_V2_RAW_URL, {
+    headers: {
+      "user-agent": request.headers.get("user-agent") || "EvermoreLifeProxy/1.0",
+    },
+  });
+  const response = await fetch(upstreamRequest);
+
+  if (!response.ok) {
+    return new Response("Cockpit v2 is temporarily unavailable.", {
+      status: 502,
+      headers: responseHeaders(response.headers),
+    });
+  }
+
+  const headers = responseHeaders(response.headers, { html: true });
+  headers.set("cache-control", "public, max-age=60, s-maxage=300");
+  return new Response(await response.text(), {
+    status: 200,
+    headers,
+  });
+}
 
 function isHtml(response) {
   return (response.headers.get("content-type") || "").includes("text/html");
