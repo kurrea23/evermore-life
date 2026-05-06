@@ -3,6 +3,17 @@
   "name": "evermore-life-live",
   "main": "./evermore-live-proxy.js",
   "compatibility_date": "2026-05-05",
+  "assets": {
+    "directory": "../../experiments",
+    "binding": "DASHBOARD_ASSETS",
+    "run_worker_first": true
+  },
+  "kv_namespaces": [
+    {
+      "binding": "COCKPIT_STATE",
+      "id": "32fa6b4a72324b66b3f7a8967c5bdb51"
+    }
+  ],
   "routes": [
     {
       "pattern": "evermorelife.org/*",
