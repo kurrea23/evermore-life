@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kevin V2 — Evermore Life Cockpit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:   #0d1f2d;
+    --navy2:  #102233;
+    --navy3:  #162d40;
+    --gold:   #c9a84c;
+    --gold2:  #e8c96e;
+    --cream:  #f5f0e8;
+    --cream2: #d6cfbf;
+    --red:    #c0392b;
+    --green:  #27ae60;
+    --shadow: rgba(0,0,0,0.4);
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--navy);
+    color: var(--cream);
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+  }
+
+  /* ── TOP NAV ────────────────────────────────────────────── */
+  #topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 48px;
+    background: linear-gradient(90deg, #0a1a27 0%, #0d1f2d 100%);
+    border-bottom: 1px solid rgba(201,168,76,0.25);
+    display: flex; align-items: center; padding: 0 24px; gap: 16px;
+    z-index: 100;
+  }
+  #topbar .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-weight: 600; letter-spacing: 0.08em;
+    color: var(--gold); white-space: nowrap;
+  }
+  #topbar .sep { flex: 1; }
+  #topbar .room-pill {
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 20px; padding: 4px 14px;
+    font-size: 11px; letter-spacing: 0.1em; color: var(--gold2);
+    text-transform: uppercase;
+  }
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+  /* ── MAIN LAYOUT ────────────────────────────────────────── */
+  #app {
+    position: fixed; top: 48px; left: 0; right: 0; bottom: 0;
+    display: flex;
+  }
+
+  /* ── LEFT PANEL — TASK ROOM ─────────────────────────────── */
+  #task-panel {
+    width: 58%; border-right: 1px solid rgba(201,168,76,0.15);
+    display: flex; flex-direction: column;
+    padding: 32px 40px; gap: 24px;
+    overflow-y: auto;
+  }
+
+  .room-selector {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .room-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 6px; padding: 7px 16px;
+    font-family: 'Inter', sans-serif; font-size: 12px;
+    color: var(--cream2); cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+  }
+  .room-btn:hover { background: rgba(201,168,76,0.1); color: var(--gold2); }
+  .room-btn.active {
+    background: rgba(201,168,76,0.15);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .phase-label {
+    font-family: 'Inter', sans-serif; font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gold); opacity: 0.7; margin-bottom: 4px;
+  }
+  .room-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px; font-weight: 300; line-height: 1.2;
+    color: var(--cream);
+  }
+  .phase-tag {
+    display: inline-block;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 4px; padding: 3px 10px;
+    font-size: 11px; letter-spacing: 0.08em;
+    color: var(--gold2); margin-top: 6px;
+  }
+
+  /* ── ACTION CARD ────────────────────────────────────────── */
+  .action-card {
+    background: linear-gradient(135deg, rgba(22,45,64,0.8) 0%, rgba(16,34,51,0.9) 100%);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 12px; padding: 28px 32px;
+    position: relative; overflow: hidden;
+  }
+  .action-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .action-card .card-label {
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); opacity: 0.6; margin-bottom: 12px;
+  }
+  .action-card .action-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 400; line-height: 1.5;
+    color: var(--cream);
+  }
+
+  /* ── BLOCKING CONDITIONS ────────────────────────────────── */
+  .blocking-card {
+    background: rgba(192,57,43,0.08);
+    border: 1px solid rgba(192,57,43,0.35);
+    border-radius: 10px; padding: 18px 24px;
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .blocking-card .block-icon {
+    width: 20px; height: 20px; min-width: 20px;
+    background: var(--red); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: white; font-weight: 700; margin-top: 2px;
+  }
+  .blocking-card .block-text {
+    font-size: 14px; line-height: 1.6; color: #e07070;
+  }
+  .blocking-card .block-label {
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--red); opacity: 0.8; margin-bottom: 6px;
+  }
+
+  /* ── RESPONSE BUTTONS ────────────────────────────────────── */
+  .response-section { margin-top: 4px; }
+  .response-label {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--cream2); opacity: 0.5; margin-bottom: 14px;
+  }
+  .response-buttons {
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .resp-btn {
+    flex: 1; min-width: 120px;
+    padding: 16px 20px;
+    border-radius: 10px; border: 1px solid;
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    letter-spacing: 0.02em;
+  }
+  .resp-btn.yes {
+    background: rgba(39,174,96,0.1); border-color: rgba(39,174,96,0.35);
+    color: #5ecd8a;
+  }
+  .resp-btn.yes:hover {
+    background: rgba(39,174,96,0.2); border-color: #27ae60;
+    box-shadow: 0 0 20px rgba(39,174,96,0.2); transform: translateY(-1px);
+  }
+  .resp-btn.notyet {
+    background: rgba(201,168,76,0.08); border-color: rgba(201,168,76,0.25);
+    color: var(--gold2);
+  }
+  .resp-btn.notyet:hover {
+    background: rgba(201,168,76,0.15); border-color: var(--gold);
+    box-shadow: 0 0 20px rgba(201,168,76,0.15); transform: translateY(-1px);
+  }
+  .resp-btn.stuck {
+    background: rgba(192,57,43,0.08); border-color: rgba(192,57,43,0.3);
+    color: #e07070;
+  }
+  .resp-btn.stuck:hover {
+    background: rgba(192,57,43,0.15); border-color: var(--red);
+    box-shadow: 0 0 20px rgba(192,57,43,0.15); transform: translateY(-1px);
+  }
+  .resp-btn:active { transform: translateY(0); }
+
+  /* ── HANDOFF HINT ────────────────────────────────────────── */
+  .handoff-hint {
+    font-size: 12px; color: var(--cream2); opacity: 0.45;
+    font-style: italic; text-align: center; padding-top: 8px;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  /* ── PRIVATE AI CHAT ─────────────────────────────────────── */
+  .ai-chat-card {
+    border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 12px;
+    background: rgba(8,15,24,0.34);
+    overflow: hidden;
+  }
+  .ai-chat-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+  }
+  .ai-chat-title {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gold);
+  }
+  .ai-chat-status {
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(245,240,232,0.48);
+  }
+  .ai-chat-log {
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .ai-msg {
+    max-width: 92%;
+    border-radius: 10px;
+    padding: 11px 13px;
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+  .ai-msg.assistant {
+    align-self: flex-start;
+    color: var(--cream);
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.18);
+  }
+  .ai-msg.user {
+    align-self: flex-end;
+    color: var(--cream);
+    background: rgba(90,132,190,0.14);
+    border: 1px solid rgba(90,132,190,0.26);
+  }
+  .ai-chat-form {
+    display: flex;
+    gap: 10px;
+    padding: 14px;
+    border-top: 1px solid rgba(201,168,76,0.12);
+  }
+  .ai-chat-form input {
+    flex: 1;
+    min-width: 0;
+    background: rgba(0,0,0,0.22);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 8px;
+    color: var(--cream);
+    font: inherit;
+    font-size: 13px;
+    padding: 12px 13px;
+    outline: none;
+  }
+  .ai-chat-form input:focus { border-color: rgba(201,168,76,0.55); }
+  .ai-chat-form button {
+    min-width: 82px;
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 8px;
+    background: rgba(201,168,76,0.15);
+    color: var(--gold2);
+    font: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .ai-chat-form button:disabled {
+    cursor: wait;
+    opacity: 0.55;
+  }
+
+  /* ── RIGHT PANEL — KEVIN 3D ─────────────────────────────── */
+  #kevin-panel {
+    width: 42%;
+    display: flex; flex-direction: column;
+    background: linear-gradient(160deg, #0a1925 0%, #0d2035 100%);
+    position: relative;
+  }
+
+  #canvas-container {
+    flex: 1; position: relative;
+    background: radial-gradient(ellipse at 50% 60%, #102a40 0%, #080f18 100%);
+  }
+  #kevin-canvas {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: block;
+  }
+
+  /* Loading overlay */
+  #kevin-loading {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 20px;
+    z-index: 10; pointer-events: none;
+  }
+  .spinner {
+    width: 40px; height: 40px;
+    border: 2px solid rgba(201,168,76,0.15);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #kevin-loading span {
+    font-size: 11px; letter-spacing: 0.15em; color: var(--gold); opacity: 0.6;
+    text-transform: uppercase;
+  }
+
+  /* Kevin name badge */
+  .kevin-badge {
+    position: absolute; bottom: 12px; right: 14px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; font-weight: 300; letter-spacing: 0.12em;
+    color: var(--gold); opacity: 0.4;
+    text-transform: uppercase;
+  }
+
+  /* State indicator */
+  .kevin-state-badge {
+    position: absolute; top: 14px; left: 14px;
+    background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 20px; padding: 5px 12px;
+    font-size: 10px; letter-spacing: 0.12em; color: var(--gold2);
+    text-transform: uppercase; transition: all 0.4s;
+  }
+
+  /* ── SPEECH BUBBLE ────────────────────────────────────────── */
+  #speech-area {
+    min-height: 90px; max-height: 140px;
+    border-top: 1px solid rgba(201,168,76,0.12);
+    padding: 18px 24px;
+    display: flex; align-items: flex-start; gap: 12px;
+    background: linear-gradient(0deg, rgba(8,15,24,0.6) 0%, transparent 100%);
+    position: relative; overflow: hidden;
+  }
+  .speech-avatar {
+    width: 32px; height: 32px; min-width: 32px;
+    background: linear-gradient(135deg, var(--gold) 0%, #a07830 100%);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    color: var(--navy); font-family: 'Inter', sans-serif;
+    box-shadow: 0 0 16px rgba(201,168,76,0.3);
+  }
+  #speech-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px; font-weight: 400; line-height: 1.55;
+    color: var(--cream); flex: 1;
+    opacity: 1; transition: opacity 0.3s;
+  }
+  #speech-text.fading { opacity: 0; }
+
+  /* Speaking indicator */
+  .speaking-dots {
+    display: none; align-items: center; gap: 4px; padding-top: 2px;
+  }
+  .speaking-dots.active { display: flex; }
+  .speaking-dots span {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--gold);
+    animation: bounce 0.8s ease-in-out infinite;
+  }
+  .speaking-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .speaking-dots span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4} 50%{transform:translateY(-5px);opacity:1} }
+
+  /* ── IDLE TIMER INDICATOR ────────────────────────────────── */
+  #idle-bar {
+    position: absolute; bottom: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--gold2));
+    width: 0%; transition: width 0.5s linear;
+    opacity: 0;
+  }
+
+  /* ── SCROLLBAR ─────────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 2px; }
+
+  @media (max-width: 900px) {
+    html, body { overflow: auto; }
+    #topbar { position: sticky; }
+    #app {
+      position: static;
+      min-height: calc(100vh - 48px);
+      flex-direction: column-reverse;
+    }
+    #task-panel, #kevin-panel { width: 100%; }
+    #task-panel { padding: 24px 20px 32px; overflow: visible; }
+    #kevin-panel { min-height: 520px; }
+    #canvas-container { min-height: 360px; }
+    .ai-chat-form { flex-direction: column; }
+    .ai-chat-form button { min-height: 44px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="logo">EVERMORE LIFE</div>
+  <div class="sep"></div>
+  <div class="room-pill" id="topbar-room">A2P Registration</div>
+  <div class="status-dot"></div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+
+  <!-- LEFT: TASK PANEL -->
+  <div id="task-panel">
+    <!-- Room selector -->
+    <div class="room-selector">
+      <button class="room-btn active" onclick="switchRoom('A2P_REGISTRATION', this)">A2P Registration</button>
+      <button class="room-btn" onclick="switchRoom('FUNNEL_BUILD', this)">Funnel Build</button>
+      <button class="room-btn" onclick="switchRoom('SARAH_SETUP', this)">Sarah AI Setup</button>
+    </div>
+
+    <!-- Room header -->
+    <div>
+      <div class="phase-label" id="phase-label">Phase 1 — Pre-flight</div>
+      <div class="room-title" id="room-title">A2P Registration</div>
+      <span class="phase-tag" id="phase-tag">Phase 1 — Pre-flight</span>
+    </div>
+
+    <!-- Next action card -->
+    <div class="action-card">
+      <div class="card-label">Next Action</div>
+      <div class="action-text" id="action-text">
+        Confirm the optin page is live at evermorelife.org/optin with the SMS consent checkbox unchecked by default.
+      </div>
+    </div>
+
+    <!-- Blocking conditions -->
+    <div id="blocking-section" style="display:none;">
+      <div class="blocking-card">
+        <div class="block-icon">!</div>
+        <div>
+          <div class="block-label">Stop Condition</div>
+          <div class="block-text" id="blocking-text"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Response buttons -->
+    <div class="response-section">
+      <div class="response-label">Respond to Kevin</div>
+      <div class="response-buttons">
+        <button class="resp-btn yes" onclick="respond('yes')">
+          <span>✓</span> Yes, done
+        </button>
+        <button class="resp-btn notyet" onclick="respond('notyet')">
+          <span>○</span> Not yet
+        </button>
+        <button class="resp-btn stuck" onclick="respond('stuck')">
+          <span>✗</span> I'm stuck
+        </button>
+      </div>
+    </div>
+
+    <section class="ai-chat-card" aria-label="Private Kevin AI chat">
+      <div class="ai-chat-head">
+        <div class="ai-chat-title">Private Kevin AI</div>
+        <div class="ai-chat-status" id="ai-chat-status">Read-only cockpit context</div>
+      </div>
+      <div class="ai-chat-log" id="ai-chat-log">
+        <div class="ai-msg assistant">Kevin is online. Tell me what changed or ask what the next move is, and I will keep it grounded in the cockpit state.</div>
+      </div>
+      <form class="ai-chat-form" id="ai-chat-form">
+        <input id="ai-chat-input" type="text" autocomplete="off" placeholder="Ask Kevin what to do next..." />
+        <button id="ai-chat-send" type="submit">Send</button>
+      </form>
+    </section>
+
+    <div class="handoff-hint" id="handoff-hint">
+      Complex tasks → Kevin hands off to Claude or Sarah
+    </div>
+  </div>
+
+  <!-- RIGHT: KEVIN 3D VIEWPORT -->
+  <div id="kevin-panel">
+    <div id="canvas-container">
+      <canvas id="kevin-canvas"></canvas>
+
+      <!-- Loading overlay -->
+      <div id="kevin-loading">
+        <div class="spinner"></div>
+        <span>Initialising Kevin</span>
+      </div>
+
+      <!-- State badge -->
+      <div class="kevin-state-badge" id="kevin-state-badge">Idle</div>
+
+      <!-- Kevin label -->
+      <div class="kevin-badge">Kevin · PM</div>
+    </div>
+
+    <!-- Speech area -->
+    <div id="speech-area">
+      <div class="speech-avatar">K</div>
+      <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+        <div id="speech-text">
+          Loading Kevin…
+        </div>
+        <div class="speaking-dots" id="speaking-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div id="idle-bar"></div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- THREE.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// ROOM STATE DATA
+// ═══════════════════════════════════════════════════════════════
+const rooms = {
+  A2P_REGISTRATION: {
+    name: "A2P Registration",
+    phase: "Phase 1 — Pre-flight",
+    nextAction: "Confirm the optin page is live at evermorelife.org/optin with the SMS consent checkbox unchecked by default.",
+    blockingConditions: [],
+    kevinLine: "We're in A2P registration. Phase one is pre-flight. Have you confirmed the optin page is live with the consent checkbox visible and unchecked?",
+    yesLine: "Good. Mark that confirmed and let's move to the domain verification step. I'll flag you when the next checkpoint is ready.",
+    notyetLine: "No problem. Here's what you need: go to evermorelife.org/optin and verify the SMS checkbox is visible but unchecked by default. Come back when that's done.",
+    stuckLine: "Okay. This part needs copy review — want me to bring in Claude for that? Or I can walk you through the technical steps.",
+  },
+  FUNNEL_BUILD: {
+    name: "Funnel Build",
+    phase: "Phase 5 — Funnel Page",
+    nextAction: "Host FUNNEL_PAGE.html on evermorelife.org at the /legacy path.",
+    blockingConditions: ["A2P registration must be submitted first"],
+    kevinLine: "The funnel page is ready to host. But A2P registration needs to be submitted before we go live with paid traffic. Is that submitted?",
+    yesLine: "Good — let's proceed. Upload FUNNEL_PAGE.html to your hosting provider under the /legacy path and confirm the URL resolves.",
+    notyetLine: "Hold on. We can't send paid traffic without A2P cleared. Switch to the A2P Registration room and get that submitted first.",
+    stuckLine: "The hosting step can be tricky. This is a technical setup — want me to bring in Claude to help with the upload process?",
+  },
+  SARAH_SETUP: {
+    name: "Sarah AI Setup",
+    phase: "Phase 6 — Sarah AI Flow",
+    nextAction: "Create the Sarah chat widget in GHL with the 7 qualification questions.",
+    blockingConditions: [],
+    kevinLine: "Sarah needs to be wired up in GHL. Have you created the chat widget yet?",
+    yesLine: "Great. Next is configuring the 7 qualification questions in order. I'll pull up the question sequence for you.",
+    notyetLine: "Here's the path: go to GHL → Sites → Chat Widget → New Widget. Name it Sarah. I'll be here when it's created.",
+    stuckLine: "GHL's chat widget setup has a few gotchas. This is editing territory — want me to bring in Claude to draft the qualification questions?",
+  }
+};
+
+let currentRoomKey = 'A2P_REGISTRATION';
+let roomState = rooms[currentRoomKey];
+const aiChatHistory = [];
+
+// ═══════════════════════════════════════════════════════════════
+// SPEECH SYNTHESIS
+// ═══════════════════════════════════════════════════════════════
+const synth = window.speechSynthesis;
+let isSpeaking = false;
+let mouthAnimActive = false;
+let mouthTime = 0;
+
+function speak(text, onDone) {
+  if (synth.speaking) synth.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.rate = 0.92;
+  utter.pitch = 0.93;
+  utter.volume = 0.9;
+
+  // Try to pick a good male/neutral voice
+  const voices = synth.getVoices();
+  const preferred = voices.find(v => v.name.includes('Daniel') || v.name.includes('Alex') || v.name.includes('Google UK English Male'));
+  if (preferred) utter.voice = preferred;
+
+  utter.onstart = () => {
+    isSpeaking = true;
+    mouthAnimActive = true;
+    document.getElementById('speaking-dots').classList.add('active');
+  };
+  utter.onend = () => {
+    isSpeaking = false;
+    mouthAnimActive = false;
+    document.getElementById('speaking-dots').classList.remove('active');
+    if (onDone) onDone();
+  };
+  utter.onerror = () => {
+    isSpeaking = false;
+    mouthAnimActive = false;
+    document.getElementById('speaking-dots').classList.remove('active');
+  };
+
+  synth.speak(utter);
+}
+
+function setSpeechText(text) {
+  const el = document.getElementById('speech-text');
+  el.classList.add('fading');
+  setTimeout(() => {
+    el.textContent = text;
+    el.classList.remove('fading');
+  }, 300);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ROOM SWITCHING
+// ═══════════════════════════════════════════════════════════════
+function switchRoom(key, btn) {
+  currentRoomKey = key;
+  roomState = rooms[key];
+
+  // Update UI
+  document.querySelectorAll('.room-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  document.getElementById('phase-label').textContent = roomState.phase;
+  document.getElementById('room-title').textContent = roomState.name;
+  document.getElementById('phase-tag').textContent = roomState.phase;
+  document.getElementById('action-text').textContent = roomState.nextAction;
+  document.getElementById('topbar-room').textContent = roomState.name;
+
+  // Blocking conditions
+  const blockSec = document.getElementById('blocking-section');
+  if (roomState.blockingConditions.length > 0) {
+    blockSec.style.display = 'block';
+    document.getElementById('blocking-text').textContent = roomState.blockingConditions.join(' · ');
+    setKevinState('warning');
+  } else {
+    blockSec.style.display = 'none';
+    setKevinState('idle');
+  }
+
+  // Kevin speaks
+  setSpeechText(roomState.kevinLine);
+  setTimeout(() => speak(roomState.kevinLine), 400);
+  resetIdleTimer();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RESPONSE HANDLING
+// ═══════════════════════════════════════════════════════════════
+function respond(type) {
+  resetIdleTimer();
+  let line = '';
+  let state = 'idle';
+
+  if (type === 'yes') {
+    line = roomState.yesLine;
+    state = 'affirm';
+  } else if (type === 'notyet') {
+    line = roomState.notyetLine;
+    state = 'thinking';
+  } else if (type === 'stuck') {
+    line = roomState.stuckLine;
+    state = 'handoff';
+    // Show handoff hint
+    document.getElementById('handoff-hint').textContent = 'Handing off to Claude → complex task detected';
+    setTimeout(() => {
+      document.getElementById('handoff-hint').textContent = 'Complex tasks → Kevin hands off to Claude or Sarah';
+    }, 6000);
+  }
+
+  setKevinState(state);
+  setSpeechText(line);
+  setTimeout(() => {
+    speak(line, () => setKevinState('idle'));
+  }, 200);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PRIVATE AI CHAT
+// ═══════════════════════════════════════════════════════════════
+const aiChatForm = document.getElementById('ai-chat-form');
+const aiChatInput = document.getElementById('ai-chat-input');
+const aiChatLog = document.getElementById('ai-chat-log');
+const aiChatStatus = document.getElementById('ai-chat-status');
+const aiChatSend = document.getElementById('ai-chat-send');
+
+aiChatForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const message = aiChatInput.value.trim();
+  if (!message) return;
+
+  aiChatInput.value = '';
+  addAIMessage(message, 'user');
+  aiChatHistory.push({ role: 'user', content: message });
+  setKevinState('thinking');
+  aiChatStatus.textContent = 'Thinking';
+  aiChatSend.disabled = true;
+
+  try {
+    const response = await fetch('/api/kevin-chat', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        message,
+        history: aiChatHistory.slice(-8),
+      }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(data.error || data.detail || 'Kevin could not answer yet.');
+    }
+    const reply = data.reply || 'I heard you. Let’s verify the cockpit state and pick the next concrete action.';
+    addAIMessage(reply, 'assistant');
+    aiChatHistory.push({ role: 'assistant', content: reply });
+    setSpeechText(reply);
+    speak(reply, () => setKevinState('idle'));
+    aiChatStatus.textContent = 'Ready';
+  } catch (error) {
+    const fallback = `${error.message || 'Kevin is not connected yet.'} Check the Worker secret and deployment, then try again.`;
+    addAIMessage(fallback, 'assistant');
+    setSpeechText(fallback);
+    setKevinState('warning');
+    aiChatStatus.textContent = 'Needs config';
+  } finally {
+    aiChatSend.disabled = false;
+    aiChatInput.focus();
+    resetIdleTimer();
+  }
+});
+
+function addAIMessage(text, role) {
+  const item = document.createElement('div');
+  item.className = `ai-msg ${role === 'user' ? 'user' : 'assistant'}`;
+  item.textContent = text;
+  aiChatLog.appendChild(item);
+  aiChatLog.scrollTop = aiChatLog.scrollHeight;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// IDLE TIMER
+// ═══════════════════════════════════════════════════════════════
+let idleTimer = null;
+let idleBarTimer = null;
+const IDLE_SECONDS = 30;
+
+function resetIdleTimer() {
+  clearTimeout(idleTimer);
+  clearInterval(idleBarTimer);
+  const bar = document.getElementById('idle-bar');
+  bar.style.width = '0%';
+  bar.style.opacity = '0';
+
+  let elapsed = 0;
+  idleBarTimer = setInterval(() => {
+    elapsed++;
+    const pct = (elapsed / IDLE_SECONDS) * 100;
+    bar.style.width = pct + '%';
+    bar.style.opacity = pct > 5 ? '1' : '0';
+  }, 1000);
+
+  idleTimer = setTimeout(() => {
+    clearInterval(idleBarTimer);
+    bar.style.width = '0%';
+    bar.style.opacity = '0';
+    const idleLine = "Still there? What's the next click? I'm watching the task list.";
+    setKevinState('thinking');
+    setSpeechText(idleLine);
+    speak(idleLine, () => setKevinState('idle'));
+    resetIdleTimer();
+  }, IDLE_SECONDS * 1000);
+}
+
+// Listen for any user interaction
+['click','keydown','mousemove'].forEach(ev =>
+  document.addEventListener(ev, () => resetIdleTimer(), { passive: true })
+);
+
+// ═══════════════════════════════════════════════════════════════
+// THREE.JS SCENE + KEVIN CHARACTER
+// ═══════════════════════════════════════════════════════════════
+const canvas = document.getElementById('kevin-canvas');
+const container = document.getElementById('canvas-container');
+
+const renderer = new THREE.WebGLRenderer({
+  canvas, antialias: true, alpha: true
+});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x08131e, 0.04);
+
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+camera.position.set(0, 1.62, 3.2);
+camera.lookAt(0, 1.4, 0);
+
+// ── LIGHTING (three-point: warm key, cool fill, navy rim) ──
+// Key light — warm gold
+const keyLight = new THREE.DirectionalLight(0xffd280, 2.2);
+keyLight.position.set(2.5, 4, 2);
+keyLight.castShadow = true;
+keyLight.shadow.mapSize.set(1024, 1024);
+keyLight.shadow.camera.near = 0.5;
+keyLight.shadow.camera.far = 15;
+keyLight.shadow.bias = -0.001;
+scene.add(keyLight);
+
+// Fill light — cool blue
+const fillLight = new THREE.DirectionalLight(0x7ab4e0, 0.8);
+fillLight.position.set(-3, 2, 1.5);
+scene.add(fillLight);
+
+// Rim light — deep navy/purple
+const rimLight = new THREE.DirectionalLight(0x1a2a6c, 1.4);
+rimLight.position.set(0, 1, -3);
+scene.add(rimLight);
+
+// Ambient
+const ambientLight = new THREE.HemisphereLight(0x1a3050, 0x080f18, 0.6);
+scene.add(ambientLight);
+
+// Ground plane (subtle)
+const groundGeo = new THREE.PlaneGeometry(8, 8);
+const groundMat = new THREE.MeshStandardMaterial({
+  color: 0x080f18, roughness: 0.95, metalness: 0.0
+});
+const ground = new THREE.Mesh(groundGeo, groundMat);
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = 0;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// Subtle gold floor reflection strip
+const stripGeo = new THREE.PlaneGeometry(0.3, 0.8);
+const stripMat = new THREE.MeshStandardMaterial({
+  color: 0xc9a84c, roughness: 0.3, metalness: 0.8,
+  transparent: true, opacity: 0.12
+});
+const strip = new THREE.Mesh(stripGeo, stripMat);
+strip.rotation.x = -Math.PI / 2;
+strip.position.set(0, 0.001, 0.3);
+scene.add(strip);
+
+// ── KEVIN CHARACTER (procedural — always rendered as fallback) ──
+let kevin = null;
+let kevinMixer = null;
+let kevinModel = 'procedural';
+let animState = 'idle';
+let animTime = 0;
+let targetPose = { spineX: 0, headY: 0, headX: 0, rArmZ: 0, rArmX: 0, lArmZ: 0, lHandY: 0, bodyBob: 0 };
+let currentPose = { spineX: 0, headY: 0, headX: 0, rArmZ: 0, rArmX: 0, lArmZ: 0, lHandY: 0, bodyBob: 0 };
+
+function buildProceduralKevin() {
+  const group = new THREE.Group();
+
+  // ── Materials ──
+  const skinMat = new THREE.MeshStandardMaterial({
+    color: 0xc68642, roughness: 0.6, metalness: 0.05
+  });
+  const suitMat = new THREE.MeshStandardMaterial({
+    color: 0x1a2a3d, roughness: 0.7, metalness: 0.1
+  });
+  const shirtMat = new THREE.MeshStandardMaterial({
+    color: 0xf5f0e8, roughness: 0.8, metalness: 0.0
+  });
+  const tieMat = new THREE.MeshStandardMaterial({
+    color: 0xc9a84c, roughness: 0.5, metalness: 0.2
+  });
+  const hairMat = new THREE.MeshStandardMaterial({
+    color: 0x1a0f0a, roughness: 0.9, metalness: 0.0
+  });
+  const eyeMat = new THREE.MeshStandardMaterial({
+    color: 0x0a0a0a, roughness: 0.2, metalness: 0.0,
+    emissive: 0x111111
+  });
+  const irisMat = new THREE.MeshStandardMaterial({
+    color: 0x2a5f8f, roughness: 0.3, metalness: 0.0
+  });
+
+  const addMesh = (geo, mat, parent, px=0, py=0, pz=0, rx=0, ry=0, rz=0) => {
+    const m = new THREE.Mesh(geo, mat);
+    m.position.set(px, py, pz);
+    m.rotation.set(rx, ry, rz);
+    m.castShadow = true; m.receiveShadow = true;
+    parent.add(m);
+    return m;
+  };
+
+  // ── ROOT / HIPS ──
+  const hips = new THREE.Group();
+  hips.position.set(0, 0.95, 0);
+  group.add(hips);
+
+  // ── TORSO ──
+  const spine = new THREE.Group();
+  hips.add(spine);
+
+  // Abdomen
+  const abdomen = addMesh(new THREE.CylinderGeometry(0.16, 0.18, 0.28, 16), suitMat, spine, 0, 0.14, 0);
+  // Chest
+  const chest = addMesh(new THREE.CylinderGeometry(0.18, 0.16, 0.32, 16), suitMat, spine, 0, 0.42, 0);
+  // Shirt collar area
+  addMesh(new THREE.CylinderGeometry(0.13, 0.13, 0.12, 12), shirtMat, spine, 0, 0.58, 0.015);
+  // Tie
+  addMesh(new THREE.BoxGeometry(0.045, 0.22, 0.015), tieMat, spine, 0, 0.48, 0.17);
+  // Suit lapels (left & right)
+  addMesh(new THREE.BoxGeometry(0.1, 0.22, 0.03), suitMat, spine, -0.09, 0.46, 0.14);
+  addMesh(new THREE.BoxGeometry(0.1, 0.22, 0.03), suitMat, spine, 0.09, 0.46, 0.14);
+
+  // ── SHOULDERS / COLLAR ──
+  const shoulderGroup = new THREE.Group();
+  shoulderGroup.position.set(0, 0.56, 0);
+  spine.add(shoulderGroup);
+
+  addMesh(new THREE.SphereGeometry(0.085, 10, 8), suitMat, shoulderGroup, -0.23, 0, 0);
+  addMesh(new THREE.SphereGeometry(0.085, 10, 8), suitMat, shoulderGroup, 0.23, 0, 0);
+
+  // ── LEFT ARM (suit) ──
+  const lArm = new THREE.Group();
+  lArm.position.set(-0.23, 0, 0);
+  shoulderGroup.add(lArm);
+
+  addMesh(new THREE.CylinderGeometry(0.06, 0.055, 0.26, 10), suitMat, lArm, 0, -0.13, 0);
+  const lElbow = new THREE.Group();
+  lElbow.position.set(0, -0.26, 0);
+  lArm.add(lElbow);
+  addMesh(new THREE.SphereGeometry(0.058, 8, 6), suitMat, lElbow, 0, 0, 0);
+  addMesh(new THREE.CylinderGeometry(0.055, 0.05, 0.24, 10), suitMat, lElbow, 0, -0.12, 0);
+  // Left hand
+  const lHand = new THREE.Group();
+  lHand.position.set(0, -0.25, 0);
+  lElbow.add(lHand);
+  addMesh(new THREE.SphereGeometry(0.052, 10, 8), skinMat, lHand, 0, 0, 0);
+
+  // ── RIGHT ARM ──
+  const rArm = new THREE.Group();
+  rArm.position.set(0.23, 0, 0);
+  shoulderGroup.add(rArm);
+
+  addMesh(new THREE.CylinderGeometry(0.06, 0.055, 0.26, 10), suitMat, rArm, 0, -0.13, 0);
+  const rElbow = new THREE.Group();
+  rElbow.position.set(0, -0.26, 0);
+  rArm.add(rElbow);
+  addMesh(new THREE.SphereGeometry(0.058, 8, 6), suitMat, rElbow, 0, 0, 0);
+  addMesh(new THREE.CylinderGeometry(0.055, 0.05, 0.24, 10), suitMat, rElbow, 0, -0.12, 0);
+  // Right hand
+  const rHand = new THREE.Group();
+  rHand.position.set(0, -0.25, 0);
+  rElbow.add(rHand);
+  addMesh(new THREE.SphereGeometry(0.052, 10, 8), skinMat, rHand, 0, 0, 0);
+
+  // ── NECK ──
+  const neck = addMesh(new THREE.CylinderGeometry(0.055, 0.065, 0.12, 12), skinMat, spine, 0, 0.67, 0);
+
+  // ── HEAD ──
+  const headGroup = new THREE.Group();
+  headGroup.position.set(0, 0.77, 0);
+  spine.add(headGroup);
+
+  // Head shape
+  addMesh(new THREE.SphereGeometry(0.155, 24, 18), skinMat, headGroup, 0, 0, 0);
+  // Forehead brow subtle bump
+  addMesh(new THREE.SphereGeometry(0.145, 12, 8), skinMat, headGroup, 0, 0.04, 0.09);
+
+  // ── Eyes ──
+  const eyeWhiteMat = new THREE.MeshStandardMaterial({ color: 0xfafafa, roughness: 0.9 });
+  // Left eye
+  addMesh(new THREE.SphereGeometry(0.034, 10, 8), eyeWhiteMat, headGroup, -0.058, 0.02, 0.12);
+  addMesh(new THREE.SphereGeometry(0.022, 10, 8), irisMat, headGroup, -0.058, 0.02, 0.145);
+  addMesh(new THREE.SphereGeometry(0.013, 8, 6), eyeMat, headGroup, -0.058, 0.02, 0.155);
+  // Right eye
+  addMesh(new THREE.SphereGeometry(0.034, 10, 8), eyeWhiteMat, headGroup, 0.058, 0.02, 0.12);
+  addMesh(new THREE.SphereGeometry(0.022, 10, 8), irisMat, headGroup, 0.058, 0.02, 0.145);
+  addMesh(new THREE.SphereGeometry(0.013, 8, 6), eyeMat, headGroup, 0.058, 0.02, 0.155);
+
+  // ── Eyebrows ──
+  const browMat = new THREE.MeshStandardMaterial({ color: 0x1a0f0a, roughness: 0.95 });
+  addMesh(new THREE.BoxGeometry(0.055, 0.008, 0.012), browMat, headGroup, -0.058, 0.062, 0.135);
+  addMesh(new THREE.BoxGeometry(0.055, 0.008, 0.012), browMat, headGroup, 0.058, 0.062, 0.135);
+
+  // ── Nose ──
+  addMesh(new THREE.SphereGeometry(0.022, 8, 6), skinMat, headGroup, 0, -0.018, 0.148);
+
+  // ── Mouth / Jaw ──
+  const jawGroup = new THREE.Group();
+  jawGroup.position.set(0, -0.045, 0.11);
+  headGroup.add(jawGroup);
+
+  const upperLip = addMesh(new THREE.BoxGeometry(0.062, 0.014, 0.018), skinMat, jawGroup, 0, 0.008, 0);
+  const lowerLip = addMesh(new THREE.BoxGeometry(0.06, 0.014, 0.018), skinMat, jawGroup, 0, -0.008, 0);
+  const mouthLine = addMesh(new THREE.BoxGeometry(0.048, 0.005, 0.01), new THREE.MeshStandardMaterial({ color: 0x8b4a3a, roughness: 0.9 }), jawGroup, 0, 0, 0.006);
+
+  // ── Ears ──
+  addMesh(new THREE.SphereGeometry(0.032, 8, 6), skinMat, headGroup, -0.158, 0, 0);
+  addMesh(new THREE.SphereGeometry(0.032, 8, 6), skinMat, headGroup, 0.158, 0, 0);
+
+  // ── Hair ──
+  addMesh(new THREE.SphereGeometry(0.162, 16, 10), hairMat, headGroup, 0, 0.07, -0.02);
+  // Hair sides
+  addMesh(new THREE.SphereGeometry(0.12, 10, 8), hairMat, headGroup, -0.1, 0.03, -0.01);
+  addMesh(new THREE.SphereGeometry(0.12, 10, 8), hairMat, headGroup, 0.1, 0.03, -0.01);
+
+  // ── HIPS / LEGS ──
+  const hipsMesh = addMesh(new THREE.CylinderGeometry(0.18, 0.17, 0.18, 14), suitMat, hips, 0, -0.09, 0);
+
+  // Left leg
+  const lThigh = new THREE.Group();
+  lThigh.position.set(-0.1, -0.2, 0);
+  hips.add(lThigh);
+  addMesh(new THREE.CylinderGeometry(0.09, 0.082, 0.32, 12), suitMat, lThigh, 0, -0.16, 0);
+  const lKnee = new THREE.Group();
+  lKnee.position.set(0, -0.33, 0);
+  lThigh.add(lKnee);
+  addMesh(new THREE.SphereGeometry(0.085, 10, 8), suitMat, lKnee, 0, 0, 0);
+  addMesh(new THREE.CylinderGeometry(0.082, 0.075, 0.3, 12), suitMat, lKnee, 0, -0.15, 0);
+  // Left foot
+  addMesh(new THREE.BoxGeometry(0.1, 0.055, 0.2), new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.6, metalness: 0.1 }), lKnee, 0, -0.32, 0.05);
+
+  // Right leg
+  const rThigh = new THREE.Group();
+  rThigh.position.set(0.1, -0.2, 0);
+  hips.add(rThigh);
+  addMesh(new THREE.CylinderGeometry(0.09, 0.082, 0.32, 12), suitMat, rThigh, 0, -0.16, 0);
+  const rKnee = new THREE.Group();
+  rKnee.position.set(0, -0.33, 0);
+  rThigh.add(rKnee);
+  addMesh(new THREE.SphereGeometry(0.085, 10, 8), suitMat, rKnee, 0, 0, 0);
+  addMesh(new THREE.CylinderGeometry(0.082, 0.075, 0.3, 12), suitMat, rKnee, 0, -0.15, 0);
+  addMesh(new THREE.BoxGeometry(0.1, 0.055, 0.2), new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.6, metalness: 0.1 }), rKnee, 0, -0.32, 0.05);
+
+  group.castShadow = true;
+  scene.add(group);
+
+  // Store references for animation
+  group.userData = {
+    spine,
+    headGroup,
+    lArm,
+    rArm,
+    lElbow,
+    rElbow,
+    lHand,
+    rHand,
+    jawGroup,
+    lowerLip,
+    hips,
+    lThigh,
+    rThigh
+  };
+
+  return group;
+}
+
+// ── Build Kevin ──
+kevin = buildProceduralKevin();
+scene.add(kevin);
+
+// Hide loading overlay
+setTimeout(() => {
+  const loading = document.getElementById('kevin-loading');
+  loading.style.opacity = '0';
+  loading.style.transition = 'opacity 0.8s';
+  setTimeout(() => loading.style.display = 'none', 800);
+}, 800);
+
+// ═══════════════════════════════════════════════════════════════
+// KEVIN STATE MACHINE
+// ═══════════════════════════════════════════════════════════════
+function setKevinState(state) {
+  animState = state;
+  const badge = document.getElementById('kevin-state-badge');
+
+  const stateMap = {
+    idle:     { label: 'Idle',      color: 'rgba(201,168,76,0.15)',   border: 'rgba(201,168,76,0.25)' },
+    thinking: { label: 'Thinking',  color: 'rgba(100,140,200,0.15)',  border: 'rgba(100,140,200,0.3)' },
+    warning:  { label: 'Blocked',   color: 'rgba(192,57,43,0.15)',    border: 'rgba(192,57,43,0.35)' },
+    affirm:   { label: 'Confirmed', color: 'rgba(39,174,96,0.15)',    border: 'rgba(39,174,96,0.3)' },
+    handoff:  { label: 'Handoff',   color: 'rgba(150,90,200,0.15)',   border: 'rgba(150,90,200,0.3)' },
+  };
+
+  const s = stateMap[state] || stateMap.idle;
+  badge.textContent = s.label;
+  badge.style.background = s.color;
+  badge.style.borderColor = s.border;
+
+  // Set target pose
+  switch(state) {
+    case 'idle':
+      targetPose = { spineX: 0, headY: 0, headX: 0, rArmZ: -0.2, rArmX: 0.1, lArmZ: 0.2, lHandY: 0, bodyBob: 1 };
+      break;
+    case 'thinking':
+      targetPose = { spineX: -0.04, headY: 0.12, headX: 0.08, rArmZ: -0.5, rArmX: 0.8, lArmZ: 0.2, lHandY: 0, bodyBob: 0.3 };
+      break;
+    case 'warning':
+      targetPose = { spineX: 0.02, headY: 0, headX: -0.05, rArmZ: -0.15, rArmX: 0.0, lArmZ: 0.15, lHandY: 0, bodyBob: 0.2 };
+      break;
+    case 'affirm':
+      targetPose = { spineX: 0, headY: 0, headX: 0, rArmZ: -0.3, rArmX: -0.1, lArmZ: 0.3, lHandY: 0, bodyBob: 0.8 };
+      break;
+    case 'handoff':
+      // Pointing left (toward task list)
+      targetPose = { spineX: -0.05, headY: -0.2, headX: 0, rArmZ: -1.2, rArmX: -0.3, lArmZ: 0.2, lHandY: 0, bodyBob: 0.5 };
+      break;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ANIMATION LOOP
+// ═══════════════════════════════════════════════════════════════
+const clock = new THREE.Clock();
+let gazeAngle = 0;
+let gazeTarget = 0;
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+function animate() {
+  requestAnimationFrame(animate);
+  const delta = clock.getDelta();
+  animTime += delta;
+
+  if (!kevin) { renderer.render(scene, camera); return; }
+
+  const u = kevin.userData;
+  const lerpSpeed = delta * 3.5;
+
+  // ── Lerp poses ──
+  for (const key in currentPose) {
+    currentPose[key] = lerp(currentPose[key], targetPose[key], lerpSpeed);
+  }
+
+  // ── Idle breathing / bob ──
+  const breathAmt = currentPose.bodyBob;
+  const breathY = Math.sin(animTime * 1.2) * 0.006 * breathAmt;
+  const breathZ = Math.sin(animTime * 0.6) * 0.003 * breathAmt;
+  u.spine.position.y = breathY;
+  u.spine.rotation.z = breathZ;
+
+  // ── Head sway ──
+  const headSway = Math.sin(animTime * 0.7) * 0.012 * breathAmt;
+  u.headGroup.rotation.y = currentPose.headY + headSway;
+  u.headGroup.rotation.x = currentPose.headX;
+
+  // ── Spine ──
+  u.spine.rotation.x = currentPose.spineX;
+
+  // ── Right arm ──
+  u.rArm.rotation.z = currentPose.rArmZ;
+  u.rArm.rotation.x = currentPose.rArmX;
+
+  // ── Left arm slight idle swing ──
+  const lArmSwing = animState === 'idle' ? Math.sin(animTime * 1.2 + 1) * 0.04 : 0;
+  u.lArm.rotation.z = currentPose.lArmZ + lArmSwing;
+
+  // ── Gaze — follow task area (slightly left) ──
+  gazeTarget = animState === 'handoff' ? -0.25 : -0.08;
+  gazeAngle = lerp(gazeAngle, gazeTarget, delta * 2);
+  u.headGroup.rotation.y += gazeAngle * 0.2;
+
+  // ── Mouth lipsync ──
+  if (mouthAnimActive) {
+    mouthTime += delta * 14;
+    const openAmt = Math.abs(Math.sin(mouthTime)) * 0.022;
+    u.jawGroup.rotation.x = openAmt * 1.2;
+    u.jawGroup.position.z = 0.11 + openAmt * 0.5;
+  } else {
+    u.jawGroup.rotation.x = lerp(u.jawGroup.rotation.x, 0, delta * 8);
+    u.jawGroup.position.z = lerp(u.jawGroup.position.z, 0.11, delta * 8);
+  }
+
+  // ── Thinking: hand to chin gesture (rArm) ──
+  if (animState === 'thinking') {
+    const chinTouch = Math.sin(animTime * 2) * 0.04;
+    u.rElbow.rotation.x = lerp(u.rElbow.rotation.x, -1.0 + chinTouch, lerpSpeed);
+  } else {
+    u.rElbow.rotation.x = lerp(u.rElbow.rotation.x, 0, lerpSpeed * 0.5);
+  }
+
+  // ── Pointing: rArm fully extended ──
+  if (animState === 'handoff') {
+    u.rElbow.rotation.x = lerp(u.rElbow.rotation.x, 0, lerpSpeed);
+  }
+
+  // ── Leg micro-weight-shift (idle only) ──
+  if (animState === 'idle') {
+    const weightShift = Math.sin(animTime * 0.4) * 0.015;
+    u.lThigh.position.x = -0.1 + weightShift;
+    u.rThigh.position.x = 0.1 + weightShift * 0.5;
+    u.hips.rotation.z = weightShift * 0.5;
+  }
+
+  renderer.render(scene, camera);
+}
+
+// ── Resize handler ──
+function onResize() {
+  const w = container.offsetWidth;
+  const h = container.offsetHeight;
+  renderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', onResize);
+onResize();
+animate();
+
+// ═══════════════════════════════════════════════════════════════
+// BOOT SEQUENCE
+// ═══════════════════════════════════════════════════════════════
+function bootKevin() {
+  // Load voices first (some browsers need a delay)
+  const doGreet = () => {
+    const greeting = rooms[currentRoomKey].kevinLine;
+    setSpeechText(greeting);
+    setKevinState('idle');
+    setTimeout(() => {
+      speak(greeting);
+      resetIdleTimer();
+    }, 600);
+  };
+
+  if (synth.getVoices().length > 0) {
+    doGreet();
+  } else {
+    synth.addEventListener('voiceschanged', doGreet, { once: true });
+    // Fallback if voiceschanged never fires
+    setTimeout(doGreet, 1200);
+  }
+}
+
+// Small delay to let Three.js settle
+setTimeout(bootKevin, 1000);
+
+</script>
+</body>
+</html>

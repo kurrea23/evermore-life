@@ -13,7 +13,8 @@ v2/
 │   └── _footer.html    ← Global footer block (copy-paste into any page)
 └── pages/
     ├── index.html      ← Homepage
-    └── optin.html      ← Quote / lead capture page
+    ├── optin.html      ← Quote / lead capture page
+    └── sarah.html      ← Standalone Sarah AI guide, available at /sarah
 ```
 
 ## How to patch a section
@@ -51,3 +52,7 @@ Edit `shared/_tokens.css` only. The `--gold`, `--navy`, etc. variables cascade t
 2. Enable GitHub Pages on the `main` branch → `01_website/v2/pages/` as root
 3. Point A2P reviewers at the GitHub Pages URL
 4. Later: rebuild sections inside GHL using these blocks as the design spec
+
+## Sarah standby page
+
+`pages/sarah.html` is the loadable Sarah AI guide while A2P SMS approval is blocked. It runs with scripted fallback responses, keeps the Claude/API and GHL webhook hooks disabled until real backend endpoints are connected, and preserves demo lead submissions in browser local storage under `evermore-sarah-standby-leads`.

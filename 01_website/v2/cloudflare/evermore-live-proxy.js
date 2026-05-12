@@ -1,6 +1,8 @@
 const PAGES_ORIGIN = "evermore-life.pages.dev";
 const APEX_HOST = "evermorelife.org";
 const DASHBOARD_ASSET_PATH = "/EVERMORE_COCKPIT_v2.html";
+const SARAH_ASSET_PATH = "/Sarah_Evermore_AI_v2.html";
+const KEVIN_ASSET_PATH = "/kevin_v2.html";
 const DASHBOARD_COOKIE_NAME = "__Host-evermore_dashboard";
 const DASHBOARD_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const COCKPIT_STATE_KEY = "cockpit-v2-state";
@@ -10,6 +12,8 @@ const CLEAN_REDIRECTS = new Map([
   ["/optin.html", "/optin"],
   ["/get-quote", "/optin"],
   ["/chat.html", "/chat"],
+  ["/sarah.html", "/sarah"],
+  ["/kevin.html", "/kevin"],
   ["/privacy.html", "/privacy"],
   ["/terms.html", "/terms"],
   ["/thank-you.html", "/thank-you"],
@@ -25,6 +29,10 @@ const CLEAN_REDIRECTS = new Map([
   ["/01_website/v2/pages/optin.html", "/optin"],
   ["/01_website/v2/pages/chat", "/chat"],
   ["/01_website/v2/pages/chat.html", "/chat"],
+  ["/01_website/v2/pages/sarah", "/sarah"],
+  ["/01_website/v2/pages/sarah.html", "/sarah"],
+  ["/01_website/experiments/kevin_v2", "/kevin"],
+  ["/01_website/experiments/kevin_v2.html", "/kevin"],
   ["/01_website/v2/pages/privacy", "/privacy"],
   ["/01_website/v2/pages/privacy.html", "/privacy"],
   ["/01_website/v2/pages/terms", "/terms"],
@@ -39,6 +47,7 @@ const PUBLIC_ROUTES = new Map([
   ["/terms", "/01_website/v2/pages/terms"],
   ["/optin", "/01_website/v2/pages/optin"],
   ["/chat", "/01_website/v2/pages/chat"],
+  ["/sarah", "/01_website/v2/pages/sarah"],
   ["/thank-you", "/01_website/v2/pages/thank-you"],
   ["/404", "/01_website/v2/pages/404"],
 ]);
@@ -60,6 +69,10 @@ export default {
       return handleCockpitState(request, env);
     }
 
+    if (incomingUrl.pathname === "/api/kevin-chat") {
+      return handleKevinChat(request, env);
+    }
+
     const cleanPath = CLEAN_REDIRECTS.get(incomingUrl.pathname);
     if (cleanPath) {
       incomingUrl.pathname = cleanPath;
@@ -69,6 +82,15 @@ export default {
     const dashboardResponse = await maybeHandleDashboard(request, env, incomingUrl);
     if (dashboardResponse) {
       return dashboardResponse;
+    }
+
+    const kevinResponse = await maybeHandleKevin(request, env, incomingUrl);
+    if (kevinResponse) {
+      return kevinResponse;
+    }
+
+    if (incomingUrl.pathname === "/sarah" || incomingUrl.pathname === "/sarah/") {
+      return serveSarahAsset(request, env);
     }
 
     const upstreamUrl = new URL(request.url);
@@ -136,6 +158,25 @@ async function maybeHandleDashboard(request, env, incomingUrl) {
   return serveDashboardAsset(request, env);
 }
 
+async function maybeHandleKevin(request, env, incomingUrl) {
+  if (incomingUrl.pathname !== "/kevin" && incomingUrl.pathname !== "/kevin/") {
+    return null;
+  }
+
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    return new Response("Method not allowed", {
+      status: 405,
+      headers: privateHeaders({ allow: "GET, HEAD" }),
+    });
+  }
+
+  if (!(await isDashboardAuthenticated(request, env))) {
+    return serveDashboardLogin();
+  }
+
+  return serveKevinAsset(request, env);
+}
+
 async function handleCockpitState(request, env) {
   if (!env.COCKPIT_STATE) {
     return jsonResponse({ error: "Cockpit state storage is not configured." }, 503);
@@ -169,6 +210,109 @@ async function handleCockpitState(request, env) {
   const nextState = normalizeCockpitState(body);
   await env.COCKPIT_STATE.put(COCKPIT_STATE_KEY, JSON.stringify(nextState));
   return jsonResponse(nextState);
+}
+
+async function handleKevinChat(request, env) {
+  if (request.method !== "POST") {
+    return jsonResponse({ error: "Method not allowed." }, 405, false, { allow: "POST" });
+  }
+
+  if (!(await isDashboardAuthenticated(request, env))) {
+    return jsonResponse({ error: "Login required." }, 401);
+  }
+
+  const apiKey = readSecret(env, "OPENAI_API_KEY");
+  if (!apiKey) {
+    return jsonResponse({ error: "Kevin AI is not configured yet." }, 503);
+  }
+
+  const bodyText = await request.text();
+  if (bodyText.length > 50000) {
+    return jsonResponse({ error: "Message is too large." }, 413);
+  }
+
+  let body;
+  try {
+    body = JSON.parse(bodyText || "{}");
+  } catch {
+    return jsonResponse({ error: "Invalid JSON." }, 400);
+  }
+
+  const message = String(body.message || "").trim();
+  if (!message) {
+    return jsonResponse({ error: "Message is required." }, 400);
+  }
+
+  const history = Array.isArray(body.history) ? body.history.slice(-8) : [];
+  const cockpitState = await readCockpitStateForKevin(env);
+  const prompt = buildKevinPrompt(message, history, cockpitState);
+
+  const openAiResponse = await fetch("https://api.openai.com/v1/responses", {
+    method: "POST",
+    headers: {
+      "authorization": `Bearer ${apiKey}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      model: readSecret(env, "OPENAI_MODEL") || "gpt-4.1-mini",
+      instructions: [
+        "You are Kevin, the private Evermore Life project manager.",
+        "Keep the operator focused on the next concrete action.",
+        "Use the cockpit state as context, but clearly separate verified facts from stale or documented-only status.",
+        "Do not claim a deployment, A2P approval, lead submission, workflow publish, or live result is complete unless the provided state explicitly proves it.",
+        "Kevin is read-only in this version. Do not say you updated the dashboard, marked tasks done, sent messages, or changed external systems.",
+        "Keep replies concise, practical, and direct. Prefer a short next-action list when useful.",
+        "Do not provide legal, tax, carrier-compliance, or insurance advice as fact; suggest checking the relevant official source or human owner when needed.",
+      ].join(" "),
+      input: prompt,
+      max_output_tokens: 650,
+    }),
+  });
+
+  const data = await openAiResponse.json().catch(() => null);
+  if (!openAiResponse.ok) {
+    return jsonResponse({
+      error: "Kevin AI request failed.",
+      detail: data && data.error && data.error.message ? data.error.message : "OpenAI returned an error.",
+    }, 502);
+  }
+
+  return jsonResponse({ reply: extractOpenAIText(data) || "I heard you. The next move is to verify the dashboard state and choose the next concrete action." });
+}
+
+async function readCockpitStateForKevin(env) {
+  if (!env.COCKPIT_STATE) return null;
+  try {
+    return await env.COCKPIT_STATE.get(COCKPIT_STATE_KEY, "json");
+  } catch {
+    return null;
+  }
+}
+
+function buildKevinPrompt(message, history, cockpitState) {
+  return JSON.stringify({
+    user_message: message,
+    recent_history: history.map((item) => ({
+      role: String(item.role || "").slice(0, 20),
+      content: String(item.content || "").slice(0, 1200),
+    })),
+    cockpit_state: cockpitState || defaultCockpitState(),
+  });
+}
+
+function extractOpenAIText(data) {
+  if (!data || typeof data !== "object") return "";
+  if (typeof data.output_text === "string") return data.output_text.trim();
+  if (!Array.isArray(data.output)) return "";
+
+  const chunks = [];
+  for (const item of data.output) {
+    if (!item || !Array.isArray(item.content)) continue;
+    for (const part of item.content) {
+      if (part && typeof part.text === "string") chunks.push(part.text);
+    }
+  }
+  return chunks.join("").trim();
 }
 
 function defaultCockpitState() {
@@ -252,6 +396,47 @@ async function serveDashboardAsset(request, env) {
 
   const headers = privateHeaders(assetResponse.headers, { html: true });
   headers.set("x-evermore-deployment", "cloudflare-dashboard");
+  return new Response(request.method === "HEAD" ? null : assetResponse.body, {
+    status: 200,
+    headers,
+  });
+}
+
+async function serveSarahAsset(request, env) {
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    return new Response("Method not allowed", {
+      status: 405,
+      headers: responseHeaders(new Headers({ allow: "GET, HEAD" })),
+    });
+  }
+
+  const assetResponse = await env.DASHBOARD_ASSETS.fetch(`https://dashboard-assets.local${SARAH_ASSET_PATH}`);
+  if (!assetResponse.ok) {
+    return new Response("Sarah is temporarily unavailable.", {
+      status: 502,
+      headers: responseHeaders(new Headers()),
+    });
+  }
+
+  const headers = responseHeaders(assetResponse.headers, { html: true });
+  headers.set("x-evermore-deployment", "cloudflare-sarah-standby");
+  return new Response(request.method === "HEAD" ? null : assetResponse.body, {
+    status: 200,
+    headers,
+  });
+}
+
+async function serveKevinAsset(request, env) {
+  const assetResponse = await env.DASHBOARD_ASSETS.fetch(`https://dashboard-assets.local${KEVIN_ASSET_PATH}`);
+  if (!assetResponse.ok) {
+    return new Response("Kevin is temporarily unavailable.", {
+      status: 502,
+      headers: privateHeaders(),
+    });
+  }
+
+  const headers = privateHeaders(assetResponse.headers, { html: true });
+  headers.set("x-evermore-deployment", "cloudflare-kevin-private");
   return new Response(request.method === "HEAD" ? null : assetResponse.body, {
     status: 200,
     headers,
@@ -381,6 +566,9 @@ function serveRobots() {
     "Disallow: /dashboard/",
     "Disallow: /dashboard/login",
     "Disallow: /dashboard/logout",
+    "Disallow: /kevin",
+    "Disallow: /kevin/",
+    "Disallow: /api/kevin-chat",
     "Allow: /",
     "Sitemap: https://evermorelife.org/sitemap.xml",
     "",
