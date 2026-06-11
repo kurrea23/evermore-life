@@ -1,0 +1,91 @@
+/* ============================================================
+   EVERMORE LIFE — DESIGN TOKENS
+   Global CSS custom properties. Import this in every page.
+   To update brand colors/fonts site-wide, edit ONLY this file.
+   ============================================================ */
+
+:root {
+  /* Brand Colors */
+  --navy:        #0d1b4b;
+  --navy-deep:   #091238;
+  --navy-mid:    #1a3070;
+  --gold:        #c8a96e;
+  --gold-dark:   #b8934f;
+  --gold-light:  #dfc28a;
+
+  /* Neutrals */
+  --white:       #ffffff;
+  --off-white:   #f7f9fc;
+  --border:      #e0e6ef;
+  --text-primary:   #1a1a2e;
+  --text-secondary: #6b7c99;
+  --text-muted:     #9aafce;
+
+  /* Semantic */
+  --success: #22c55e;
+  --warn:    #f59e0b;
+  --error:   #ef4444;
+
+  /* Chart Accents */
+  --chart-blue:  #60a5fa;
+  --chart-green: #34d399;
+  --chart-gold:  var(--gold);
+
+  /* Typography */
+  --font-sans: 'Inter', 'Segoe UI', Arial, sans-serif;
+  --font-size-xs:   0.75rem;
+  --font-size-sm:   0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg:   1.125rem;
+  --font-size-xl:   1.25rem;
+  --font-size-2xl:  1.5rem;
+  --font-size-3xl:  1.875rem;
+  --font-size-4xl:  2.25rem;
+  --font-size-5xl:  3rem;
+
+  /* Spacing */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* Radii */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(13,27,75,0.08);
+  --shadow-md:  0 4px 16px rgba(13,27,75,0.10);
+  --shadow-lg:  0 8px 32px rgba(13,27,75,0.14);
+  --shadow-xl:  0 16px 48px rgba(13,27,75,0.18);
+
+  /* Layout */
+  --max-width:  1100px;
+  --section-padding-y: 80px;
+  --section-padding-x: 40px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-slow: 0.4s ease;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --section-padding-y: 56px;
+    --section-padding-x: 20px;
+    --font-size-5xl: 2rem;
+    --font-size-4xl: 1.75rem;
+    --font-size-3xl: 1.5rem;
+  }
+}

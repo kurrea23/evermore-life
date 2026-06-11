@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  "name": "evermore-retirement-routes",
+  "main": "./retirement-routes.js",
+  "compatibility_date": "2026-06-11",
+  "routes": [
+    {
+      "pattern": "evermorelife.org/retirement*",
+      "zone_name": "evermorelife.org"
+    },
+    {
+      "pattern": "www.evermorelife.org/retirement*",
+      "zone_name": "evermorelife.org"
+    },
+    {
+      "pattern": "evermorelife.org/01_website/retirement-planning-v2/*",
+      "zone_name": "evermorelife.org"
+    },
+    {
+      "pattern": "www.evermorelife.org/01_website/retirement-planning-v2/*",
+      "zone_name": "evermorelife.org"
+    }
+  ]
+}

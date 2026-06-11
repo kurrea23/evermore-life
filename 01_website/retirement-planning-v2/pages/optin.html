@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Request an IUL &amp; Retirement Strategy Review | Evermore Life</title>
+  <meta name="description" content="Request a no-obligation review of IUL, retirement income, mortgage protection, and family life insurance strategies." />
+  <link rel="canonical" href="https://evermorelife.org/retirement/review" />
+  <meta property="og:title" content="Request a Retirement &amp; Protection Strategy Review | Evermore Life" />
+  <meta property="og:description" content="Explore IUL, retirement income, mortgage protection, and family coverage with a licensed independent broker." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://evermorelife.org/retirement/review" />
+  <meta property="og:image" content="https://evermorelife.org/01_website/retirement-planning-v2/assets/og-evermore-life.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Shared Tokens + Base -->
+  <link rel="stylesheet" href="_tokens.css" />
+  <link rel="stylesheet" href="_base.css" />
+
+  <style>
+  /* ============================================================
+     PAGE-LEVEL STYLES — optin.html
+     Sections: nav | optin-hero | form | trust | footer
+     ============================================================ */
+
+  /* ── OPTIN HERO ── */
+  .optin-hero {
+    background: linear-gradient(140deg, var(--navy-deep) 0%, var(--navy-mid) 60%, var(--navy) 100%);
+    padding: 70px var(--section-padding-x) 60px;
+    text-align: center;
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .optin-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(200,169,110,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .optin-eyebrow {
+    display: inline-block;
+    background: rgba(200,169,110,0.15);
+    border: 1px solid rgba(200,169,110,0.3);
+    color: var(--gold);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: var(--radius-full);
+    margin-bottom: var(--space-5);
+  }
+  .optin-hero h1 {
+    font-size: var(--font-size-4xl);
+    font-weight: 900;
+    line-height: 1.12;
+    margin-bottom: var(--space-5);
+    max-width: 640px;
+    margin-inline: auto;
+  }
+  .optin-hero h1 em { font-style: normal; color: var(--gold); }
+  .optin-hero p {
+    font-size: var(--font-size-lg);
+    color: #c8ddf5;
+    max-width: 520px;
+    margin-inline: auto;
+    line-height: 1.7;
+  }
+
+  /* ── FORM SECTION ── */
+  .form-section {
+    padding: var(--section-padding-y) var(--section-padding-x);
+    background: var(--off-white);
+  }
+  .form-layout {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 60px;
+    max-width: var(--max-width);
+    margin-inline: auto;
+    align-items: start;
+  }
+
+  /* Left: bullets */
+  .form-benefits { padding-top: var(--space-4); }
+  .form-benefits h2 {
+    font-size: var(--font-size-3xl);
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1.2;
+    margin-bottom: var(--space-8);
+  }
+  .form-benefits h2 span { color: var(--gold); }
+  .benefit-list { display: flex; flex-direction: column; gap: var(--space-5); margin-bottom: var(--space-10); }
+  .benefit-item { display: flex; gap: var(--space-4); align-items: flex-start; }
+  .benefit-check {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(13,27,75,0.07);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .benefit-check svg { width: 14px; height: 14px; stroke: var(--navy); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .benefit-item p { font-size: var(--font-size-base); color: var(--text-secondary); line-height: 1.6; }
+  .benefit-item strong { color: var(--navy); font-weight: 700; }
+
+  .carriers-badge {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+  }
+  .carriers-badge p {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-4);
+  }
+  .carriers-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .carrier-chip {
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    padding: 5px 14px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  /* Right: Form card */
+  .form-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-10);
+    box-shadow: var(--shadow-xl);
+    position: sticky;
+    top: 84px;
+  }
+  .form-card-header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+  }
+  .form-card-header h3 {
+    font-size: var(--font-size-2xl);
+    font-weight: 900;
+    color: var(--navy);
+    margin-bottom: var(--space-2);
+  }
+  .form-card-header p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+  }
+
+  /* GHL embed container */
+  .ghl-embed {
+    width: 100%;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .ghl-embed iframe {
+    display: block;
+    width: 100%;
+    border: none;
+  }
+
+  .form-disclaimer {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: var(--space-4);
+    line-height: 1.6;
+    opacity: 0.75;
+  }
+  .form-disclaimer a { color: var(--text-secondary); font-weight: 700; }
+  .review-standby {
+    min-height: 360px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: var(--space-8);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--off-white);
+  }
+  .review-standby h4 { color: var(--navy); font-size: var(--font-size-xl); margin-bottom: var(--space-3); }
+  .review-standby p { color: var(--text-secondary); line-height: 1.7; margin-bottom: var(--space-6); }
+  .review-standby .btn { width: 100%; justify-content: center; }
+
+  /* ── MINI TRUST BAR ── */
+  .mini-trust {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 28px var(--section-padding-x);
+  }
+  .mini-trust-inner {
+    max-width: 860px;
+    margin-inline: auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+  }
+  .mini-trust-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+  }
+  .mini-trust-item svg { width: 20px; height: 20px; stroke: var(--navy); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .mini-trust-item strong { color: var(--navy); }
+
+  @media (max-width: 900px) {
+    .form-layout {
+      grid-template-columns: 1fr;
+      gap: var(--space-10);
+    }
+    .form-card { position: static; }
+  }
+  @media (max-width: 540px) {
+    .optin-hero { padding: 56px 20px 48px; }
+    .optin-hero h1,
+    .optin-hero p,
+    .optin-eyebrow {
+      max-width: 340px;
+      margin-inline: auto;
+    }
+    .optin-hero h1 {
+      font-size: 1.9rem;
+    }
+    .optin-eyebrow {
+      line-height: 1.55;
+      white-space: normal;
+    }
+    .form-section { padding: 48px 20px; }
+    .form-card { padding: var(--space-6); }
+    .mini-trust-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      justify-items: center;
+      text-align: center;
+    }
+    .mini-trust-item {
+      max-width: 320px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     BLOCK: GLOBAL NAV
+     ============================================================ -->
+<style>
+.site-nav { position: sticky; top: 0; z-index: 200; background: var(--navy); padding: 0 var(--section-padding-x); height: 68px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 12px rgba(0,0,0,0.18); }
+.nav-logo { display: flex; align-items: center; flex-shrink: 0; }
+.nav-logo img { display: block; width: auto; height: 62px; }
+.nav-links { display: flex; align-items: center; gap: var(--space-8); }
+.nav-links a { color: var(--text-muted); font-size: var(--font-size-sm); font-weight: 500; transition: color var(--transition-fast); }
+.nav-links a:hover, .nav-links a.is-active { color: var(--gold); }
+.nav-cta { background: var(--gold); color: var(--navy); padding: 10px 22px; border-radius: var(--radius-sm); font-size: var(--font-size-sm); font-weight: 800; transition: background var(--transition-fast); flex-shrink: 0; }
+.nav-cta:hover { background: var(--gold-dark); }
+.nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: var(--space-2); background: none; border: none; }
+.nav-toggle span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; }
+@media (max-width: 768px) {
+  .site-nav { padding: 0 20px; height: 60px; }
+  .nav-logo img { height: 48px; }
+  .nav-links { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--navy-deep); flex-direction: column; padding: var(--space-6); gap: var(--space-5); border-top: 1px solid rgba(255,255,255,0.08); box-shadow: var(--shadow-lg); }
+  .nav-links.open { display: flex; }
+  .nav-links a { font-size: var(--font-size-base); color: var(--white); }
+  .nav-toggle { display: flex; }
+}
+</style>
+<nav class="site-nav" role="navigation" aria-label="Main navigation">
+  <a href="index.html" class="nav-logo" aria-label="Evermore Life home">
+    <img src="../assets/evermorelife-llc-logo-nav.png" alt="Evermore Life LLC" />
+  </a>
+  <ul class="nav-links" id="navLinks" role="list">
+    <li><a href="index.html#products">Products</a></li>
+    <li><a href="index.html#how-it-works">How It Works</a></li>
+    <li><a href="index.html#why-us">Why Us</a></li>
+    <li><a href="tel:+15055043101">(505) 504-3101</a></li>
+  </ul>
+  <a href="tel:+15055043101" class="nav-cta">Call Us →</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<!-- END BLOCK: GLOBAL NAV -->
+
+
+<!-- ============================================================
+     BLOCK: OPTIN HERO
+     ============================================================ -->
+<section class="optin-hero" aria-label="Get a free quote">
+  <div class="optin-eyebrow">Free · No Obligation · Built Around Your Goals</div>
+  <h1>Request Your <em>Free Strategy Review</em></h1>
+  <p>Tell us what you are planning for and a licensed agent will help you compare retirement and family-protection options. No pressure, no commitment.</p>
+</section>
+<!-- END BLOCK: OPTIN HERO -->
+
+
+<!-- ============================================================
+     BLOCK: MINI TRUST BAR
+     ============================================================ -->
+<div class="mini-trust" role="region" aria-label="Trust indicators">
+  <div class="mini-trust-inner">
+    <div class="mini-trust-item">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span><strong>Licensed</strong> independent brokers</span>
+    </div>
+    <div class="mini-trust-item">
+      <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <span><strong>A-rated</strong> carrier partners</span>
+    </div>
+    <div class="mini-trust-item">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span><strong>No obligation</strong> to apply or purchase</span>
+    </div>
+    <div class="mini-trust-item">
+      <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      <span>Your <strong>info is secure</strong> &amp; never sold</span>
+    </div>
+  </div>
+</div>
+<!-- END BLOCK: MINI TRUST BAR -->
+
+
+<!-- ============================================================
+     BLOCK: FORM + BENEFITS
+     ============================================================ -->
+<section class="form-section" aria-label="Quote request form">
+  <div class="form-layout">
+
+    <!-- Left: Benefits -->
+    <div class="form-benefits reveal">
+      <h2>Why families choose<br /><span>Evermore Life</span></h2>
+      <div class="benefit-list">
+        <div class="benefit-item">
+          <div class="benefit-check">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <p><strong>We start with your goals.</strong> Retirement income, family protection, mortgage protection, and legacy planning each require a different approach.</p>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-check">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <p><strong>We compare multiple carriers.</strong> A licensed independent agent can review suitable options and explain the differences side by side.</p>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-check">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <p><strong>No high-pressure sales.</strong> We present your options clearly and let you decide on your own terms.</p>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-check">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <p><strong>Clear tradeoffs, not hype.</strong> We explain policy charges, guarantees, non-guaranteed assumptions, and long-term funding expectations.</p>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-check">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <p><strong>Licensed in multiple states.</strong> Fully compliant, regulated, and accountable agents serving families nationwide.</p>
+        </div>
+      </div>
+
+      <div class="carriers-badge">
+        <p>Carriers we compare</p>
+        <div class="carriers-list">
+          <span class="carrier-chip">Mutual of Omaha</span>
+          <span class="carrier-chip">Ethos Life</span>
+          <span class="carrier-chip">American Amicable</span>
+          <span class="carrier-chip">Transamerica</span>
+          <span class="carrier-chip">Aetna</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Form Card -->
+    <div class="form-card reveal" id="quote-form">
+      <div class="form-card-header">
+        <h3>Request My Free Strategy Review</h3>
+        <p>A licensed agent will reach out to learn about your goals, usually within 1 business day.</p>
+      </div>
+
+      <!-- LAUNCH BLOCKER: connect the separate retirement-planning GHL form here. -->
+      <div class="review-standby">
+        <div>
+          <h4>Online strategy-review requests are coming online.</h4>
+          <p>The retirement-planning intake is being kept separate from our existing quote funnel. Call Evermore Life to start a private, no-pressure conversation with a licensed agent.</p>
+          <a href="tel:+15055043101" class="btn btn-primary">Call (505) 504-3101</a>
+        </div>
+      </div>
+
+      <p class="form-disclaimer">
+        You may request a quote without agreeing to receive text messages. A licensed agent may contact
+        you by phone or email regarding your request. Evermore Life LLC · 4539 N 22nd St, Ste R,
+        Phoenix, AZ 85016 · <a href="tel:+15055043101">(505) 504-3101</a>
+      </p>
+    </div>
+
+  </div>
+</section>
+<!-- END BLOCK: FORM + BENEFITS -->
+
+
+<!-- ============================================================
+     BLOCK: GLOBAL FOOTER
+     ============================================================ -->
+<style>
+.site-footer { background: var(--navy-deep); color: var(--text-muted); padding: 60px var(--section-padding-x) 32px; }
+.footer-grid { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1.4fr; gap: 40px; max-width: var(--max-width); margin-inline: auto; margin-bottom: 48px; }
+.footer-brand-logo { display: inline-flex; align-items: center; width: min(260px, 100%); margin-bottom: var(--space-4); }
+.footer-brand-logo img { display: block; width: 100%; height: auto; object-fit: contain; object-position: left center; filter: drop-shadow(0 0 10px rgba(200,169,110,0.16)); }
+.footer-tagline { font-size: var(--font-size-sm); color: var(--text-muted); line-height: 1.65; max-width: 260px; margin-bottom: var(--space-5); }
+.footer-license { font-size: var(--font-size-xs); color: rgba(154,175,206,0.6); line-height: 1.6; max-width: 280px; }
+.footer-col-title { font-size: var(--font-size-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gold); margin-bottom: var(--space-5); }
+.footer-col a, .footer-col p { display: block; font-size: var(--font-size-sm); color: var(--text-muted); margin-bottom: var(--space-3); line-height: 1.5; transition: color var(--transition-fast); }
+.footer-col a:hover { color: var(--gold); }
+.footer-bottom { max-width: var(--max-width); margin-inline: auto; padding-top: var(--space-6); border-top: 1px solid rgba(255,255,255,0.07); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4); font-size: var(--font-size-xs); color: rgba(154,175,206,0.55); }
+.footer-bottom a { color: rgba(154,175,206,0.55); }
+.footer-bottom a:hover { color: var(--gold); }
+.footer-legal-links { display: flex; gap: var(--space-5); flex-wrap: wrap; }
+@media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 540px) { .footer-grid { grid-template-columns: 1fr; } .site-footer { padding: 48px 20px 28px; } }
+</style>
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-grid">
+    <div>
+      <a href="index.html" class="footer-brand-logo" aria-label="Evermore Life home">
+        <img src="../assets/evermorelife-llc-logo-nav.png" alt="Evermore Life LLC" />
+      </a>
+      <p class="footer-tagline">Independent life insurance brokerage helping families protect what matters most.</p>
+      <p class="footer-license">Evermore Life LLC is a licensed independent insurance agency. We represent multiple carriers and are not captive to any single insurer. Products and availability vary by state.</p>
+    </div>
+    <div>
+      <p class="footer-col-title">Products</p>
+      <div class="footer-col">
+        <a href="index.html#products">Retirement Income Planning</a>
+        <a href="index.html#products">Term Life</a>
+        <a href="index.html#products">Indexed Universal Life</a>
+        <a href="index.html#products">Whole Life</a>
+        <a href="index.html#products">Mortgage Protection</a>
+        <a href="index.html#products">Annuities</a>
+      </div>
+    </div>
+    <div>
+      <p class="footer-col-title">Company</p>
+      <div class="footer-col">
+        <a href="index.html#why-us">About Us</a>
+        <a href="optin.html">Strategy Review</a>
+        <a href="optin.html">Review &amp; SMS Consent</a>
+      </div>
+    </div>
+    <div>
+      <p class="footer-col-title">Contact</p>
+      <div class="footer-col">
+        <p>Evermore Life LLC<br>4539 N 22nd St, Ste R<br>Phoenix, AZ 85016</p>
+        <a href="tel:+15055043101">+1 (505) 504-3101</a>
+        <a href="mailto:evermorelifeagent01@gmail.com">evermorelifeagent01@gmail.com</a>
+        <a href="optin.html">Request a Callback</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Evermore Life LLC. All rights reserved.</span>
+    <div class="footer-legal-links">
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+    </div>
+  </div>
+</footer>
+<!-- END BLOCK: GLOBAL FOOTER -->
+
+<div class="mobile-cta-bar" role="region" aria-label="Quick contact actions">
+  <a href="tel:+15055043101" class="mobile-cta-call">Call Us</a>
+  <a href="#quote-form" class="mobile-cta-quote" aria-label="Request a free strategy review">Review</a>
+</div>
+
+<script>
+/* ── Scroll reveal ── */
+(function() {
+  var els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('visible'); });
+    return;
+  }
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(function(el) { obs.observe(el); });
+})();
+
+/* ── Nav hamburger ── */
+(function() {
+  var toggle = document.getElementById('navToggle');
+  var links  = document.getElementById('navLinks');
+  if (!toggle || !links) return;
+  toggle.addEventListener('click', function() {
+    var open = links.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open);
+  });
+  links.querySelectorAll('a').forEach(function(a) {
+    a.addEventListener('click', function() {
+      links.querySelectorAll('a').forEach(function(link) { link.classList.remove('is-active'); });
+      a.classList.add('is-active');
+      links.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
