@@ -75,6 +75,10 @@ export default {
       return handleCockpitState(request, env);
     }
 
+    if (incomingUrl.pathname === "/api/cockpit-update") {
+      return handleCockpitUpdate(request, env);
+    }
+
     if (incomingUrl.pathname === "/api/kevin-chat") {
       return handleKevinChat(request, env);
     }
@@ -193,8 +197,8 @@ async function handleCockpitState(request, env) {
   }
 
   if (request.method === "GET" || request.method === "HEAD") {
-    const state = await env.COCKPIT_STATE.get(COCKPIT_STATE_KEY, "json");
-    return jsonResponse(state || defaultCockpitState(), 200, request.method === "HEAD");
+    const storedState = await env.COCKPIT_STATE.get(COCKPIT_STATE_KEY, "json");
+    return jsonResponse(withLegacyAliases(normalizeCockpitState(storedState)), 200, request.method === "HEAD");
   }
 
   if (request.method !== "POST") {
@@ -213,9 +217,55 @@ async function handleCockpitState(request, env) {
     return jsonResponse({ error: "Invalid JSON." }, 400);
   }
 
-  const nextState = normalizeCockpitState(body);
+  const currentState = normalizeCockpitState(await env.COCKPIT_STATE.get(COCKPIT_STATE_KEY, "json"));
+  const legacyBrief = objectOrEmpty(objectOrEmpty(body.main).dailyBrief);
+  const nextState = {
+    ...currentState,
+    version: 2,
+    generated: legacyBrief.text
+      ? mergeLegacyBrief(currentState.generated, legacyBrief)
+      : currentState.generated,
+    user: normalizeUserState(body.user || legacyUserState(body)),
+    updatedAt: new Date().toISOString(),
+  };
   await env.COCKPIT_STATE.put(COCKPIT_STATE_KEY, JSON.stringify(nextState));
-  return jsonResponse(nextState);
+  return jsonResponse(withLegacyAliases(nextState));
+}
+
+async function handleCockpitUpdate(request, env) {
+  if (!env.COCKPIT_STATE) {
+    return jsonResponse({ error: "Cockpit state storage is not configured." }, 503);
+  }
+
+  if (!(await isDashboardAuthenticated(request, env))) {
+    return jsonResponse({ error: "Login required." }, 401);
+  }
+
+  if (request.method !== "POST") {
+    return jsonResponse({ error: "Method not allowed." }, 405, false, { allow: "POST" });
+  }
+
+  const bodyText = await request.text();
+  if (bodyText.length > 250000) {
+    return jsonResponse({ error: "Cockpit update is too large." }, 413);
+  }
+
+  let body;
+  try {
+    body = JSON.parse(bodyText || "{}");
+  } catch {
+    return jsonResponse({ error: "Invalid JSON." }, 400);
+  }
+
+  const currentState = normalizeCockpitState(await env.COCKPIT_STATE.get(COCKPIT_STATE_KEY, "json"));
+  const nextState = {
+    ...currentState,
+    version: 2,
+    generated: normalizeGeneratedState(body.generated || body),
+    updatedAt: new Date().toISOString(),
+  };
+  await env.COCKPIT_STATE.put(COCKPIT_STATE_KEY, JSON.stringify(nextState));
+  return jsonResponse(withLegacyAliases(nextState));
 }
 
 async function handleKevinChat(request, env) {
@@ -323,25 +373,177 @@ function extractOpenAIText(data) {
 
 function defaultCockpitState() {
   return {
-    version: 1,
-    main: {},
-    projects: {},
+    version: 2,
+    generated: normalizeGeneratedState({}),
+    user: normalizeUserState({}),
     updatedAt: new Date().toISOString(),
   };
 }
 
 function normalizeCockpitState(body) {
-  const state = defaultCockpitState();
-  if (body && typeof body === "object") {
-    if (body.main && typeof body.main === "object" && !Array.isArray(body.main)) {
-      state.main = body.main;
-    }
-    if (body.projects && typeof body.projects === "object" && !Array.isArray(body.projects)) {
-      state.projects = body.projects;
-    }
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return defaultCockpitState();
   }
-  state.updatedAt = new Date().toISOString();
-  return state;
+
+  if (body.version === 2 || body.generated || body.user) {
+    return {
+      version: 2,
+      generated: normalizeGeneratedState(body.generated),
+      user: normalizeUserState(body.user),
+      updatedAt: cleanString(body.updatedAt) || new Date().toISOString(),
+    };
+  }
+
+  const main = objectOrEmpty(body.main);
+  const dailyBrief = objectOrEmpty(main.dailyBrief);
+  const legacyMain = { ...main };
+  delete legacyMain.dailyBrief;
+  delete legacyMain.__wins;
+
+  return {
+    version: 2,
+    generated: normalizeGeneratedState({
+      briefText: dailyBrief.text,
+      generatedAt: dailyBrief.updatedAt || body.updatedAt,
+      generatedBy: "legacy-state-migration",
+    }),
+    user: normalizeUserState({
+      main: legacyMain,
+      projects: body.projects,
+      wins: main.__wins,
+    }),
+    updatedAt: cleanString(body.updatedAt) || new Date().toISOString(),
+  };
+}
+
+function legacyUserState(body) {
+  if (!body || typeof body !== "object" || Array.isArray(body)) return {};
+  const main = { ...objectOrEmpty(body.main) };
+  const wins = Array.isArray(main.__wins) ? main.__wins : body.wins;
+  delete main.dailyBrief;
+  delete main.__wins;
+  return {
+    main,
+    projects: body.projects,
+    wins,
+  };
+}
+
+function withLegacyAliases(state) {
+  const generated = normalizeGeneratedState(state.generated);
+  const user = normalizeUserState(state.user);
+  return {
+    ...state,
+    main: {
+      ...user.main,
+      dailyBrief: {
+        text: briefText(generated.brief),
+        updatedAt: generated.generatedAt,
+      },
+      __wins: user.wins,
+    },
+    projects: user.projects,
+  };
+}
+
+function mergeLegacyBrief(currentGenerated, legacyBrief) {
+  const generated = normalizeGeneratedState(currentGenerated);
+  const parsed = parseBriefText(cleanString(legacyBrief.text));
+  return normalizeGeneratedState({
+    ...generated,
+    brief: {
+      today: parsed.today || generated.brief.today,
+      done: parsed.done || generated.brief.done,
+      next: parsed.next || generated.brief.next,
+      blockers: parsed.blockers || generated.brief.blockers,
+    },
+    generatedAt: cleanString(legacyBrief.updatedAt) || new Date().toISOString(),
+    generatedBy: "legacy-dashboard-edit",
+  });
+}
+
+function briefText(brief) {
+  const value = objectOrEmpty(brief);
+  return [
+    `Today: ${cleanString(value.today)}`,
+    `Done: ${cleanString(value.done)}`,
+    `Next: ${cleanString(value.next)}`,
+    `Blockers: ${cleanString(value.blockers)}`,
+  ].join(" ");
+}
+
+function normalizeGeneratedState(value) {
+  const source = objectOrEmpty(value);
+  const parsedBrief = parseBriefText(cleanString(source.briefText));
+  const providedBrief = objectOrEmpty(source.brief);
+  const generatedAt = cleanString(source.generatedAt) || cleanString(providedBrief.updatedAt) || "";
+
+  return {
+    date: cleanString(source.date),
+    mission: cleanString(source.mission),
+    nextAction: cleanString(source.nextAction),
+    brief: {
+      today: cleanString(providedBrief.today) || parsedBrief.today,
+      done: cleanString(providedBrief.done) || parsedBrief.done,
+      next: cleanString(providedBrief.next) || parsedBrief.next,
+      blockers: cleanString(providedBrief.blockers) || parsedBrief.blockers,
+    },
+    priorities: stringArray(source.priorities, 5),
+    schedule: stringArray(source.schedule, 20),
+    followUps: stringArray(source.followUps, 20),
+    risks: stringArray(source.risks, 20),
+    sources: normalizeSources(source.sources),
+    generatedAt,
+    generatedBy: cleanString(source.generatedBy),
+  };
+}
+
+function normalizeUserState(value) {
+  const source = objectOrEmpty(value);
+  return {
+    main: objectOrEmpty(source.main),
+    projects: objectOrEmpty(source.projects),
+    wins: Array.isArray(source.wins) ? source.wins.slice(0, 50) : [],
+  };
+}
+
+function normalizeSources(value) {
+  const source = objectOrEmpty(value);
+  return {
+    gmail: cleanString(source.gmail) || "not-scanned",
+    calendar: cleanString(source.calendar) || "not-scanned",
+    repo: cleanString(source.repo) || "not-scanned",
+    highLevel: cleanString(source.highLevel) || "not-scanned",
+  };
+}
+
+function parseBriefText(text) {
+  const parts = { today: "", done: "", next: "", blockers: "" };
+  const normalized = String(text || "").replace(/\s+/g, " ").trim();
+  const patterns = [
+    ["today", /today:\s*(.*?)(?=\s(done|wins|next|blockers):|$)/i],
+    ["done", /(done|wins):\s*(.*?)(?=\s(today|next|blockers):|$)/i],
+    ["next", /next:\s*(.*?)(?=\s(today|done|wins|blockers):|$)/i],
+    ["blockers", /blockers:\s*(.*?)(?=\s(today|done|wins|next):|$)/i],
+  ];
+  for (const [key, pattern] of patterns) {
+    const match = normalized.match(pattern);
+    if (match) parts[key] = (key === "done" ? match[2] : match[1]).trim();
+  }
+  return parts;
+}
+
+function objectOrEmpty(value) {
+  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+}
+
+function stringArray(value, maxItems) {
+  if (!Array.isArray(value)) return [];
+  return value.map(cleanString).filter(Boolean).slice(0, maxItems);
+}
+
+function cleanString(value) {
+  return typeof value === "string" ? value.trim().slice(0, 5000) : "";
 }
 
 async function handleDashboardLogin(request, env) {

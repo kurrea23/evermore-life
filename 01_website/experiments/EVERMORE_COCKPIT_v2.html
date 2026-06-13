@@ -144,6 +144,30 @@
   .alert-card { border-radius:4px; padding:11px 13px; margin-bottom:10px; }
   .alert-title { font-size:8px; letter-spacing:0.15em; color:var(--orange); font-weight:bold; margin-bottom:5px; }
   .alert-body { font-size:9px; color:var(--text); line-height:1.55; }
+  .daily-source-card { border:1px solid rgba(0,245,255,0.42); background:linear-gradient(135deg,#061521,#0a1b2b); border-radius:5px; padding:12px 14px; margin-bottom:11px; box-shadow:0 0 18px rgba(0,245,255,0.08); }
+  .daily-source-top { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; flex-wrap:wrap; }
+  .daily-source-title { font-size:9px; letter-spacing:0.18em; color:var(--cyan); font-weight:bold; }
+  .daily-source-meta { font-size:7px; letter-spacing:0.12em; color:var(--text-dim); }
+  .daily-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:9px; }
+  .daily-cell { background:rgba(7,9,15,0.55); border:1px solid rgba(201,168,76,0.12); border-radius:3px; padding:7px 8px; min-height:58px; }
+  .daily-cell strong { display:block; font-size:7px; letter-spacing:0.16em; color:var(--gold); margin-bottom:4px; }
+  .daily-cell span { display:block; font-size:8px; color:var(--text); line-height:1.4; }
+  .daily-brief-editor { display:grid; grid-template-columns:1fr auto; gap:6px; align-items:start; }
+  .daily-brief-input { width:100%; min-height:52px; resize:vertical; background:var(--bg); border:1px solid rgba(0,245,255,0.2); border-radius:3px; color:var(--text); font-family:'Courier New',monospace; font-size:8px; line-height:1.45; padding:7px 8px; outline:none; }
+  .daily-brief-input:focus { border-color:var(--cyan); }
+  .edc-brief { background:linear-gradient(135deg,#001a1a,#002222); border:1px solid rgba(0,245,255,0.5); border-radius:5px; padding:10px 13px; margin-bottom:11px; display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:center; }
+  .edc-countdown { font-size:24px; font-weight:900; color:var(--cyan); text-shadow:0 0 14px var(--cyan); letter-spacing:0.08em; white-space:nowrap; }
+  .edc-copy { font-size:8px; color:var(--text); line-height:1.45; }
+  .status-history { background:rgba(201,168,76,0.04); border:1px solid rgba(201,168,76,0.16); border-radius:4px; padding:10px 12px; margin-bottom:10px; }
+  .status-history-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px 12px; font-size:8px; color:var(--text); line-height:1.45; }
+  .wins-card { background:linear-gradient(135deg,#07140c,#0b1b12); border:1px solid rgba(74,222,128,0.22); border-radius:4px; padding:10px 12px; margin-bottom:12px; }
+  .wins-list { display:grid; gap:5px; }
+  .win-entry { font-size:8px; color:var(--text); line-height:1.45; padding:5px 7px; background:rgba(74,222,128,0.05); border:1px solid rgba(74,222,128,0.12); border-radius:3px; }
+  .win-entry strong { color:#4ade80; }
+  .stop-card { border:1px solid rgba(248,113,113,0.28); background:rgba(248,113,113,0.05); border-radius:4px; padding:9px 11px; margin-top:10px; }
+  .stop-line { font-size:8px; color:var(--text); line-height:1.45; padding:5px 0; border-bottom:1px solid rgba(248,113,113,0.1); }
+  .stop-line:last-child { border-bottom:none; }
+  .stop-line strong { color:#F87171; }
 
   /* ─── METRICS ─── */
   .metrics-row { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:14px; }
@@ -306,6 +330,11 @@
     .integrations-grid { grid-template-columns:1fr 1fr; }
     .main-layout { grid-template-columns:1fr; }
     .project-grid { grid-template-columns:1fr; }
+    .daily-grid { grid-template-columns:1fr 1fr; }
+    .daily-brief-editor { grid-template-columns:1fr; }
+    .edc-brief { grid-template-columns:1fr; }
+    .edc-countdown { font-size:20px; }
+    .status-history-grid { grid-template-columns:1fr; }
   }
 </style>
 <meta http-equiv="refresh" content="300">
@@ -330,12 +359,13 @@
 <div class="cockpit-header">
   <div>
     <div class="cockpit-title">⬡ EVERMORE LIFE — MISSION COCKPIT</div>
-    <div class="cockpit-sub">FINAL EXPENSE FUNNEL · v6.1 · A2P BLOCKED ON IRS/CP575 · KEVIN NOT YET DEPLOYED · UPDATES SYNC ACROSS DEVICES</div>
+    <div class="cockpit-sub">FINAL EXPENSE FUNNEL · V2.1 · DAILY SOURCE OF TRUTH · ADS BUILD MOVES WITHOUT SMS · UPDATES SYNC ACROSS DEVICES</div>
   </div>
   <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-    <span class="status-pill pill-alert"><span class="blink">●</span> A2P: IRS BLOCKER</span>
-    <span class="status-pill pill-alert"><span class="blink">●</span> KVN: NOT DEPLOYED</span>
-    <span class="status-pill pill-waiting"><span class="blink">●</span> MACU PAYMENT RETURNED</span>
+    <span class="status-pill pill-waiting"><span class="blink">●</span> A2P: SMS ONLY BLOCKER</span>
+    <span class="status-pill pill-building"><span class="blink">●</span> KEVIN: PRIVATE ROUTE LIVE</span>
+    <span class="status-pill pill-building"><span class="blink">●</span> ADS BUILD: KEEP MOVING</span>
+    <span class="status-pill pill-waiting">🎪 EDC LV</span>
     <div class="cockpit-time" id="clock">--</div>
   </div>
 </div>
@@ -351,9 +381,10 @@
 <div class="stat-bar">
   <div class="stat-item"><div class="stat-val green" id="stat-done">6</div><div class="stat-lbl">STEPS DONE</div></div>
   <div class="stat-item"><div class="stat-val blue" id="stat-left">4</div><div class="stat-lbl">REMAINING</div></div>
-  <div class="stat-item"><div class="stat-val red">⚠</div><div class="stat-lbl">A2P BLOCKED</div></div>
-  <div class="stat-item"><div class="stat-val orange">⚠</div><div class="stat-lbl">KVN DOWN</div></div>
-  <div class="stat-item"><div class="stat-val cyan" id="proj-count">3</div><div class="stat-lbl">ACTIVE PROJECTS</div></div>
+  <div class="stat-item"><div class="stat-val orange">SMS</div><div class="stat-lbl">A2P BLOCKS TEXTING</div></div>
+  <div class="stat-item"><div class="stat-val cyan">✓</div><div class="stat-lbl">KEVIN ROUTE LIVE</div></div>
+  <div class="stat-item"><div class="stat-val cyan" id="edc-days">--</div><div class="stat-lbl">EDC LAS VEGAS</div></div>
+  <div class="stat-item"><div class="stat-val cyan" id="proj-count">4</div><div class="stat-lbl">ACTIVE PROJECTS</div></div>
 </div>
 <div class="progress-section"><div class="progress-fill" id="prog-fill" style="width:60%"></div></div>
 
@@ -367,15 +398,15 @@
   <div class="panel">
     <div class="panel-title">⬡ AGENTS STATUS</div>
 
-    <!-- KVN — NOT DEPLOYED -->
+    <!-- KEVIN — PRIVATE ROUTE LIVE -->
     <div class="agent-card kvn">
-      <div class="agent-dot dot-red"></div>
+      <div class="agent-dot dot-gold"></div>
       <div style="flex:1;">
-        <div class="agent-name red">KVN · NOT DEPLOYED</div>
-        <div class="agent-url">workers.dev — BLANK · NO RESPONSE</div>
-        <div class="agent-note">⚠ workers.dev URL is returning blank. KVN V2 upgrade needs to be pushed. See PROJECTS → KEVIN V2.</div>
+        <div class="agent-name gold">KEVIN · PRIVATE ROUTE LIVE</div>
+        <div class="agent-url">🔒 <a href="https://evermorelife.org/kevin" target="_blank">evermorelife.org/kevin</a></div>
+        <div class="agent-note">Private Kevin route is deployed and protected by dashboard login. Remaining blocker: set <strong style="color:#F87171;">OPENAI_API_KEY</strong> in the Worker, then verify authenticated chat replies.</div>
       </div>
-      <span class="status-pill pill-alert" style="font-size:7px;">⚠ DOWN</span>
+      <span class="status-pill pill-building" style="font-size:7px;">⟳ AI PENDING</span>
     </div>
 
     <!-- SARAH — LIVE -->
@@ -542,9 +573,9 @@
     <div class="step-row" id="step-10">
       <div class="step-num num-pending">10</div>
       <div class="step-content">
-        <div class="step-name">Install Meta Pixel → launch test ad → first sale</div>
-        <div class="step-detail">wire_pixel.sh · small budget, 2-3 creatives, financial special category · Call new leads &lt; 5 min</div>
-        <span class="step-tag tag-you">AFTER A2P APPROVAL</span>
+        <div class="step-name">Install Meta Pixel → build test ad path → first sale</div>
+        <div class="step-detail">wire_pixel.sh · small budget, 2-3 creatives, financial special category · email/chat/call follow-up until SMS clears</div>
+        <span class="step-tag tag-active">BUILD NOW · SMS PLUGS IN LATER</span>
       </div>
     </div>
 
@@ -553,25 +584,65 @@
   <!-- CENTER: ALERTS + METRICS + FUNNEL + ADS -->
   <div class="center-panel">
 
+    <div class="daily-source-card">
+      <div class="daily-source-top">
+        <div>
+          <div class="daily-source-title">⬡ DAILY SOURCE OF TRUTH — V2.1</div>
+          <div class="daily-source-meta">Morning scan + email brief + live cockpit edits all land here. Measure more, manage more.</div>
+        </div>
+        <button class="btn-save-note" onclick="saveDailyBrief()">SAVE BRIEF</button>
+      </div>
+      <div class="daily-grid">
+        <div class="daily-cell"><strong>TODAY</strong><span id="brief-today">GHL workflow, fake-lead test, ad prep, Kevin V2, EDC window.</span></div>
+        <div class="daily-cell"><strong>DONE / WINS</strong><span id="brief-done">Use mark-done notes to create cockpit memory.</span></div>
+        <div class="daily-cell"><strong>NEXT UP</strong><span id="brief-next">Build ads and email/chat/call follow-up while SMS waits.</span></div>
+        <div class="daily-cell"><strong>BLOCKERS</strong><span id="brief-blockers">A2P blocks SMS only. Kevin route is live, but AI chat needs OPENAI_API_KEY. Keep ads buildout moving.</span></div>
+      </div>
+      <div class="daily-brief-editor">
+        <textarea class="daily-brief-input" id="dailyBriefInput" placeholder="Paste or type the morning dashboard email summary here. Keep it short: today, done, next, blockers."></textarea>
+        <button class="btn-add-item" onclick="resetDailyBrief()">RESET</button>
+      </div>
+    </div>
+
+    <div class="edc-brief">
+      <div class="edc-countdown" id="edc-count">--</div>
+      <div class="edc-copy">
+        <strong style="color:var(--cyan);letter-spacing:0.12em;">EDC LAS VEGAS — MAY 15-17, 2026</strong><br>
+        Treat this as the hard pre-EDC push window: ad campaign built, GHL workflow tested, Kevin/Sarah status accurate, and SMS ready to plug in after A2P clears.
+      </div>
+    </div>
+
+    <div class="status-history">
+      <div class="alert-title" style="color:var(--gold);">⬡ RECENT STATUS + HISTORY</div>
+      <div class="status-history-grid">
+        <div><span style="color:#4ade80;">✓</span> evermorelife.org live through Cloudflare Pages / Worker.</div>
+        <div><span style="color:#4ade80;">✓</span> GHL launch kit and fake-lead checklist exist.</div>
+        <div><span style="color:#60a5fa;">•</span> Morning automation emails the dashboard payload to kurrea7@gmail.com.</div>
+        <div><span style="color:#a78bfa;">★</span> Transamerica upline changed to Craig Weinberger.</div>
+        <div><span style="color:var(--orange);">⚠</span> Canonical routes should stay `/thank-you` and `/privacy` unless changed everywhere.</div>
+        <div><span style="color:#F87171;">⚠</span> A2P / CP575 remains the SMS gate, not the ads gate.</div>
+      </div>
+    </div>
+
     <!-- A2P BLOCKER ALERT — RED -->
-    <div class="alert-card" style="border:1px solid rgba(248,113,113,0.5);background:linear-gradient(135deg,#200808,#2a0a0a);">
-      <div class="alert-title" style="color:#F87171;">🚨 A2P BLOCKED — IRS COMPANY NAME MISMATCH</div>
+    <div class="alert-card" style="border:1px solid rgba(249,115,22,0.45);background:linear-gradient(135deg,#1f0d00,#2a1200);">
+      <div class="alert-title" style="color:var(--orange);">⚠ A2P BLOCKED — SMS ONLY, ADS BUILDOUT CONTINUES</div>
       <div class="alert-body">
-        A2P 10DLC registration is blocked because the IRS record still shows the <strong style="color:#F87171;">old company name</strong>. When you changed the company name, the IRS was not updated.<br><br>
+        A2P 10DLC registration is blocked because the IRS record still shows the <strong style="color:#F87171;">old company name</strong>. That blocks marketing SMS, but it does not block building ads, creative, lead forms, email follow-up, chat follow-up, call tasks, or fake-lead testing.<br><br>
         <strong style="color:var(--orange);">WHAT YOU NEED:</strong><br>
         1. Get the <strong style="color:#60a5fa;">CP575 form</strong> from the IRS (EIN confirmation letter with new/correct company name)<br>
         2. If IRS still shows old name → update IRS with new legal company name<br>
         3. Submit all updated paperwork to Go High Level<br>
-        4. GHL confirmed today this is the blocker — must be resolved before A2P can clear.<br><br>
+        4. When approved, plug SMS into the already-tested workflow.<br><br>
         <strong style="color:var(--orange);">IRS contact:</strong> 1-800-829-4933 · Mon–Fri 7AM–7PM local time
       </div>
     </div>
 
     <!-- KVN ALERT -->
     <div class="alert-card" style="border:1px solid rgba(248,113,113,0.4);background:linear-gradient(135deg,#1a0808,#200a0a);">
-      <div class="alert-title" style="color:#F87171;">🚨 KVN NOT DEPLOYED — workers.dev IS BLANK</div>
+      <div class="alert-title" style="color:#F87171;">🚨 KEVIN ROUTE IS LIVE — AI SECRET STILL NEEDED</div>
       <div class="alert-body">
-        Checked workers.dev — blank, no response. KVN is NOT deployed. Need to push the <strong style="color:#60a5fa;">KVN V2 upgrade</strong>. See PROJECTS tab → KEVIN V2 for the full build checklist. This is a parallel track to A2P — can be worked on simultaneously.
+        The private Kevin route is now live at <strong style="color:#60a5fa;">evermorelife.org/kevin</strong> and requires the dashboard login. The remaining task is to add the <strong style="color:#F87171;">OPENAI_API_KEY</strong> Worker secret and verify an authenticated chat reply. This stays parallel to A2P.
       </div>
     </div>
 
@@ -586,7 +657,14 @@
       <div class="metric-card"><div class="metric-val cyan" id="m-leads">0</div><div class="metric-lbl">LEADS CAPTURED</div><div class="metric-sub">LIFETIME</div></div>
       <div class="metric-card"><div class="metric-val green" id="m-appts">0</div><div class="metric-lbl">APPOINTMENTS</div><div class="metric-sub">BOOKED</div></div>
       <div class="metric-card"><div class="metric-val">$0</div><div class="metric-lbl">AD SPEND</div><div class="metric-sub">THIS MONTH</div></div>
-      <div class="metric-card"><div class="metric-val orange">BLOCKED</div><div class="metric-lbl">A2P STATUS</div><div class="metric-sub">IRS UPDATE NEEDED</div></div>
+      <div class="metric-card"><div class="metric-val orange">SMS HOLD</div><div class="metric-lbl">A2P STATUS</div><div class="metric-sub">ADS BUILD CONTINUES</div></div>
+    </div>
+
+    <div class="wins-card">
+      <div class="alert-title" style="color:#4ade80;">⬡ WINS / RECENT COMPLETIONS</div>
+      <div class="wins-list" id="winsList">
+        <div class="win-entry">No saved completions yet. Mark a cockpit or project task done and it will show up here.</div>
+      </div>
     </div>
 
     <div class="tiktok-card">
@@ -603,9 +681,10 @@
       <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.28);border-radius:3px;padding:7px 9px;"><div style="font-size:8px;color:#4ade80;font-weight:bold;">✓ LIVE</div><div style="font-size:9px;color:var(--text);margin-top:1px;">/thankyou</div></div>
       <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.28);border-radius:3px;padding:7px 9px;"><div style="font-size:8px;color:#4ade80;font-weight:bold;">✓ LIVE</div><div style="font-size:9px;color:var(--text);margin-top:1px;">/privacypolicy</div></div>
       <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.28);border-radius:3px;padding:7px 9px;grid-column:span 2;"><div style="font-size:8px;color:#4ade80;font-weight:bold;">✓ LIVE</div><div style="font-size:9px;color:var(--text);margin-top:1px;">/terms</div></div>
+      <div style="background:var(--lorange);border:1px solid rgba(249,115,22,0.35);border-radius:3px;padding:7px 9px;grid-column:span 2;"><div style="font-size:8px;color:var(--orange);font-weight:bold;">⚠ CANONICAL ROUTES</div><div style="font-size:8px;color:var(--text);margin-top:1px;">Worker routes point to `/thank-you` and `/privacy`. Update stale `/thankyou` or `/privacypolicy` references before relying on them.</div></div>
     </div>
 
-    <div class="funnel-title">⬡ FUNNEL FLOW (TARGETS — ADS BLOCKED ON A2P)</div>
+    <div class="funnel-title">⬡ FUNNEL FLOW (TARGETS — SMS BLOCKED, ADS BUILD ACTIVE)</div>
     <div class="funnel-row"><div class="funnel-label">Ad Impressions</div><div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:100%;background:linear-gradient(90deg,#1a4a8a,#60a5fa);"></div></div><div class="funnel-count">—</div></div>
     <div class="funnel-row"><div class="funnel-label">Link Clicks</div><div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:8%;background:linear-gradient(90deg,#1a5a3a,#4ade80);"></div></div><div class="funnel-count">~8%</div></div>
     <div class="funnel-row"><div class="funnel-label">Page Visits</div><div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:6%;background:linear-gradient(90deg,#2a1f05,#C9A84C);"></div></div><div class="funnel-count">~6%</div></div>
@@ -613,9 +692,9 @@
     <div class="funnel-row"><div class="funnel-label">Leads Captured</div><div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:3%;background:linear-gradient(90deg,#1a4a8a,#60a5fa);"></div></div><div class="funnel-count">~3%</div></div>
     <div class="funnel-row"><div class="funnel-label">Appts Booked</div><div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:1.5%;background:linear-gradient(90deg,#0A3A14,#4ade80);"></div></div><div class="funnel-count">~1.5%</div></div>
 
-    <div class="ad-title">⬡ AD CREATIVE STATUS · BLOCKED ON A2P</div>
-    <div class="ad-row"><div class="ad-name">Ad A — Hero Video (60-90 sec)</div><div class="ad-badge badge-blocked">BLOCKED · A2P</div></div>
-    <div class="ad-row"><div class="ad-name">Ad B — Problem/Solution (30 sec)</div><div class="ad-badge badge-blocked">BLOCKED · A2P</div></div>
+    <div class="ad-title">⬡ AD CREATIVE STATUS · BUILD NOW, PLUG SMS LATER</div>
+    <div class="ad-row"><div class="ad-name">Ad A — Hero Video (60-90 sec)</div><div class="ad-badge badge-building">BUILD SCRIPT</div></div>
+    <div class="ad-row"><div class="ad-name">Ad B — Problem/Solution (30 sec)</div><div class="ad-badge badge-building">BUILD SCRIPT</div></div>
     <div class="ad-row"><div class="ad-name">Ad C — Testimonial Style (45 sec)</div><div class="ad-badge badge-pending">PENDING RECORD</div></div>
     <div class="ad-row"><div class="ad-name">Ad D — Direct Response (15 sec)</div><div class="ad-badge badge-pending">PENDING RECORD</div></div>
     <div class="ad-row"><div class="ad-name">Static Image — Peace of Mind</div><div class="ad-badge badge-building">PROMPTS READY</div></div>
@@ -629,7 +708,7 @@
     <div class="room-card blocked-card">
       <div class="room-name">📡 A2P REGISTRATION — BLOCKED</div>
       <div class="room-step">BLOCKED ON IRS NAME MISMATCH · MUST UPDATE IRS + GET CP575 FIRST</div>
-      <div class="room-desc">Submitted May 3 but blocked — IRS shows old company name. New company name must be updated with IRS. Get CP575 EIN letter. Submit to GHL. Only then will A2P clear and SMS go live. GHL confirmed this today.</div>
+      <div class="room-desc">Submitted May 3 but blocked — IRS shows old company name. New company name must be updated with IRS. Get CP575 EIN letter. Submit to GHL. This is the SMS gate only; ads, email, chat, and call workflow still move.</div>
       <div class="room-actions">
         <a class="room-act" style="color:#F87171;border-color:rgba(248,113,113,0.3);" href="#">📋 A2P PROJECT →</a>
       </div>
@@ -657,7 +736,7 @@
       <div class="int-card"><div class="int-name">GitHub Pages CI</div><div class="int-status is-building">⚠ FAILS = NORMAL</div></div>
       <div class="int-card"><div class="int-name">Claude API</div><div class="int-status is-live">✓ WIRED</div></div>
       <div class="int-card"><div class="int-name">TikTok Shop</div><div class="int-status is-live">✓ ACTIVE</div></div>
-      <div class="int-card"><div class="int-name">Meta Pixel / Ads</div><div class="int-status is-waiting">⏳ AFTER A2P</div></div>
+      <div class="int-card"><div class="int-name">Meta Pixel / Ads</div><div class="int-status is-building">⟳ BUILD NOW</div></div>
       <div class="int-card"><div class="int-name">MACU XXXX6402</div><div class="int-status is-alert">🚨 PAYMENT RETURNED</div></div>
       <div class="int-card"><div class="int-name">IRS / EIN</div><div class="int-status is-alert">⚠ NAME UPDATE NEEDED</div></div>
     </div>
@@ -668,12 +747,21 @@
     <div class="file-card" onclick="window.open('../../02_ghl/launch_kit/test-checklist.md')"><div class="file-icon">✅</div><div class="file-info"><div class="file-name">test-checklist.md</div><div class="file-desc">9-point checklist for fake-lead test</div></div><div class="file-status fs-ready">✓ READY</div></div>
 
     <div class="next-title">⬡ BATTLE PLAN — NOW</div>
-    <div class="action-card red-alert"><div class="action-num red">🚨 PRIORITY 1 — IRS / A2P UNBLOCK</div><div class="action-text">Call IRS: 1-800-829-4933. Get CP575 EIN letter with correct company name. If IRS shows old name, update it. Once you have the CP575 and corrected IRS record, submit all docs to GHL. This unblocks SMS + ads.</div></div>
-    <div class="action-card red-alert"><div class="action-num red">🚨 PRIORITY 2 — PUSH KVN V2</div><div class="action-text">workers.dev is blank. Push the Kevin V2 upgrade. Go to PROJECTS tab for the step-by-step build checklist. Three.js + Ready Player Me path is recommended.</div></div>
-    <div class="action-card urgent"><div class="action-num orange">OPEN — STEPS 7 + 8 — GHL WORKFLOW</div><div class="action-text">Build "Evermore Website Lead Intake" in GHL → Automation → Workflows. Submit test lead, verify 9 checklist items, publish when all pass.</div></div>
+    <div class="action-card urgent"><div class="action-num orange">PRIORITY 1 — ADS / EMAIL / CHAT / CALL FLOW</div><div class="action-text">Build the campaign around channels that do not need A2P: lead form, email confirmation, chat follow-up, owner notification, opportunity, and call task.</div></div>
+    <div class="action-card urgent"><div class="action-num orange">PRIORITY 2 — STEPS 7 + 8 — GHL WORKFLOW</div><div class="action-text">Build "Evermore Website Lead Intake" in GHL → Automation → Workflows. Submit test lead, verify 9 checklist items, publish when all pass.</div></div>
+    <div class="action-card red-alert"><div class="action-num red">SMS GATE — IRS / A2P UNBLOCK</div><div class="action-text">Call IRS: 1-800-829-4933. Get CP575 EIN letter with correct company name. Submit docs to GHL. This unblocks SMS, not the rest of the campaign.</div></div>
+    <div class="action-card red-alert"><div class="action-num red">PARALLEL — PUSH KVN V2</div><div class="action-text">workers.dev is blank. Push the Kevin V2 upgrade. Go to PROJECTS tab for the step-by-step build checklist. Three.js + Ready Player Me path is recommended.</div></div>
     <div class="action-card urgent"><div class="action-num orange">OPEN — CF TOKEN ROTATION — SECURITY</div><div class="action-text">dash.cloudflare.com → Profile → API Tokens. Revoke old exposed token. Create new scoped token. Update wrangler locally.</div></div>
     <div class="action-card red-alert"><div class="action-num red">🚨 MACU LOAN XXXX6402</div><div class="action-text">Log in to macu.com. Payment returned for Consumer Loan. Update payment source or manually pay to avoid late fees.</div></div>
     <div class="action-card"><div class="action-num">ANYTIME — INTEGRITY CONNECT · ZIP 85260</div><div class="action-text">Cherry Pick lead (Ethos Abandon Cart) may still be in queue. Log in, claim, call within 5 min. 3 attempts required in 24h.</div></div>
+
+    <div class="stop-card">
+      <div class="alert-title" style="color:#F87171;">⬡ STOP CONDITIONS — DO NOT BREAK COMPLIANCE</div>
+      <div class="stop-line"><strong>SMS HOLD:</strong> Do not send marketing SMS until A2P/TCR approval is confirmed.</div>
+      <div class="stop-line"><strong>NO COPY DRIFT:</strong> Do not change A2P wording, opt-in URL, privacy, terms, or SMS consent unless updating all matching docs/screenshots.</div>
+      <div class="stop-line"><strong>ADS OK:</strong> Build ads, email, chat, call workflow, fake-lead tests, and creative while SMS waits.</div>
+      <div class="stop-line"><strong>SECURITY:</strong> Keep Cloudflare tokens out of browser HTML and rotate any exposed token.</div>
+    </div>
   </div>
 
 </div>
@@ -699,7 +787,7 @@
       <div class="project-card-header" onclick="toggleProject('a2p')">
         <div>
           <div class="project-name" style="color:#F87171;">📡 A2P REGISTRATION — IRS BLOCKER</div>
-          <div style="font-size:7px;color:var(--text-dim);letter-spacing:0.1em;margin-top:2px;">BLOCKED · CANNOT SMS OR RUN ADS UNTIL RESOLVED</div>
+          <div style="font-size:7px;color:var(--text-dim);letter-spacing:0.1em;margin-top:2px;">BLOCKED · CANNOT SEND MARKETING SMS UNTIL RESOLVED</div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <span class="project-progress-pill" style="background:rgba(248,113,113,0.12);color:#F87171;border:1px solid rgba(248,113,113,0.3);" id="pill-a2p">0 / 6 DONE</span>
@@ -707,7 +795,7 @@
         </div>
       </div>
       <div class="project-body" id="body-a2p">
-        <div class="project-desc">A2P 10DLC SMS registration submitted May 3 but BLOCKED. When you changed company names, the IRS record was not updated. GHL/TCR is seeing a name mismatch on the EIN. Must update IRS → get CP575 → submit to GHL. No SMS, no ads until this clears.</div>
+        <div class="project-desc">A2P 10DLC SMS registration submitted May 3 but BLOCKED. When you changed company names, the IRS record was not updated. GHL/TCR is seeing a name mismatch on the EIN. Must update IRS → get CP575 → submit to GHL. No marketing SMS until this clears; ads, email, chat, and call workflow can keep moving.</div>
         <div class="project-blocker">
           <strong>🚨 ROOT CAUSE:</strong> IRS shows old company name. New company name was never registered with IRS after name change.<br><br>
           <strong>WHAT YOU NEED:</strong> CP575 form (EIN confirmation letter) showing correct/new company name. If IRS still has old name, you must update it first.<br><br>
@@ -765,6 +853,28 @@
       </div>
     </div>
 
+    <!-- PROJECT 4: ADS / NO-SMS LAUNCH -->
+    <div class="project-card" id="proj-ads">
+      <div class="project-card-header" onclick="toggleProject('ads')">
+        <div>
+          <div class="project-name" style="color:#60a5fa;">📣 ADS + FOLLOW-UP — NO SMS PATH</div>
+          <div style="font-size:7px;color:var(--text-dim);letter-spacing:0.1em;margin-top:2px;">BUILD NOW · EMAIL / CHAT / CALL FLOW · SMS PLUGS IN LATER</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="project-progress-pill" style="background:rgba(96,165,250,0.08);color:#60a5fa;border:1px solid rgba(96,165,250,0.2);" id="pill-ads">0 / 6 DONE</span>
+          <span class="project-expand-icon" id="icon-ads">▼</span>
+        </div>
+      </div>
+      <div class="project-body" id="body-ads">
+        <div class="project-desc">Do not let A2P freeze the campaign. Build the non-SMS path now: compliant ad creative, live lead form, confirmation email, chat/Sarah follow-up, owner notification, call task, and fake-lead proof. SMS can be added after A2P clears.</div>
+        <div id="steps-ads"></div>
+        <div class="add-item-row">
+          <input class="add-item-input" id="newtask-ads" placeholder="Add a new ads/follow-up task..." onkeydown="if(event.key==='Enter')addProjectTask('ads')">
+          <button class="btn-add-item" onclick="addProjectTask('ads')">+ ADD</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 </div>
@@ -803,7 +913,7 @@ refresh: reloads every 5 minutes and rehydrates saved state</div>
 <footer>
   <div class="footer-note">EVERMORE LIFE LLC · FINAL EXPENSE DIVISION · <span id="last-update">--</span></div>
   <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-    <div class="footer-ver" id="prog-label">v6.1 · MAY 6 · A2P BLOCKED · KVN DOWN · CLOUD SYNC</div>
+    <div class="footer-ver" id="prog-label">V2.1 · A2P SMS HOLD · ADS BUILD ACTIVE · CLOUD SYNC</div>
     <div class="footer-ver" id="sync-status" style="color:var(--cyan);">SYNC: STARTING</div>
     <button onclick="location.reload()" style="background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:'Courier New',monospace;font-size:8px;letter-spacing:0.1em;padding:4px 12px;border-radius:3px;cursor:pointer;">↺ REFRESH</button>
     <button onclick="clearAllData()" style="background:transparent;border:1px solid rgba(248,113,113,0.3);color:rgba(248,113,113,0.6);font-family:'Courier New',monospace;font-size:7px;letter-spacing:0.1em;padding:4px 10px;border-radius:3px;cursor:pointer;">⚠ RESET ALL</button>
@@ -820,7 +930,28 @@ function updateClock() {
 }
 updateClock();
 setInterval(updateClock, 1000);
-document.getElementById('last-update').textContent = 'v6.1 · AUTO-REFRESH 5MIN · UPDATES SYNC TO CLOUD';
+document.getElementById('last-update').textContent = 'V2.1 · DAILY SOURCE OF TRUTH · AUTO-REFRESH 5MIN · UPDATES SYNC TO CLOUD';
+
+function updateEDC() {
+  const countEl = document.getElementById('edc-count');
+  const daysEl = document.getElementById('edc-days');
+  if (!countEl && !daysEl) return;
+  const now = new Date();
+  const edc = new Date('2026-05-15T20:00:00-07:00');
+  const diff = edc - now;
+  if (diff <= 0) {
+    if (countEl) countEl.textContent = "IT'S TIME";
+    if (daysEl) daysEl.textContent = 'NOW';
+    return;
+  }
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+  const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+  if (countEl) countEl.textContent = days + 'd ' + hours + 'h ' + mins + 'm';
+  if (daysEl) daysEl.textContent = days + ' DAYS';
+}
+updateEDC();
+setInterval(updateEDC, 30000);
 
 // ─── TAB SWITCHING ───
 function switchTab(tab) {
@@ -955,6 +1086,7 @@ function confirmComplete() {
   }
   setStorage(data);
   applyStepState(_modalKey, data[_modalKey]);
+  addWin(_modalName || _modalKey, note || 'Marked complete from main cockpit.');
   updateProgress();
   closeModal();
 }
@@ -1001,6 +1133,96 @@ function renderLog(key, notes) {
 
 function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
+const DEFAULT_DAILY_BRIEF = {
+  text: 'Today: build ads, GHL workflow, fake-lead test, email/chat/call follow-up, Kevin verification, and EDC prep. Done: Kevin private route is live at /kevin. Next: add OPENAI_API_KEY and verify authenticated chat. Blockers: A2P blocks SMS only; Kevin AI secret is still missing; route canonical cleanup remains open.',
+  updatedAt: 'default',
+};
+
+function parseDailyBriefText(text) {
+  const fallback = DEFAULT_DAILY_BRIEF.text;
+  const source = (text || fallback).trim();
+  const parts = { today: '', done: '', next: '', blockers: '' };
+  const normalized = source.replace(/\n+/g, ' ');
+  const patterns = [
+    ['today', /today:\s*(.*?)(?=\s(done|wins|next|blockers):|$)/i],
+    ['done', /(done|wins):\s*(.*?)(?=\s(today|next|blockers):|$)/i],
+    ['next', /next:\s*(.*?)(?=\s(today|done|wins|blockers):|$)/i],
+    ['blockers', /blockers:\s*(.*?)(?=\s(today|done|wins|next):|$)/i],
+  ];
+  patterns.forEach(([key, regex]) => {
+    const match = normalized.match(regex);
+    if (!match) return;
+    parts[key] = (key === 'done' ? match[2] : match[1]).trim();
+  });
+  if (!parts.today) parts.today = 'Build ads, workflow, fake-lead proof, and EDC prep.';
+  if (!parts.done) parts.done = 'Completion notes will populate wins.';
+  if (!parts.next) parts.next = 'Move non-SMS campaign work forward.';
+  if (!parts.blockers) parts.blockers = 'A2P blocks SMS only; keep ads, email, chat, and calls moving.';
+  return parts;
+}
+
+function renderDailyBrief() {
+  const data = getStorage();
+  const brief = data.dailyBrief || DEFAULT_DAILY_BRIEF;
+  const text = brief.text || DEFAULT_DAILY_BRIEF.text;
+  const parsed = parseDailyBriefText(text);
+  const input = document.getElementById('dailyBriefInput');
+  if (input) input.value = text;
+  const map = {
+    'brief-today': parsed.today,
+    'brief-done': parsed.done,
+    'brief-next': parsed.next,
+    'brief-blockers': parsed.blockers,
+  };
+  Object.keys(map).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = map[id];
+  });
+}
+
+function saveDailyBrief() {
+  const input = document.getElementById('dailyBriefInput');
+  if (!input) return;
+  const data = getStorage();
+  data.dailyBrief = { text: input.value.trim() || DEFAULT_DAILY_BRIEF.text, updatedAt: new Date().toISOString() };
+  setStorage(data);
+  renderDailyBrief();
+}
+
+function resetDailyBrief() {
+  const data = getStorage();
+  delete data.dailyBrief;
+  setStorage(data);
+  renderDailyBrief();
+}
+
+function addWin(title, note) {
+  const data = getStorage();
+  if (!Array.isArray(data.__wins)) data.__wins = [];
+  data.__wins.unshift({
+    ts: fmtNow(),
+    title: title,
+    note: note || 'Completed.',
+  });
+  data.__wins = data.__wins.slice(0, 8);
+  setStorage(data);
+  renderWins();
+}
+
+function renderWins() {
+  const list = document.getElementById('winsList');
+  if (!list) return;
+  const data = getStorage();
+  const wins = Array.isArray(data.__wins) ? data.__wins : [];
+  if (wins.length === 0) {
+    list.innerHTML = '<div class="win-entry">No saved completions yet. Mark a cockpit or project task done and it will show up here.</div>';
+    return;
+  }
+  list.innerHTML = wins.map(win =>
+    '<div class="win-entry"><strong>' + escHtml(win.ts || '') + ' · ' + escHtml(win.title || 'Completed item') + '</strong><br>' + escHtml(win.note || 'Completed.') + '</div>'
+  ).join('');
+}
+
 function applyStepState(key, state) {
   const row = document.getElementById(key);
   if (!row) return;
@@ -1041,7 +1263,7 @@ function updateProgress() {
   document.getElementById('prog-fill').style.width = pct + '%';
   document.getElementById('stat-done').textContent = done;
   document.getElementById('stat-left').textContent = total - done;
-  document.getElementById('prog-label').textContent = 'v6.1 · ' + pct + '% COMPLETE · A2P BLOCKED · KVN DOWN · CLOUD SYNC';
+  document.getElementById('prog-label').textContent = 'V2.1 · ' + pct + '% COMPLETE · A2P SMS HOLD · ADS BUILD ACTIVE · CLOUD SYNC';
 }
 
 // ─── PROJECT COCKPITS ───
@@ -1055,17 +1277,25 @@ const DEFAULT_PROJECTS = {
     { id: 'a2p-6', text: 'After GHL confirms — check A2P/10DLC status in GHL → Settings → Phone Numbers', done: false, notes: [] },
   ],
   kevin: [
-    { id: 'kevin-1', text: 'Verify workers.dev URL — confirm it returns blank (not a 404)', done: false, notes: [] },
-    { id: 'kevin-2', text: 'Set up Three.js + Ready Player Me avatar base for V2', done: false, notes: [] },
-    { id: 'kevin-3', text: 'Add PBR materials, lipsync, gaze tracking, and voice to KVN', done: false, notes: [] },
-    { id: 'kevin-4', text: 'Deploy KVN V2 to Cloudflare Workers (workers.dev)', done: false, notes: [] },
-    { id: 'kevin-5', text: 'Test KVN V2 — verify voice, lipsync, and gaze all working on workers.dev', done: false, notes: [] },
+    { id: 'kevin-1', text: 'Verify https://evermorelife.org/kevin shows the private login page when signed out', done: true, notes: ['Verified live on May 12. Route returns the private Evermore access screen.'] },
+    { id: 'kevin-2', text: 'Verify authenticated /kevin renders the Kevin V2 interface after dashboard login', done: false, notes: [] },
+    { id: 'kevin-3', text: 'Set OPENAI_API_KEY in the evermore-life-live Worker secrets', done: false, notes: [] },
+    { id: 'kevin-4', text: 'Verify /api/kevin-chat returns a real Kevin reply when authenticated', done: false, notes: [] },
+    { id: 'kevin-5', text: 'Refine Kevin voice, behavior, and dashboard guidance after first live chat works', done: false, notes: [] },
   ],
   ghl: [
     { id: 'ghl-1', text: 'GHL → Automation → Workflows → Create "Evermore Website Lead Intake"', done: false, notes: [] },
     { id: 'ghl-2', text: 'Add triggers: Form 10 + Main Opt-In form. Add actions: Tag, Notify, Opportunity, Email, Task (no SMS yet)', done: false, notes: [] },
     { id: 'ghl-3', text: 'Submit test lead from evermorelife.org/optin and verify all 9 checklist items in test-checklist.md', done: false, notes: [] },
     { id: 'ghl-4', text: 'Publish workflow after all 9 items pass', done: false, notes: [] },
+  ],
+  ads: [
+    { id: 'ads-1', text: 'Confirm non-SMS launch path: lead form, email confirmation, Sarah/chat follow-up, owner notify, call task', done: false, notes: [] },
+    { id: 'ads-2', text: 'Prepare 2-3 compliant Meta creative angles and keep insurance/financial category rules in mind', done: false, notes: [] },
+    { id: 'ads-3', text: 'Confirm fake-lead test passes without SMS: contact, tag, opportunity, email, owner notify, call task', done: false, notes: [] },
+    { id: 'ads-4', text: 'Install or verify Meta Pixel and conversion route without firing messy test traffic', done: false, notes: [] },
+    { id: 'ads-5', text: 'Build tiny test campaign structure and hold final launch until workflow proof is clean', done: false, notes: [] },
+    { id: 'ads-6', text: 'After A2P clears, plug SMS branch into the already-tested workflow', done: false, notes: [] },
   ],
 };
 
@@ -1173,6 +1403,7 @@ function markProjDone(projId, stepId) {
   if (!step.notes) step.notes = [];
   step.notes.push({ ts: fmtNow(), text: '✓ COMPLETED' + (note ? ': ' + note : '.') });
   saveProjectSteps(projId, steps);
+  addWin(step.text, note || 'Completed in ' + projId.toUpperCase() + ' project.');
   renderProjectSteps(projId);
 }
 
@@ -1216,10 +1447,14 @@ async function clearAllData() {
 // ─── INIT ───
 async function initCockpit() {
   initMainSteps();
-  ['a2p','kevin','ghl'].forEach(id => updateProjectPill(id, getProjectSteps(id)));
+  renderDailyBrief();
+  renderWins();
+  ['a2p','kevin','ghl','ads'].forEach(id => updateProjectPill(id, getProjectSteps(id)));
   await loadRemoteState();
   initMainSteps();
-  ['a2p','kevin','ghl'].forEach(id => {
+  renderDailyBrief();
+  renderWins();
+  ['a2p','kevin','ghl','ads'].forEach(id => {
     updateProjectPill(id, getProjectSteps(id));
     const body = document.getElementById('body-' + id);
     if (body && body.classList.contains('open')) renderProjectSteps(id);
