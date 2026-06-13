@@ -7,4 +7,6 @@ node_modules/
 .idea/
 .vscode/
 .wrangler/
+__pycache__/
+*.pyc
 04_tools/cockpit_update/cockpit_update.config.json
