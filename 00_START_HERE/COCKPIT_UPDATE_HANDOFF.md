@@ -66,6 +66,19 @@ Both commands must return `ok: true`. Retry a failed write once. Send the succes
 
 The cockpit marks a snapshot stale after 30 hours.
 
+## Cockpit V3 Private Preview
+
+- Preview: `https://evermorelife.org/dashboard-preview`
+- Asset: `01_website/experiments/EVERMORE_COCKPIT_v3.html`
+- Preview state key: `cockpit-v3-preview-state`
+- Preview writer: `04_tools/cockpit_update/push_cockpit_preview_update.py`
+- Refresh runbook: `00_START_HERE/COCKPIT_V3_REFRESH_RUNBOOK.md`
+- Rollback runbook: `00_START_HERE/COCKPIT_V3_ROLLBACK_RUNBOOK.md`
+
+V3 is isolated from production. Its state, backups, history, browser edits, and generated updates use preview-only KV keys and API routes. Do not promote V3 to `/dashboard` until the preview is explicitly approved.
+
+Use `04_tools/cockpit_update/deploy_cockpit_preview.sh` for preview deployments so production and preview state are exported before Wrangler deploys the Worker.
+
 ## Deployment
 
 ```bash
