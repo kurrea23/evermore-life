@@ -50,6 +50,10 @@ Use `04_tools/cockpit_update/push_cockpit_update.py` to write and verify a struc
 
 The daily Codex automation runs at 7:00 AM `America/Phoenix`. It scans verified Gmail, Calendar, current handoffs, and recent workspace evidence; reports HighLevel as unavailable when authentication fails; writes both cockpit snapshots; verifies both; then emails one combined receipt.
 
+Before using older June handoffs as current truth, read
+`00_START_HERE/OPERATOR_STATE_UPDATE_2026-06-14.md` for the operator-corrected
+status of retired May 11 / EDC / old-LLC A2P blocker work.
+
 The two targets have separate scopes:
 
 - Revenue cockpit v2: `https://evermorelife.org/dashboard`, written with `push_cockpit_update.py`. Keep it Evermore Life revenue-first and preserve its manual state.
