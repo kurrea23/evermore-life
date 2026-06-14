@@ -1,1 +1,1 @@
-../../../../02_ghl/launch_kit/live-build-runbook.md
+../../../../../02_ghl/launch_kit/live-build-runbook.md
