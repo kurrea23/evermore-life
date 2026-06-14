@@ -127,7 +127,7 @@ After the pixel is in your pages, push the updated files to GHL:
    - Open the page editor
    - Go to **Custom Code / Header** section
    - Paste the pixel code in the `<head>` section
-   
+
 **OR** if your GHL site uses the HTML files directly:
 - Go to **Settings → Custom Code** → add pixel to the global `<head>`
 - This adds it to ALL pages at once — faster

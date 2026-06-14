@@ -1,6 +1,6 @@
 # Evermore Email Nurture Sequence
 
-**Audience:** Valid Arizona or Arkansas inquiry that has not booked.  
+**Audience:** Valid Arizona or Texas inquiry that has not booked.
 **Exit conditions:** Appointment booked, Not Interested, Bad Fit / Invalid, unsubscribe, or opportunity closed.
 
 Approved GHL booking URL:
@@ -20,8 +20,8 @@ There is no pressure and no obligation. When you are ready, choose a time here:
 
 https://api.leadconnectorhq.com/widget/booking/NzsTTtQ0xBDAMXVhly7L
 
-Evermore Life Insurance LLC  
-evermorelifeagent01@gmail.com  
+Evermore Life Insurance LLC
+evermorelifeagent01@gmail.com
 https://evermorelife.org/privacy | https://evermorelife.org/terms
 
 Coverage options vary by age, health, state, product type, carrier, and eligibility. Not all applicants qualify.

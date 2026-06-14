@@ -73,7 +73,7 @@ In Ads Manager → + Create:
 
 **Ad Set level:**
 - Ad set name: `ELC_2026_Q2_TOF_SoccerDad_29-50_AZ-AR-TX`
-- Locations: Arizona, Arkansas + Texas (when licensed)
+- Locations: Arizona and Texas; exclude Arkansas while pending
 - Age: 29–50
 - Gender: All
 - Detailed targeting: Parenting, Family, Homeownership, Financial Planning
@@ -140,7 +140,7 @@ In Ads Manager → + Create:
 **Ad Set level:**
 - Ad set name: `ELC_2026_Q2_MOF_HowItWorks_VideoViewers25pct`
 - Custom audience: `ELC_VideoViewers_25pct_60d`
-- Locations: Arizona, Arkansas
+- Locations: Arizona, Texas
 - Optimization: Landing Page Views
 
 **Ad level:**
@@ -192,7 +192,7 @@ This is a different audience with different copy. Run it as its own campaign.
 **Ad Set level:**
 - Age: 40–58
 - Interests: Retirement Planning, Financial Independence, 401k, Investing
-- Locations: Arizona, Arkansas
+- Locations: Arizona, Texas
 
 **Ad level:**
 - Use: AD A-3 from `FACEBOOK_AD_CAMPAIGN_COMPLETE.md`

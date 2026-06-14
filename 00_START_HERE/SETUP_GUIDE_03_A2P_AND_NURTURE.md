@@ -85,7 +85,7 @@ Or just reply to this email with any questions.
 Warm regards,
 Sarah
 Evermore Life Insurance LLC
-evermorelife.org | Licensed in Arizona & Arkansas
+evermorelife.org | Licensed in Arizona & Texas
 
 Coverage options vary by age, health, state, carrier, and eligibility. Not all applicants qualify.
 ```

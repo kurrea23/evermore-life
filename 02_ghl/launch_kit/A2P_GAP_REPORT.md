@@ -1,6 +1,6 @@
 # A2P Gap Report
 
-**Verified:** June 13, 2026  
+**Verified:** June 13, 2026
 **Status:** HOLD pending EIN. Do not submit or activate SMS until the EIN arrives and A2P is approved.
 
 ## Live Evidence Verified

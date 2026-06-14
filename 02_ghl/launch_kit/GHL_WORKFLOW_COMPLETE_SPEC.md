@@ -1,6 +1,6 @@
 # GHL Workflow Complete Spec
 
-**Workflow name:** `Evermore Website Lead Intake`  
+**Workflow name:** `Evermore Website Lead Intake`
 **Purpose:** Convert a permissioned website inquiry into a verified lead, immediate owner action, compliant nurture, and booked appointment.
 
 ## Trigger
@@ -110,4 +110,3 @@ Terminal stages: `Not Interested`, `Bad Fit / Invalid`
 | Unsupported state | Tagged not served, owner notified, unavailable email, workflow stops |
 | Existing opted-out contact submits again | Opt-out remains; no SMS |
 | Lead books | Unbooked nurture stops; opportunity moves to Appointment Booked |
-

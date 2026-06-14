@@ -1,7 +1,7 @@
 # Guides 00-03 Completion Handoff
 
-**Last verified:** June 13, 2026  
-**Workspace:** `/Users/k9smac/Desktop/EVERMORE-LIFE`  
+**Last verified:** June 13, 2026
+**Workspace:** `/Users/k9smac/Desktop/EVERMORE-LIFE`
 **GHL location:** Evermore Life LLC, `OOWpXE1DSDg6zKkj4Qbd`
 
 ## Executive Status
@@ -87,7 +87,7 @@ Completed:
 - Campaign copy and first-launch planning documents exist.
 - Pixel and conversion-event code are deployed.
 - Live `/optin` is selected as the safe first campaign destination.
-- Recommended initial geo remains Arizona and Arkansas only; Texas is pending.
+- Recommended initial geo is Arizona and Texas only; Arkansas remains pending.
 - First launch slice is documented at `$10/day` for seven days after gates pass.
 
 Still required before spending:
@@ -139,7 +139,7 @@ Still required:
 4. Submit one controlled Arizona lead with SMS unchecked and record results in
    `02_ghl/launch_kit/test-checklist.md`.
 5. Verify `PageView`, `ViewContent`, and `Lead` in Meta Test Events.
-6. Approve one creative and launch the `$10/day` Arizona and Arkansas test.
+6. Approve one creative and launch the `$10/day` Arizona and Texas test.
 7. When the EIN arrives, finish and submit A2P; activate SMS only after approval.
 
 ## Important Safety Rules

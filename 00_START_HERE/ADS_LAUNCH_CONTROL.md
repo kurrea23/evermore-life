@@ -1,6 +1,6 @@
 # Evermore Ads Launch Control
 
-**Baseline verified:** June 13, 2026  
+**Baseline verified:** June 13, 2026
 **Goal:** First booked call from Evermore-owned ads without spending against an unproven funnel.
 
 ## Launch Decision
@@ -29,7 +29,7 @@ Do not publish paid campaigns yet. The public site is reachable, but tracking an
 | Lead attribution | GHL form currently uses inline thank-you; `/thank-you` Lead event may not fire | Redirect successful form submission to `/thank-you` or configure a verified form-success Lead event | Lucidus in GHL + Codex |
 | Campaign destination | `FUNNEL_PAGE.html` is local and contains placeholder links | Use a reviewed live URL with working privacy, terms, and Sarah/quote CTA | Codex |
 | Ad package | Campaign copy exists; upload package and creatives do not | At least one compliant ad has final copy, creative, destination, tracking, audience, and budget | Codex + Lucidus |
-| Licensing scope | Arizona and Arkansas active; Texas pending | Campaign geo targets only active licensed states | Lucidus |
+| Licensing scope | Arizona and Texas active; Arkansas pending | Campaign geo targets only active licensed states | Lucidus |
 | Meta category | Old handoff said `Credit`; current Meta category is `Financial products and services` | Confirm the category shown in the live Ads Manager flow | Lucidus in Meta |
 
 ## First Launch Slice
@@ -39,7 +39,7 @@ Launch one small campaign before building the whole nine-ad system:
 | Item | Choice |
 | --- | --- |
 | Offer | Free coverage review |
-| Audience | Arizona and Arkansas only |
+| Audience | Arizona and Texas only |
 | Creative | One approved short-form story or direct-response video |
 | Destination | Live `/optin` initially; move to campaign funnel after it passes review |
 | Objective | Leads |

@@ -1,7 +1,7 @@
 # State Service Gate Update Handoff
 
-**Date:** June 14, 2026  
-**Approval state:** Human status correction received; live GHL changes not made  
+**Date:** June 14, 2026
+**Approval state:** Human status correction received; live GHL changes not made
 **Current governing status:** Arizona and Texas active; Arkansas pending
 
 ## Why This Exists
@@ -59,4 +59,3 @@ the new status contract. The state-page source of truth is:
 
 Unknown. No GHL account change or end-to-end Texas/Arkansas routing test was
 performed during the state-page build.
-
