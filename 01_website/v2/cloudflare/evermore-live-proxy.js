@@ -50,6 +50,12 @@ const PUBLIC_ROUTES = new Map([
   ["/sarah", "/01_website/v2/pages/sarah"],
   ["/thank-you", "/01_website/v2/pages/thank-you"],
   ["/404", "/01_website/v2/pages/404"],
+  ["/arizona", "/01_website/state-pages/public/arizona/"],
+  ["/arizona/", "/01_website/state-pages/public/arizona/"],
+  ["/texas", "/01_website/state-pages/public/texas/"],
+  ["/texas/", "/01_website/state-pages/public/texas/"],
+  ["/arkansas", "/01_website/state-pages/public/arkansas/"],
+  ["/arkansas/", "/01_website/state-pages/public/arkansas/"],
 ]);
 
 export default {
@@ -586,6 +592,9 @@ function isHtml(response) {
 
 function rewriteHtml(html) {
   return html
+    .replaceAll('href="../assets/state-pages.css"', 'href="/01_website/state-pages/public/assets/state-pages.css"')
+    .replaceAll("url('../assets/hero-", "url('/01_website/state-pages/public/assets/hero-")
+    .replaceAll('href="../../../../index.html"', 'href="/"')
     .replaceAll('href="_tokens.css"', 'href="/01_website/v2/pages/_tokens.css"')
     .replaceAll('href="_base.css"', 'href="/01_website/v2/pages/_base.css"')
     .replaceAll('src="../assets/', 'src="/01_website/v2/assets/')
