@@ -7,6 +7,7 @@
    ========================================================================== */
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 body { font-family: 'Segoe UI', Arial, sans-serif; color: #1a1a2e; background: #fff; }
 
 /* NAV */
@@ -20,8 +21,6 @@ nav {
   top: 0;
   z-index: 100;
 }
-.nav-logo { color: #fff; font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; text-decoration: none; }
-.nav-logo span { color: #c8a96e; }
 .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
 .nav-links a { color: #cdd3e0; text-decoration: none; font-size: 0.95rem; transition: color 0.2s; }
 .nav-links a:hover { color: #c8a96e; }
@@ -62,9 +61,9 @@ nav {
   font-size: 1.05rem;
   font-weight: 800;
   text-decoration: none;
-  transition: background 0.2s, transform 0.1s;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
-.btn-primary:hover { background: #b8934f; transform: translateY(-2px); }
+.btn-primary:hover { background: #b8934f; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(13,27,75,0.2); }
 .btn-secondary {
   background: transparent;
   color: #fff;
@@ -128,10 +127,10 @@ nav {
   border-radius: 14px;
   padding: 36px 28px;
   text-align: center;
-  transition: box-shadow 0.2s, transform 0.2s;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
   cursor: default;
 }
-.product-card:hover { box-shadow: 0 8px 32px rgba(13,27,75,0.12); transform: translateY(-4px); }
+.product-card:hover { border-color: #c8a96e; box-shadow: 0 8px 32px rgba(13,27,75,0.12); transform: translateY(-4px); }
 .product-icon { margin-bottom: 16px; display: flex; align-items: center; justify-content: center; }
 .product-icon svg { width: 44px; height: 44px; color: #c8a96e; stroke: #c8a96e; }
 .product-card h3 { font-size: 1.15rem; font-weight: 800; color: #0d1b4b; margin-bottom: 10px; }
@@ -142,14 +141,16 @@ nav {
 .why-section .section-title { color: #fff; }
 .why-section .section-sub { color: #9aafce; }
 .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; max-width: 1080px; margin: 0 auto; }
-.why-card { background: rgba(255,255,255,0.06); border-radius: 12px; padding: 28px 24px; border: 1px solid rgba(200,169,110,0.25); }
+.why-card { background: rgba(255,255,255,0.06); border-radius: 12px; padding: 28px 24px; border: 1px solid rgba(200,169,110,0.25); transition: box-shadow 0.2s ease, transform 0.2s ease; }
+.why-card:hover { box-shadow: 0 8px 24px rgba(13,27,75,0.12); transform: translateY(-2px); }
 .why-card h4 { font-size: 1rem; font-weight: 700; color: #c8a96e; margin-bottom: 10px; }
 .why-card p { font-size: 0.9rem; color: #9aafce; line-height: 1.6; }
 
 /* HOW IT WORKS */
 .steps-grid { display: flex; gap: 0; max-width: 900px; margin: 0 auto; align-items: flex-start; flex-wrap: wrap; justify-content: center; }
 .step { text-align: center; flex: 1; min-width: 180px; padding: 10px 20px; }
-.step-num { width: 52px; height: 52px; border-radius: 50%; background: #0d1b4b; color: #c8a96e; font-size: 1.4rem; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+.step-num { width: 52px; height: 52px; border-radius: 50%; background: #0d1b4b; color: #c8a96e; font-size: 1.4rem; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.step-item:hover .step-num { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(200,169,110,0.15); }
 .step h4 { font-size: 1rem; font-weight: 700; color: #0d1b4b; margin-bottom: 8px; }
 .step p { font-size: 0.88rem; color: #6b7c99; line-height: 1.5; }
 
@@ -348,7 +349,7 @@ footer {
 .footer-brand { display: inline-flex; width: min(260px, 100%); margin-bottom: 16px; }
 .footer-brand img { display: block; width: 100%; height: auto; }
 .mobile-cta-bar { display: none; }
-.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
 .reveal.visible { opacity: 1; transform: none; }
 
 @media (max-width: 900px) {
