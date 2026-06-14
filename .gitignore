@@ -10,3 +10,13 @@ node_modules/
 __pycache__/
 *.pyc
 04_tools/cockpit_update/cockpit_update.config.json
+/STATE LICENSES/
+/04_tools/cockpit_update/*snapshot*.json
+/BLUEPRINTS/reports/*cockpit*morning-update*.md
+/05_exports_archive/
+/cockpit-os/
+/04_content_narrative/ad_campaign_scaffold/exports/rough-cuts/
+/05_video_clips/**/*.mp4
+/00_START_HERE/active/rooms/A2P_REGISTRATION/screenshots_to_take/
+/Client-Intake.html
+/SYSTEM_MAP.md
