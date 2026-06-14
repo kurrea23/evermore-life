@@ -22,7 +22,7 @@ Never write to `/dashboard`, `/api/cockpit-update`, or `cockpit-v2-state`.
 8. Push generated state with `04_tools/cockpit_update/push_cockpit_preview_update.py`.
 9. Require writer output containing `ok: true` and `productionUnchanged: true`.
 10. Verify preview history gained the prior generated snapshot and manual counts did not change.
-11. Send a receipt to `kurrea7@gmail.com` only after verification. Clearly label it as a V3 preview refresh.
+11. Send a receipt to the configured operator email only after verification. Clearly label it as a V3 preview refresh.
 
 ## Festival Evidence Rules
 
