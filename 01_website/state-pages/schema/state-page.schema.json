@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Evermore State Page Registry",
+  "type": "object",
+  "required": ["schema_version", "generated_pages_are_drafts", "states"],
+  "properties": {
+    "schema_version": { "const": 2 },
+    "generated_pages_are_drafts": { "const": true },
+    "ghl_form_id": { "type": "string" },
+    "contact_email": { "type": "string" },
+    "states": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "slug",
+          "code",
+          "status",
+          "status_label",
+          "robots",
+          "canonical",
+          "seo_title",
+          "seo_description",
+          "hero_title",
+          "hero_title_accent",
+          "hero_sub",
+          "products_sub",
+          "why_title",
+          "why_sub",
+          "why_cards",
+          "optin_heading",
+          "optin_sub",
+          "optin_disclaimer"
+        ],
+        "properties": {
+          "status": { "enum": ["active", "pending", "unavailable"] },
+          "robots": { "type": "string" },
+          "hero_image": { "type": "string" },
+          "why_cards": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {
+              "type": "object",
+              "required": ["title", "body"],
+              "properties": {
+                "title": { "type": "string" },
+                "body": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
