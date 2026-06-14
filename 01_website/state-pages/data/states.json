@@ -1,0 +1,89 @@
+{
+  "schema_version": 2,
+  "generated_pages_are_drafts": true,
+  "ghl_form_id": "e8RIDTdhAVlc6CT9Zfj5",
+  "contact_email": "evermorelifeagent01@gmail.com",
+  "states": [
+    {
+      "name": "Arizona",
+      "slug": "arizona",
+      "code": "AZ",
+      "status": "active",
+      "status_label": "Now serving Arizona",
+      "robots": "noindex, nofollow",
+      "canonical": "https://evermorelife.org/arizona/",
+      "hero_image": "hero-arizona.jpg",
+      "seo_title": "Arizona Life Insurance & Mortgage Protection | Evermore Life",
+      "seo_description": "Evermore Life helps Arizona families compare life insurance, final expense, term life, IUL, whole life, mortgage protection, and annuity options. Get a free quote today.",
+      "hero_title": "Protect What Matters Most in Arizona",
+      "hero_title_accent": "Life Insurance Made Simple",
+      "hero_sub": "From Phoenix to Tucson and every community in between, Evermore Life helps Arizona families compare final expense, term life, indexed universal life, whole life, mortgage protection, and annuity options — clearly and without pressure. We compare top carriers so you can review options quickly.",
+      "products_sub": "Whether you're an Arizona family looking for final expense coverage, a term policy, cash-value life insurance, mortgage protection, or annuity guidance, we help you review options that fit your goals and budget.",
+      "why_title": "Why Arizona Families Choose Evermore Life",
+      "why_sub": "We're independent brokers licensed to serve Arizona — our loyalty is to you, not the carriers.",
+      "why_cards": [
+        { "title": "Licensed to Serve Arizona", "body": "Evermore Life is an independent brokerage serving Arizona families. We work for you, not the insurance companies — so the advice stays in your corner." },
+        { "title": "No Medical Exam Options", "body": "Many of our final expense and simplified-issue plans require no physical exam — get covered fast even with health conditions." },
+        { "title": "Transparent Pricing", "body": "No hidden fees. No surprises. We show you exactly what you're paying and what you're getting before you sign anything." },
+        { "title": "Built for Arizona Life", "body": "From Phoenix and Tucson to Flagstaff and the communities in between, we help Arizona families find coverage that fits real budgets and real life." }
+      ],
+      "optin_heading": "Get Your Free, No-Obligation Arizona Quote",
+      "optin_sub": "Enter your name and phone number and a licensed Evermore Life agent will reach out to you — no pressure, no obligation.",
+      "optin_disclaimer": "You can request a quote without agreeing to text messages. A licensed agent may contact you by phone or email about your request."
+    },
+    {
+      "name": "Texas",
+      "slug": "texas",
+      "code": "TX",
+      "status": "active",
+      "status_label": "Now serving Texas",
+      "robots": "noindex, nofollow",
+      "canonical": "https://evermorelife.org/texas/",
+      "hero_image": "hero-texas.jpg",
+      "seo_title": "Texas Life Insurance & Mortgage Protection | Evermore Life",
+      "seo_description": "Evermore Life helps Texas families compare life insurance, final expense, term life, IUL, whole life, mortgage protection, and annuity options. Get a free quote today.",
+      "hero_title": "Protect What Matters Most in Texas",
+      "hero_title_accent": "Life Insurance Made Simple",
+      "hero_sub": "From Houston and Dallas–Fort Worth to San Antonio, Austin, and West Texas, Evermore Life helps Texas families compare final expense, term life, indexed universal life, whole life, mortgage protection, and annuity options — clearly and without pressure. We compare top carriers so you can review options quickly.",
+      "products_sub": "Whether you're a Texas family looking for final expense coverage, a term policy, cash-value life insurance, mortgage protection, or annuity guidance, we help you review options that fit your goals and budget.",
+      "why_title": "Why Texas Families Choose Evermore Life",
+      "why_sub": "We're independent brokers licensed to serve Texas — our loyalty is to you, not the carriers.",
+      "why_cards": [
+        { "title": "Licensed to Serve Texas", "body": "Evermore Life is an independent brokerage serving Texas families. We work for you, not the insurance companies — so the advice stays in your corner." },
+        { "title": "No Medical Exam Options", "body": "Many of our final expense and simplified-issue plans require no physical exam — get covered fast even with health conditions." },
+        { "title": "Transparent Pricing", "body": "No hidden fees. No surprises. We show you exactly what you're paying and what you're getting before you sign anything." },
+        { "title": "Built for Texas Life", "body": "From the Gulf Coast to the Hill Country and the Panhandle, we help Texas families protect homes, incomes, and the legacy behind them." }
+      ],
+      "optin_heading": "Get Your Free, No-Obligation Texas Quote",
+      "optin_sub": "Enter your name and phone number and a licensed Evermore Life agent will reach out to you — no pressure, no obligation.",
+      "optin_disclaimer": "You can request a quote without agreeing to text messages. A licensed agent may contact you by phone or email about your request."
+    },
+    {
+      "name": "Arkansas",
+      "slug": "arkansas",
+      "code": "AR",
+      "status": "pending",
+      "status_label": "Arkansas — coming soon",
+      "robots": "noindex, nofollow",
+      "canonical": "https://evermorelife.org/arkansas/",
+      "hero_image": "hero-arkansas.jpg",
+      "seo_title": "Evermore Life Is Coming to Arkansas | Availability Updates",
+      "seo_description": "Evermore Life is preparing to serve Arkansas families with life insurance, mortgage protection, and final expense guidance. Join the availability list to be the first to know.",
+      "hero_title": "Evermore Life Is Coming to Arkansas",
+      "hero_title_accent": "Be the First to Know",
+      "hero_sub": "We're preparing to bring the same warm, clear coverage guidance to Arkansas families. Join our availability list and we'll reach out the moment Evermore Life service opens in your area.",
+      "products_sub": "When service opens in Arkansas, we'll help families review final expense, term, cash-value life insurance, mortgage protection, and annuity options that fit their goals and budget. Here's a look at what Evermore Life offers.",
+      "why_title": "The Evermore Life Approach",
+      "why_sub": "Here's the independent, love-first approach we're preparing to bring to Arkansas families.",
+      "why_cards": [
+        { "title": "Independent Brokers", "body": "Evermore Life is an independent brokerage. When we open in your state, our loyalty will be to you — not the insurance companies." },
+        { "title": "No Medical Exam Options", "body": "Many final expense and simplified-issue plans require no physical exam — designed to help families get covered even with health conditions." },
+        { "title": "Transparent Pricing", "body": "No hidden fees. No surprises. We believe in showing families exactly what they're paying and what they're getting." },
+        { "title": "Love-First Approach", "body": "We lead with preparation and care, never fear or pressure — the same warm experience we're preparing for Arkansas families." }
+      ],
+      "optin_heading": "Be the First to Know When Arkansas Opens",
+      "optin_sub": "Arkansas service isn't open yet. Send us a quick note and we'll email you the moment Evermore Life is available in your area.",
+      "optin_disclaimer": "Joining the Arkansas availability list is not an application for insurance and does not guarantee future availability."
+    }
+  ]
+}
