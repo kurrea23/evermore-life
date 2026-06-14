@@ -6,11 +6,11 @@ I am setting up A2P 10DLC compliance in GoHighLevel for Evermore Life LLC.
 
 Live pages are working:
 
-- Home: https://evermorelife.org/home
+- Home: https://evermorelife.org/
 - Opt-in form: https://evermorelife.org/optin
 - Terms: https://evermorelife.org/terms
-- Privacy Policy: https://evermorelife.org/privacypolicy
-- Thank You: https://evermorelife.org/thankyou
+- Privacy Policy: https://evermorelife.org/privacy
+- Thank You: https://evermorelife.org/thank-you
 
 The site has custom pages, GHL embedded forms, Terms, Privacy Policy, opt-in language, and working extensionless routes. The chat widget path was abandoned because Home/Opt-In collect phone numbers, so the cleaner route is custom website form opt-in.
 

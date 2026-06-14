@@ -10,7 +10,7 @@ Opt-in URL:
 
 Privacy Policy:
 
-`https://evermorelife.org/privacypolicy`
+`https://evermorelife.org/privacy`
 
 Terms of Service:
 
@@ -59,4 +59,3 @@ Take one screenshot that clearly shows:
 - Brand name, domain, sample messages, and policy pages must match.
 - Do not mention START keyword opt-in unless a real number/keyword flow is configured.
 - Do not mix broad marketing blasts with this launch use case. Keep it to requested quote follow-up and appointment reminders.
-

@@ -75,8 +75,8 @@ Set these final URLs:
 
 - Home: `https://evermorelife.org/`
 - Opt-in: `https://evermorelife.org/optin`
-- Thank you: `https://evermorelife.org/thankyou`
-- Privacy: `https://evermorelife.org/privacypolicy`
+- Thank you: `https://evermorelife.org/thank-you`
+- Privacy: `https://evermorelife.org/privacy`
 - Terms: `https://evermorelife.org/terms`
 
 If GHL publishes with trailing slashes, use the trailing-slash version consistently in A2P.

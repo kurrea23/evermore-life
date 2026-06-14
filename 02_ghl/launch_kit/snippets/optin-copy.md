@@ -42,7 +42,7 @@ Text below form:
 
 Privacy link:
 
-`https://evermorelife.org/privacypolicy`
+`https://evermorelife.org/privacy`
 
 Terms link:
 

@@ -42,7 +42,7 @@ Text directly below the form:
 
 Footer links:
 
-- Privacy Policy: `https://evermorelife.org/privacypolicy`
+- Privacy Policy: `https://evermorelife.org/privacy`
 - Terms of Service: `https://evermorelife.org/terms`
 
 Hidden/tracking fields if GHL allows:
@@ -57,7 +57,7 @@ Hidden/tracking fields if GHL allows:
 
 Submission action:
 
-- Show redirect or confirmation page: `https://evermorelife.org/thankyou`
+- Show redirect or confirmation page: `https://evermorelife.org/thank-you`
 - Add tag in workflow: `evermore-life-lead`
 
 Important A2P details:

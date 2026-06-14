@@ -6,7 +6,7 @@ Customer Care
 
 ## Use Case Description
 
-Evermore Life LLC sends SMS messages only to people who submit a quote request and voluntarily opt in on our website at https://evermorelife.org/home or https://evermorelife.org/optin. Messages are used to confirm receipt of the request, coordinate appointment times, answer questions, and follow up about life insurance coverage options related to the person's inquiry. SMS consent is optional and is not required to request a quote. Messages include opt-out instructions such as STOP and help instructions such as HELP.
+Evermore Life LLC sends SMS messages only to people who submit a quote request and voluntarily opt in on our website at https://evermorelife.org/ or https://evermorelife.org/optin. Messages are used to confirm receipt of the request, coordinate appointment times, answer questions, and follow up about life insurance coverage options related to the person's inquiry. SMS consent is optional and is not required to request a quote. Messages include opt-out instructions such as STOP and help instructions such as HELP.
 
 ## Sample Message #1
 

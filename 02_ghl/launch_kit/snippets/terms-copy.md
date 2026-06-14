@@ -42,7 +42,7 @@ User responsibilities:
 
 Privacy:
 
-`Your use of the website is also governed by our Privacy Policy at https://evermorelife.org/privacypolicy.`
+`Your use of the website is also governed by our Privacy Policy at https://evermorelife.org/privacy.`
 
 Contact:
 
@@ -52,5 +52,5 @@ Contact:
 
 Footer links:
 
-- `https://evermorelife.org/privacypolicy`
+- `https://evermorelife.org/privacy`
 - `https://evermorelife.org/terms`

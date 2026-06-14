@@ -9,6 +9,9 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 SITE_CURRENT_DIR="$PROJECT_ROOT/01_website/current"
 SITE_EXPERIMENTS_DIR="$PROJECT_ROOT/01_website/experiments"
+SITE_V2_DIR="$PROJECT_ROOT/01_website/v2/pages"
+RETIREMENT_V2_DIR="$PROJECT_ROOT/01_website/retirement-planning-v2/pages"
+CAMPAIGN_FUNNEL="$PROJECT_ROOT/04_content_narrative/FUNNEL_PAGE.html"
 
 cat <<'EOF'
 Evermore Meta Pixel wiring
@@ -25,13 +28,19 @@ if [[ ! "$META_PIXEL_ID" =~ ^[0-9]{6,30}$ ]]; then
 fi
 
 FILES=(
-  "$SITE_CURRENT_DIR/index.html"
-  "$SITE_CURRENT_DIR/optin.html"
-  "$SITE_CURRENT_DIR/thank-you.html"
-  "$SITE_EXPERIMENTS_DIR/Evermore_Landing_Page.html"
-  "$SITE_EXPERIMENTS_DIR/Sarah_Evermore_AI.html"
-  "$SITE_EXPERIMENTS_DIR/evermore-landing.html"
+  "$SITE_CURRENT_DIR"/*.html
+  "$SITE_V2_DIR"/*.html
+  "$RETIREMENT_V2_DIR"/*.html
+  "$CAMPAIGN_FUNNEL"
 )
+
+for optional_file in \
+  "$SITE_EXPERIMENTS_DIR/Evermore_Landing_Page.html" \
+  "$SITE_EXPERIMENTS_DIR/Sarah_Evermore_AI.html" \
+  "$SITE_EXPERIMENTS_DIR/evermore-landing.html"
+do
+  [[ -f "$optional_file" ]] && FILES+=("$optional_file")
+done
 
 python3 - "$META_PIXEL_ID" "${FILES[@]}" <<'PY'
 import re
@@ -61,12 +70,19 @@ src="https://www.facebook.com/tr?id={pixel_id}&ev=PageView&noscript=1"
 """
 
 block_re = re.compile(r"\n?<!-- Meta Pixel Code -->[\s\S]*?<!-- End Meta Pixel Code -->\n?", re.I)
+config_re = re.compile(r"(window\.EVERMORE_META_PIXEL_ID\s*=\s*)['\"][^'\"]*['\"]")
 updated = []
 
 for path in paths:
     if not path.exists():
         continue
     text = path.read_text(encoding="utf-8")
+    if config_re.search(text):
+        new = config_re.sub(rf"\g<1>'{pixel_id}'", text)
+        if new != text:
+            path.write_text(new, encoding="utf-8")
+            updated.append(str(path))
+        continue
     without_old = block_re.sub("\n", text)
     if "</head>" not in without_old:
         print(f"Skipped {path}: no </head> tag")

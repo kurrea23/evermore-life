@@ -64,5 +64,5 @@ Contact:
 
 Footer links:
 
-- `https://evermorelife.org/privacypolicy`
+- `https://evermorelife.org/privacy`
 - `https://evermorelife.org/terms`

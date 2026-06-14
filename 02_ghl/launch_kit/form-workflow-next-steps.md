@@ -63,7 +63,7 @@ Add these actions in order:
 4. Send Confirmation Email
    - To the lead
    - Subject: We received your Evermore Life quote request
-   - Body: Thanks for requesting information from Evermore Life LLC. A licensed agent will review your request and follow up shortly. You can review our Privacy Policy at https://evermorelife.org/privacypolicy and Terms of Service at https://evermorelife.org/terms.
+   - Body: Thanks for requesting information from Evermore Life LLC. A licensed agent will review your request and follow up shortly. You can review our Privacy Policy at https://evermorelife.org/privacy and Terms of Service at https://evermorelife.org/terms.
 
 5. Wait
    - Wait 1 day

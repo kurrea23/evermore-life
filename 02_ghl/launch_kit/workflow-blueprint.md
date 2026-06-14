@@ -66,7 +66,7 @@ Body:
 
 `Evermore Life`
 
-`Privacy Policy: https://evermorelife.org/privacypolicy`
+`Privacy Policy: https://evermorelife.org/privacy`
 
 `Terms: https://evermorelife.org/terms`
 
