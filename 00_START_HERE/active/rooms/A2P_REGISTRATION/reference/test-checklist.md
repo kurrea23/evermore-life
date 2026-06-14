@@ -1,1 +1,1 @@
-../../../../02_ghl/launch_kit/test-checklist.md
+../../../../../02_ghl/launch_kit/test-checklist.md
