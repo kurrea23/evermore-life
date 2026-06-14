@@ -12,8 +12,8 @@
       background: #0d1b4b; padding: 16px 40px;
       display: flex; align-items: center; justify-content: space-between;
     }
-    .nav-logo { color: #fff; font-size: 1.5rem; font-weight: 800; text-decoration: none; }
-    .nav-logo span { color: #c8a96e; }
+    .nav-logo { display: inline-flex; align-items: center; text-decoration: none; }
+    .nav-logo img { display: block; width: auto; height: 48px; }
     .nav-back { color: #9aafce; text-decoration: none; font-size: 0.9rem; }
     .nav-back:hover { color: #c8a96e; }
 
@@ -176,7 +176,9 @@ src="https://www.facebook.com/tr?id=1895928277755643&ev=PageView&noscript=1"
 <body>
 
 <nav>
-  <a href="https://evermorelife.org/" class="nav-logo">Evermore <span>Life</span></a>
+  <a href="../../index.html" class="nav-logo" aria-label="Evermore Life home">
+    <img src="../v2/assets/evermorelife-llc-logo-nav.png" alt="Evermore Life" />
+  </a>
   <a href="https://evermorelife.org/" class="nav-back">← Back to Home</a>
 </nav>
 

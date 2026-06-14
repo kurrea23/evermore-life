@@ -14,13 +14,25 @@
   <meta property="og:image" content="https://evermorelife.org/01_website/v2/assets/og-evermore-life.svg" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="stylesheet" href="../assets/state-pages.css" />
+  <style>
+    html { scroll-behavior: smooth; }
+    .reveal { transform: translateY(24px); }
+    .product-card { transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease; }
+    .product-card:hover { border-color: #c8a96e; }
+    .btn-primary { transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; }
+    .btn-primary:hover { box-shadow: 0 8px 20px rgba(13,27,75,0.2); }
+    .step-num { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .step-item:hover .step-num { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(200,169,110,0.15); }
+    .why-card { transition: box-shadow 0.2s ease, transform 0.2s ease; }
+    .why-card:hover { box-shadow: 0 8px 24px rgba(13,27,75,0.12); transform: translateY(-2px); }
+  </style>
 </head>
 <body class="state-active" data-state="TX">
 
 <!-- NAV -->
 <nav class="site-nav" role="navigation" aria-label="Main navigation">
-  <a href="https://evermorelife.org/" class="nav-logo" aria-label="Evermore Life home">
-    <img src="/01_website/v2/assets/evermorelife-llc-logo-nav.png" alt="Evermore Life LLC" />
+  <a href="../../../../index.html" class="nav-logo" aria-label="Evermore Life home">
+    <img src="../assets/evermorelife-llc-logo-nav.png" alt="Evermore Life" />
   </a>
   <ul class="nav-links" id="navLinks">
     <li><a href="#products">Products</a></li>
@@ -247,8 +259,8 @@
 <footer>
   <div class="footer-grid">
     <div class="footer-col">
-      <a href="https://evermorelife.org/" class="footer-brand" aria-label="Evermore Life home">
-        <img src="/01_website/v2/assets/evermorelife-llc-logo-nav.png" alt="Evermore Life LLC" />
+      <a href="../../../../index.html" class="footer-brand" aria-label="Evermore Life home">
+        <img src="../assets/evermorelife-llc-logo-nav.png" alt="Evermore Life" />
       </a>
       <p>Independent life insurance brokerage helping Texas families protect what matters most.</p>
     </div>
@@ -299,21 +311,40 @@
 <script>
 (function() {
   var reveal = document.querySelectorAll('.reveal');
-  var revealObserver = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) entry.target.classList.add('visible');
-    });
-  }, { threshold: 0.1 });
-  reveal.forEach(function(el) { revealObserver.observe(el); });
+  if (!('IntersectionObserver' in window)) {
+    reveal.forEach(function(el) { el.classList.add('visible'); });
+  }
+  var revealObserver = null;
+  if ('IntersectionObserver' in window) {
+    revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveal.forEach(function(el) { revealObserver.observe(el); });
+  }
 
   var toggle = document.getElementById('navToggle');
   var links = document.getElementById('navLinks');
-  toggle.addEventListener('click', function() {
-    var open = links.classList.toggle('open');
-    toggle.setAttribute('aria-expanded', open);
-  });
+  if (toggle && links) {
+    toggle.addEventListener('click', function() {
+      var open = links.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open);
+    });
+    links.querySelectorAll('a').forEach(function(a) {
+      a.addEventListener('click', function() {
+        links.querySelectorAll('a').forEach(function(link) { link.classList.remove('is-active'); });
+        a.classList.add('is-active');
+        links.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
 
-  document.querySelectorAll('[data-count-to]').forEach(function(counter) {
+  function animateCounter(counter) {
     var target = Number(counter.dataset.countTo);
     var suffix = counter.dataset.suffix || '';
     var start = null;
@@ -324,11 +355,27 @@
       if (progress < 1) requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
-  });
+  }
+  var counters = document.querySelectorAll('[data-count-to]');
+  if ('IntersectionObserver' in window) {
+    var counterObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (!entry.isIntersecting) return;
+        animateCounter(entry.target);
+        counterObserver.unobserve(entry.target);
+      });
+    }, { threshold: 0.45 });
+    counters.forEach(function(counter) { counterObserver.observe(counter); });
+  } else {
+    counters.forEach(animateCounter);
+  }
 
+  function initCharts() {
+    if (typeof Chart === 'undefined') return;
   var chartDefaults = {
     responsive: true,
     maintainAspectRatio: false,
+    animation: { duration: 1600, easing: 'easeOutQuart' },
     plugins: { legend: { labels: { color: '#9aafce' } } },
     scales: {
       x: { ticks: { color: '#9aafce' }, grid: { color: 'rgba(255,255,255,0.05)' } },
@@ -360,8 +407,20 @@
       labels: ['Coverage in place', 'Potential gap'],
       datasets: [{ data: [168000, 582000], backgroundColor: ['#c8a96e', 'rgba(96,165,250,0.22)'], borderColor: ['#c8a96e', '#60a5fa'] }]
     },
-    options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { labels: { color: '#9aafce' } } } }
+    options: { responsive: true, maintainAspectRatio: false, cutout: '68%', animation: { animateRotate: true, duration: 1700, easing: 'easeOutQuart' }, plugins: { legend: { labels: { color: '#9aafce' } } } }
   });
+  }
+  var chartSection = document.getElementById('how-money-works');
+  if (chartSection && 'IntersectionObserver' in window) {
+    var chartObserver = new IntersectionObserver(function(entries) {
+      if (!entries[0].isIntersecting) return;
+      initCharts();
+      chartObserver.disconnect();
+    }, { threshold: 0.3 });
+    chartObserver.observe(chartSection);
+  } else {
+    initCharts();
+  }
 })();
 </script>
 
