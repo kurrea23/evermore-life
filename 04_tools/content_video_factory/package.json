@@ -1,0 +1,26 @@
+{
+  "name": "evermore-content-video-factory",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio src/index.ts --public-dir ../..",
+    "render:soccer": "remotion render src/index.ts SoccerDadLegacy ../../04_content_narrative/ad_campaign_scaffold/exports/rough-cuts/ELC_2026_Q2_TOF_SoccerDad_Legacy_9x16_v01_rough.mp4 --public-dir ../.. --scale=0.5",
+    "render:chef": "remotion render src/index.ts ChefDaughterLegacy ../../04_content_narrative/ad_campaign_scaffold/exports/rough-cuts/ELC_2026_Q2_TOF_ChefDaughter_Legacy_9x16_v01_rough.mp4 --public-dir ../.. --scale=0.5",
+    "render:graduation": "remotion render src/index.ts GraduationLegacy ../../04_content_narrative/ad_campaign_scaffold/exports/rough-cuts/ELC_2026_Q2_TOF_Graduation_Legacy_9x16_v01_rough.mp4 --public-dir ../.. --scale=0.5",
+    "render:final-expense": "remotion render src/index.ts FinalExpenseClarity ../../04_content_narrative/ad_campaign_scaffold/exports/rough-cuts/ELC_2026_Q2_MOF_FinalExpense_Clarity_9x16_v01_rough.mp4 --public-dir ../.. --scale=0.5",
+    "render:tree": "remotion render src/index.ts TreeKeepsGrowing ../../04_content_narrative/ad_campaign_scaffold/exports/rough-cuts/ELC_2026_Q2_TOF_TreeKeepsGrowing_9x16_v01_rough.mp4 --public-dir ../.. --scale=0.5",
+    "render:rough-cuts": "npm run render:soccer && npm run render:chef && npm run render:graduation && npm run render:final-expense && npm run render:tree"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "@remotion/media": "^4.0.0",
+    "@remotion/transitions": "^4.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.7.0"
+  }
+}

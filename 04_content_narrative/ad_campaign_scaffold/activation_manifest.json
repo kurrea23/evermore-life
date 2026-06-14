@@ -1,0 +1,340 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-06-14",
+  "service_status_source": "01_website/state-pages/data/states.json",
+  "default_organic_destination": "https://evermorelife.org/optin",
+  "default_paid_destination": "https://evermorelife.org/optin",
+  "paid_launch_status": "hold",
+  "paid_launch_reason": "Live GHL state routing, controlled lead flow, Meta Test Events, final creative approval, and human publish approval remain required.",
+  "items": [
+    {
+      "creative_id": "ELC_2026_Q2_LEAD_HowItWorks_9x16_v01",
+      "slug": "how-it-works",
+      "title": "How It Works",
+      "stage": "LEAD",
+      "priority": 1,
+      "source_clip_dir": null,
+      "clips": [],
+      "expected_clip_count": 0,
+      "rough_asset": null,
+      "final_asset": "04_content_narrative/ad_campaign_scaffold/exports/ELC_2026_Q2_LEAD_HowItWorks_9x16_v01_meta_final.mp4",
+      "production_source": "Phone, HeyGen, or approved talking-head recording",
+      "illustrative_story": false,
+      "product_focused": true,
+      "organic_channels": [
+        "Instagram Reels",
+        "Facebook Reels",
+        "Facebook Page"
+      ],
+      "organic_caption": "A coverage review should feel clear, not confusing. Evermore Life starts with a few basic questions about what you want to protect, then a licensed professional can help explain available options and next steps. No pressure. Just a clearer next step.",
+      "organic_cta": "Start a simple coverage review",
+      "hashtags": "#EvermoreLife #LifeInsuranceEducation #CoverageReview",
+      "paid_role": "First paid launch creative",
+      "paid_objective": "Leads",
+      "meta_draft_name": "ELC_2026_Q2_LEAD_HowItWorks_9x16_v01",
+      "ad_copy_source": "04_content_narrative/META_ADS_UPLOAD_PACKAGE.md",
+      "promotion_rule": "Use as the first paid launch creative only after every launch gate passes.",
+      "captions": []
+    },
+    {
+      "creative_id": "ELC_2026_Q2_TOF_SoccerDad_Legacy_9x16_v01",
+      "slug": "soccer-dad-legacy",
+      "title": "Soccer Dad Legacy",
+      "stage": "TOF",
+      "priority": 2,
+      "source_clip_dir": "05_video_clips/G05_Soccer_Son",
+      "clips": [
+        "05_video_clips/G05_Soccer_Son/s1_clip_01_cleats_shelf.mp4",
+        "05_video_clips/G05_Soccer_Son/s1_clip_02_boy_kicking.mp4",
+        "05_video_clips/G05_Soccer_Son/s1_clip_03_tying_cleats.mp4",
+        "05_video_clips/G05_Soccer_Son/s1_clip_04_teen_rain.mp4",
+        "05_video_clips/G05_Soccer_Son/s1_clip_05_award.mp4",
+        "05_video_clips/G05_Soccer_Son/s1_clip_06_stadium_hug.mp4",
+        "05_video_clips/G05_Soccer_Son/s1_clip_07_oak_sapling.mp4"
+      ],
+      "expected_clip_count": 7,
+      "rough_asset": "04_content_narrative/ad_campaign_scaffold/exports/rough-cuts/ELC_2026_Q2_TOF_SoccerDad_Legacy_9x16_v01_rough.mp4",
+      "final_asset": "04_content_narrative/ad_campaign_scaffold/exports/ELC_2026_Q2_TOF_SoccerDad_Legacy_9x16_v01_meta_final.mp4",
+      "production_source": "Existing local Kling clips",
+      "illustrative_story": true,
+      "product_focused": false,
+      "organic_channels": [
+        "Instagram Reels",
+        "Facebook Reels",
+        "YouTube Shorts"
+      ],
+      "organic_caption": "A story about legacy. Some dreams do not end. They move through the people we love. The practices, shifts, sacrifices, and ordinary ways we keep showing up become part of someone else's future.",
+      "organic_cta": "Follow the story",
+      "hashtags": "#EvermoreLife #Legacy #FamilyStory #BeThereEvermore",
+      "paid_role": "Top-of-funnel video-view campaign",
+      "paid_objective": "Engagement / Video Views",
+      "meta_draft_name": "ELC_2026_Q2_TOF_SoccerDad_9x16_v01",
+      "ad_copy_source": "04_content_narrative/FACEBOOK_AD_CAMPAIGN_COMPLETE.md, AD A-1",
+      "promotion_rule": "Publish organically first. Consider paid TOF use only after final review and useful watch-retention evidence.",
+      "captions": [
+        {
+          "start_seconds": 0,
+          "end_seconds": 6,
+          "text": "He gave up the game so his son could play it better."
+        },
+        {
+          "start_seconds": 6,
+          "end_seconds": 14,
+          "text": "Every early morning. Every sideline in the rain."
+        },
+        {
+          "start_seconds": 14,
+          "end_seconds": 22,
+          "text": "Every sacrifice nobody saw."
+        },
+        {
+          "start_seconds": 22,
+          "end_seconds": 30,
+          "text": "One day, his son crossed a finish line he helped build."
+        },
+        {
+          "start_seconds": 30,
+          "end_seconds": 33,
+          "text": "That is legacy."
+        }
+      ]
+    },
+    {
+      "creative_id": "ELC_2026_Q2_TOF_ChefDaughter_Legacy_9x16_v01",
+      "slug": "chef-daughter-legacy",
+      "title": "Chef Daughter Legacy",
+      "stage": "TOF",
+      "priority": 3,
+      "source_clip_dir": "05_video_clips/G06_Chef_Daughter",
+      "clips": [
+        "05_video_clips/G06_Chef_Daughter/s2_clip_01_cooking_together.mp4",
+        "05_video_clips/G06_Chef_Daughter/s2_clip_02_flour_hands.mp4",
+        "05_video_clips/G06_Chef_Daughter/s2_clip_03_parent_paperwork.mp4",
+        "05_video_clips/G06_Chef_Daughter/s2_clip_04_teen_cooking.mp4",
+        "05_video_clips/G06_Chef_Daughter/s2_clip_05_restaurant_proud.mp4",
+        "05_video_clips/G06_Chef_Daughter/s2_clip_06_daughter_hug.mp4"
+      ],
+      "expected_clip_count": 6,
+      "rough_asset": "04_content_narrative/ad_campaign_scaffold/exports/rough-cuts/ELC_2026_Q2_TOF_ChefDaughter_Legacy_9x16_v01_rough.mp4",
+      "final_asset": "04_content_narrative/ad_campaign_scaffold/exports/ELC_2026_Q2_TOF_ChefDaughter_Legacy_9x16_v01_meta_final.mp4",
+      "production_source": "Existing local Kling clips",
+      "illustrative_story": true,
+      "product_focused": false,
+      "organic_channels": [
+        "Instagram Reels",
+        "Facebook Reels",
+        "YouTube Shorts"
+      ],
+      "organic_caption": "A story about legacy. The little things you teach, repeat, and quietly make possible can become the roots someone else grows from.",
+      "organic_cta": "Share with someone who showed up",
+      "hashtags": "#EvermoreLife #Legacy #FamilyStory #BeThereEvermore",
+      "paid_role": "Organic-first TOF challenger",
+      "paid_objective": "Engagement / Video Views",
+      "meta_draft_name": null,
+      "ad_copy_source": "04_content_narrative/VIDEO_PRODUCTION_PROMPTS_COMPLETE.md",
+      "promotion_rule": "Publish organically first. Create a paid challenger only if watch retention and shares justify it.",
+      "captions": [
+        {
+          "start_seconds": 0,
+          "end_seconds": 5,
+          "text": "She learned to cook from you."
+        },
+        {
+          "start_seconds": 5,
+          "end_seconds": 11,
+          "text": "She learned to work from watching you."
+        },
+        {
+          "start_seconds": 11,
+          "end_seconds": 18,
+          "text": "Now she has her own place."
+        },
+        {
+          "start_seconds": 18,
+          "end_seconds": 25,
+          "text": "And the first dish on the menu is yours."
+        },
+        {
+          "start_seconds": 25,
+          "end_seconds": 28,
+          "text": "That is legacy."
+        }
+      ]
+    },
+    {
+      "creative_id": "ELC_2026_Q2_TOF_Graduation_Legacy_9x16_v01",
+      "slug": "graduation-legacy",
+      "title": "Graduation Legacy",
+      "stage": "TOF",
+      "priority": 4,
+      "source_clip_dir": "05_video_clips/G07_Graduation",
+      "clips": [
+        "05_video_clips/G07_Graduation/s3_clip_01_sunrise_leave.mp4",
+        "05_video_clips/G07_Graduation/s3_clip_02_child_asleep.mp4",
+        "05_video_clips/G07_Graduation/s3_clip_03_bills.mp4",
+        "05_video_clips/G07_Graduation/s3_clip_04_studying.mp4",
+        "05_video_clips/G07_Graduation/s3_clip_05_graduation_stage.mp4",
+        "05_video_clips/G07_Graduation/s3_clip_06_finding_parent.mp4",
+        "05_video_clips/G07_Graduation/s3_clip_07_hug.mp4",
+        "05_video_clips/G07_Graduation/s3_clip_08_roots.mp4"
+      ],
+      "expected_clip_count": 8,
+      "rough_asset": "04_content_narrative/ad_campaign_scaffold/exports/rough-cuts/ELC_2026_Q2_TOF_Graduation_Legacy_9x16_v01_rough.mp4",
+      "final_asset": "04_content_narrative/ad_campaign_scaffold/exports/ELC_2026_Q2_TOF_Graduation_Legacy_9x16_v01_meta_final.mp4",
+      "production_source": "Existing local Kling clips",
+      "illustrative_story": true,
+      "product_focused": false,
+      "organic_channels": [
+        "Instagram Reels",
+        "Facebook Reels",
+        "YouTube Shorts"
+      ],
+      "organic_caption": "A story about legacy. They may not remember every late night, every shift, or every quiet sacrifice. But one day, every hard day has a face.",
+      "organic_cta": "Tag someone who never gave up",
+      "hashtags": "#EvermoreLife #Legacy #Graduation #FamilyStory",
+      "paid_role": "Organic-first TOF challenger",
+      "paid_objective": "Engagement / Video Views",
+      "meta_draft_name": null,
+      "ad_copy_source": "04_content_narrative/VIDEO_PRODUCTION_PROMPTS_COMPLETE.md",
+      "promotion_rule": "Publish organically first. Create a paid challenger only if watch retention and shares justify it.",
+      "captions": [
+        {
+          "start_seconds": 0,
+          "end_seconds": 7,
+          "text": "They may not remember every late night."
+        },
+        {
+          "start_seconds": 7,
+          "end_seconds": 15,
+          "text": "But they will remember that you never gave up."
+        },
+        {
+          "start_seconds": 15,
+          "end_seconds": 25,
+          "text": "Every shift. Every sacrifice. Every quiet choice for their future."
+        },
+        {
+          "start_seconds": 25,
+          "end_seconds": 34,
+          "text": "One day, they walk across the stage."
+        },
+        {
+          "start_seconds": 34,
+          "end_seconds": 37,
+          "text": "That is legacy."
+        }
+      ]
+    },
+    {
+      "creative_id": "ELC_2026_Q2_MOF_FinalExpense_Clarity_9x16_v01",
+      "slug": "final-expense-clarity",
+      "title": "Final Expense Clarity",
+      "stage": "MOF",
+      "priority": 5,
+      "source_clip_dir": "05_video_clips/G08_Final_Expense",
+      "clips": [
+        "05_video_clips/G08_Final_Expense/s4_clip_01_photo_album.mp4",
+        "05_video_clips/G08_Final_Expense/s4_clip_02_hands.mp4",
+        "05_video_clips/G08_Final_Expense/s4_clip_03_folder.mp4",
+        "05_video_clips/G08_Final_Expense/s4_clip_04_tree.mp4"
+      ],
+      "expected_clip_count": 4,
+      "rough_asset": "04_content_narrative/ad_campaign_scaffold/exports/rough-cuts/ELC_2026_Q2_MOF_FinalExpense_Clarity_9x16_v01_rough.mp4",
+      "final_asset": "04_content_narrative/ad_campaign_scaffold/exports/ELC_2026_Q2_MOF_FinalExpense_Clarity_9x16_v01_meta_final.mp4",
+      "production_source": "Existing local Kling clips",
+      "illustrative_story": false,
+      "product_focused": true,
+      "organic_channels": [
+        "Instagram Reels",
+        "Facebook Reels",
+        "Facebook Page"
+      ],
+      "organic_caption": "The people we love should not have to carry confusion on top of grief. Final expense coverage can be one way to create clarity. Not because we expect the worst. Because love prepares.",
+      "organic_cta": "Request a simple coverage review",
+      "hashtags": "#EvermoreLife #FinalExpense #FamilyProtection #InsuranceEducation",
+      "paid_role": "Warm-audience education candidate",
+      "paid_objective": "Landing Page Views",
+      "meta_draft_name": null,
+      "ad_copy_source": "04_content_narrative/VIDEO_PRODUCTION_PROMPTS_COMPLETE.md",
+      "promotion_rule": "Use only after compliance review and after a warm audience exists.",
+      "captions": [
+        {
+          "start_seconds": 0,
+          "end_seconds": 5,
+          "text": "The people we love should not have to guess what we wanted."
+        },
+        {
+          "start_seconds": 5,
+          "end_seconds": 10,
+          "text": "They should not have to carry confusion on top of grief."
+        },
+        {
+          "start_seconds": 10,
+          "end_seconds": 16,
+          "text": "Final expense coverage can be one way to create clarity."
+        },
+        {
+          "start_seconds": 16,
+          "end_seconds": 19,
+          "text": "Because love prepares."
+        }
+      ]
+    },
+    {
+      "creative_id": "ELC_2026_Q2_TOF_TreeKeepsGrowing_9x16_v01",
+      "slug": "tree-keeps-growing",
+      "title": "Tree Keeps Growing",
+      "stage": "TOF",
+      "priority": 6,
+      "source_clip_dir": "05_video_clips/G10_Tree_Grows",
+      "clips": [
+        "05_video_clips/G10_Tree_Grows/s6_clip_01_acorn.mp4",
+        "05_video_clips/G10_Tree_Grows/s6_clip_02_rain.mp4",
+        "05_video_clips/G10_Tree_Grows/s6_clip_03_sapling.mp4",
+        "05_video_clips/G10_Tree_Grows/s6_clip_04_young_tree.mp4",
+        "05_video_clips/G10_Tree_Grows/s6_clip_05_family_tree.mp4"
+      ],
+      "expected_clip_count": 5,
+      "rough_asset": "04_content_narrative/ad_campaign_scaffold/exports/rough-cuts/ELC_2026_Q2_TOF_TreeKeepsGrowing_9x16_v01_rough.mp4",
+      "final_asset": "04_content_narrative/ad_campaign_scaffold/exports/ELC_2026_Q2_TOF_TreeKeepsGrowing_9x16_v01_meta_final.mp4",
+      "production_source": "Existing local Kling clips",
+      "illustrative_story": false,
+      "product_focused": false,
+      "organic_channels": [
+        "Instagram Reels",
+        "Facebook Reels",
+        "YouTube Shorts"
+      ],
+      "organic_caption": "A legacy starts small. A choice. A plan. A promise. Then one day, it gives shade to the people you love.",
+      "organic_cta": "Be there evermore",
+      "hashtags": "#EvermoreLife #Legacy #BeThereEvermore #FamilyProtection",
+      "paid_role": "Brand-awareness candidate",
+      "paid_objective": "Engagement / Video Views",
+      "meta_draft_name": null,
+      "ad_copy_source": "04_content_narrative/FACEBOOK_AD_CAMPAIGN_COMPLETE.md, AD A-2",
+      "promotion_rule": "Publish organically first. Use for paid awareness only if it earns useful watch retention.",
+      "captions": [
+        {
+          "start_seconds": 0,
+          "end_seconds": 5,
+          "text": "A legacy starts small."
+        },
+        {
+          "start_seconds": 5,
+          "end_seconds": 10,
+          "text": "A choice. A plan. A promise."
+        },
+        {
+          "start_seconds": 10,
+          "end_seconds": 19,
+          "text": "Then one day, it gives shade to the people you love."
+        },
+        {
+          "start_seconds": 19,
+          "end_seconds": 23,
+          "text": "Be there evermore."
+        }
+      ]
+    }
+  ]
+}

@@ -21,6 +21,7 @@ The content system is built to move two types of people — the protective paren
 ├── NARRATIVE_BIBLE.md               ← Brand story, ICPs, tone, message pillars
 ├── EXECUTION_PLAN.md                ← Week-by-week launch roadmap
 ├── AI_VIDEO_PROMPTS.md              ← Ready-to-use Sora / Runway / Midjourney prompts
+├── ad_campaign_scaffold/            ← Campaign production queue, Higgsfield MCP brief, output tracker
 ├── FUNNEL_PAGE.html                 ← Standalone landing page for the content campaign
 └── STORY_SCRIPTS/
     ├── soccer_dad_script.md         ← Full cinematic hero video script
@@ -60,6 +61,14 @@ SHORT FORM AD (TikTok/Reels/Shorts)
 
 ### The AI Video Production Layer
 **AI_VIDEO_PROMPTS.md** translates the scripts into ready-to-paste generation prompts for Sora, Runway ML, and Midjourney. This enables rapid, low-cost production of cinematic content without traditional film crews.
+
+### The Ad Campaign Scaffold
+**ad_campaign_scaffold/** turns the narrative system into a repeatable ad factory. It contains the first production batch, campaign naming, Higgsfield MCP prompt brief, generated-output lanes, and a review tracker for deciding which videos are approved, exported, launched, paused, or scaled.
+
+Start daily execution in
+`ad_campaign_scaffold/CONTENT_ACTIVATION_BOARD.md`. It inventories real local
+assets, points to paste-ready post packages, and holds paid promotion behind
+the current service-state and live-funnel gates.
 
 ### The Launch Timeline
 **EXECUTION_PLAN.md** is the operational document — who does what, which tools to use, what it costs, and how to know if it's working.
