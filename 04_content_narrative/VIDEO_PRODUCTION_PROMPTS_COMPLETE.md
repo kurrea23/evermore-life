@@ -101,7 +101,7 @@ The people we love should not have to carry confusion on top of grief. Final exp
 
 ### Voiceover
 
-Life insurance is not one-size-fits-all. Your age, health, state, budget, and goals matter. Evermore Life helps families in Arizona and Arkansas start a simple coverage review and compare options that may fit. No pressure. No obligation. Just a clearer next step.
+Life insurance is not one-size-fits-all. Your age, health, state, budget, and goals matter. Evermore Life helps families in Arizona and Texas start a simple coverage review and compare options that may fit. No pressure. No obligation. Just a clearer next step.
 
 ### HeyGen Script
 
@@ -162,4 +162,3 @@ Coverage, pricing, and eligibility depend on age, health, state, product type, c
 - Add the short-form coverage disclaimer in caption copy.
 - Confirm no generated logos, text artifacts, fake policy documents, or unsupported claims.
 - Record every take in `ad_campaign_scaffold/creative_output_tracker.md`.
-

@@ -1,7 +1,7 @@
 # Evermore Organic Content Calendar - 30 Days
 
-**Goal:** Build trust and warm audiences while paid-ad tracking is completed.  
-**Mix:** Emotional story, education, and trust/process.  
+**Goal:** Build trust and warm audiences while paid-ad tracking is completed.
+**Mix:** Emotional story, education, and trust/process.
 **Primary CTA:** `Start a simple coverage review: https://evermorelife.org/optin`
 **Paste-ready Meta batch:** `ad_campaign_scaffold/META_ORGANIC_CONTENT_BATCH_30DAY.md`
 

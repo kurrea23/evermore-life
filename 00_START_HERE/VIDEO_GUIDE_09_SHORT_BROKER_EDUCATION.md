@@ -157,7 +157,7 @@ Save as: `ELC_Short_BrokerEd_Thumb_9x16.jpg`
 
 At the end card, add small text:
 ```
-This is educational content only. Coverage availability varies by age, health, state, carrier, and eligibility. Not all applicants qualify. Evermore Life Insurance LLC. Licensed in Arizona and Arkansas.
+This is educational content only. Coverage availability varies by age, health, state, carrier, and eligibility. Not all applicants qualify. Evermore Life Insurance LLC. Licensed in Arizona and Texas.
 ```
 
 ---

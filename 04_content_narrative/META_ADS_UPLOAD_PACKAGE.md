@@ -1,8 +1,8 @@
 # Evermore Meta Ads Upload Package
 
-**Prepared:** June 13, 2026  
-**Launch status:** Draft-ready; do not publish until Pixel and GHL test-lead gates pass.  
-**Active geographies:** Arizona and Arkansas only. Do not add Texas until licensing is confirmed active.
+**Prepared:** June 13, 2026
+**Launch status:** Draft-ready; do not publish until Pixel and GHL test-lead gates pass.
+**Active geographies:** Arizona and Texas only. Do not add Texas until licensing is confirmed active.
 
 ## Account-Level Setup
 
@@ -40,7 +40,7 @@
 | Field | Value |
 | --- | --- |
 | Ad set name | `AZ-AR_Adults_CoverageReview_Broad_v01` |
-| Location | Arizona; Arkansas |
+| Location | Arizona; Texas |
 | Age | Adults permitted by the current Financial Products and Services category |
 | Gender | All |
 | Audience | Broad; do not rely on restricted targeting that Ads Manager removes |
@@ -63,7 +63,7 @@
 
 > Life insurance is not one-size-fits-all. Your age, health, state, budget, and goals all matter.
 >
-> Evermore Life helps families in Arizona and Arkansas start a simple coverage review and compare options that may fit.
+> Evermore Life helps families in Arizona and Texas start a simple coverage review and compare options that may fit.
 >
 > No pressure. No obligation. Just a clearer next step.
 >
@@ -85,7 +85,7 @@
 >
 > Protection is one more way to keep showing up for the people who carry your story.
 >
-> Evermore Life helps families in Arizona and Arkansas compare life insurance options based on their goals and situation.
+> Evermore Life helps families in Arizona and Texas compare life insurance options based on their goals and situation.
 >
 > Coverage options vary by age, health, state, product type, carrier, and eligibility. Not all applicants qualify. This is a solicitation for insurance.
 
@@ -125,4 +125,3 @@ Fill this before publishing:
 | Controlled GHL lead ID | `[CONFIRM]` |
 | Approved creative path | `[CONFIRM]` |
 | Human approver | `[CONFIRM]` |
-

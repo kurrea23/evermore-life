@@ -360,7 +360,7 @@ Add text overlays at these exact moments:
 At the very end (last 3 seconds), add small text at bottom of screen:
 
 ```
-Coverage availability, policy type, benefits, premiums, and approval depend on age, health, state, carrier underwriting, and eligibility. Not all applicants qualify. Evermore Life Insurance LLC. Licensed in Arizona and Arkansas.
+Coverage availability, policy type, benefits, premiums, and approval depend on age, health, state, carrier underwriting, and eligibility. Not all applicants qualify. Evermore Life Insurance LLC. Licensed in Arizona and Texas.
 ```
 
 Font size: small (12–14pt equivalent)

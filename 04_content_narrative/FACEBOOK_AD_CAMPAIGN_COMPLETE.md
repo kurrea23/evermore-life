@@ -1,16 +1,16 @@
 # Evermore Life — Facebook Ad Campaign: Complete & Ready to Launch
-**Updated:** June 2026 | **Focus:** IUL · Retirement Planning · Mortgage Protection · Final Expense  
-**Campaign Name:** Evermore Life Cinematic Legacy Campaign (ELC 2026 Q2)  
+**Updated:** June 2026 | **Focus:** IUL · Retirement Planning · Mortgage Protection · Final Expense
+**Campaign Name:** Evermore Life Cinematic Legacy Campaign (ELC 2026 Q2)
 **Tagline:** *Your legacy moves on. Be there evermore.*
 
 ---
 
 ## ⚡ READ THIS FIRST — YOUR SITUATION RIGHT NOW
 
-You are licensed in **Arizona, Arkansas, and soon Texas**.  
-You have a **Go High Level** account, a **v2 website**, and a **Sarah AI intake flow**.  
-You are **cash-constrained** and need leads that cost less than $31 and actually pick up the phone.  
-**Goal #1:** Get your first self-generated booked call this week.  
+You are licensed in **Arizona and Texas; Arkansas remains pending**.
+You have a **Go High Level** account, a **v2 website**, and a **Sarah AI intake flow**.
+You are **cash-constrained** and need leads that cost less than $31 and actually pick up the phone.
+**Goal #1:** Get your first self-generated booked call this week.
 **Goal #2:** Build a machine that runs at $10–15/lead cost-per-lead long term.
 
 The strategy: warm people up with emotional video → retarget viewers with education → convert warm traffic with the Sarah AI intake. You own the whole thing.
@@ -46,7 +46,7 @@ CAMPAIGN C — BOTTOM OF FUNNEL (Leads / Conversions)
   → Budget: $5/day to start
 ```
 
-**Total starting budget: $25/day = ~$750/month.**  
+**Total starting budget: $25/day = ~$750/month.**
 This is your break-even point. If you close 1 policy from $750 in ad spend, you're already ahead of the $31/lead agency model.
 
 ---
@@ -62,12 +62,12 @@ This is your break-even point. If you close 1 policy from $750 in ad spend, you'
 ---
 
 ## ── CAMPAIGN A: TOP OF FUNNEL ──
-### Audience: Cold — Arizona and Arkansas only until Texas licensing is active; interests: Family, Parenting, Homeownership, Financial Planning
+### Audience: Cold — Arizona and Texas only until Texas licensing is active; interests: Family, Parenting, Homeownership, Financial Planning
 
 ---
 
 ### AD A-1 — Soccer Dad Legacy (Primary TOF Video)
-**Creative:** Soccer Dad hero video (3–5 min) or 35-sec short cut  
+**Creative:** Soccer Dad hero video (3–5 min) or 35-sec short cut
 **Placement:** Facebook Feed + Instagram Reels + Facebook Reels
 
 ```
@@ -76,7 +76,7 @@ He was the best player in his county.
 
 Then life gave him something bigger to protect.
 
-Years later, his son picked up the ball — not because anyone pushed him. 
+Years later, his son picked up the ball — not because anyone pushed him.
 Because something inside him already knew.
 
 So the father showed up.
@@ -113,7 +113,7 @@ Learn More
 ---
 
 ### AD A-2 — The Tree Keeps Growing (Brand / Symbol Ad)
-**Creative:** Acorn → tree growth animation or cinematic nature footage, 15–25 sec  
+**Creative:** Acorn → tree growth animation or cinematic nature footage, 15–25 sec
 **Placement:** Facebook Feed + Instagram Reels
 
 ```
@@ -152,8 +152,8 @@ Learn More
 ---
 
 ### AD A-3 — IUL / Retirement Planning Hook (NEW — Retirement Audience)
-**Creative:** Talking head or cinematic lifestyle — couple in their 50s, home equity, calm life  
-**Placement:** Facebook Feed (skews older, better for 40–58 demographic)  
+**Creative:** Talking head or cinematic lifestyle — couple in their 50s, home equity, calm life
+**Placement:** Facebook Feed (skews older, better for 40–58 demographic)
 **Target:** Ages 40–58, interests: Retirement Planning, Financial Independence, Investing, Home Equity
 
 ```
@@ -195,8 +195,8 @@ Learn More
 ---
 
 ### AD A-4 — Mortgage Protection Hook
-**Creative:** Family in front of a home, or parent signing documents  
-**Placement:** Facebook Feed + Instagram  
+**Creative:** Family in front of a home, or parent signing documents
+**Placement:** Facebook Feed + Instagram
 **Target:** Ages 28–50, interests: Homeownership, Mortgage, First-Time Home Buyer
 
 ```
@@ -212,7 +212,7 @@ Mortgage protection life insurance is designed specifically to cover your mortga
 
 It's one of the most overlooked types of coverage. And for most homeowners, it costs less than you'd think.
 
-We're Evermore Life. We help homeowners in Arizona and Arkansas compare mortgage protection options based on your loan balance, age, and health situation.
+We're Evermore Life. We help homeowners in Arizona and Texas compare mortgage protection options based on your loan balance, age, and health situation.
 
 Start with a simple coverage review. No pressure.
 
@@ -237,8 +237,8 @@ Learn More
 ---
 
 ### AD A-5 — Final Expense (for ages 50–75 audience)
-**Creative:** Adult child with parent, warm home setting  
-**Placement:** Facebook Feed  
+**Creative:** Adult child with parent, warm home setting
+**Placement:** Facebook Feed
 **Target:** Ages 50–75 (or ages 35–55 targeting adult children thinking about parents)
 
 ```
@@ -254,7 +254,7 @@ But she made sure the financial part was already figured out.
 
 That's what final expense coverage does.
 
-It's not a big policy. It's a plan. A gift. A way of saying: 
+It's not a big policy. It's a plan. A gift. A way of saying:
 "I love you enough to make sure you're not carrying this alone."
 
 We're Evermore Life. We help families compare final expense options — simple whole life policies designed to cover burial costs, medical bills, and final expenses — so no one is left figuring it out in the hardest moment.
@@ -285,7 +285,7 @@ Learn More
 ---
 
 ### AD B-1 — "Here's What Actually Happens" Education
-**Creative:** Sarah AI walkthrough or simple explainer, 30–45 sec  
+**Creative:** Sarah AI walkthrough or simple explainer, 30–45 sec
 
 ```
 [PRIMARY TEXT]
@@ -324,7 +324,7 @@ Get Started
 ---
 
 ### AD B-2 — Term vs. IUL vs. Final Expense Education
-**Creative:** Simple motion graphic or talking head, 45–60 sec  
+**Creative:** Simple motion graphic or talking head, 45–60 sec
 
 ```
 [PRIMARY TEXT]
@@ -373,13 +373,13 @@ See My Options
 ---
 
 ### AD B-3 — IUL Retirement Deep Dive (Retargeting IUL viewers)
-**Creative:** Calm, confident — lifestyle imagery or AI spokesperson  
+**Creative:** Calm, confident — lifestyle imagery or AI spokesperson
 
 ```
 [PRIMARY TEXT]
 If you're between 35 and 55 and thinking about retirement, this is worth 2 minutes.
 
-An Indexed Universal Life policy (IUL) isn't just life insurance. 
+An Indexed Universal Life policy (IUL) isn't just life insurance.
 It's a financial vehicle that can:
 
 ✅ Build cash value tied to a market index (with downside protection)
@@ -392,7 +392,7 @@ Unlike direct market investments, IUL interest crediting may include a floor and
 
 This isn't for everyone. But if you're looking for a way to protect your family AND build something for retirement — an IUL conversation is worth having.
 
-We're Evermore Life. We're licensed in Arizona and Arkansas. Let's start with a simple review.
+We're Evermore Life. We're licensed in Arizona and Texas. Let's start with a simple review.
 
 ▸ IULs are complex products. This is educational content only. Product availability, caps, floors, fees, and suitability vary by carrier, age, health, and state. Not all applicants qualify. Speak with a licensed professional before making decisions.
 ```
@@ -420,7 +420,7 @@ See My Options
 ---
 
 ### AD C-1 — The Soft Re-Engage
-**Creative:** 15–20 sec simple text-motion or Sarah AI clip  
+**Creative:** 15–20 sec simple text-motion or Sarah AI clip
 
 ```
 [PRIMARY TEXT]
@@ -453,7 +453,7 @@ Get Started
 ---
 
 ### AD C-2 — The Objection Crusher (Price)
-**Creative:** Talking head or text motion  
+**Creative:** Talking head or text motion
 
 ```
 [PRIMARY TEXT]
@@ -495,7 +495,7 @@ See My Options
 ---
 
 ### AD C-3 — The Objection Crusher (Health Concerns)
-**Creative:** Compassionate tone, warm visual  
+**Creative:** Compassionate tone, warm visual
 
 ```
 [PRIMARY TEXT]
@@ -511,7 +511,7 @@ Final expense policies, in particular, often have simplified or guaranteed-issue
 
 The only way to know what you qualify for is to ask.
 
-We help people in Arizona and Arkansas figure out what they may actually qualify for — not what they assume they can't get.
+We help people in Arizona and Texas figure out what they may actually qualify for — not what they assume they can't get.
 
 It starts with a few honest questions. That's it.
 
@@ -720,7 +720,7 @@ ELC_2026_Q2_BOF_HealthObjection_SarahNoBook_Feed_v01
 - A great conversation opener ("Is your family protected?") that can pivot to IUL if they qualify
 
 ### The Pitch Shift for IUL/Retirement:
-**Old hook:** "Protect your family if something happens to you."  
+**Old hook:** "Protect your family if something happens to you."
 **New hook:** "What if your life insurance could also be part of your retirement plan?"
 
 This hits differently with the 40–55 demographic who are already thinking about retirement and feel like they're behind on savings.
@@ -741,7 +741,7 @@ These can be recorded on your phone today. No AI video needed.
 > Policy value may be accessed through withdrawals or loans, but policy terms, lapse risk, and tax considerations matter.
 > It's not for everyone. Your age, health, and goals matter.
 > But if you've never had this conversation — it's worth having.
-> I'm [your name] with Evermore Life. We're licensed in Arizona and Arkansas.
+> I'm [your name] with Evermore Life. We're licensed in Arizona and Texas.
 > Drop a comment or click the link and let's talk about what might actually fit your situation."
 
 ---
@@ -774,10 +774,10 @@ These can be recorded on your phone today. No AI video needed.
 
 ## REQUIRED DISCLAIMER — ADD TO ALL ADS AND FUNNEL PAGES
 
-> Coverage availability, policy type, benefits, premiums, and approval depend on age, health, state, carrier underwriting, product type, and other eligibility factors. Not all applicants qualify. Evermore Life Insurance LLC may work with multiple carriers to help compare available options. This is a solicitation for insurance. Licensed in Arizona and Arkansas.
+> Coverage availability, policy type, benefits, premiums, and approval depend on age, health, state, carrier underwriting, product type, and other eligibility factors. Not all applicants qualify. Evermore Life Insurance LLC may work with multiple carriers to help compare available options. This is a solicitation for insurance. Licensed in Arizona and Texas.
 
 ---
 
-*Built on: Evermore Life Cinematic Legacy Campaign scaffolding*  
-*Source files: 04_content_narrative/imported_campaign/Evermore_Life_Cinematic_Legacy_Campaign/*  
+*Built on: Evermore Life Cinematic Legacy Campaign scaffolding*
+*Source files: 04_content_narrative/imported_campaign/Evermore_Life_Cinematic_Legacy_Campaign/*
 *Do not delete source files — this document builds on top of them.*
