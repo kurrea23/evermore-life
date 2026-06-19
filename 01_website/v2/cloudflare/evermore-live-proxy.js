@@ -1397,6 +1397,10 @@ function rewriteHtml(html) {
     .replaceAll('data-widget-id="69f6e7fdcc1c6313dcd0f983"', 'data-widget-id="6a34718b718826e00221fc81"')
     .replaceAll("Evermore Life LLC", "Evermore Life Insurance LLC")
     .replaceAll("EVERMORE LIFE LLC", "EVERMORE LIFE INSURANCE LLC")
+    .replaceAll("Aetna, and Corebridge", "Aetna, Corebridge, and Americo")
+    .replaceAll('data-count-to="5" data-suffix="+"', 'data-count-to="7" data-suffix="+"')
+    .replaceAll('<span>Corebridge</span>\n  </div>', '<span>Corebridge</span> ·\n    <span>Americo</span>\n  </div>')
+    .replaceAll('<span class="carrier-chip">Corebridge</span>\n        </div>', '<span class="carrier-chip">Corebridge</span>\n          <span class="carrier-chip">Americo</span>\n        </div>')
     .replaceAll('<meta name="robots" content="noindex, nofollow" />', '<meta name="robots" content="index, follow" />');
 }
 
