@@ -169,3 +169,17 @@ do not rewrite history.
   approval-gated.
 - **Evidence:** `BLUEPRINTS/reports/2026-06-19_americo-carrier-copy-update.md`
 - **Owner:** Evermore operator
+
+### 2026-06-19 - Publish Americo carrier update live with Worker bridge
+
+- **Status:** approved
+- **Decision:** Push the queued website updates to GitHub `main` and deploy a
+  Cloudflare Worker bridge so live pages show Americo immediately while Pages
+  catches up to the latest source.
+- **Why:** The operator requested that everything be made live because the
+  Americo updates were not visible in production.
+- **Consequences:** Live public pages now show Americo. The Worker contains a
+  temporary Americo-specific rewrite that should be removed after Pages origin
+  output reflects GitHub `main` directly.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-19_americo-live-publish.md`
+- **Owner:** Evermore operator

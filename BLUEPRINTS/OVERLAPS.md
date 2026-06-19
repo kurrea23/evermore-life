@@ -268,3 +268,18 @@ shows.
 - **Next move:** After approved publish, verify the live public pages show
   Americo anywhere carrier rosters are displayed.
 - **Status:** open
+
+## 2026-06-19 - Worker bridge is masking stale Pages output for Americo
+
+- **Surfaces:** GitHub main + Cloudflare Pages + Cloudflare Worker
+- **Finding:** GitHub `main` contains the Americo source update, but the live
+  Pages output initially remained on the previous Corebridge-only build. The
+  Worker now rewrites stale carrier copy to include Americo and seven-carrier
+  counts while Pages catches up.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-19_americo-live-publish.md`,
+  `01_website/v2/cloudflare/evermore-live-proxy.js`
+- **Impact:** Visitors see the correct carrier roster now, but production has a
+  temporary edge bridge that should not become permanent source drift.
+- **Next move:** Recheck Pages after the build settles, then remove the
+  Americo-specific Worker rewrite once origin output is current.
+- **Status:** open
