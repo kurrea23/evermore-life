@@ -1,6 +1,6 @@
 # Evermore State Page System
 
-This folder is the scalable source for premium, state-specific Evermore Life
+This folder is the scalable source for premium, state-specific Evermore Life Insurance LLC
 landing pages.
 
 ## Current Governing Status
@@ -9,11 +9,11 @@ landing pages.
 | --- | --- | --- |
 | Arizona | active | coverage-review conversion page |
 | Texas | active | coverage-review conversion page |
-| Arkansas | pending | availability-update page only |
+| Arkansas | active | coverage-review conversion page |
 
-This status reflects the human operator's June 14, 2026 correction. Older repo
-handoffs that list Arkansas as active and Texas as pending are stale and must
-not control this state-page system.
+This status reflects the human operator's Arkansas activation approval after
+Arkansas licensing was obtained. Older repo handoffs that conflict with the
+state data are stale and must not control this state-page system.
 
 ## Build
 
@@ -53,4 +53,3 @@ deployed automatically.
    requirements, carrier availability, or customer claims.
 6. Deploys, publishing, messages, spending, and account changes remain
    approval-gated.
-

@@ -2,719 +2,1292 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>KVN — Obsidian Kevin Prime</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KVN — Evermore Life Mission Cockpit</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  :root {
-    --cyan: #00f5ff;
-    --cyan-dim: #00c8d4;
-    --cyan-glow: rgba(0,245,255,0.15);
-    --bg: #07070f;
-    --bg2: #0d0d1a;
-    --bg3: #111122;
-    --text: #c8e8f0;
-    --text-dim: #5a7a88;
-    --border: rgba(0,245,255,0.2);
-  }
-  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'Courier New', monospace; }
+/* ═══════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* ── BOOT SCREEN ── */
-  #boot {
-    position: fixed; inset: 0; z-index: 999;
-    background: var(--bg);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 24px; text-align: center;
-  }
-  #boot-logo {
-    font-size: clamp(60px, 18vw, 120px);
-    font-weight: 900; letter-spacing: 0.2em;
-    color: var(--cyan);
-    text-shadow: 0 0 30px var(--cyan), 0 0 60px var(--cyan), 0 0 100px rgba(0,245,255,0.4);
-    margin-bottom: 20px;
-  }
-  #boot-subtitle { font-size: clamp(11px, 3vw, 14px); letter-spacing: 0.12em; color: var(--cyan-dim); line-height: 1.8; margin-bottom: 32px; }
-  .boot-line { font-size: clamp(10px, 2.5vw, 12px); letter-spacing: 0.1em; color: var(--text-dim); margin: 6px 0; opacity: 0; transition: opacity 0.4s; }
-  .boot-line.visible { opacity: 1; }
-  #boot-online { color: var(--cyan); font-weight: bold; }
-  #boot-enter {
-    margin-top: 28px; padding: 18px 48px;
-    border: 2px solid var(--cyan); background: rgba(0,245,255,0.08); color: var(--cyan);
-    font-family: 'Courier New', monospace; font-size: 15px; letter-spacing: 0.15em;
-    cursor: pointer; opacity: 0; transition: opacity 0.5s, background 0.2s;
-    border-radius: 4px; min-width: 200px; min-height: 56px;
-    box-shadow: 0 0 20px rgba(0,245,255,0.3);
-  }
-  #boot-enter.visible { opacity: 1; }
-  #boot-enter:hover, #boot-enter:active { background: rgba(0,245,255,0.2); }
+:root {
+  --navy:   #07090F;
+  --navy2:  #0D1B3E;
+  --navy3:  #111827;
+  --gold:   #C9A84C;
+  --gold2:  #e8c96e;
+  --cream:  #f5f0e8;
+  --dim:    #6b7280;
+  --green:  #22c55e;
+  --font:   'Courier New', Courier, monospace;
+}
 
-  /* ── MAIN APP ── */
-  #app { display: none; width: 100%; height: 100%; position: relative; }
+html, body {
+  min-height: 100%;
+  background: var(--navy);
+  color: var(--cream);
+  font-family: var(--font);
+  font-size: 13px;
+  line-height: 1.6;
+  scroll-behavior: smooth;
+}
 
-  /* ── DESKTOP: 3-column ── */
-  #layout {
-    display: grid;
-    grid-template-columns: 240px 1fr 300px;
-    grid-template-rows: 100%;
-    height: 100%;
-    width: 100%;
-  }
+/* ═══════════════════════════════════════════════
+   COCKPIT LAYOUT
+═══════════════════════════════════════════════ */
+#cockpit {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 20px 140px;
+}
 
-  /* ── PANELS ── */
-  .panel {
-    background: var(--bg2);
-    border-right: 1px solid var(--border);
-    overflow: hidden;
-    display: flex; flex-direction: column;
-  }
-  .panel-header {
-    padding: 12px 16px;
-    background: var(--bg3);
-    border-bottom: 1px solid var(--border);
-    font-size: 10px; letter-spacing: 0.15em; color: var(--cyan);
-    flex-shrink: 0;
-  }
+/* HEADER */
+.cockpit-header {
+  border-bottom: 1px solid var(--gold);
+  padding-bottom: 18px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.cockpit-logo {
+  width: 40px; height: 40px;
+  border: 2px solid var(--gold);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  background: rgba(201,168,76,0.06);
+}
+.cockpit-title {
+  font-size: 15px;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+.cockpit-sub {
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.cockpit-badge {
+  margin-left: auto;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  padding: 4px 12px;
+  border-radius: 2px;
+  animation: pulse-badge 2s ease-in-out infinite;
+}
+@keyframes pulse-badge {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
 
-  /* ── CHECKLIST PANEL ── */
-  #panel-mission { border-right: 1px solid var(--border); }
-  #checklist { padding: 12px; overflow-y: auto; flex: 1; }
-  .check-item {
-    display: flex; align-items: flex-start; gap: 10px;
-    padding: 10px 8px; border-radius: 4px; cursor: pointer;
-    border-bottom: 1px solid rgba(0,245,255,0.06);
-    font-size: 11px; letter-spacing: 0.05em; line-height: 1.4;
-    transition: background 0.15s;
-  }
-  .check-item:hover { background: var(--cyan-glow); }
-  .check-item.done { opacity: 0.45; }
-  .check-item.done .check-label { text-decoration: line-through; }
-  .check-box {
-    width: 16px; height: 16px; border: 1px solid var(--cyan); border-radius: 2px;
-    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-    font-size: 10px; color: var(--cyan); margin-top: 1px;
-  }
-  .check-item.done .check-box { background: var(--cyan-glow); }
-  #progress-bar-wrap { padding: 12px; flex-shrink: 0; border-top: 1px solid var(--border); }
-  #progress-label { font-size: 10px; color: var(--text-dim); letter-spacing: 0.1em; margin-bottom: 6px; }
-  #progress-track { height: 3px; background: rgba(0,245,255,0.1); border-radius: 2px; }
-  #progress-fill { height: 100%; background: var(--cyan); border-radius: 2px; transition: width 0.4s; box-shadow: 0 0 8px var(--cyan); }
+/* SECTION CARDS */
+.section-card {
+  background: var(--navy3);
+  border: 1px solid rgba(201,168,76,0.22);
+  border-radius: 6px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.section-card:hover { border-color: rgba(201,168,76,0.45); }
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 18px;
+  cursor: pointer;
+  user-select: none;
+  background: rgba(201,168,76,0.04);
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+  transition: background 0.15s;
+}
+.section-header:hover { background: rgba(201,168,76,0.08); }
+.section-icon { font-size: 14px; }
+.section-title {
+  flex: 1;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+.section-count { font-size: 10px; color: var(--dim); }
+.section-chevron {
+  font-size: 10px; color: var(--gold);
+  transition: transform 0.25s;
+}
+.section-card.collapsed .section-chevron { transform: rotate(-90deg); }
+.section-body { padding: 12px 18px; }
+.section-card.collapsed .section-body { display: none; }
 
-  /* ── SCENE PANEL ── */
-  #panel-scene {
-    position: relative; background: var(--bg); border: none;
-    overflow: hidden;
-  }
-  #kvn-canvas { display: block; width: 100% !important; height: 100% !important; }
-  #scene-header {
-    position: absolute; top: 0; left: 0; right: 0;
-    padding: 10px 16px;
-    background: linear-gradient(to bottom, rgba(7,7,15,0.9), transparent);
-    font-size: 10px; letter-spacing: 0.2em; color: var(--cyan);
-    z-index: 2; pointer-events: none;
-  }
-  #kvn-speech {
-    position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
-    background: rgba(13,13,26,0.92); border: 1px solid var(--border);
-    padding: 10px 16px; border-radius: 4px;
-    font-size: 11px; color: var(--text); max-width: 85%; text-align: center;
-    opacity: 0; transition: opacity 0.5s; z-index: 2;
-    pointer-events: none;
-  }
-  #kvn-speech.visible { opacity: 1; }
+/* CHECKLIST ITEMS */
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background 0.12s, opacity 0.2s;
+}
+.check-item:last-child { border-bottom: none; }
+.check-item:hover { background: rgba(255,255,255,0.03); }
+.check-box {
+  width: 16px; height: 16px;
+  border: 1px solid rgba(201,168,76,0.4);
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  transition: all 0.2s;
+}
+.check-item.done .check-box {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+.check-item.done .check-label {
+  text-decoration: line-through;
+  opacity: 0.45;
+}
+.check-label { font-size: 12px; color: var(--cream); line-height: 1.5; }
 
-  /* ── CHAT PANEL ── */
-  #panel-chat { border-right: none; }
-  #chat-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-  .msg { max-width: 90%; font-size: 12px; line-height: 1.5; }
-  .msg-kvn { align-self: flex-start; }
-  .msg-kvn .msg-name { font-size: 9px; letter-spacing: 0.1em; color: var(--cyan); margin-bottom: 3px; }
-  .msg-kvn .msg-bubble {
-    background: var(--bg3); border-left: 2px solid var(--cyan);
-    padding: 8px 10px; border-radius: 0 4px 4px 0; color: var(--text);
-  }
-  .msg-user { align-self: flex-end; }
-  .msg-user .msg-bubble {
-    background: rgba(0,245,255,0.08); border: 1px solid var(--border);
-    padding: 8px 10px; border-radius: 4px 0 0 4px; color: var(--text);
-  }
-  .msg-typing { opacity: 0.5; font-style: italic; }
-  #chat-input-wrap {
-    padding: 10px; border-top: 1px solid var(--border); flex-shrink: 0;
-    display: flex; gap: 8px; background: var(--bg2);
-  }
-  #chat-input {
-    flex: 1; background: var(--bg3); border: 1px solid var(--border);
-    color: var(--text); padding: 10px 12px; font-family: 'Courier New', monospace;
-    font-size: 16px; border-radius: 2px; outline: none; resize: none;
-    min-height: 42px; max-height: 80px;
-  }
-  #chat-input:focus { border-color: var(--cyan); }
-  #chat-send {
-    background: var(--cyan-glow); border: 1px solid var(--cyan); color: var(--cyan);
-    padding: 0 14px; font-family: 'Courier New', monospace; font-size: 18px;
-    cursor: pointer; border-radius: 2px; flex-shrink: 0; min-width: 44px; min-height: 44px;
-  }
-  #chat-send:active { background: rgba(0,245,255,0.25); }
+/* NOTES SECTION */
+#notes-list { min-height: 20px; }
+.note-card {
+  background: rgba(201,168,76,0.05);
+  border: 1px solid rgba(201,168,76,0.18);
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--cream);
+  animation: noteIn 0.3s ease;
+  position: relative;
+}
+.note-card .note-ts {
+  font-size: 9px;
+  color: var(--dim);
+  margin-top: 5px;
+}
+.note-card .note-del {
+  position: absolute; top: 8px; right: 10px;
+  color: var(--dim); cursor: pointer; font-size: 11px;
+  opacity: 0; transition: opacity 0.15s;
+}
+.note-card:hover .note-del { opacity: 1; }
+@keyframes noteIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  /* ── MOBILE: tab layout ── */
-  @media (max-width: 768px) {
-    #layout {
-      grid-template-columns: 1fr;
-      grid-template-rows: 1fr auto;
-      padding-bottom: env(safe-area-inset-bottom);
-    }
-    #panel-mission { display: none; }
-    #panel-chat { display: none; }
-    #panel-scene { display: flex; }
+/* DIALOG OVERLAY */
+.kvn-overlay {
+  position: fixed; inset: 0;
+  background: rgba(7,9,15,0.65);
+  z-index: 900;
+  display: flex; align-items: center; justify-content: center;
+  animation: fadeIn 0.15s ease;
+}
+.kvn-dialog {
+  background: var(--navy3);
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  padding: 24px 28px;
+  min-width: 320px;
+  max-width: 440px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  animation: slideUp 0.2s ease;
+}
+.kvn-dialog h3 {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.kvn-dialog input, .kvn-dialog textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: 4px;
+  color: var(--cream);
+  font-family: var(--font);
+  font-size: 13px;
+  padding: 10px 12px;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+.kvn-dialog input:focus, .kvn-dialog textarea:focus {
+  border-color: var(--gold);
+}
+.kvn-dialog .dialog-btns {
+  display: flex; gap: 8px; margin-top: 14px; justify-content: flex-end;
+}
+.btn-gold {
+  background: var(--gold);
+  color: var(--navy);
+  border: none;
+  border-radius: 4px;
+  font-family: var(--font);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 8px 18px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.15s;
+}
+.btn-gold:hover { background: var(--gold2); }
+.btn-ghost {
+  background: transparent;
+  color: var(--dim);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  font-family: var(--font);
+  font-size: 11px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-ghost:hover { border-color: var(--dim); color: var(--cream); }
 
-    /* Tab bar */
-    #tab-bar {
-      display: flex !important;
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: rgba(13,13,26,0.97); border-top: 1px solid var(--border);
-      z-index: 100;
-      padding-bottom: env(safe-area-inset-bottom);
-    }
-    .tab-btn {
-      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 10px 0; cursor: pointer; font-family: 'Courier New', monospace;
-      font-size: 8px; letter-spacing: 0.12em; color: var(--text-dim);
-      border: none; background: transparent; gap: 4px; min-height: 56px;
-    }
-    .tab-btn.active { color: var(--cyan); }
-    .tab-btn .tab-icon { font-size: 18px; }
-    .tab-btn.active .tab-icon { filter: drop-shadow(0 0 6px var(--cyan)); }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes slideUp {
+  from { opacity:0; transform: translateY(14px); }
+  to   { opacity:1; transform: translateY(0); }
+}
 
-    #panel-scene { padding-bottom: 56px; }
+/* REPORT PANEL */
+#report-panel {
+  background: var(--navy3);
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-top: 20px;
+  display: none;
+  animation: noteIn 0.3s ease;
+}
+#report-panel.visible { display: block; }
+#report-panel h4 {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+#report-content { font-size: 12px; line-height: 1.9; }
+.report-ok   { color: var(--green); }
+.report-pend { color: var(--gold); }
+.report-summary {
+  margin-top: 12px;
+  border-top: 1px solid rgba(201,168,76,0.2);
+  padding-top: 10px;
+  color: var(--gold);
+}
 
-    /* Show active tab panel */
-    #app.tab-kvn #panel-scene { display: flex; }
-    #app.tab-chat #panel-scene { display: none; }
-    #app.tab-chat #panel-chat { display: flex; height: calc(100vh - 56px); width: 100%; position: fixed; top: 0; left: 0; z-index: 50; }
-    #app.tab-mission #panel-scene { display: none; }
-    #app.tab-mission #panel-mission { display: flex !important; height: calc(100vh - 56px); width: 100%; position: fixed; top: 0; left: 0; z-index: 50; }
-  }
+/* ═══════════════════════════════════════════════
+   KVN SPRITE
+═══════════════════════════════════════════════ */
+#kvn-wrap {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  z-index: 1000;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  width: 80px;
+}
+#kvn-wrap.dragging { cursor: grabbing; }
 
-  #tab-bar { display: none; }
+/* SPEECH BUBBLE */
+#kvn-bubble {
+  position: absolute;
+  bottom: 88px; left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  color: var(--navy);
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: bold;
+  padding: 7px 12px;
+  border-radius: 10px;
+  white-space: nowrap;
+  max-width: 230px;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.4;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+  z-index: 1001;
+}
+#kvn-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -7px; left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #fff;
+  border-bottom: none;
+}
+#kvn-bubble.visible { opacity: 1; }
 
-  /* ── CSS FALLBACK AVATAR ── */
-  #kvn-fallback {
-    display: none; flex-direction: column; align-items: center; justify-content: center;
-    width: 100%; height: 100%; background: var(--bg);
-    position: absolute; inset: 0;
-  }
-  .kvn-avatar {
-    width: 140px; height: 180px; position: relative;
-    animation: float 3s ease-in-out infinite;
-  }
-  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
-  .kvn-hood {
-    width: 0; height: 0;
-    border-left: 70px solid transparent;
-    border-right: 70px solid transparent;
-    border-bottom: 80px solid #08080f;
-    position: absolute; top: 0; left: 0;
-  }
-  .kvn-head {
-    width: 90px; height: 80px; background: #2a3050;
-    border-radius: 8px; position: absolute; top: 40px; left: 25px;
-    box-shadow: 0 0 20px rgba(0,245,255,0.3);
-  }
-  .kvn-eye { width: 16px; height: 10px; background: var(--cyan); border-radius: 50%; position: absolute; top: 28px; box-shadow: 0 0 12px var(--cyan), 0 0 24px var(--cyan); animation: pulse-eye 2s ease-in-out infinite; }
-  @keyframes pulse-eye { 0%,100%{opacity:1} 50%{opacity:0.5} }
-  .kvn-eye.left { left: 18px; }
-  .kvn-eye.right { right: 18px; }
-  .kvn-torso {
-    width: 100px; height: 80px; background: #1a2840;
-    border-radius: 6px; position: absolute; top: 108px; left: 20px;
-    box-shadow: 0 0 15px rgba(0,245,255,0.15);
-  }
-  .kvn-rune {
-    width: 20px; height: 20px; background: var(--cyan);
-    position: absolute; top: 28px; left: 40px; border-radius: 3px;
-    box-shadow: 0 0 10px var(--cyan); opacity: 0.9;
-    animation: pulse-eye 1.5s ease-in-out infinite;
-  }
-  .kvn-name-plate {
-    margin-top: 20px; font-size: 22px; font-weight: 900; letter-spacing: 0.3em;
-    color: var(--cyan); text-shadow: 0 0 20px var(--cyan);
-  }
-  .kvn-sub { font-size: 9px; letter-spacing: 0.12em; color: var(--text-dim); margin-top: 4px; }
+/* KVN SVG */
+#kvn-sprite {
+  width: 80px; height: 88px;
+  display: block;
+  filter: drop-shadow(0 4px 12px rgba(201,168,76,0.2));
+  transition: filter 0.3s;
+}
+#kvn-wrap:hover #kvn-sprite {
+  filter: drop-shadow(0 4px 18px rgba(201,168,76,0.4));
+}
 
-  /* Scrollbars */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+/* ── ANIMATIONS ── */
 
-  /* Scanline overlay */
-  #scanlines {
-    position: fixed; inset: 0; pointer-events: none; z-index: 998;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
-  }
+/* Idle: gentle bob */
+@keyframes kvn-idle {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-4px); }
+}
+/* Walk: legs alternate */
+@keyframes kvn-leg-l {
+  0%, 100% { transform: rotate(-20deg); }
+  50%       { transform: rotate(16deg); }
+}
+@keyframes kvn-leg-r {
+  0%, 100% { transform: rotate(16deg); }
+  50%       { transform: rotate(-20deg); }
+}
+/* Sword raise on action */
+@keyframes kvn-sword-raise {
+  0%   { transform: rotate(0deg) translateY(0); }
+  25%  { transform: rotate(-70deg) translateY(-6px); }
+  60%  { transform: rotate(-65deg) translateY(-5px); }
+  100% { transform: rotate(0deg) translateY(0); }
+}
+/* Action bounce */
+@keyframes kvn-bounce {
+  0%, 100% { transform: translateY(0); }
+  20%       { transform: translateY(-10px); }
+  40%       { transform: translateY(-4px); }
+  60%       { transform: translateY(-8px); }
+  80%       { transform: translateY(-2px); }
+}
+/* Shield shimmer */
+@keyframes kvn-shield-shimmer {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.65; }
+}
+/* Visor glow pulse when talking */
+@keyframes kvn-visor-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+/* Crest glow */
+@keyframes kvn-crest-glow {
+  0%, 100% { opacity: 0.8; }
+  50%       { opacity: 1; }
+}
+
+/* State application */
+#kvn-body-group { animation: kvn-idle 2.2s ease-in-out infinite; }
+#kvn-wrap.walking   #kvn-body-group { animation: none; }
+#kvn-wrap.action    #kvn-body-group { animation: kvn-bounce 0.65s ease; }
+#kvn-wrap.talking   #kvn-body-group { animation: kvn-idle 2.2s ease-in-out infinite; }
+
+#kvn-leg-l { transform-origin: 50% 0%; }
+#kvn-leg-r { transform-origin: 50% 0%; }
+#kvn-wrap.walking #kvn-leg-l { animation: kvn-leg-l 0.32s linear infinite; }
+#kvn-wrap.walking #kvn-leg-r { animation: kvn-leg-r 0.32s linear infinite; }
+
+#kvn-shield-g { animation: kvn-shield-shimmer 2.8s ease-in-out infinite; }
+
+#kvn-sword-group { transform-origin: 61px 45px; }
+#kvn-wrap.action #kvn-sword-group { animation: kvn-sword-raise 0.75s ease forwards; }
+
+#kvn-visor-rect { animation: kvn-crest-glow 3s ease-in-out infinite; }
+#kvn-wrap.talking #kvn-visor-rect { animation: kvn-visor-pulse 0.5s ease-in-out infinite; }
+
+/* ═══════════════════════════════════════════════
+   COMMAND PANEL
+═══════════════════════════════════════════════ */
+#kvn-panel {
+  position: absolute;
+  bottom: 96px; right: 0;
+  width: 174px;
+  background: var(--navy2);
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.1);
+  overflow: hidden;
+  display: none;
+  z-index: 1002;
+  animation: slideUp 0.18s ease;
+}
+#kvn-panel.open { display: block; }
+.panel-header {
+  padding: 9px 14px 7px;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: var(--gold);
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(201,168,76,0.18);
+  background: rgba(201,168,76,0.05);
+}
+.panel-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 13px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: var(--cream);
+  font-family: var(--font);
+  font-size: 11px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s, color 0.12s;
+}
+.panel-btn:last-child { border-bottom: none; }
+.panel-btn:hover { background: rgba(201,168,76,0.1); color: var(--gold); }
+.picon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+
+/* MARK DONE MODE */
+body.mark-done-mode .check-item:not(.done) {
+  outline: 2px dashed rgba(201,168,76,0.6);
+  outline-offset: 2px;
+  border-radius: 3px;
+  cursor: crosshair;
+}
+.mark-done-banner {
+  position: fixed;
+  top: 16px; left: 50%; transform: translateX(-50%);
+  background: var(--gold);
+  color: var(--navy);
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  padding: 9px 22px;
+  border-radius: 20px;
+  z-index: 999;
+  animation: slideUp 0.2s ease;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  display: none;
+  white-space: nowrap;
+}
+body.mark-done-mode .mark-done-banner { display: block; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--navy); }
+::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.25); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(201,168,76,0.45); }
 </style>
 </head>
 <body>
 
-<!-- BOOT -->
-<div id="boot">
-  <div id="boot-logo">KVN</div>
-  <div id="boot-subtitle">OBSIDIAN KEVIN PRIME<br>Accountability Intelligence System v1.0</div>
-  <div class="boot-line" id="bl1">LOADING NEURAL CORE...</div>
-  <div class="boot-line" id="bl2">CALIBRATING MISSION PARAMETERS...</div>
-  <div class="boot-line" id="bl3" style="color:var(--cyan);font-weight:bold;">● SYSTEMS ONLINE</div>
-  <button id="boot-enter" onclick="enterApp()">[ TAP TO ENTER ]</button>
+<!-- MARK DONE BANNER -->
+<div class="mark-done-banner" id="mark-done-banner">
+  ⚔ Click any incomplete step to mark it done &nbsp;&nbsp;·&nbsp;&nbsp; ESC to cancel
 </div>
 
-<div id="scanlines"></div>
+<!-- ═══════════════════════════════════════ -->
+<!--  MISSION COCKPIT                       -->
+<!-- ═══════════════════════════════════════ -->
+<div id="cockpit">
 
-<!-- MAIN APP -->
-<div id="app" class="tab-kvn">
-  <div id="layout">
+  <!-- Header -->
+  <div class="cockpit-header">
+    <div class="cockpit-logo">⚔</div>
+    <div>
+      <div class="cockpit-title">Evermore Life</div>
+      <div class="cockpit-sub">Mission Cockpit — KVN Demo</div>
+    </div>
+    <div class="cockpit-badge">LIVE</div>
+  </div>
 
-    <!-- MISSION PANEL -->
-    <div class="panel" id="panel-mission">
-      <div class="panel-header">◈ DAILY MISSION</div>
-      <div id="checklist">
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Standing station ready</span></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Binder open</span></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Script reviewed</span></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Leads loaded</span></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Calls made</span></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Statuses updated</span></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Follow-ups sent</span></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Study block done</span></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-label">Metrics logged</span></div>
+  <!-- A2P Registration -->
+  <div class="section-card" id="sec-a2p">
+    <div class="section-header" onclick="toggleSection('sec-a2p')">
+      <span class="section-icon">📡</span>
+      <span class="section-title">A2P 10DLC Registration</span>
+      <span class="section-count" id="count-sec-a2p">0 / 5</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="check-item" onclick="handleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Register brand with Campaign Registry</span>
       </div>
-      <div id="progress-bar-wrap">
-        <div id="progress-label">MISSION PROGRESS — <span id="prog-num">0</span>/9</div>
-        <div id="progress-track"><div id="progress-fill" style="width:0%"></div></div>
+      <div class="check-item" onclick="handleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Submit A2P campaign use case</span>
+      </div>
+      <div class="check-item" onclick="handleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Obtain carrier approval for SMS campaign</span>
+      </div>
+      <div class="check-item" onclick="handleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Link Twilio number to approved campaign</span>
+      </div>
+      <div class="check-item" onclick="handleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Test end-to-end SMS delivery flow</span>
       </div>
     </div>
+  </div>
 
-    <!-- SCENE PANEL -->
-    <div id="panel-scene">
-      <div id="scene-header">KVN | ONLINE</div>
-      <canvas id="kvn-canvas"></canvas>
-      <!-- CSS fallback if WebGL unavailable -->
-      <div id="kvn-fallback">
-        <div class="kvn-avatar">
-          <div class="kvn-hood"></div>
-          <div class="kvn-head">
-            <div class="kvn-eye left"></div>
-            <div class="kvn-eye right"></div>
-          </div>
-          <div class="kvn-torso"><div class="kvn-rune"></div></div>
+  <!-- Funnel Page -->
+  <div class="section-card" id="sec-funnel">
+    <div class="section-header" onclick="toggleSection('sec-funnel')">
+      <span class="section-icon">🌐</span>
+      <span class="section-title">Funnel Page</span>
+      <span class="section-count" id="count-sec-funnel">0 / 4</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="check-item" onclick="handleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Design landing page hero section</span>
+      </div>
+      <div class="check-item" onclick="handleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Write VSL script and record video</span>
+      </div>
+      <div class="check-item" onclick="handleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Integrate opt-in form with CRM</span>
+      </div>
+      <div class="check-item" onclick="handleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Set up thank-you page redirect</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sarah AI -->
+  <div class="section-card" id="sec-sarah">
+    <div class="section-header" onclick="toggleSection('sec-sarah')">
+      <span class="section-icon">🤖</span>
+      <span class="section-title">Sarah AI</span>
+      <span class="section-count" id="count-sec-sarah">0 / 3</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="check-item" onclick="handleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Configure Sarah conversation flows</span>
+      </div>
+      <div class="check-item" onclick="handleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Train on Evermore Life objection handling</span>
+      </div>
+      <div class="check-item" onclick="handleCheck(this)">
+        <div class="check-box"></div>
+        <span class="check-label">Live test with 5 real lead scenarios</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- KVN Notes -->
+  <div class="section-card" id="sec-notes">
+    <div class="section-header" onclick="toggleSection('sec-notes')">
+      <span class="section-icon">📝</span>
+      <span class="section-title">KVN Notes</span>
+      <span class="section-count" id="count-sec-notes">0 notes</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div id="notes-list">
+        <div id="notes-placeholder" style="color:var(--dim);font-size:11px;text-align:center;padding:12px 0;">
+          No notes yet. Ask KVN to add one.
         </div>
-        <div class="kvn-name-plate">KVN</div>
-        <div class="kvn-sub">OBSIDIAN KEVIN PRIME · ONLINE</div>
-      </div>
-      <div id="kvn-speech"></div>
-    </div>
-
-    <!-- CHAT PANEL -->
-    <div class="panel" id="panel-chat">
-      <div class="panel-header">◈ COMMS — KVN</div>
-      <div id="chat-messages"></div>
-      <div id="chat-input-wrap">
-        <textarea id="chat-input" placeholder="Message KVN..." rows="1"
-          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg();}"></textarea>
-        <button id="chat-send" onclick="sendMsg()">➤</button>
       </div>
     </div>
-
   </div>
 
-  <!-- TAB BAR (mobile only) -->
-  <div id="tab-bar">
-    <button class="tab-btn active" id="tab-kvn" onclick="switchTab('kvn')">
-      <span class="tab-icon">◉</span>KVN
+  <!-- Report output -->
+  <div id="report-panel">
+    <h4>⚔ KVN Status Report</h4>
+    <div id="report-content"></div>
+  </div>
+
+</div><!-- /cockpit -->
+
+
+<!-- ═══════════════════════════════════════ -->
+<!--  KVN THE KNIGHT                        -->
+<!-- ═══════════════════════════════════════ -->
+<div id="kvn-wrap">
+
+  <!-- Speech bubble -->
+  <div id="kvn-bubble"></div>
+
+  <!-- Command panel -->
+  <div id="kvn-panel">
+    <div class="panel-header">⚔ KVN Commands</div>
+    <button class="panel-btn" onclick="kvnCmd('scrollUp')">
+      <span class="picon">⬆️</span> Scroll Up
     </button>
-    <button class="tab-btn" id="tab-chat" onclick="switchTab('chat')">
-      <span class="tab-icon">◈</span>CHAT
+    <button class="panel-btn" onclick="kvnCmd('scrollDown')">
+      <span class="picon">⬇️</span> Scroll Down
     </button>
-    <button class="tab-btn" id="tab-mission" onclick="switchTab('mission')">
-      <span class="tab-icon">✓</span>MISSION
+    <button class="panel-btn" onclick="kvnCmd('addNote')">
+      <span class="picon">📝</span> Add Note
+    </button>
+    <button class="panel-btn" onclick="kvnCmd('addSection')">
+      <span class="picon">➕</span> Add Section
+    </button>
+    <button class="panel-btn" onclick="kvnCmd('markDone')">
+      <span class="picon">✅</span> Mark Done
+    </button>
+    <button class="panel-btn" onclick="kvnCmd('report')">
+      <span class="picon">📊</span> Report
     </button>
   </div>
-</div>
 
+  <!-- ── KVN SVG SPRITE ── -->
+  <!--
+    ViewBox: 0 0 80 90
+    Layout (Y axis, from top):
+      4-12   : helmet crest
+      12-38  : helmet / head
+      30-62  : torso + pauldrons
+      32-58  : shield (left), sword (right)
+      58-78  : legs + boots
+  -->
+  <svg id="kvn-sprite" viewBox="0 0 80 90" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="gGold" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#e8c96e"/>
+        <stop offset="100%" style="stop-color:#a07830"/>
+      </linearGradient>
+      <linearGradient id="gBody" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#192c68"/>
+        <stop offset="100%" style="stop-color:#0D1B3E"/>
+      </linearGradient>
+      <linearGradient id="gHelm" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#1e3070"/>
+        <stop offset="100%" style="stop-color:#0D1B3E"/>
+      </linearGradient>
+      <linearGradient id="gShield" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#1a2a5e"/>
+        <stop offset="100%" style="stop-color:#091020"/>
+      </linearGradient>
+      <linearGradient id="gVisor" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#f5f0e8;stop-opacity:0.95"/>
+        <stop offset="100%" style="stop-color:#c8b870;stop-opacity:0.5"/>
+      </linearGradient>
+      <linearGradient id="gBlade" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color:#8899bb"/>
+        <stop offset="40%" style="stop-color:#ddeeff"/>
+        <stop offset="100%" style="stop-color:#8899bb"/>
+      </linearGradient>
+      <filter id="fGlow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="1.2" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+
+    <!-- Everything bobs together -->
+    <g id="kvn-body-group">
+
+      <!-- ── LEGS (rendered first, behind torso) ── -->
+      <g id="kvn-legs">
+        <!-- Left leg -->
+        <g id="kvn-leg-l" style="transform-origin:33px 60px">
+          <rect x="28" y="61" width="9" height="14" rx="2" fill="url(#gBody)" stroke="url(#gGold)" stroke-width="0.9"/>
+          <!-- Boot -->
+          <rect x="26" y="72" width="11" height="5" rx="2" fill="#080e20" stroke="url(#gGold)" stroke-width="0.8"/>
+          <!-- Boot toe accent -->
+          <rect x="34" y="73" width="3" height="3" rx="1" fill="url(#gGold)" opacity="0.5"/>
+        </g>
+        <!-- Right leg -->
+        <g id="kvn-leg-r" style="transform-origin:47px 60px">
+          <rect x="43" y="61" width="9" height="14" rx="2" fill="url(#gBody)" stroke="url(#gGold)" stroke-width="0.9"/>
+          <!-- Boot -->
+          <rect x="43" y="72" width="11" height="5" rx="2" fill="#080e20" stroke="url(#gGold)" stroke-width="0.8"/>
+          <!-- Boot toe accent -->
+          <rect x="43" y="73" width="3" height="3" rx="1" fill="url(#gGold)" opacity="0.5"/>
+        </g>
+      </g>
+
+      <!-- ── SHIELD (left arm, behind torso) ── -->
+      <g id="kvn-shield-g">
+        <!-- Arm -->
+        <rect x="15" y="38" width="8" height="10" rx="2" fill="url(#gBody)" stroke="url(#gGold)" stroke-width="0.8"/>
+        <!-- Shield body -->
+        <rect x="10" y="36" width="13" height="18" rx="3" fill="url(#gShield)" stroke="url(#gGold)" stroke-width="1.2"/>
+        <!-- Shield trim top curve -->
+        <path d="M10,40 Q16.5,33 23,40" fill="none" stroke="url(#gGold)" stroke-width="0.8" opacity="0.7"/>
+        <!-- Shield boss -->
+        <circle cx="16.5" cy="46" r="3" fill="url(#gGold)" opacity="0.9"/>
+        <circle cx="16.5" cy="46" r="1.5" fill="#fff" opacity="0.3"/>
+        <!-- Shield cross -->
+        <line x1="10" y1="46" x2="23" y2="46" stroke="url(#gGold)" stroke-width="0.6" opacity="0.4"/>
+        <line x1="16.5" y1="36" x2="16.5" y2="54" stroke="url(#gGold)" stroke-width="0.6" opacity="0.4"/>
+      </g>
+
+      <!-- ── SWORD + RIGHT ARM (behind torso visually but on right) ── -->
+      <g id="kvn-sword-group" style="transform-origin:59px 45px">
+        <!-- Right arm -->
+        <rect x="57" y="38" width="8" height="10" rx="2" fill="url(#gBody)" stroke="url(#gGold)" stroke-width="0.8"/>
+        <!-- Sword blade -->
+        <rect x="58" y="10" width="4" height="28" rx="2" fill="url(#gBlade)" stroke="#8899bb" stroke-width="0.5"/>
+        <!-- Blade highlight -->
+        <rect x="59.2" y="11" width="1.2" height="22" rx="0.6" fill="rgba(255,255,255,0.45)"/>
+        <!-- Cross-guard -->
+        <rect x="53" y="36" width="14" height="4" rx="1.5" fill="url(#gGold)"/>
+        <!-- Pommel -->
+        <ellipse cx="60" cy="42" rx="3" ry="2.2" fill="url(#gGold)"/>
+        <circle cx="60" cy="42" r="1.2" fill="rgba(255,255,255,0.3)"/>
+      </g>
+
+      <!-- ── TORSO ── -->
+      <rect x="24" y="34" width="32" height="28" rx="5" fill="url(#gBody)" stroke="url(#gGold)" stroke-width="1.3"/>
+      <!-- Chest plate horizontal lines -->
+      <line x1="28" y1="40" x2="52" y2="40" stroke="url(#gGold)" stroke-width="0.7" opacity="0.45"/>
+      <line x1="29" y1="47" x2="51" y2="47" stroke="url(#gGold)" stroke-width="0.55" opacity="0.3"/>
+      <!-- Center rune -->
+      <polygon points="40,42 43,46 40,50 37,46" fill="none" stroke="url(#gGold)" stroke-width="0.9" opacity="0.7"/>
+      <circle cx="40" cy="46" r="1" fill="url(#gGold)" opacity="0.6"/>
+      <!-- Belt line -->
+      <line x1="24" y1="58" x2="56" y2="58" stroke="url(#gGold)" stroke-width="1" opacity="0.6"/>
+      <!-- Belt buckle -->
+      <rect x="37" y="55" width="6" height="6" rx="1" fill="url(#gGold)" opacity="0.7"/>
+
+      <!-- ── PAULDRONS (shoulders) ── -->
+      <!-- Left pauldron -->
+      <rect x="17" y="32" width="11" height="8" rx="3" fill="url(#gBody)" stroke="url(#gGold)" stroke-width="1"/>
+      <line x1="17" y1="36" x2="28" y2="36" stroke="url(#gGold)" stroke-width="0.6" opacity="0.5"/>
+      <!-- Right pauldron -->
+      <rect x="52" y="32" width="11" height="8" rx="3" fill="url(#gBody)" stroke="url(#gGold)" stroke-width="1"/>
+      <line x1="52" y1="36" x2="63" y2="36" stroke="url(#gGold)" stroke-width="0.6" opacity="0.5"/>
+
+      <!-- ── HELMET ── -->
+      <rect x="25" y="12" width="30" height="24" rx="5" fill="url(#gHelm)" stroke="url(#gGold)" stroke-width="1.4"/>
+
+      <!-- Helmet crest -->
+      <rect x="35" y="6" width="10" height="9" rx="2" fill="url(#gBody)" stroke="url(#gGold)" stroke-width="1"/>
+      <!-- Crest plume -->
+      <path d="M37,6 C37,2 40,1 40,1 C40,1 43,2 43,6" fill="#c9a84c" opacity="0.7"/>
+      <path d="M38,6 C38,3.5 40,2.5 40,2.5 C40,2.5 42,3.5 42,6" fill="#e8c96e" opacity="0.5"/>
+
+      <!-- Cheek guards -->
+      <rect x="25" y="20" width="6" height="10" rx="2" fill="#0a1428" stroke="url(#gGold)" stroke-width="0.8"/>
+      <rect x="49" y="20" width="6" height="10" rx="2" fill="#0a1428" stroke="url(#gGold)" stroke-width="0.8"/>
+
+      <!-- Visor slot (the glow window) -->
+      <g id="kvn-visor-g" filter="url(#fGlow)">
+        <rect id="kvn-visor-rect" x="30" y="21" width="20" height="9" rx="2.5"
+              fill="url(#gVisor)" stroke="url(#gGold)" stroke-width="0.9"/>
+        <!-- Visor scanline glow -->
+        <line x1="31" y1="24" x2="49" y2="24" stroke="rgba(255,250,220,0.6)" stroke-width="0.8"/>
+        <line x1="32" y1="27" x2="48" y2="27" stroke="rgba(255,250,220,0.35)" stroke-width="0.6"/>
+      </g>
+
+      <!-- Helm top trim -->
+      <line x1="25" y1="18" x2="55" y2="18" stroke="url(#gGold)" stroke-width="0.8" opacity="0.55"/>
+      <!-- Chin strap detail -->
+      <line x1="31" y1="31" x2="49" y2="31" stroke="url(#gGold)" stroke-width="0.8" opacity="0.4"/>
+
+    </g><!-- /kvn-body-group -->
+  </svg>
+  <!-- end KVN SVG -->
+
+</div><!-- /kvn-wrap -->
+
+
+<!-- ═══════════════════════════════════════ -->
+<!--  JAVASCRIPT                            -->
+<!-- ═══════════════════════════════════════ -->
 <script>
-// If THREE fails to load, enterApp will use CSS fallback
-window.addEventListener('error', function(e) {
-  if (e.filename && e.filename.includes('three')) {
-    console.warn('Three.js failed to load, using CSS fallback');
-  }
-}, true);
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" onerror="window.THREE=undefined;"></script>
-<script>
-// ── BOOT SEQUENCE ──
-function runBoot() {
-  setTimeout(() => document.getElementById('bl1').classList.add('visible'), 500);
-  setTimeout(() => document.getElementById('bl2').classList.add('visible'), 1100);
-  setTimeout(() => document.getElementById('bl3').classList.add('visible'), 1700);
-  setTimeout(() => document.getElementById('boot-enter').classList.add('visible'), 2200);
-  // Auto-advance after 4s if user doesn't tap
-  setTimeout(() => { if (document.getElementById('boot').style.display !== 'none') enterApp(); }, 4500);
-}
-function enterApp() {
-  if (enterApp._called) return;
-  enterApp._called = true;
-  const boot = document.getElementById('boot');
-  boot.style.transition = 'opacity 0.5s';
-  boot.style.opacity = '0';
-  setTimeout(() => {
-    boot.style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    // Try 3D scene, fall back to CSS avatar
-    try {
-      if (typeof THREE !== 'undefined') {
-        initScene();
-        document.getElementById('kvn-canvas').style.display = 'block';
-        document.getElementById('kvn-fallback').style.display = 'none';
-      } else {
-        throw new Error('THREE not loaded');
-      }
-    } catch(e) {
-      document.getElementById('kvn-canvas').style.display = 'none';
-      document.getElementById('kvn-fallback').style.display = 'flex';
-    }
-    setTimeout(() => {
-      kvnSay("Systems online. Obsidian Kevin Prime reporting. You have a mission today, Keenan — let's execute.");
-      addKvnMsg("Systems online. Obsidian Kevin Prime reporting. You have a mission today, Keenan — let's execute.");
-    }, 400);
-  }, 500);
-}
-runBoot();
+/* ────────────────────────────────────────
+   DOM REFS
+──────────────────────────────────────── */
+const kvnWrap    = document.getElementById('kvn-wrap');
+const kvnPanel   = document.getElementById('kvn-panel');
+const kvnBubble  = document.getElementById('kvn-bubble');
+const notesSec   = document.getElementById('sec-notes');
+const notesList  = document.getElementById('notes-list');
+const notesPlaceholder = document.getElementById('notes-placeholder');
 
-// ── TAB SWITCHING ──
-function switchTab(t) {
-  const app = document.getElementById('app');
-  app.className = 'tab-' + t;
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + t).classList.add('active');
-  if (t === 'chat') setTimeout(() => document.getElementById('chat-messages').scrollTop = 99999, 100);
-}
+/* ────────────────────────────────────────
+   STATE
+──────────────────────────────────────── */
+let isDragging    = false;
+let dragOffX      = 0, dragOffY = 0;
+let panelOpen     = false;
+let markDoneMode  = false;
+let idleTimer     = null;
+let bubbleTimer   = null;
+let sectionCount  = 0;
+let noteCount     = 0;
+let mouseDownTime = 0;
+let mouseDownPos  = { x: 0, y: 0 };
 
-// ── CHECKLIST ──
-function toggleCheck(el) {
-  el.classList.toggle('done');
-  el.querySelector('.check-box').textContent = el.classList.contains('done') ? '✓' : '';
-  updateProgress();
-}
-function updateProgress() {
-  const items = document.querySelectorAll('.check-item');
-  const done = document.querySelectorAll('.check-item.done').length;
-  const pct = Math.round((done / items.length) * 100);
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('prog-num').textContent = done;
-}
-
-// ── KVN SPEECH BUBBLE ──
-function kvnSay(text) {
-  const el = document.getElementById('kvn-speech');
-  el.textContent = text;
-  el.classList.add('visible');
-  clearTimeout(kvnSay._t);
-  kvnSay._t = setTimeout(() => el.classList.remove('visible'), 6000);
-}
-
-// ── CHAT ──
-function addKvnMsg(text) {
-  const msgs = document.getElementById('chat-messages');
-  const div = document.createElement('div');
-  div.className = 'msg msg-kvn';
-  div.innerHTML = '<div class="msg-name">KVN</div><div class="msg-bubble">' + text + '</div>';
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-function addUserMsg(text) {
-  const msgs = document.getElementById('chat-messages');
-  const div = document.createElement('div');
-  div.className = 'msg msg-user';
-  div.innerHTML = '<div class="msg-bubble">' + text + '</div>';
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-const KVN_RESPONSES = {
-  greet: ["Keenan. Good — you're here. Now let's talk about what you're actually going to do today.", "I see you. The question is whether you're ready to work. Are you?", "Online and tracking. What do you need?"],
-  schedule: ["Today: get standing, open binder, review script, load leads, dial. That's it. Everything else is noise.", "Your mission today is simple. Stand up. Dial. Book. Don't overcomplicate it.", "Dial block. Follow-up block. Study block. Three things. Execute in order."],
-  dials: ["How many dials so far? Give me a number.", "Dials are the only metric that matters right now. Everything else is downstream of that.", "The math is simple: more dials = more contacts = more appointments. What's your count?"],
-  calls: ["Pick up the phone. That's the job today.", "Every call you don't make is a lead going cold. What's the hesitation?", "You already know the script. The only thing left is to dial."],
-  appointment: ["Good. One appointment is a foothold. Now book the next one.", "Appointment set? That's the job. Now show up prepared and run it clean.", "Did it show? If not, follow up. If yes — what's the outcome?"],
-  tired: ["Noted. Take five minutes, then get back on the phone. That's it.", "Tired is fine. Stopping is not. Rest is scheduled — grinding is now.", "I don't do tired. You rest, you refuel, you get back to work. What do you need?"],
-  done: ["Results. Give me numbers: dials, contacts, appointments, apps.", "Finished for the day? What did you produce? Walk me through it.", "Done is a big word. What actually got accomplished? Metrics."],
-  iul: ["IUL: cash value, death benefit, indexed growth, no downside market risk. Your job is to explain it cleaner than anyone else.", "Premium funds the policy. Cash value grows with the index. Death benefit protects the family. Loans are tax-advantaged. That's the pitch.", "WinFlex shows you guaranteed vs non-guaranteed columns. Client cares about the cash value curve and the death benefit floor. Know those numbers cold."],
-  help: ["I handle: schedule, dials, appointments, IUL questions, follow-up cadence, daily review. What do you need?", "Ask me about today's schedule, your dial count, IUL, or objection handling. I'm here."],
-  default: ["Execute first. Questions after.", "Focus. One dial at a time.", "I need more than that. What specifically do you need from me?", "The work doesn't do itself, Keenan. What's the next action?", "Stop thinking. Start dialing."]
+/* ────────────────────────────────────────
+   VOICE LINES
+──────────────────────────────────────── */
+const LINES = {
+  spawn:     'KVN online. At your service.',
+  scrollUp:  'Moving up.',
+  scrollDown:'Going down.',
+  addNote:   'Note saved.',
+  addSection:'Section added.',
+  markDone:  'Marked complete.',
+  idle: [
+    'Still here.',
+    "What's next?",
+    'Standing by.',
+    'Ready when you are.',
+    'Eyes on the mission.',
+    'Awaiting orders.'
+  ]
 };
 
-function getResponse(input) {
-  const t = input.toLowerCase();
-  if (/hello|hi |hey|yo|what'?s up|good morning|good afternoon/.test(t)) return pick(KVN_RESPONSES.greet);
-  if (/schedule|today|plan|what do|checklist/.test(t)) return pick(KVN_RESPONSES.schedule);
-  if (/dial|dials|how many|count|numbers/.test(t)) return pick(KVN_RESPONSES.dials);
-  if (/call|phone|ring|prospect/.test(t)) return pick(KVN_RESPONSES.calls);
-  if (/appoint|book|set|meeting|show/.test(t)) return pick(KVN_RESPONSES.appointment);
-  if (/tired|exhausted|break|rest|done for|stop/.test(t)) return pick(KVN_RESPONSES.tired);
-  if (/done|finish|complete|wrapped|end of/.test(t)) return pick(KVN_RESPONSES.done);
-  if (/iul|cash value|winflex|illustration|policy|premium|death benefit/.test(t)) return pick(KVN_RESPONSES.iul);
-  if (/help|what can|commands|options/.test(t)) return pick(KVN_RESPONSES.help);
-  return pick(KVN_RESPONSES.default);
-}
-function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-function sendMsg() {
-  const input = document.getElementById('chat-input');
-  const text = input.value.trim();
-  if (!text) return;
-  addUserMsg(text);
-  input.value = '';
-  input.style.height = 'auto';
-  // Typing indicator
-  const msgs = document.getElementById('chat-messages');
-  const typing = document.createElement('div');
-  typing.className = 'msg msg-kvn msg-typing';
-  typing.innerHTML = '<div class="msg-name">KVN</div><div class="msg-bubble">...</div>';
-  msgs.appendChild(typing);
-  msgs.scrollTop = msgs.scrollHeight;
-  const delay = 600 + Math.random() * 600;
-  setTimeout(() => {
-    msgs.removeChild(typing);
-    const response = getResponse(text);
-    addKvnMsg(response);
-    kvnSay(response);
-  }, delay);
+/* ────────────────────────────────────────
+   SPEECH
+──────────────────────────────────────── */
+// Warm up voices
+if (window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = () => {};
+  window.speechSynthesis.getVoices();
 }
 
-// ── THREE.JS SCENE ──
-let scene, camera, renderer, kvnGroup, particles, clock;
-let floatT = 0;
-
-function initScene() {
-  const canvas = document.getElementById('kvn-canvas');
-  clock = new THREE.Clock();
-
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x07070f);
-  scene.fog = new THREE.FogExp2(0x07070f, 0.045);
-
-  const w = canvas.parentElement.clientWidth;
-  const h = canvas.parentElement.clientHeight;
-  camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 100);
-  camera.position.set(0, 1.2, 5.5);
-  camera.lookAt(0, 1.2, 0);
-
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(w, h);
-  renderer.shadowMap.enabled = true;
-
-  // Lights
-  scene.add(new THREE.AmbientLight(0x0a1520, 1.2));
-  const eyeLight = new THREE.PointLight(0x00f5ff, 2.5, 8);
-  eyeLight.position.set(0, 2.1, 0.3);
-  scene.add(eyeLight);
-  const rimLight = new THREE.PointLight(0x003344, 1.5, 12);
-  rimLight.position.set(-3, 3, -2);
-  scene.add(rimLight);
-  const floorLight = new THREE.PointLight(0x00f5ff, 0.8, 5);
-  floorLight.position.set(0, -0.3, 0);
-  scene.add(floorLight);
-
-  kvnGroup = new THREE.Group();
-  buildKVN(kvnGroup);
-  kvnGroup.position.y = 0.3;
-  scene.add(kvnGroup);
-
-  buildEnvironment();
-  buildParticles();
-
-  window.addEventListener('resize', onResize);
-  animate();
+function speak(text) {
+  showBubble(text);
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.rate   = 0.95;
+  utt.pitch  = 1.0;
+  utt.volume = 0.9;
+  const voices = window.speechSynthesis.getVoices();
+  const pick = voices.find(v =>
+    /Daniel|Alex|Google UK|Rishi|Arthur/i.test(v.name)
+  );
+  if (pick) utt.voice = pick;
+  window.speechSynthesis.speak(utt);
 }
 
-function mat(color, emissive = 0x000000, emissiveIntensity = 0) {
-  return new THREE.MeshStandardMaterial({ color, emissive, emissiveIntensity, metalness: 0.7, roughness: 0.3 });
+function showBubble(text) {
+  clearTimeout(bubbleTimer);
+  kvnBubble.textContent = text;
+  kvnBubble.classList.add('visible');
+  bubbleTimer = setTimeout(() => kvnBubble.classList.remove('visible'), 3800);
 }
 
-function buildKVN(g) {
-  const dark = mat(0x1a1a2e);
-  const metal = mat(0x2a3050);
-  const accent = mat(0x1a2840, 0x00f5ff, 0.3);
-  const glow = mat(0x00f5ff, 0x00f5ff, 1.5);
-  const cloak = new THREE.MeshStandardMaterial({ color: 0x08080f, metalness: 0.1, roughness: 0.9, side: THREE.DoubleSide });
-
-  // Torso
-  const torso = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.9, 0.45), metal);
-  torso.position.y = 1.2;
-  g.add(torso);
-  // Chest rune
-  const rune = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.18, 0.02), new THREE.MeshStandardMaterial({ color: 0x00f5ff, emissive: 0x00f5ff, emissiveIntensity: 2 }));
-  rune.position.set(0, 1.28, 0.24);
-  g.add(rune);
-  // Abdomen
-  const abdomen = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.3, 0.38), dark);
-  abdomen.position.y = 0.82;
-  g.add(abdomen);
-  // Hips
-  const hips = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.2, 0.4), metal);
-  hips.position.y = 0.6;
-  g.add(hips);
-  // Legs
-  [[-0.22, 1], [0.22, 1]].forEach(([x]) => {
-    const thigh = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.4, 0.3), dark);
-    thigh.position.set(x, 0.3, 0);
-    g.add(thigh);
-    const shin = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.38, 0.28), metal);
-    shin.position.set(x, -0.08, 0);
-    g.add(shin);
-    const boot = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.14, 0.35), dark);
-    boot.position.set(x, -0.32, 0.04);
-    g.add(boot);
-  });
-  // Arms
-  [[-0.58, 1], [0.58, -1]].forEach(([x]) => {
-    const upper = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.4, 0.25), dark);
-    upper.position.set(x, 1.15, 0);
-    g.add(upper);
-    const lower = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.38, 0.22), metal);
-    lower.position.set(x, 0.78, 0);
-    g.add(lower);
-    const hand = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.16, 0.18), accent);
-    hand.position.set(x, 0.56, 0);
-    g.add(hand);
-  });
-  // Pauldrons
-  [[-0.52, 1], [0.52, -1]].forEach(([x]) => {
-    const p = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.16, 0.35), accent);
-    p.position.set(x, 1.45, 0);
-    g.add(p);
-    const spike = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.06, 0.18, 5), dark);
-    spike.position.set(x, 1.57, 0);
-    g.add(spike);
-  });
-  // Neck
-  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.12, 0.18, 6), dark);
-  neck.position.y = 1.71;
-  g.add(neck);
-  // Head
-  const head = new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.52, 0.48), metal);
-  head.position.y = 2.06;
-  g.add(head);
-  // Visor
-  const visor = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.14, 0.05), new THREE.MeshStandardMaterial({ color: 0x00f5ff, emissive: 0x00f5ff, emissiveIntensity: 0.8, transparent: true, opacity: 0.85 }));
-  visor.position.set(0, 2.1, 0.25);
-  g.add(visor);
-  // Eyes
-  [-0.12, 0.12].forEach(x => {
-    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.055, 8, 8), glow);
-    eye.position.set(x, 2.12, 0.26);
-    g.add(eye);
-  });
-  // Hood cowl
-  const hoodGeo = new THREE.ConeGeometry(0.46, 0.7, 8, 1, true);
-  const hood = new THREE.Mesh(hoodGeo, cloak);
-  hood.position.set(0, 2.48, -0.05);
-  hood.rotation.x = 0.15;
-  g.add(hood);
-  const hoodBrim = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.5, 0.06, 8), cloak);
-  hoodBrim.position.set(0, 2.13, -0.05);
-  g.add(hoodBrim);
-  // Cloak panels
-  [[-0.28, 0], [0.28, 0], [0, -0.2]].forEach(([x, z]) => {
-    const cGeo = new THREE.PlaneGeometry(0.3, 1.4);
-    const c = new THREE.Mesh(cGeo, cloak);
-    c.position.set(x, 0.7, z - 0.26);
-    c.rotation.y = x * 0.4;
-    g.add(c);
-  });
+/* ────────────────────────────────────────
+   STATE MACHINE
+──────────────────────────────────────── */
+function setState(s) {
+  kvnWrap.classList.remove('walking', 'talking', 'action');
+  if (s !== 'idle') kvnWrap.classList.add(s);
+  resetIdleTimer();
 }
 
-function buildEnvironment() {
-  // Floor
-  const floorGeo = new THREE.PlaneGeometry(20, 20, 20, 20);
-  const floorMat = new THREE.MeshStandardMaterial({ color: 0x060614, metalness: 0.5, roughness: 0.8 });
-  const floor = new THREE.Mesh(floorGeo, floorMat);
-  floor.rotation.x = -Math.PI / 2;
-  floor.position.y = -0.5;
-  scene.add(floor);
-  // Grid
-  const grid = new THREE.GridHelper(14, 28, 0x00f5ff, 0x0a1520);
-  grid.position.y = -0.49;
-  grid.material.opacity = 0.25;
-  grid.material.transparent = true;
-  scene.add(grid);
-  // Pedestal
-  const ped = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.3, 0.12, 32), new THREE.MeshStandardMaterial({ color: 0x0d1525, emissive: 0x001020, emissiveIntensity: 0.5, metalness: 0.8, roughness: 0.2 }));
-  ped.position.y = -0.45;
-  scene.add(ped);
-  // Rune ring
-  const ringGeo = new THREE.TorusGeometry(1.0, 0.02, 8, 64);
-  const ringMat = new THREE.MeshStandardMaterial({ color: 0x00f5ff, emissive: 0x00f5ff, emissiveIntensity: 1.2 });
-  const ring = new THREE.Mesh(ringGeo, ringMat);
-  ring.rotation.x = Math.PI / 2;
-  ring.position.y = -0.38;
-  scene.add(ring);
-  // Pillars
-  [-3.5, 3.5].forEach(x => {
-    const p = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.18, 5, 6), new THREE.MeshStandardMaterial({ color: 0x0a0a18, metalness: 0.3, roughness: 0.9 }));
-    p.position.set(x, 2, -3);
-    scene.add(p);
-  });
+function doAction(lineKey, duration) {
+  setState('action');
+  speak(LINES[lineKey] || lineKey);
+  setTimeout(() => { if (!isDragging) setState('idle'); }, duration || 900);
 }
 
-function buildParticles() {
-  const geo = new THREE.BufferGeometry();
-  const count = 80;
-  const pos = new Float32Array(count * 3);
-  for (let i = 0; i < count; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const r = 1.2 + Math.random() * 2.2;
-    pos[i * 3] = Math.cos(angle) * r;
-    pos[i * 3 + 1] = Math.random() * 4.5 - 0.5;
-    pos[i * 3 + 2] = Math.sin(angle) * r;
-  }
-  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  const mat = new THREE.PointsMaterial({ color: 0x00f5ff, size: 0.025, transparent: true, opacity: 0.7 });
-  particles = new THREE.Points(geo, mat);
-  scene.add(particles);
+function doTalk(text, duration) {
+  setState('talking');
+  speak(text);
+  setTimeout(() => { if (!isDragging) setState('idle'); }, duration || 2500);
 }
 
-function animate() {
-  requestAnimationFrame(animate);
-  const dt = clock.getDelta();
-  floatT += dt;
-  if (kvnGroup) {
-    kvnGroup.position.y = 0.3 + Math.sin(floatT * 0.8) * 0.06;
-    kvnGroup.rotation.y = Math.sin(floatT * 0.3) * 0.04;
-  }
-  if (particles) {
-    particles.rotation.y += dt * 0.04;
-    const positions = particles.geometry.attributes.position.array;
-    for (let i = 1; i < positions.length; i += 3) {
-      positions[i] += dt * 0.06;
-      if (positions[i] > 4) positions[i] = -0.5;
+/* ────────────────────────────────────────
+   IDLE TIMER
+──────────────────────────────────────── */
+function resetIdleTimer() {
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => {
+    if (!isDragging && !markDoneMode) {
+      const line = LINES.idle[Math.floor(Math.random() * LINES.idle.length)];
+      doTalk(line, 2500);
     }
-    particles.geometry.attributes.position.needsUpdate = true;
-  }
-  renderer.render(scene, camera);
+  }, 20000);
 }
 
-function onResize() {
-  const panel = document.getElementById('panel-scene');
-  const w = panel.clientWidth;
-  const h = panel.clientHeight;
-  if (w > 0 && h > 0) {
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    renderer.setSize(w, h);
+/* ────────────────────────────────────────
+   DRAG
+──────────────────────────────────────── */
+kvnWrap.addEventListener('mousedown', e => {
+  if (e.target.closest('#kvn-panel')) return;
+  mouseDownTime = Date.now();
+  mouseDownPos  = { x: e.clientX, y: e.clientY };
+  isDragging    = true;
+  const rect    = kvnWrap.getBoundingClientRect();
+  dragOffX = e.clientX - rect.left;
+  dragOffY = e.clientY - rect.top;
+  kvnWrap.classList.add('dragging');
+  closePanel();
+  setState('walking');
+  e.preventDefault();
+});
+
+document.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  moveKVN(e.clientX, e.clientY);
+});
+
+document.addEventListener('mouseup', e => {
+  if (!isDragging) return;
+  isDragging = false;
+  kvnWrap.classList.remove('dragging');
+  setState('idle');
+
+  // Short click (moved < 6px, held < 250ms) → toggle panel
+  const dx = Math.abs(e.clientX - mouseDownPos.x);
+  const dy = Math.abs(e.clientY - mouseDownPos.y);
+  if (dx < 6 && dy < 6 && Date.now() - mouseDownTime < 250) {
+    togglePanel();
+  }
+});
+
+// Touch support
+kvnWrap.addEventListener('touchstart', e => {
+  if (e.target.closest('#kvn-panel')) return;
+  const t = e.touches[0];
+  mouseDownTime = Date.now();
+  mouseDownPos  = { x: t.clientX, y: t.clientY };
+  isDragging    = true;
+  const rect    = kvnWrap.getBoundingClientRect();
+  dragOffX = t.clientX - rect.left;
+  dragOffY = t.clientY - rect.top;
+  kvnWrap.classList.add('dragging');
+  closePanel();
+  setState('walking');
+}, { passive: true });
+
+document.addEventListener('touchmove', e => {
+  if (!isDragging) return;
+  moveKVN(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive: true });
+
+document.addEventListener('touchend', e => {
+  if (!isDragging) return;
+  isDragging = false;
+  kvnWrap.classList.remove('dragging');
+  setState('idle');
+  const t = e.changedTouches[0];
+  const dx = Math.abs(t.clientX - mouseDownPos.x);
+  const dy = Math.abs(t.clientY - mouseDownPos.y);
+  if (dx < 8 && dy < 8 && Date.now() - mouseDownTime < 300) {
+    togglePanel();
+  }
+});
+
+function moveKVN(cx, cy) {
+  let x = cx - dragOffX;
+  let y = cy - dragOffY;
+  const maxX = window.innerWidth  - kvnWrap.offsetWidth;
+  const maxY = window.innerHeight - kvnWrap.offsetHeight;
+  x = Math.max(0, Math.min(x, maxX));
+  y = Math.max(0, Math.min(y, maxY));
+  kvnWrap.style.right  = 'auto';
+  kvnWrap.style.bottom = 'auto';
+  kvnWrap.style.left   = x + 'px';
+  kvnWrap.style.top    = y + 'px';
+}
+
+/* ────────────────────────────────────────
+   PANEL
+──────────────────────────────────────── */
+function togglePanel() {
+  panelOpen = !panelOpen;
+  kvnPanel.classList.toggle('open', panelOpen);
+  if (panelOpen) doTalk('Ready.', 1200);
+}
+function closePanel() {
+  panelOpen = false;
+  kvnPanel.classList.remove('open');
+}
+
+// Close when clicking outside KVN
+document.addEventListener('mousedown', e => {
+  if (!kvnWrap.contains(e.target)) closePanel();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closePanel(); exitMarkDone(); }
+});
+
+/* ────────────────────────────────────────
+   COMMANDS
+──────────────────────────────────────── */
+function kvnCmd(cmd) {
+  closePanel();
+  switch (cmd) {
+    case 'scrollUp':   cmdScrollUp();   break;
+    case 'scrollDown': cmdScrollDown(); break;
+    case 'addNote':    cmdAddNote();    break;
+    case 'addSection': cmdAddSection(); break;
+    case 'markDone':   cmdMarkDone();   break;
+    case 'report':     cmdReport();     break;
   }
 }
-setTimeout(onResize, 100);
+
+/* SCROLL UP */
+function cmdScrollUp() {
+  doAction('scrollUp', 700);
+  window.scrollBy({ top: -window.innerHeight * 0.65, behavior: 'smooth' });
+}
+
+/* SCROLL DOWN */
+function cmdScrollDown() {
+  doAction('scrollDown', 700);
+  window.scrollBy({ top:  window.innerHeight * 0.65, behavior: 'smooth' });
+}
+
+/* ADD NOTE */
+function cmdAddNote() {
+  const overlay = makeOverlay();
+  overlay.innerHTML = `
+    <div class="kvn-dialog">
+      <h3>📝 Add Note</h3>
+      <textarea id="kvn-note-input" rows="3"
+        placeholder="Type your note… (Ctrl+Enter to save)"></textarea>
+      <div class="dialog-btns">
+        <button class="btn-ghost" onclick="destroyOverlay()">Cancel</button>
+        <button class="btn-gold"  onclick="submitNote()">Save Note</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(() => document.getElementById('kvn-note-input')?.focus(), 60);
+  document.getElementById('kvn-note-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) submitNote();
+    if (e.key === 'Escape') destroyOverlay();
+  });
+}
+function submitNote() {
+  const val = document.getElementById('kvn-note-input')?.value?.trim();
+  if (!val) return;
+  destroyOverlay();
+  addNote(val);
+  doAction('addNote', 900);
+}
+function addNote(text) {
+  noteCount++;
+  if (notesPlaceholder) notesPlaceholder.remove();
+  const now  = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+  const card = document.createElement('div');
+  card.className = 'note-card';
+  card.innerHTML = `<div>${escHtml(text)}</div>
+    <div class="note-ts">⚔ KVN · ${now}</div>
+    <span class="note-del" title="Delete" onclick="this.closest('.note-card').remove(); updateCounts();">✕</span>`;
+  notesList.appendChild(card);
+  notesSec.classList.remove('collapsed');
+  updateCounts();
+}
+
+/* ADD SECTION */
+function cmdAddSection() {
+  const overlay = makeOverlay();
+  overlay.innerHTML = `
+    <div class="kvn-dialog">
+      <h3>➕ New Section</h3>
+      <input id="kvn-section-input" type="text"
+        placeholder="Section name…" maxlength="60"/>
+      <div class="dialog-btns">
+        <button class="btn-ghost" onclick="destroyOverlay()">Cancel</button>
+        <button class="btn-gold"  onclick="submitSection()">Add Section</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(() => document.getElementById('kvn-section-input')?.focus(), 60);
+  document.getElementById('kvn-section-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter')  submitSection();
+    if (e.key === 'Escape') destroyOverlay();
+  });
+}
+function submitSection() {
+  const val = document.getElementById('kvn-section-input')?.value?.trim();
+  if (!val) return;
+  destroyOverlay();
+  insertSection(val);
+  doAction('addSection', 900);
+}
+function insertSection(name) {
+  sectionCount++;
+  const id   = 'sec-dyn-' + sectionCount;
+  const card = document.createElement('div');
+  card.className = 'section-card';
+  card.id = id;
+  card.innerHTML = `
+    <div class="section-header" onclick="toggleSection('${id}')">
+      <span class="section-icon">🗂</span>
+      <span class="section-title">${escHtml(name)}</span>
+      <span class="section-count" id="count-${id}">empty</span>
+      <span class="section-chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <p style="color:var(--dim);font-size:11px;padding:8px 0;">
+        New section created by KVN. Click items in other sections to move progress here.
+      </p>
+    </div>`;
+  // Insert before notes section
+  document.getElementById('cockpit').insertBefore(card, notesSec);
+}
+
+/* MARK DONE */
+function cmdMarkDone() {
+  markDoneMode = true;
+  document.body.classList.add('mark-done-mode');
+  doTalk('Which step?', 2200);
+}
+function exitMarkDone() {
+  markDoneMode = false;
+  document.body.classList.remove('mark-done-mode');
+}
+
+/* REPORT */
+function cmdReport() {
+  const sections = [];
+  document.querySelectorAll('.section-card').forEach(card => {
+    if (card.id === 'sec-notes') return;
+    const title = card.querySelector('.section-title')?.textContent?.trim() || card.id;
+    const items = card.querySelectorAll('.check-item');
+    const done  = card.querySelectorAll('.check-item.done');
+    if (items.length > 0) sections.push({ title, done: done.length, total: items.length });
+  });
+
+  const totalDone  = sections.reduce((a, s) => a + s.done,  0);
+  const totalItems = sections.reduce((a, s) => a + s.total, 0);
+  const pct = totalItems ? Math.round(totalDone / totalItems * 100) : 0;
+  const summary = `Mission status: ${pct}% complete. ${totalDone} of ${totalItems} tasks done.`;
+
+  const panel   = document.getElementById('report-panel');
+  const content = document.getElementById('report-content');
+  content.innerHTML = sections.map(s => {
+    const done = s.done === s.total && s.total > 0;
+    const cls  = done ? 'report-ok' : 'report-pend';
+    const icon = done ? '✅' : '⏳';
+    return `<div class="report-line ${cls}">${icon} ${escHtml(s.title)}: ${s.done}/${s.total}</div>`;
+  }).join('') +
+  `<div class="report-line report-summary">⚔ ${escHtml(summary)}</div>`;
+
+  panel.classList.add('visible');
+  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+  setTimeout(() => speak(summary), 400);
+  doAction('scrollDown', 1100);
+}
+
+/* ────────────────────────────────────────
+   CHECKLIST TOGGLE
+──────────────────────────────────────── */
+function handleCheck(el) {
+  if (markDoneMode) {
+    if (!el.classList.contains('done')) {
+      markItem(el);
+      exitMarkDone();
+      doAction('markDone', 800);
+    }
+    return;
+  }
+  // Normal toggle
+  if (el.classList.contains('done')) {
+    el.classList.remove('done');
+    el.querySelector('.check-box').textContent = '';
+  } else {
+    markItem(el);
+  }
+  updateCounts();
+}
+function markItem(el) {
+  el.classList.add('done');
+  el.querySelector('.check-box').textContent = '✓';
+  updateCounts();
+}
+
+/* ────────────────────────────────────────
+   SECTION TOGGLE
+──────────────────────────────────────── */
+function toggleSection(id) {
+  document.getElementById(id)?.classList.toggle('collapsed');
+}
+
+/* ────────────────────────────────────────
+   COUNTS
+──────────────────────────────────────── */
+function updateCounts() {
+  document.querySelectorAll('.section-card').forEach(card => {
+    const id = card.id;
+    if (id === 'sec-notes') {
+      const n = document.querySelectorAll('.note-card').length;
+      const el = document.getElementById('count-sec-notes');
+      if (el) el.textContent = n + (n === 1 ? ' note' : ' notes');
+      return;
+    }
+    const items = card.querySelectorAll('.check-item');
+    const done  = card.querySelectorAll('.check-item.done');
+    const el = document.getElementById('count-' + id);
+    if (el && items.length) el.textContent = done.length + ' / ' + items.length;
+  });
+}
+
+/* ────────────────────────────────────────
+   OVERLAY HELPERS
+──────────────────────────────────────── */
+function makeOverlay() {
+  destroyOverlay();
+  const el = document.createElement('div');
+  el.className = 'kvn-overlay';
+  el.id = 'kvn-overlay';
+  el.addEventListener('mousedown', e => { if (e.target === el) destroyOverlay(); });
+  return el;
+}
+function destroyOverlay() {
+  document.getElementById('kvn-overlay')?.remove();
+}
+
+/* ────────────────────────────────────────
+   UTIL
+──────────────────────────────────────── */
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+/* ────────────────────────────────────────
+   INIT
+──────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  updateCounts();
+  resetIdleTimer();
+  // Spawn greeting
+  setTimeout(() => doTalk(LINES.spawn, 3200), 800);
+});
+
+// Resize: keep KVN inside viewport
+window.addEventListener('resize', () => {
+  const rect = kvnWrap.getBoundingClientRect();
+  const maxX = window.innerWidth  - kvnWrap.offsetWidth;
+  const maxY = window.innerHeight - kvnWrap.offsetHeight;
+  if (rect.left > maxX) kvnWrap.style.left = maxX + 'px';
+  if (rect.top  > maxY) kvnWrap.style.top  = maxY + 'px';
+});
 </script>
 </body>
 </html>

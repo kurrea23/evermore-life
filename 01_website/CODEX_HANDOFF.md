@@ -93,7 +93,7 @@ If GHL deployment is preferred instead:
 ### Task C — Update Sarah page for full product range
 `v2/pages/sarah.html` — update copy to reflect:
 - Not just final expense — also IUL, retirement planning, mortgage protection, term life
-- New intro: "Hi, I'm Sarah with Evermore Life. I help families compare life insurance options — from family protection and retirement planning to mortgage coverage and final expense."
+- New intro: "Hi, I'm Sarah with Evermore Life Insurance LLC. I help families compare life insurance options — from family protection and retirement planning to mortgage coverage and final expense."
 - Make the booking CTA more prominent (above the fold)
 - Add a quick 3-question qualifier before the booking button
 

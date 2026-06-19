@@ -14,7 +14,7 @@ Effective date:
 
 Summary:
 
-`Evermore Life collects your information to provide insurance quotes and communicate with you. We do not sell your personal information. SMS consent is optional, separate from quote requests, and you can opt out of text messages at any time by replying STOP.`
+`Evermore Life Insurance LLC collects your information to provide insurance quotes and communicate with you. We do not sell your personal information. SMS consent is optional, separate from quote requests, and you can opt out of text messages at any time by replying STOP.`
 
 Information we collect:
 
@@ -34,7 +34,7 @@ How we use information:
 
 SMS communications:
 
-`If you voluntarily check an SMS consent box, Evermore Life may send text messages about your quote request, appointment reminders, and insurance information related to your inquiry. Message and data rates may apply. Message frequency varies. Your SMS consent is not required to request a quote or purchase any product or service.`
+`If you voluntarily check an SMS consent box, Evermore Life Insurance LLC may send text messages about your quote request, appointment reminders, and insurance information related to your inquiry. Message and data rates may apply. Message frequency varies. Your SMS consent is not required to request a quote or purchase any product or service.`
 
 Opt out:
 
@@ -50,7 +50,7 @@ Mobile data non-sharing clause:
 
 Service providers:
 
-`We may use trusted service providers, such as CRM, communication, hosting, analytics, and advertising platforms, to operate our business. These providers may process information only as needed to provide services to Evermore Life and must protect the information they process.`
+`We may use trusted service providers, such as CRM, communication, hosting, analytics, and advertising platforms, to operate our business. These providers may process information only as needed to provide services to Evermore Life Insurance LLC and must protect the information they process.`
 
 Security:
 
@@ -58,7 +58,7 @@ Security:
 
 Contact:
 
-`Evermore Life`
+`Evermore Life Insurance LLC`
 
 `evermorelifeagent01@gmail.com`
 

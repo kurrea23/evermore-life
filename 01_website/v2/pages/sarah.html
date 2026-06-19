@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Sarah | Evermore Life — Final Expense Insurance Guide</title>
-  <meta name="description" content="Standalone Sarah AI guide for Evermore Life LLC. This page is available while A2P SMS approval is pending and can later connect to the live AI chat and GHL workflow." />
+  <title>Sarah | Evermore Life Insurance LLC — Final Expense Insurance Guide</title>
+  <meta name="description" content="Standalone Sarah AI guide for Evermore Life Insurance LLC. This page is available while A2P SMS approval is pending and can later connect to the live AI chat and GHL workflow." />
   <link rel="canonical" href="https://evermorelife.org/sarah" />
-  <meta property="og:title" content="Sarah | Evermore Life AI Guide" />
-  <meta property="og:description" content="Meet Sarah, Evermore Life's standalone AI guide for final expense insurance conversations." />
+  <meta property="og:title" content="Sarah | Evermore Life Insurance LLC AI Guide" />
+  <meta property="og:description" content="Meet Sarah, Evermore Life Insurance LLC's standalone AI guide for final expense insurance conversations." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://evermorelife.org/sarah" />
   <meta property="og:image" content="https://evermorelife.org/01_website/v2/assets/og-evermore-life.svg" />
@@ -35,7 +35,7 @@
 
   <style>
     /* ============================================================
-       DESIGN TOKENS — Evermore Life Brand
+       DESIGN TOKENS — Evermore Life Insurance LLC Brand
        ============================================================ */
     :root {
       --navy:       #0D1B3E;
@@ -767,7 +767,7 @@
     <div class="logo-lockup">
       <div class="logo-mark">E</div>
       <div class="logo-text">
-        <h1>Evermore Life LLC</h1>
+        <h1>Evermore Life Insurance LLC</h1>
         <p>Final Expense Insurance</p>
       </div>
     </div>
@@ -797,7 +797,7 @@
   <div id="welcome-screen">
     <div class="welcome-avatar">👩</div>
     <h2>Hi, I'm Sarah.</h2>
-    <p>I'm your personal guide at Evermore Life. I help families just like yours find honest, affordable final expense coverage — with no pressure, ever.</p>
+    <p>I'm your personal guide at Evermore Life Insurance LLC. I help families just like yours find honest, affordable final expense coverage — with no pressure, ever.</p>
 
     <div class="tagline">Simple. Honest. Trusted.<br>Protect What Matters. Leave Peace Behind.</div>
 
@@ -870,7 +870,7 @@ const state = {
     state:         '',
     preferredDate: '',
     preferredTime: '',
-    source:        'Sarah AI - Evermore Life',
+    source:        'Sarah AI - Evermore Life Insurance LLC',
     utmSource:     UTM.source,
     utmMedium:     UTM.medium,
     utmCampaign:   UTM.campaign,
@@ -900,7 +900,7 @@ const CLAUDE_CONFIG = {
   maxTokens: 400
 };
 
-const SARAH_SYSTEM_PROMPT = `You are Sarah, a warm and knowledgeable insurance guide for Evermore Life LLC.
+const SARAH_SYSTEM_PROMPT = `You are Sarah, a warm and knowledgeable insurance guide for Evermore Life Insurance LLC.
 You help people aged 50-75 understand final expense insurance.
 You are never pushy. You always move the conversation gently toward booking a free consultation with a licensed agent.
 You know that coverage amounts depend on age, health, and other factors — never promise specific premium amounts or guarantee specific coverage amounts.
@@ -1219,7 +1219,7 @@ function showBookingForm() {
   card.className = 'booking-card';
   card.innerHTML = `
     <h3>Schedule Your Free Call</h3>
-    <p class="subtitle">A licensed Evermore Life agent will reach out — no pressure, ever.</p>
+    <p class="subtitle">A licensed Evermore Life Insurance LLC agent will reach out — no pressure, ever.</p>
 
     <div class="form-row">
       <div class="form-field">
@@ -1270,7 +1270,7 @@ function showBookingForm() {
 
     <p class="privacy-note">
       🔒 Your information is private and secure. We never sell your data.<br>
-      By submitting, you agree to be contacted by a licensed Evermore Life agent.
+      By submitting, you agree to be contacted by a licensed Evermore Life Insurance LLC agent.
     </p>
   `;
 
@@ -1307,7 +1307,7 @@ function showConfirmation() {
   card.innerHTML = `
     <div class="confirm-icon">✓</div>
     <h3>You're all set${name}!</h3>
-    <p>A licensed Evermore Life agent will be in touch ${when}.</p>
+    <p>A licensed Evermore Life Insurance LLC agent will be in touch ${when}.</p>
     <p>They'll have everything we talked about and will walk you through your options clearly and honestly.</p>
     <div class="agent-note">
       <strong style="color:var(--gold-light);">📋 What to expect on your call:</strong><br><br>
@@ -1356,7 +1356,7 @@ async function startConversation() {
 
   // Opening sequence
   await showTyping(800);
-  await addMessage('ai', 'Hi there! 👋 My name is Sarah, and I\'m here to help you explore final expense insurance with Evermore Life — completely free, zero pressure, zero obligation.');
+  await addMessage('ai', 'Hi there! 👋 My name is Sarah, and I\'m here to help you explore final expense insurance with Evermore Life Insurance LLC — completely free, zero pressure, zero obligation.');
 
   await showTyping(900);
   await addMessage('ai', 'Everything we talk about stays between us. My only goal is to make sure you have the right information to protect the people you love. Ready to get started?');
@@ -1589,7 +1589,7 @@ async function handleFormSubmit() {
   // META PIXEL — fire Lead event here
   if (typeof fbq !== 'undefined') {
     fbq('track', 'Lead', {
-      content_name:     'Evermore Life Consultation Request',
+      content_name:     'Evermore Life Insurance LLC Consultation Request',
       content_category: 'Final Expense Insurance',
       value:            0,
       currency:         'USD'
@@ -1606,10 +1606,10 @@ async function handleFormSubmit() {
 
   // Final Sarah messages
   await showTyping(900);
-  await addMessage('ai', `You're all set, ${first}! 🎉 One of our licensed Evermore Life agents will be in touch ${date ? 'around ' + formatDate(date) : 'very soon'}. They'll have everything we talked about ready to go.`);
+  await addMessage('ai', `You're all set, ${first}! 🎉 One of our licensed Evermore Life Insurance LLC agents will be in touch ${date ? 'around ' + formatDate(date) : 'very soon'}. They'll have everything we talked about ready to go.`);
 
   await showTyping(700);
-  await addMessage('ai', `On behalf of everyone here at Evermore Life — thank you so much for trusting us to help protect your family. That truly means the world to us. 💛`);
+  await addMessage('ai', `On behalf of everyone here at Evermore Life Insurance LLC — thank you so much for trusting us to help protect your family. That truly means the world to us. 💛`);
 
   showConfirmation();
   updateProgress(9); // Show 100%

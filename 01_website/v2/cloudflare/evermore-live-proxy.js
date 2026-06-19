@@ -10,6 +10,7 @@ const COCKPIT_STATE_KEY = "cockpit-v2-state";
 const COCKPIT_PREVIEW_STATE_KEY = "cockpit-v3-preview-state";
 const COCKPIT_PREVIEW_BACKUP_PREFIX = "cockpit-v3-preview-backup:";
 const COCKPIT_PREVIEW_HISTORY_PREFIX = "cockpit-v3-preview-history:";
+const RECRUITING_PAGE_KV_KEY = "public:recruiting-page-html:v1";
 
 const CLEAN_REDIRECTS = new Map([
   ["/index.html", "/"],
@@ -21,6 +22,8 @@ const CLEAN_REDIRECTS = new Map([
   ["/privacy.html", "/privacy"],
   ["/terms.html", "/terms"],
   ["/thank-you.html", "/thank-you"],
+  ["/recruiting.html", "/recruiting"],
+  ["/recruiting/", "/recruiting"],
   ["/404.html", "/404"],
   ["/cockpit-v2.html", "/dashboard"],
   ["/cockpit-v2", "/dashboard"],
@@ -43,6 +46,8 @@ const CLEAN_REDIRECTS = new Map([
   ["/01_website/v2/pages/terms.html", "/terms"],
   ["/01_website/v2/pages/thank-you", "/thank-you"],
   ["/01_website/v2/pages/thank-you.html", "/thank-you"],
+  ["/01_website/v2/pages/recruiting", "/recruiting"],
+  ["/01_website/v2/pages/recruiting.html", "/recruiting"],
 ]);
 
 const PUBLIC_ROUTES = new Map([
@@ -53,6 +58,8 @@ const PUBLIC_ROUTES = new Map([
   ["/chat", "/01_website/v2/pages/chat"],
   ["/sarah", "/01_website/v2/pages/sarah"],
   ["/thank-you", "/01_website/v2/pages/thank-you"],
+  ["/recruiting", "/01_website/v2/pages/recruiting"],
+  ["/sitemap.xml", "/01_website/v2/sitemap.xml"],
   ["/404", "/01_website/v2/pages/404"],
 ]);
 
@@ -116,6 +123,10 @@ export default {
 
     if (incomingUrl.pathname === "/sarah" || incomingUrl.pathname === "/sarah/") {
       return serveSarahAsset(request, env);
+    }
+
+    if (incomingUrl.pathname === "/recruiting" || incomingUrl.pathname === "/recruiting/") {
+      return serveRecruitingPage(request, env);
     }
 
     const upstreamUrl = new URL(request.url);
@@ -469,7 +480,7 @@ async function handleKevinChat(request, env) {
     body: JSON.stringify({
       model: readSecret(env, "OPENAI_MODEL") || "gpt-4.1-mini",
       instructions: [
-        "You are Kevin, the private Evermore Life project manager.",
+        "You are Kevin, the private Evermore Life Insurance LLC project manager.",
         "Keep the operator focused on the next concrete action.",
         "Use the cockpit state as context, but clearly separate verified facts from stale or documented-only status.",
         "Do not claim a deployment, A2P approval, lead submission, workflow publish, or live result is complete unless the provided state explicitly proves it.",
@@ -1159,7 +1170,8 @@ async function serveSarahAsset(request, env) {
 
   const headers = responseHeaders(assetResponse.headers, { html: true });
   headers.set("x-evermore-deployment", "cloudflare-sarah-standby");
-  return new Response(request.method === "HEAD" ? null : assetResponse.body, {
+  const body = request.method === "HEAD" ? null : rewriteHtml(await assetResponse.text());
+  return new Response(body, {
     status: 200,
     headers,
   });
@@ -1193,7 +1205,7 @@ function serveDashboardLogin(errorMessage = "", formAction = "/dashboard/login")
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>Evermore Life - Private Dashboard</title>
+<title>Evermore Life Insurance LLC - Private Dashboard</title>
 <style>
   :root {
     color-scheme: dark;
@@ -1323,6 +1335,39 @@ function serveRobots() {
   });
 }
 
+async function serveRecruitingPage(request, env) {
+  const kvHtml = env?.COCKPIT_STATE
+    ? await env.COCKPIT_STATE.get(RECRUITING_PAGE_KV_KEY)
+    : "";
+
+  if (kvHtml) {
+    return new Response(rewriteHtml(kvHtml), {
+      headers: responseHeaders(new Headers(), { html: true }),
+    });
+  }
+
+  const upstreamUrl = new URL(request.url);
+  upstreamUrl.protocol = "https:";
+  upstreamUrl.hostname = PAGES_ORIGIN;
+  upstreamUrl.pathname = PUBLIC_ROUTES.get("/recruiting");
+
+  const upstreamRequest = new Request(upstreamUrl.toString(), request);
+  const response = await fetch(upstreamRequest);
+
+  if (!isHtml(response)) {
+    return new Response(response.body, {
+      status: response.status,
+      headers: responseHeaders(response.headers),
+    });
+  }
+
+  const html = rewriteHtml(await response.text());
+  return new Response(html, {
+    status: response.status,
+    headers: responseHeaders(response.headers, { html: true }),
+  });
+}
+
 function isHtml(response) {
   return (response.headers.get("content-type") || "").includes("text/html");
 }
@@ -1338,7 +1383,12 @@ function rewriteHtml(html) {
     .replaceAll('href="optin.html"', 'href="/optin"')
     .replaceAll('href="privacy.html"', 'href="/privacy"')
     .replaceAll('href="terms.html"', 'href="/terms"')
-    .replaceAll('href="thank-you.html"', 'href="/thank-you"');
+    .replaceAll('href="thank-you.html"', 'href="/thank-you"')
+    .replaceAll('href="recruiting.html"', 'href="/recruiting"')
+    .replaceAll('data-widget-id="69f6e7fdcc1c6313dcd0f983"', 'data-widget-id="6a34718b718826e00221fc81"')
+    .replaceAll("Evermore Life LLC", "Evermore Life Insurance LLC")
+    .replaceAll("EVERMORE LIFE LLC", "EVERMORE LIFE INSURANCE LLC")
+    .replaceAll('<meta name="robots" content="noindex, nofollow" />', '<meta name="robots" content="index, follow" />');
 }
 
 function responseHeaders(sourceHeaders, options = {}) {

@@ -12,7 +12,7 @@ Headline:
 
 Subheadline:
 
-`Final expense, term life, IUL, whole life, mortgage protection, and annuity options tailored to you and your family. Evermore Life compares top carriers so you can review coverage options with guidance from a licensed agent.`
+`Final expense, term life, IUL, whole life, mortgage protection, and annuity options tailored to you and your family. Evermore Life Insurance LLC compares top carriers so you can review coverage options with guidance from a licensed agent.`
 
 Primary CTA:
 
@@ -79,7 +79,7 @@ Annuities:
 
 ## Footer
 
-`Evermore Life is an independent life insurance brokerage helping families protect what matters most. Coverage, premiums, and eligibility vary by carrier and individual application.`
+`Evermore Life Insurance LLC is an independent life insurance brokerage helping families protect what matters most. Coverage, premiums, and eligibility vary by carrier and individual application.`
 
 Footer links:
 

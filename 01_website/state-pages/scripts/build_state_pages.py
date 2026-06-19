@@ -173,6 +173,35 @@ def render_hero_style(state: dict) -> str:
     )
 
 
+def render_hero_video(state: dict) -> str:
+    """Optional background video for the hero. Muted + autoplay + playsinline so
+    it plays through ONCE on load and then holds on its final frame (no loop —
+    the clip is short and restarting looks jarring). The hero photo is the
+    poster/fallback for mobile and slow connections. Returns '' when absent."""
+    video = state.get("hero_video")
+    if not video:
+        return ""
+    poster = state.get("hero_image", "")
+    poster_attr = (
+        f' poster="../assets/{html.escape(poster, quote=True)}"' if poster else ""
+    )
+    src = html.escape(video, quote=True)
+    return (
+        f'<video class="hero-bg" autoplay muted playsinline preload="metadata"{poster_attr}>\n'
+        f'    <source src="../assets/{src}" type="video/mp4" />\n'
+        "  </video>\n"
+        '  <div class="hero-veil" aria-hidden="true"></div>'
+    )
+
+
+def render_hero_kicker(state: dict) -> str:
+    """Optional brand tagline that sits above the hero headline as live text."""
+    text = state.get("hero_kicker")
+    if not text:
+        return ""
+    return f'<p class="hero-kicker">{html.escape(text)}</p>'
+
+
 def render_page(template: str, state: dict, form_id: str, email: str) -> str:
     status = state["status"]
 
@@ -201,6 +230,8 @@ def render_page(template: str, state: dict, form_id: str, email: str) -> str:
 
     raw = {
         "HERO_STYLE": render_hero_style(state),
+        "HERO_VIDEO": render_hero_video(state),
+        "HERO_KICKER": render_hero_kicker(state),
         "STATUS_PILL": render_status_pill(state),
         "WHY_CARDS": render_why_cards(state["why_cards"]),
         "OPTIN_BODY": optin_body,
@@ -268,15 +299,16 @@ def main() -> None:
     assets_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(CSS_FILE, assets_dir / CSS_FILE.name)
 
-    # Copy each state's hero image into the published assets folder.
+    # Copy each state's hero image (and optional hero video) into public assets.
     for state in states:
-        image = state.get("hero_image")
-        if not image:
-            continue
-        src = ROOT / "assets" / image
-        if not src.exists():
-            fail(f"{state['name']}: hero_image not found: assets/{image}")
-        shutil.copy2(src, assets_dir / image)
+        for key in ("hero_image", "hero_video"):
+            asset = state.get(key)
+            if not asset:
+                continue
+            src = ROOT / "assets" / asset
+            if not src.exists():
+                fail(f"{state['name']}: {key} not found: assets/{asset}")
+            shutil.copy2(src, assets_dir / asset)
 
     built = []
     for state in states:

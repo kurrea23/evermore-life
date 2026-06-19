@@ -13,7 +13,7 @@ The first wave is:
 
 1. Arizona - active
 2. Texas - active
-3. Arkansas - pending
+3. Arkansas - active
 
 The long-term system must scale to all 50 states without turning into 50
 unmaintainable one-off pages.
@@ -64,7 +64,7 @@ Required footer disclosure:
 
 > Coverage availability, policy type, benefits, premiums, and approval depend
 > on age, health, state, carrier underwriting, product type, and other
-> eligibility factors. Not all applicants qualify. Evermore Life may work with
+> eligibility factors. Not all applicants qualify. Evermore Life Insurance LLC may work with
 > multiple carriers to help compare available options. This is a solicitation
 > for insurance.
 
@@ -118,4 +118,3 @@ A state page is ready for human review when:
 
 A state page is ready to publish only after the launch gates in
 `STATE_PAGE_QA.md` are approved.
-

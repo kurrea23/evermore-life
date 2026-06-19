@@ -14,11 +14,11 @@ Effective date:
 
 Acceptance:
 
-`By using the Evermore Life website or submitting a quote request, you agree to these Terms of Service. If you do not agree, please do not use the website or submit your information.`
+`By using the Evermore Life Insurance LLC website or submitting a quote request, you agree to these Terms of Service. If you do not agree, please do not use the website or submit your information.`
 
 Insurance services:
 
-`Evermore Life is an independent insurance brokerage. We are not an insurance carrier, bank, investment adviser, law firm, or tax adviser. Insurance and annuity products are issued by third-party carriers, and coverage, pricing, availability, guarantees, riders, fees, surrender periods, and eligibility are subject to carrier underwriting, product terms, state availability, and approval.`
+`Evermore Life Insurance LLC is an independent insurance brokerage. We are not an insurance carrier, bank, investment adviser, law firm, or tax adviser. Insurance and annuity products are issued by third-party carriers, and coverage, pricing, availability, guarantees, riders, fees, surrender periods, and eligibility are subject to carrier underwriting, product terms, state availability, and approval.`
 
 No guarantee:
 
@@ -30,7 +30,7 @@ Annuities:
 
 Communications consent:
 
-`By submitting a form, you authorize Evermore Life and its representatives to contact you by phone or email regarding your request. SMS consent is optional and separate. If you choose to opt in to SMS, Evermore Life may send text messages about your quote request, appointment reminders, and related insurance information.`
+`By submitting a form, you authorize Evermore Life Insurance LLC and its representatives to contact you by phone or email regarding your request. SMS consent is optional and separate. If you choose to opt in to SMS, Evermore Life Insurance LLC may send text messages about your quote request, appointment reminders, and related insurance information.`
 
 SMS terms:
 
@@ -46,7 +46,7 @@ Privacy:
 
 Contact:
 
-`Evermore Life`
+`Evermore Life Insurance LLC`
 
 `evermorelifeagent01@gmail.com`
 

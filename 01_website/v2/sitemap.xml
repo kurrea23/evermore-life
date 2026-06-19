@@ -26,6 +26,11 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://evermorelife.org/recruiting</loc>
+    <lastmod>2026-06-16</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://evermorelife.org/privacy</loc>
     <lastmod>2026-05-05</lastmod>
     <priority>0.6</priority>

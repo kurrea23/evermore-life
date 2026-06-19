@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Evermore Life — State Page System
+   Evermore Life Insurance LLC — State Page System
    This stylesheet is a faithful port of the live evermorelife.org homepage
    (01_website/current/index.html) so every state page renders pixel-for-pixel
    the same, with only per-state copy swapped in by the generator.
@@ -395,4 +395,44 @@ footer {
   .hero-carriers { display: none; }
   .dataviz-section { padding: 50px 20px; }
   .viz-card { padding: 24px; }
+}
+
+/* HERO BACKGROUND VIDEO + BRAND KICKER (optional per state) */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(135deg, rgba(13,27,75,0.88) 0%, rgba(26,48,112,0.60) 55%, rgba(13,27,75,0.86) 100%);
+}
+.hero p.hero-kicker {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #d8bd86;
+  margin: 0 auto 16px;
+  max-width: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg { display: none; }
+}
+
+/* Kicker reveal: hidden while the hero clip plays, then pops in as it stops.
+   With no JS the kicker is simply visible (no class applied). */
+.hero-kicker.kicker-armed { opacity: 0; transform: translateY(12px) scale(0.96); }
+.hero-kicker.kicker-shown { opacity: 1; transform: none; }
+.hero-kicker.kicker-in { animation: kickerPop 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@keyframes kickerPop {
+  0%   { opacity: 0; transform: translateY(12px) scale(0.96); }
+  60%  { opacity: 1; transform: translateY(-2px) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }

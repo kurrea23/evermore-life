@@ -37,6 +37,8 @@
           "status": { "enum": ["active", "pending", "unavailable"] },
           "robots": { "type": "string" },
           "hero_image": { "type": "string" },
+          "hero_video": { "type": "string" },
+          "hero_kicker": { "type": "string" },
           "why_cards": {
             "type": "array",
             "minItems": 4,

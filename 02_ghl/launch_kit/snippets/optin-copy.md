@@ -14,7 +14,7 @@ Headline:
 
 Subheadline:
 
-`Tell us a little about yourself and a licensed Evermore Life agent will reach out with available coverage options. No pressure and no obligation to purchase.`
+`Tell us a little about yourself and a licensed Evermore Life Insurance LLC agent will reach out with available coverage options. No pressure and no obligation to purchase.`
 
 Bullets:
 
@@ -30,15 +30,15 @@ Bullets:
 
 Form intro:
 
-`Fill out the form below and a licensed Evermore Life agent will be in touch shortly.`
+`Fill out the form below and a licensed Evermore Life Insurance LLC agent will be in touch shortly.`
 
 Native GHL form:
 
-`Evermore Life Quote Request`
+`Evermore Life Insurance LLC Quote Request`
 
 Text below form:
 
-`You can submit this quote request without agreeing to SMS. A licensed Evermore Life agent may contact you by phone or email about your request. View our Privacy Policy and Terms of Service.`
+`You can submit this quote request without agreeing to SMS. A licensed Evermore Life Insurance LLC agent may contact you by phone or email about your request. View our Privacy Policy and Terms of Service.`
 
 Privacy link:
 
@@ -50,4 +50,4 @@ Terms link:
 
 ## Compliance Footer
 
-`Evermore Life is a licensed independent insurance brokerage. Life insurance products are underwritten by third-party carriers. Coverage amounts, premiums, and eligibility vary by carrier and individual application. This page is for informational purposes only and does not constitute a binding insurance quote or guarantee of coverage. SMS consent is optional and not a condition of purchase. Reply STOP to opt out or HELP for help. Message and data rates may apply.`
+`Evermore Life Insurance LLC is a licensed independent insurance brokerage. Life insurance products are underwritten by third-party carriers. Coverage amounts, premiums, and eligibility vary by carrier and individual application. This page is for informational purposes only and does not constitute a binding insurance quote or guarantee of coverage. SMS consent is optional and not a condition of purchase. Reply STOP to opt out or HELP for help. Message and data rates may apply.`

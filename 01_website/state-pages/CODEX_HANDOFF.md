@@ -1,6 +1,6 @@
 # Codex Handoff — Evermore State Pages (Homepage-Clone System)
 
-**Last updated:** June 14, 2026
+**Last updated:** June 16, 2026
 **Owner action that triggered this:** "Make the state pages pixel-for-pixel like
 evermorelife.org, custom per state, with a state hero image on top."
 
@@ -22,7 +22,7 @@ Currently built (all drafts, `noindex, nofollow`, nothing deployed):
 
 - **Arizona** — `active` — embeds the live quote form, hero photo of the Sonoran desert.
 - **Texas** — `active` — embeds the live quote form, hero photo of the Hill Country.
-- **Arkansas** — `pending` — "coming soon" availability-updates page, hero photo of the Ozarks.
+- **Arkansas** — `active` — embeds the live quote form, hero photo of the Ozarks.
 
 ---
 
@@ -120,6 +120,28 @@ The three current photos were generated as photorealistic, text-free landscapes
 point the state's `hero_image` at it, and rebuild. Keep them wide (16:9-ish),
 under ~300 KB, and free of embedded text. If a `hero_image` is omitted, the hero
 falls back to the original solid navy gradient automatically.
+
+**Optional hero video (`hero_video`).** A state may add a background video that
+plays through ONCE on load and then holds on its final frame (no loop — short
+clips look jarring when they restart). Drop `hero-<slug>.mp4` in `assets/`, set
+`hero_video` to that filename, and rebuild. The generator emits a muted,
+autoplay, `playsinline` `<video class="hero-bg">` with the hero JPG as its
+`poster` (so mobile and slow connections still get the still image), plus a navy
+`.hero-veil` overlay for legibility. `prefers-reduced-motion` hides the video and
+falls back to the poster. Arizona currently ships `hero-arizona.mp4` (5s, 720p, ~3 MB, AI-animated
+from the Arizona hero photo). Keep clips short, muted-friendly, and text-free —
+wording goes on as live HTML, not baked into the video.
+
+**Optional brand kicker (`hero_kicker`).** Live gold tagline rendered above the
+hero headline (`<p class="hero-kicker">`). All three states currently use
+"Your legacy moves on." Omit the field to drop the line.
+
+When a state has BOTH a `hero_video` and a `hero_kicker`, a small inline script
+keeps the kicker hidden while the clip plays and pops it in (CSS `kickerPop`)
+the moment the video ends and freezes on its last frame. Fallbacks: no video,
+reduced motion, blocked autoplay, or a video error all just show the kicker
+normally, and with JS disabled the kicker is visible by default. No data wiring
+needed — it's automatic whenever both fields are present.
 
 ---
 

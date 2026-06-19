@@ -3,889 +3,925 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EVERMORE LIFE — MISSION COCKPIT</title>
+<title>Evermore Broad Operating Cockpit</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
+  * { box-sizing: border-box; }
   :root {
-    --navy: #0D1B3E;
-    --gold: #C9A84C;
-    --gold-dim: #8B6E2A;
-    --bg: #07090F;
-    --bg2: #0D1020;
-    --bg3: #131830;
-    --text: #D0D8F0;
-    --text-dim: #5A6888;
-    --border: rgba(201,168,76,0.2);
-    --green: #1E7E34;
-    --lgreen: #0A3A14;
-    --yellow: #C9A84C;
-    --lyellow: #2A1F05;
-    --blue: #1A4A8A;
-    --lblue: #0A1530;
-    --red: #8A1A1A;
-    --lred: #2A0808;
-    --cyan: #00f5ff;
-    --orange: #F97316;
-    --lorange: #1f0d00;
+    --bg: #07111d;
+    --panel: #0c1829;
+    --panel-2: #0f2036;
+    --panel-3: #122540;
+    --text: #d7dfef;
+    --muted: #7e8ca8;
+    --gold: #d2af58;
+    --cyan: #7dd3fc;
+    --orange: #fb923c;
+    --green: #4ade80;
+    --red: #f87171;
+    --border: rgba(125, 211, 252, 0.18);
+    --border-strong: rgba(210, 175, 88, 0.25);
   }
-  html, body { width:100%; min-height:100vh; background:var(--bg); color:var(--text); font-family: 'Courier New', monospace; }
-
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:999;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  html, body {
+    margin: 0;
+    min-height: 100%;
+    background:
+      radial-gradient(circle at top, rgba(125, 211, 252, 0.08), transparent 28%),
+      linear-gradient(180deg, #050b14 0%, var(--bg) 100%);
+    color: var(--text);
+    font-family: "Courier New", monospace;
   }
-
-  /* HEADER */
-  .cockpit-header {
-    background: linear-gradient(135deg, var(--navy), #0a1428);
-    border-bottom: 2px solid var(--gold);
-    padding: 16px 28px;
-    display: flex; align-items: center; justify-content: space-between; flex-wrap:wrap; gap:10px;
-    box-shadow: 0 4px 30px rgba(201,168,76,0.15);
+  body {
+    padding: 20px;
   }
-  .cockpit-title { font-size: 20px; font-weight:900; letter-spacing:0.25em; color:var(--gold); text-shadow:0 0 20px rgba(201,168,76,0.4); }
-  .cockpit-sub { font-size:9px; letter-spacing:0.15em; color:var(--text-dim); margin-top:3px; }
-  .cockpit-time { font-size:11px; color:var(--gold-dim); letter-spacing:0.1em; text-align:right; }
-  .status-pill { display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:3px; font-size:10px; font-weight:bold; letter-spacing:0.1em; border:1px solid; }
-  .pill-live { background:var(--lgreen); border-color:var(--green); color:#4ade80; }
-  .pill-building { background:var(--lblue); border-color:var(--blue); color:#60a5fa; }
-  .pill-waiting { background:var(--lorange); border-color:var(--orange); color:var(--orange); }
-  .pill-alert { background:var(--lred); border-color:#F87171; color:#F87171; }
-  .blink { animation: blink 1.2s ease-in-out infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  /* STAT BAR */
-  .stat-bar {
-    background:var(--bg2); border-bottom:1px solid var(--border);
-    display:flex; align-items:center; gap:0; overflow-x:auto;
+  .shell {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: grid;
+    gap: 18px;
   }
-  .stat-item {
-    flex:1; min-width:90px; padding:10px 20px; text-align:center;
-    border-right:1px solid var(--border);
+  .hero {
+    background: linear-gradient(135deg, rgba(15, 32, 54, 0.96), rgba(8, 20, 35, 0.96));
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    padding: 22px 24px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
   }
-  .stat-item:last-child { border-right:none; }
-  .stat-val { font-size:22px; font-weight:900; color:var(--gold); line-height:1; }
-  .stat-val.cyan { color:var(--cyan); text-shadow:0 0 10px var(--cyan); }
-  .stat-val.green { color:#4ade80; }
-  .stat-val.blue { color:#60a5fa; }
-  .stat-val.orange { color:var(--orange); text-shadow:0 0 10px var(--orange); }
-  .stat-val.red { color:#F87171; }
-  .stat-lbl { font-size:8px; letter-spacing:0.15em; color:var(--text-dim); margin-top:3px; }
-
-  /* PROGRESS BAR */
-  .progress-section { height:5px; background:rgba(201,168,76,0.1); }
-  .progress-fill { height:100%; background:linear-gradient(90deg,var(--gold-dim),var(--gold)); box-shadow:0 0 8px rgba(201,168,76,0.4); transition:width 0.6s; }
-
-  /* MAIN LAYOUT */
-  .main-layout { display:grid; grid-template-columns:320px 1fr 320px; min-height:calc(100vh - 130px); }
-  @media(max-width:1100px) { .main-layout { grid-template-columns:1fr; } }
-
-  /* PANEL COMMON */
-  .panel { padding:20px; border-right:1px solid var(--border); overflow-y:auto; }
-  .panel:last-child { border-right:none; }
-  .panel-title { font-size:9px; letter-spacing:0.2em; color:var(--gold); margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--border); }
-
-  /* AGENT CARDS */
-  .agent-card {
-    border-radius:4px; padding:12px 14px; margin-bottom:10px;
-    display:flex; align-items:flex-start; gap:12px;
+  .eyebrow {
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
   }
-  .agent-card.kvn { background:linear-gradient(135deg,#070f15,#0a1520); border:1px solid rgba(248,113,113,0.25); box-shadow:0 0 15px rgba(248,113,113,0.06); }
-  .agent-card.sarah { background:linear-gradient(135deg,#150f00,#1a1200); border:1px solid rgba(201,168,76,0.3); box-shadow:0 0 15px rgba(201,168,76,0.06); }
-  .agent-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; margin-top:2px; }
-  .dot-cyan { background:var(--cyan); box-shadow:0 0 6px var(--cyan); animation:blink 2s infinite; }
-  .dot-gold { background:var(--gold); box-shadow:0 0 6px var(--gold); animation:blink 2.5s infinite; }
-  .dot-red { background:#F87171; box-shadow:0 0 6px #F87171; animation:blink 1.5s infinite; }
-  .agent-name { font-size:12px; font-weight:900; letter-spacing:0.15em; }
-  .agent-name.cyan { color:var(--cyan); }
-  .agent-name.gold { color:var(--gold); }
-  .agent-name.red { color:#F87171; }
-  .agent-url { font-size:9px; color:var(--text-dim); margin-top:2px; }
-  .agent-url a { color:inherit; text-decoration:none; }
-  .agent-url a:hover { color:var(--gold); }
-  .agent-note { font-size:8px; color:var(--orange); margin-top:4px; line-height:1.4; }
-
-  /* STEPS */
-  .step-row {
-    display:flex; align-items:flex-start; gap:10px;
-    padding:10px 8px; border-radius:4px; margin-bottom:3px;
-    border:1px solid transparent;
-    transition:background 0.15s, border-color 0.15s;
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.85fr);
+    gap: 18px;
+    align-items: start;
+    margin-top: 12px;
   }
-  .step-row.done { opacity:0.6; }
-  .step-row.done .step-name { text-decoration:line-through; color:var(--text-dim); }
-  .step-row.active { background:rgba(26,74,138,0.15); border-color:rgba(96,165,250,0.25); }
-  .step-row.waiting { background:rgba(249,115,22,0.07); border-color:rgba(249,115,22,0.25); }
-  .step-row.blocked { background:rgba(248,113,113,0.06); border-color:rgba(248,113,113,0.3); }
-  .step-num { width:24px; height:24px; border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:bold; flex-shrink:0; border:1px solid; }
-  .num-done { background:var(--lgreen); border-color:var(--green); color:#4ade80; }
-  .num-active { background:var(--lblue); border-color:var(--blue); color:#60a5fa; }
-  .num-pending { background:rgba(201,168,76,0.08); border-color:rgba(201,168,76,0.2); color:var(--gold-dim); }
-  .num-waiting { background:var(--lorange); border-color:var(--orange); color:var(--orange); }
-  .num-blocked { background:var(--lred); border-color:#F87171; color:#F87171; }
-  .step-content { flex:1; }
-  .step-name { font-size:11px; color:var(--text); letter-spacing:0.02em; line-height:1.4; }
-  .step-detail { font-size:9px; color:var(--text-dim); margin-top:2px; }
-  .step-tag { display:inline-block; font-size:8px; letter-spacing:0.1em; padding:2px 6px; border-radius:2px; margin-top:3px; font-weight:bold; }
-  .tag-done { background:var(--lgreen); color:#4ade80; }
-  .tag-you { background:var(--lyellow); color:var(--gold); }
-  .tag-building { background:var(--lblue); color:#60a5fa; }
-  .tag-live { background:#0A2A0A; color:#4ade80; border:1px solid #1E7E34; }
-  .tag-active { background:#0a1a2a; color:#60a5fa; border:1px solid #1a4a8a; }
-  .tag-human { background:#2A1F05; color:var(--gold); border:1px solid var(--gold-dim); }
-  .tag-blocked { background:var(--lred); color:#F87171; border:1px solid #F87171; }
-  .tag-waiting { background:var(--lorange); color:var(--orange); border:1px solid var(--orange); }
-  .who-row { display:flex; gap:4px; margin-top:4px; flex-wrap:wrap; }
-  .who-pill { font-size:7px; letter-spacing:0.12em; padding:1px 5px; border-radius:2px; font-weight:bold; }
-  .who-human { background:#2A1F05; color:var(--gold); }
-  .who-ai { background:#0a1a2a; color:var(--cyan); }
-
-  /* ROOMS SECTION */
-  .rooms-grid { display:grid; grid-template-columns:1fr; gap:8px; margin-bottom:12px; }
-  .room-card {
-    background:linear-gradient(135deg, #0a1530, #131830);
-    border:1px solid rgba(0,245,255,0.25);
-    border-radius:5px; padding:12px 14px; cursor:pointer;
-    transition:border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+  .date {
+    margin: 0 0 10px;
+    font-size: 30px;
+    line-height: 1;
   }
-  .room-card:hover { border-color:var(--cyan); box-shadow:0 0 14px rgba(0,245,255,0.18); transform:translateY(-1px); }
-  .room-card.spec { border-color:rgba(201,168,76,0.3); }
-  .room-card.spec:hover { border-color:var(--gold); box-shadow:0 0 14px rgba(201,168,76,0.2); }
-  .room-card.blocked-card { border-color:rgba(248,113,113,0.35); background:linear-gradient(135deg,#1a0808,#200a0a); }
-  .room-card.blocked-card:hover { border-color:#F87171; box-shadow:0 0 14px rgba(248,113,113,0.2); }
-  .room-name { font-size:11px; font-weight:900; letter-spacing:0.15em; color:var(--cyan); }
-  .room-card.spec .room-name { color:var(--gold); }
-  .room-card.blocked-card .room-name { color:#F87171; }
-  .room-step { font-size:8px; letter-spacing:0.15em; color:var(--text-dim); margin-top:2px; }
-  .room-desc { font-size:9px; color:var(--text); margin-top:6px; line-height:1.4; }
-  .room-actions { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
-  .room-act { font-size:8px; letter-spacing:0.1em; padding:3px 7px; border-radius:2px; background:rgba(0,245,255,0.08); color:var(--cyan); border:1px solid rgba(0,245,255,0.2); text-decoration:none; }
-  .room-card.spec .room-act { background:rgba(201,168,76,0.08); color:var(--gold); border-color:rgba(201,168,76,0.2); }
-  .room-act:hover { background:rgba(0,245,255,0.18); }
-
-  .section-label { font-size:8px; letter-spacing:0.2em; color:var(--text-dim); padding:8px 0 4px; border-bottom:1px solid rgba(201,168,76,0.1); margin-bottom:6px; }
-
-  /* CENTER PANEL */
-  .center-panel { padding:20px; border-right:1px solid var(--border); }
-
-  /* METRIC CARDS */
-  .metrics-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
-  .metric-card { background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:14px; text-align:center; }
-  .metric-val { font-size:28px; font-weight:900; color:var(--gold); line-height:1; }
-  .metric-val.cyan { color:var(--cyan); }
-  .metric-val.green { color:#4ade80; }
-  .metric-val.orange { color:var(--orange); }
-  .metric-val.red { color:#F87171; }
-  .metric-lbl { font-size:9px; letter-spacing:0.12em; color:var(--text-dim); margin-top:4px; }
-  .metric-sub { font-size:8px; color:var(--text-dim); margin-top:2px; opacity:0.6; }
-
-  /* ALERT CARD */
-  .alert-card { border-radius:4px; padding:12px 14px; margin-bottom:12px; }
-  .alert-title { font-size:9px; letter-spacing:0.15em; font-weight:bold; margin-bottom:6px; }
-  .alert-body { font-size:10px; color:var(--text); line-height:1.5; }
-
-  /* FUNNEL */
-  .funnel-title { font-size:9px; letter-spacing:0.2em; color:var(--gold); margin-bottom:10px; }
-  .funnel-stage { margin-bottom:8px; }
-  .funnel-row { display:flex; align-items:center; gap:10px; margin-bottom:3px; }
-  .funnel-label { font-size:10px; color:var(--text); width:120px; flex-shrink:0; }
-  .funnel-bar-track { flex:1; height:6px; background:rgba(201,168,76,0.1); border-radius:3px; }
-  .funnel-bar-fill { height:100%; border-radius:3px; transition:width 0.8s; }
-  .funnel-count { font-size:10px; color:var(--text-dim); width:50px; text-align:right; flex-shrink:0; }
-  .funnel-pct { font-size:9px; color:var(--text-dim); width:35px; text-align:right; flex-shrink:0; }
-
-  /* AD STATUS */
-  .ad-title { font-size:9px; letter-spacing:0.2em; color:var(--gold); margin:16px 0 10px; }
-  .ad-row { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:3px; background:var(--bg3); border:1px solid var(--border); margin-bottom:6px; }
-  .ad-name { font-size:10px; color:var(--text); flex:1; }
-  .ad-badge { font-size:8px; font-weight:bold; letter-spacing:0.1em; padding:2px 7px; border-radius:2px; }
-  .badge-pending { background:var(--lyellow); color:var(--gold); }
-  .badge-building { background:var(--lblue); color:#60a5fa; }
-  .badge-live { background:var(--lgreen); color:#4ade80; }
-  .badge-blocked { background:var(--lorange); color:var(--orange); }
-
-  /* RIGHT PANEL */
-  .right-panel { padding:20px; }
-
-  /* INTEGRATIONS */
-  .integrations-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
-  .int-card { background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:10px 12px; }
-  .int-name { font-size:10px; color:var(--text); margin-bottom:4px; }
-  .int-status { font-size:8px; font-weight:bold; letter-spacing:0.1em; }
-  .is-live { color:#4ade80; }
-  .is-pending { color:var(--gold); }
-  .is-building { color:#60a5fa; }
-  .is-waiting { color:var(--orange); }
-  .is-alert { color:#F87171; }
-
-  /* FILES */
-  .file-card {
-    background:var(--bg3); border:1px solid var(--border); border-radius:4px;
-    padding:10px 12px; margin-bottom:6px;
-    display:flex; align-items:center; gap:10px; cursor:pointer;
-    transition:border-color 0.15s, box-shadow 0.15s;
+  .mission, .next-action {
+    margin: 0 0 10px;
+    font-size: 14px;
+    line-height: 1.6;
   }
-  .file-card:hover { border-color:var(--gold); box-shadow:0 0 10px rgba(201,168,76,0.08); }
-  .file-icon { font-size:16px; flex-shrink:0; }
-  .file-info { flex:1; }
-  .file-name { font-size:10px; color:var(--gold); letter-spacing:0.04em; }
-  .file-desc { font-size:8px; color:var(--text-dim); margin-top:1px; }
-  .file-status { font-size:8px; font-weight:bold; letter-spacing:0.08em; }
-  .fs-ready { color:#4ade80; }
-  .fs-live { color:#4ade80; }
-  .fs-building { color:#60a5fa; }
-  .fs-alert { color:#F87171; }
-
-  /* NEXT ACTIONS */
-  .next-title { font-size:9px; letter-spacing:0.2em; color:var(--gold); margin:16px 0 10px; }
-  .action-card { border-radius:4px; padding:10px 12px; margin-bottom:6px; }
-  .action-card.urgent { background:rgba(249,115,22,0.07); border:1px solid rgba(249,115,22,0.3); }
-  .action-card.done-card { background:rgba(10,58,20,0.2); border:1px solid rgba(74,222,128,0.2); opacity:0.7; }
-  .action-card.normal { background:rgba(26,74,138,0.1); border:1px solid rgba(96,165,250,0.2); }
-  .action-card.red-alert { background:rgba(248,113,113,0.06); border:1px solid rgba(248,113,113,0.35); }
-  .action-num { font-size:8px; color:#60a5fa; letter-spacing:0.1em; margin-bottom:3px; }
-  .action-num.orange { color:var(--orange); }
-  .action-num.green { color:#4ade80; }
-  .action-num.red { color:#F87171; }
-  .action-text { font-size:10px; color:var(--text); line-height:1.4; }
-
-  /* TIKTOK */
-  .tiktok-card {
-    background:linear-gradient(135deg,#0d0020,#1a0030);
-    border:1px solid rgba(105,0,255,0.35);
-    border-radius:4px; padding:12px 14px; margin-bottom:10px;
+  .next-action strong {
+    color: var(--orange);
   }
-  .tiktok-title { font-size:9px; letter-spacing:0.2em; color:#a78bfa; margin-bottom:8px; }
-  .tiktok-row { display:flex; justify-content:space-between; font-size:10px; color:var(--text); margin-bottom:4px; }
-  .tiktok-val { color:#a78bfa; font-weight:bold; }
-
-  /* FOOTER */
-  footer { padding:12px 28px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background:var(--bg2); flex-wrap:wrap; gap:8px; }
-  .footer-note { font-size:8px; color:var(--text-dim); letter-spacing:0.1em; }
-  .footer-ver { font-size:8px; color:var(--gold-dim); letter-spacing:0.1em; }
-
-  /* GH warning box */
-  .gh-warn { background:linear-gradient(135deg,#0a0a20,#12122a); border:1px solid rgba(96,165,250,0.28);
-    border-radius:4px; padding:8px 11px; margin-top:6px; margin-bottom:2px; font-size:8px; color:#60a5fa; line-height:1.5; }
+  .stamp {
+    background: rgba(7, 17, 29, 0.78);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .stamp-label {
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .stamp-value {
+    font-size: 14px;
+    line-height: 1.55;
+    word-break: break-word;
+  }
+  .counts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .count-card {
+    background: rgba(9, 19, 31, 0.85);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+  .count-label {
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .count-value {
+    margin-top: 4px;
+    font-size: 22px;
+    font-weight: bold;
+  }
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .tab-button {
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: rgba(12, 24, 41, 0.92);
+    color: var(--text);
+    padding: 10px 16px;
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .tab-button.active {
+    border-color: var(--gold);
+    color: var(--gold);
+    box-shadow: 0 0 0 1px rgba(210, 175, 88, 0.2) inset;
+  }
+  .tab-panel {
+    display: none;
+    gap: 18px;
+  }
+  .tab-panel.active {
+    display: grid;
+  }
+  .grid {
+    display: grid;
+    gap: 18px;
+  }
+  .two-col {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .card {
+    background: linear-gradient(180deg, rgba(12, 24, 41, 0.96), rgba(9, 17, 29, 0.96));
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+  }
+  .card h2 {
+    margin: 0 0 12px;
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .plain-list, .generated-list {
+    margin: 0;
+    padding-left: 20px;
+  }
+  .plain-list li {
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .generated-list {
+    display: grid;
+    gap: 10px;
+    padding-left: 0;
+    list-style: none;
+  }
+  .generated-item {
+    border: 1px solid rgba(125, 211, 252, 0.16);
+    border-radius: 12px;
+    background: rgba(15, 32, 54, 0.68);
+    padding: 12px 14px;
+    display: grid;
+    gap: 10px;
+  }
+  .generated-copy {
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .generated-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .track-btn, .ghost-btn, .danger-btn, .save-btn {
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 12px;
+    background: rgba(7, 17, 29, 0.85);
+    color: var(--text);
+    font: inherit;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .track-btn {
+    border-color: rgba(210, 175, 88, 0.3);
+    color: var(--gold);
+  }
+  .save-btn {
+    border-color: rgba(74, 222, 128, 0.28);
+    color: var(--green);
+  }
+  .danger-btn {
+    border-color: rgba(248, 113, 113, 0.3);
+    color: var(--red);
+  }
+  .ghost-btn {
+    color: var(--cyan);
+  }
+  .generated-status {
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .brief {
+    display: grid;
+    gap: 10px;
+  }
+  .brief-row {
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(15, 32, 54, 0.7);
+    border: 1px solid rgba(210, 175, 88, 0.14);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .brief-row strong {
+    color: var(--gold);
+  }
+  .sources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .source-pill {
+    padding: 8px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(125, 211, 252, 0.22);
+    background: rgba(15, 32, 54, 0.66);
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  .source-pill strong {
+    color: var(--cyan);
+  }
+  .projects-shell {
+    display: grid;
+    gap: 18px;
+  }
+  .projects-intro {
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.65;
+  }
+  .projects-intro strong {
+    color: var(--gold);
+  }
+  .project-add {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+  .project-input, .project-notes, .project-title-input {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(7, 17, 29, 0.82);
+    color: var(--text);
+    font: inherit;
+  }
+  .project-input, .project-title-input {
+    padding: 11px 13px;
+    font-size: 13px;
+  }
+  .project-notes {
+    min-height: 88px;
+    padding: 12px 13px;
+    resize: vertical;
+    font-size: 12px;
+    line-height: 1.55;
+  }
+  .project-list {
+    display: grid;
+    gap: 12px;
+  }
+  .project-card {
+    border: 1px solid rgba(125, 211, 252, 0.18);
+    border-radius: 14px;
+    background: linear-gradient(180deg, rgba(15, 32, 54, 0.85), rgba(9, 17, 29, 0.92));
+    padding: 15px;
+    display: grid;
+    gap: 10px;
+  }
+  .project-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .meta-pill {
+    border: 1px solid rgba(125, 211, 252, 0.18);
+    border-radius: 999px;
+    padding: 4px 8px;
+    background: rgba(7, 17, 29, 0.75);
+  }
+  .project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .empty-state {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 12px 0 4px;
+  }
+  .footer {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.6;
+    text-align: center;
+    padding-bottom: 8px;
+  }
+  .hide {
+    display: none !important;
+  }
+  @media (max-width: 920px) {
+    body { padding: 14px; }
+    .hero-grid, .counts, .two-col, .project-add { grid-template-columns: 1fr; }
+    .date { font-size: 24px; }
+  }
 </style>
-<meta http-equiv="refresh" content="60">
 </head>
 <body>
-
-<!-- HEADER -->
-<div class="cockpit-header">
-  <div>
-    <div class="cockpit-title">⬡ EVERMORE LIFE — MISSION COCKPIT</div>
-    <div class="cockpit-sub">FINAL EXPENSE FUNNEL · SITE LIVE · A2P BLOCKED ON IRS NAME MISMATCH · KVN NOT DEPLOYED · MACU PAYMENT RETURNED</div>
-  </div>
-  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-    <span class="status-pill pill-alert"><span class="blink">●</span> A2P: IRS BLOCKER</span>
-    <span class="status-pill pill-alert"><span class="blink">●</span> KVN: DOWN</span>
-    <span class="status-pill pill-waiting"><span class="blink">●</span> MACU: PAYMENT RETURNED</span>
-    <div class="cockpit-time" id="clock">--</div>
-  </div>
-</div>
-
-<!-- STAT BAR -->
-<div class="stat-bar">
-  <div class="stat-item">
-    <div class="stat-val green" id="stat-done">6</div>
-    <div class="stat-lbl">STEPS DONE</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-val blue" id="stat-left">4</div>
-    <div class="stat-lbl">STEPS LEFT</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-val red">⚠</div>
-    <div class="stat-lbl">A2P BLOCKED · IRS</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-val red">⚠</div>
-    <div class="stat-lbl">KVN NOT DEPLOYED</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-val cyan">MAY 7</div>
-    <div class="stat-lbl">TODAY · THU</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-val orange">MAY 8</div>
-    <div class="stat-lbl">A2P CHECK · 9AM CAL</div>
-  </div>
-</div>
-
-<!-- PROGRESS BAR -->
-<div class="progress-section"><div class="progress-fill" id="prog-fill" style="width:60%"></div></div>
-
-<!-- MAIN 3-COLUMN LAYOUT -->
-<div class="main-layout">
-
-  <!-- LEFT: AGENTS + STEPS -->
-  <div class="panel">
-    <div class="panel-title">⬡ AGENTS STATUS</div>
-
-    <!-- KVN — NOT DEPLOYED -->
-    <div class="agent-card kvn">
-      <div class="agent-dot dot-red"></div>
-      <div style="flex:1;">
-        <div class="agent-name red">KVN · NOT DEPLOYED</div>
-        <div class="agent-url">workers.dev — BLANK · NO RESPONSE</div>
-        <div class="agent-note">⚠ workers.dev returns blank. KVN V2 upgrade needs to be pushed. Parallel track — work on while A2P IRS resolves.</div>
-      </div>
-      <span class="status-pill pill-alert" style="font-size:8px;">⚠ DOWN</span>
-    </div>
-
-    <!-- SARAH — LIVE -->
-    <div class="agent-card sarah">
-      <div class="agent-dot dot-gold"></div>
-      <div style="flex:1;">
-        <div class="agent-name gold">SARAH · DEPLOYED</div>
-        <div class="agent-url">🔗 <a href="https://sarah-evermore.newmexicomarketingpartners.workers.dev" target="_blank">sarah-evermore.workers.dev</a></div>
-      </div>
-      <span class="status-pill pill-live" style="font-size:8px;">✓ LIVE</span>
-    </div>
-
-    <div class="gh-warn">ℹ️ <strong>GitHub Pages CI failures are harmless</strong> — site served via Cloudflare Pages. evermorelife.org is LIVE through that path. GH CI fail emails = noise.</div>
-
-    <div style="font-size:8px;color:var(--text-dim);letter-spacing:0.06em;line-height:1.5;margin:8px 2px 0;">
-      Website live at <strong style="color:var(--cyan);">evermorelife.org</strong> (Cloudflare Pages) · All 5 routes confirmed.
-    </div>
-
-    <div class="panel-title" style="margin-top:18px;">⬡ 10-STEP LAUNCH SEQUENCE</div>
-    <div style="font-size:8px;color:var(--text-dim);letter-spacing:0.08em;margin:-6px 0 10px;">
-      MISSION: GHL workflow live → A2P IRS unblocked → SMS on → ads → bookings → sales
-    </div>
-
-    <div class="section-label">CODE + COMPLIANCE (✓ DONE)</div>
-
-    <div class="step-row done">
-      <div class="step-num num-done">✓</div>
-      <div class="step-content">
-        <div class="step-name">Codex security + compliance hardening</div>
-        <div class="step-detail">Secrets removed, SMS consent + STOP/HELP, privacy/terms updated</div>
-        <span class="step-tag tag-done">✓ DONE</span>
-      </div>
-    </div>
-
-    <div class="step-row done">
-      <div class="step-num num-done">✓</div>
-      <div class="step-content">
-        <div class="step-name">GHL launch kit shipped</div>
-        <div class="step-detail">Form map, workflow blueprint, A2P pack, runbook</div>
-        <span class="step-tag tag-done">✓ DONE</span>
-      </div>
-    </div>
-
-    <div class="step-row done">
-      <div class="step-num num-done">✓</div>
-      <div class="step-content">
-        <div class="step-name">Form approach decided: native GHL form</div>
-        <div class="step-detail">Worker relay parked for later API-level routing</div>
-        <span class="step-tag tag-done">✓ LOCKED</span>
-      </div>
-    </div>
-
-    <div class="step-row done">
-      <div class="step-num num-done">✓</div>
-      <div class="step-content">
-        <div class="step-name">Local pages QA + lead-payload fields</div>
-        <div class="step-detail">UTM/source/page/referrer wired, alert-on-missing-webhook</div>
-        <span class="step-tag tag-done">✓ DONE</span>
-      </div>
-    </div>
-
-    <div class="section-label">GHL BUILD (✓ LIVE)</div>
-
-    <div class="step-row done">
-      <div class="step-num num-done">✓</div>
-      <div class="step-content">
-        <div class="step-name">Build native GHL form + 5 pages</div>
-        <div class="step-detail">evermorelife.org/home · /optin · /thankyou · /privacypolicy · /terms — ALL LIVE via CF Pages</div>
-        <span class="step-tag tag-done">✓ LIVE ON evermorelife.org</span>
-      </div>
-    </div>
-
-    <div class="step-row done">
-      <div class="step-num num-done">✓</div>
-      <div class="step-content">
-        <div class="step-name">A2P submitted May 3 — now BLOCKED on IRS</div>
-        <div class="step-detail">IRS record shows old company name. Need CP575 EIN letter + IRS name update → resubmit to GHL/TCR</div>
-        <span class="step-tag tag-blocked">⚠ BLOCKED — IRS NAME MISMATCH</span>
-      </div>
-    </div>
-
-    <div class="section-label">WORKFLOW + TEST (OPEN — DO WHILE A2P RESOLVES)</div>
-
-    <div class="step-row active">
-      <div class="step-num num-active">7</div>
-      <div class="step-content">
-        <div class="step-name">Build GHL workflow — NO SMS yet</div>
-        <div class="step-detail">Automation → Workflows → "Evermore Website Lead Intake" · Form 10 + Main Opt-In triggers · Tag, Notify, Opportunity, Email, Task · Blueprint at form-workflow-next-steps.md</div>
-        <div class="who-row"><span class="who-pill who-human">HUMAN</span><span class="who-pill who-ai">AI: blueprint ready</span></div>
-        <span class="step-tag tag-active">⟳ OPEN · UNCONFIRMED DONE</span>
-      </div>
-    </div>
-
-    <div class="step-row active">
-      <div class="step-num num-active">8</div>
-      <div class="step-content">
-        <div class="step-name">Fake-lead test + publish workflow</div>
-        <div class="step-detail">Submit test lead · Confirm: contact, tags, opportunity, internal email, confirmation email, call task · Publish workflow when all pass</div>
-        <div class="who-row"><span class="who-pill who-human">HUMAN ONLY</span></div>
-        <span class="step-tag tag-active">⟳ AFTER STEP 7 · UNCONFIRMED</span>
-      </div>
-    </div>
-
-    <div class="step-row active">
-      <div class="step-num num-active">🔐</div>
-      <div class="step-content">
-        <div class="step-name">Rotate Cloudflare API Token</div>
-        <div class="step-detail">dash.cloudflare.com → Profile → API Tokens · Revoke old token · Create new scoped token · DO NOT paste into HTML</div>
-        <div class="who-row"><span class="who-pill who-human">HUMAN ONLY</span></div>
-        <span class="step-tag tag-active">⟳ SECURITY — STILL OPEN?</span>
-      </div>
-    </div>
-
-    <div class="section-label">A2P → ADS → SALES (BLOCKED ON IRS)</div>
-
-    <div class="step-row blocked">
-      <div class="step-num num-blocked">⚠</div>
-      <div class="step-content">
-        <div class="step-name">A2P 10DLC — BLOCKED ON IRS NAME MISMATCH</div>
-        <div class="step-detail">IRS record shows old company name. Get CP575 EIN letter → update IRS name → resubmit to GHL. GHL confirmed this is the blocker. Call IRS: 1-800-829-4933.</div>
-        <span class="step-tag tag-blocked">BLOCKED · IRS UPDATE REQUIRED</span>
-      </div>
-    </div>
-
-    <div class="step-row">
-      <div class="step-num num-pending">10</div>
-      <div class="step-content">
-        <div class="step-name">Install Meta Pixel → launch test ad → first sale</div>
-        <div class="step-detail">wire_pixel.sh · small budget, 2-3 creatives, financial special category · Call new leads &lt; 5 min</div>
-        <span class="step-tag tag-you">AFTER A2P APPROVAL</span>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- CENTER: ALERTS + METRICS + FUNNEL + ADS -->
-  <div class="center-panel">
-
-    <!-- A2P BLOCKER — TOP PRIORITY RED ALERT -->
-    <div class="alert-card" style="border:1px solid rgba(248,113,113,0.5);background:linear-gradient(135deg,#200808,#2a0a0a);">
-      <div class="alert-title" style="color:#F87171;">🚨 A2P BLOCKED — IRS COMPANY NAME MISMATCH</div>
-      <div class="alert-body">
-        A2P 10DLC is blocked because the <strong style="color:#F87171;">IRS record still shows the old company name</strong>. GHL confirmed this is the blocker.<br><br>
-        <strong style="color:var(--orange);">WHAT YOU NEED:</strong><br>
-        1. Get the <strong style="color:#60a5fa;">CP575 form</strong> from IRS — EIN confirmation letter with correct company name<br>
-        2. If IRS still shows old name → update IRS with new legal name first<br>
-        3. Submit corrected paperwork to GoHighLevel<br>
-        4. Only then can A2P clear → SMS on → ads launch<br><br>
-        <strong style="color:var(--orange);">IRS contact:</strong> 1-800-829-4933 · Mon–Fri 7AM–7PM local time
-      </div>
-    </div>
-
-    <!-- KVN ALERT -->
-    <div class="alert-card" style="border:1px solid rgba(248,113,113,0.4);background:linear-gradient(135deg,#1a0808,#200a0a);">
-      <div class="alert-title" style="color:#F87171;">🚨 KVN NOT DEPLOYED — workers.dev IS BLANK</div>
-      <div class="alert-body">
-        workers.dev returns blank — KVN is NOT live. Push the <strong style="color:#60a5fa;">KVN V2 upgrade</strong> (Three.js + Ready Player Me: PBR materials, lipsync, gaze, voice). Parallel track — can work on this while IRS/A2P resolves.
-      </div>
-    </div>
-
-    <!-- MACU ALERT -->
-    <div class="alert-card" style="border:1px solid rgba(248,113,113,0.4);background:linear-gradient(135deg,#1a0a08,#200d0a);">
-      <div class="alert-title" style="color:#F87171;">🚨 MACU CONSUMER LOAN PAYMENT RETURNED (XXXX6402)</div>
-      <div class="alert-body">Mountain America Credit Union: payment for Consumer Loan XXXX6402 was returned. Log in to <strong style="color:var(--gold);">macu.com</strong> → update payment method or retry to avoid late fees / delinquency.</div>
-    </div>
-
-    <!-- TODAY'S PRIORITIES -->
-    <div class="alert-card" style="background:linear-gradient(135deg,#1f0d00,#2a1400);border:1px solid rgba(249,115,22,0.4);">
-      <div class="alert-title" style="color:var(--orange);">📅 MAY 7, 2026 (TODAY) — OPEN ITEMS</div>
-      <div class="alert-body">
-        <strong style="color:var(--orange);">PRIORITY 1:</strong> Call IRS 1-800-829-4933 · Get CP575 / fix company name mismatch · Submit to GHL<br>
-        <strong style="color:var(--orange);">PRIORITY 2:</strong> Push KVN V2 upgrade (parallel track)<br>
-        <strong style="color:var(--orange);">OPEN:</strong> Build GHL Workflow (Step 7) + Fake Lead Test (Step 8) — still unconfirmed complete<br>
-        <strong style="color:var(--orange);">OPEN:</strong> Rotate Cloudflare API Token — still open if not yet done<br>
-        <strong style="color:var(--orange);">OPEN:</strong> MACU loan XXXX6402 — fix returned payment<br>
-        <span style="font-size:9px;color:var(--text-dim);">▸ TikTok Shop active (lucidus23) — May creator picks email received · Integrity Connect underwriting update email May 6</span>
-      </div>
-    </div>
-
-    <!-- TOMORROW MAY 8 ALERT -->
-    <div class="alert-card" style="border:1px solid rgba(96,165,250,0.4);background:linear-gradient(135deg,#0a1530,#0d1a2a);">
-      <div class="alert-title" style="color:#60a5fa;">📡 TOMORROW MAY 8 — A2P STATUS CHECK · 9:00 AM (CALENDARED)</div>
-      <div class="alert-body">GHL → Settings → Phone Numbers → A2P 10DLC. Day 5 since submission. Check status. If approved: flip SMS ON in workflow + test send to own phone. If still blocked on IRS: call IRS before resubmitting. If rejected: use HELPERS.md.</div>
-    </div>
-
-    <div class="panel-title">⬡ LIVE METRICS</div>
-
-    <div class="metrics-row">
-      <div class="metric-card">
-        <div class="metric-val cyan" id="m-leads">0</div>
-        <div class="metric-lbl">LEADS CAPTURED</div>
-        <div class="metric-sub">LIFETIME</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-val green" id="m-appts">0</div>
-        <div class="metric-lbl">APPOINTMENTS</div>
-        <div class="metric-sub">BOOKED</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-val">$0</div>
-        <div class="metric-lbl">AD SPEND</div>
-        <div class="metric-sub">THIS MONTH</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-val red">BLOCKED</div>
-        <div class="metric-lbl">A2P STATUS</div>
-        <div class="metric-sub">IRS UPDATE NEEDED</div>
-      </div>
-    </div>
-
-    <!-- TIKTOK SHOP INTEL -->
-    <div class="tiktok-card">
-      <div class="tiktok-title">⬡ TIKTOK SHOP · lucidus23 · ACTIVE</div>
-      <div class="tiktok-row"><span>Weekly Report</span><span class="tiktok-val">✓ RECEIVED MAY 4</span></div>
-      <div class="tiktok-row"><span>May Creator Picks</span><span class="tiktok-val">✓ EMAIL RECEIVED MAY 7</span></div>
-      <div class="tiktok-row"><span>Sample Score</span><span class="tiktok-val">ACTIVE — CHECK SELLER CENTER</span></div>
-      <div style="font-size:9px;color:var(--text-dim);margin-top:6px;">3 TikTok Shop emails today: May Top Picks, Creator Sample Score, Free Samples campaign. Open TikTok Shop Seller Center for GMV and orders.</div>
-    </div>
-
-    <!-- LIVE SITE ROUTES -->
-    <div class="funnel-title">⬡ LIVE SITE ROUTES — evermorelife.org (CF Pages)</div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px;">
-      <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.3);border-radius:3px;padding:8px 10px;">
-        <div style="font-size:9px;color:#4ade80;font-weight:bold;">✓ LIVE</div>
-        <div style="font-size:10px;color:var(--text);margin-top:2px;">/home</div>
-      </div>
-      <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.3);border-radius:3px;padding:8px 10px;">
-        <div style="font-size:9px;color:#4ade80;font-weight:bold;">✓ LIVE</div>
-        <div style="font-size:10px;color:var(--text);margin-top:2px;">/optin</div>
-      </div>
-      <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.3);border-radius:3px;padding:8px 10px;">
-        <div style="font-size:9px;color:#4ade80;font-weight:bold;">✓ LIVE</div>
-        <div style="font-size:10px;color:var(--text);margin-top:2px;">/thankyou</div>
-      </div>
-      <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.3);border-radius:3px;padding:8px 10px;">
-        <div style="font-size:9px;color:#4ade80;font-weight:bold;">✓ LIVE</div>
-        <div style="font-size:10px;color:var(--text);margin-top:2px;">/privacypolicy</div>
-      </div>
-      <div style="background:var(--bg3);border:1px solid rgba(74,222,128,0.3);border-radius:3px;padding:8px 10px;grid-column:span 2;">
-        <div style="font-size:9px;color:#4ade80;font-weight:bold;">✓ LIVE</div>
-        <div style="font-size:10px;color:var(--text);margin-top:2px;">/terms</div>
-      </div>
-    </div>
-
-    <div class="funnel-title">⬡ FUNNEL FLOW (TARGETS — ADS BLOCKED ON A2P)</div>
-
-    <div class="funnel-stage">
-      <div class="funnel-row">
-        <div class="funnel-label">Ad Impressions</div>
-        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:100%;background:linear-gradient(90deg,#1a4a8a,#60a5fa);"></div></div>
-        <div class="funnel-count">—</div>
-        <div class="funnel-pct">100%</div>
-      </div>
-    </div>
-    <div class="funnel-stage">
-      <div class="funnel-row">
-        <div class="funnel-label">Link Clicks</div>
-        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:8%;background:linear-gradient(90deg,#1a5a3a,#4ade80);"></div></div>
-        <div class="funnel-count">—</div>
-        <div class="funnel-pct">~8%</div>
-      </div>
-    </div>
-    <div class="funnel-stage">
-      <div class="funnel-row">
-        <div class="funnel-label">Page Visits</div>
-        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:6%;background:linear-gradient(90deg,#2a1f05,#C9A84C);"></div></div>
-        <div class="funnel-count">—</div>
-        <div class="funnel-pct">~6%</div>
-      </div>
-    </div>
-    <div class="funnel-stage">
-      <div class="funnel-row">
-        <div class="funnel-label">Sarah Chats</div>
-        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:4%;background:linear-gradient(90deg,#0a1520,#00f5ff);"></div></div>
-        <div class="funnel-count">—</div>
-        <div class="funnel-pct">~4%</div>
-      </div>
-    </div>
-    <div class="funnel-stage">
-      <div class="funnel-row">
-        <div class="funnel-label">Leads Captured</div>
-        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:3%;background:linear-gradient(90deg,#1a4a8a,#60a5fa);"></div></div>
-        <div class="funnel-count">—</div>
-        <div class="funnel-pct">~3%</div>
-      </div>
-    </div>
-    <div class="funnel-stage">
-      <div class="funnel-row">
-        <div class="funnel-label">Appts Booked</div>
-        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:1.5%;background:linear-gradient(90deg,#0A3A14,#4ade80);"></div></div>
-        <div class="funnel-count">—</div>
-        <div class="funnel-pct">~1.5%</div>
-      </div>
-    </div>
-
-    <div class="ad-title">⬡ AD CREATIVE STATUS · BLOCKED ON A2P / IRS</div>
-
-    <div class="ad-row">
-      <div class="ad-name">Ad A — Hero Video (60-90 sec)</div>
-      <div class="ad-badge badge-blocked">BLOCKED · AWAIT A2P/IRS</div>
-    </div>
-    <div class="ad-row">
-      <div class="ad-name">Ad B — Problem/Solution (30 sec)</div>
-      <div class="ad-badge badge-blocked">BLOCKED · AWAIT A2P/IRS</div>
-    </div>
-    <div class="ad-row">
-      <div class="ad-name">Ad C — Testimonial Style (45 sec)</div>
-      <div class="ad-badge badge-pending">PENDING RECORD</div>
-    </div>
-    <div class="ad-row">
-      <div class="ad-name">Ad D — Direct Response (15 sec)</div>
-      <div class="ad-badge badge-pending">PENDING RECORD</div>
-    </div>
-    <div class="ad-row">
-      <div class="ad-name">Static Image Ad — Peace of Mind</div>
-      <div class="ad-badge badge-building">PROMPTS READY</div>
-    </div>
-    <div class="ad-row">
-      <div class="ad-name">Carousel Ad — 3-Frame Story</div>
-      <div class="ad-badge badge-building">PROMPTS READY</div>
-    </div>
-  </div>
-
-  <!-- RIGHT: ROOMS + INTEGRATIONS + FILES + NEXT ACTIONS -->
-  <div class="right-panel">
-    <div class="panel-title">⬡ ROOMS — CLICK TO ENTER</div>
-
-    <div class="rooms-grid">
-      <div class="room-card blocked-card">
-        <div class="room-name">📡 A2P REGISTRATION — BLOCKED</div>
-        <div class="room-step">BLOCKED ON IRS NAME MISMATCH · MUST GET CP575 FIRST</div>
-        <div class="room-desc">Submitted May 3 but blocked. IRS shows old company name. Get CP575 EIN letter → update IRS → submit to GHL. GHL confirmed this is the blocker. SMS and ads cannot launch until resolved. IRS: 1-800-829-4933.</div>
-        <div class="room-actions">
-          <a class="room-act" style="color:#F87171;border-color:rgba(248,113,113,0.3);" href="../rooms/A2P_REGISTRATION/" onclick="event.stopPropagation();">📂 OPEN FOLDER</a>
-          <a class="room-act" style="color:#F87171;border-color:rgba(248,113,113,0.3);" href="../rooms/A2P_REGISTRATION/HELPERS.md" onclick="event.stopPropagation();">🤖 REJECTION HELP</a>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">Evermore Broad Operating Cockpit</div>
+      <div class="hero-grid">
+        <div>
+          <h1 class="date">2026-06-14</h1>
+          <p class="mission"><strong>Mission:</strong> Reconcile the active Evermore cockpit with operator-confirmed completed work and keep only live work in the active queue.</p>
+          <p class="next-action"><strong>Exact next action:</strong> Move retired launch items into Projects and Done, then keep active focus on the new LLC/EIN approval path plus current lead and licensing follow-up.</p>
+        </div>
+        <div class="stamp">
+          <div class="stamp-label">Generated</div>
+          <div class="stamp-value">2026-06-14T16:58:22Z</div>
+          <div class="stamp-label" style="margin-top: 12px;">Operating model</div>
+          <div class="stamp-value">Generated snapshot stays read-only. Projects is the manual source of truth for active work. Done holds completed work.</div>
         </div>
       </div>
-
-      <div class="room-card spec">
-        <div class="room-name">🧑‍✈️ KEVIN V2 — NEEDS PUSH</div>
-        <div class="room-step">workers.dev BLANK · PARALLEL TO A2P TRACK</div>
-        <div class="room-desc">KVN not deployed — workers.dev returns blank. V2 spec: PBR materials, lipsync, gaze, voice (Three.js + Ready Player Me). Parallel track — build while IRS/A2P resolves.</div>
-        <div class="room-actions">
-          <a class="room-act" href="../rooms/KEVIN_V2/SPEC.md" onclick="event.stopPropagation();">📄 READ SPEC</a>
+      <div class="counts">
+        <div class="count-card">
+          <div class="count-label">Tracked Projects</div>
+          <div class="count-value" id="count-projects">0</div>
+        </div>
+        <div class="count-card">
+          <div class="count-label">Completed Items</div>
+          <div class="count-value" id="count-done">0</div>
+        </div>
+        <div class="count-card">
+          <div class="count-label">Generated Date</div>
+          <div class="count-value" style="font-size: 18px;">2026-06-14</div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="panel-title">⬡ INTEGRATIONS</div>
+    <section class="tabs">
+      <button type="button" class="tab-button active" data-tab-target="tab-main">Main</button>
+      <button type="button" class="tab-button" data-tab-target="tab-projects">Projects</button>
+      <button type="button" class="tab-button" data-tab-target="tab-done">Done</button>
+      <button type="button" class="tab-button" id="reload-page">Reload Page</button>
+    </section>
 
-    <div class="integrations-grid">
-      <div class="int-card">
-        <div class="int-name">evermorelife.org</div>
-        <div class="int-status is-live">✓ LIVE (CF PAGES)</div>
-      </div>
-      <div class="int-card">
-        <div class="int-name">GHL Forms</div>
-        <div class="int-status is-live">✓ EMBEDDED</div>
-      </div>
-      <div class="int-card">
-        <div class="int-name">GHL Workflow</div>
-        <div class="int-status is-building">⟳ UNCONFIRMED — DO IT</div>
-      </div>
-      <div class="int-card">
-        <div class="int-name">A2P 10DLC</div>
-        <div class="int-status is-alert">⚠ BLOCKED · IRS NAME</div>
-      </div>
-      <div class="int-card">
-        <div class="int-name">KVN Agent</div>
-        <div class="int-status is-alert">⚠ NOT DEPLOYED</div>
-      </div>
-      <div class="int-card">
-        <div class="int-name">Sarah Agent</div>
-        <div class="int-status is-live">✓ LIVE</div>
-      </div>
-      <div class="int-card">
-        <div class="int-name">Cloudflare Workers</div>
-        <div class="int-status is-live">✓ DEPLOYED</div>
-      </div>
-      <div class="int-card">
-        <div class="int-name">CF Token Rotation</div>
-        <div class="int-status is-waiting">⚠ OPEN IF NOT DONE</div>
-      </div>
-      <div class="int-card">
-        <div class="int-name">Claude API</div>
-        <div class="int-status is-live">✓ WIRED</div>
-      </div>
-      <div class="int-card">
-        <div class="int-name">TikTok Shop</div>
-        <div class="int-status is-live">✓ ACTIVE · lucidus23</div>
-      </div>
-      <div class="int-card">
-        <div class="int-name">Meta Pixel / Ads</div>
-        <div class="int-status is-waiting">⏳ AFTER A2P/IRS</div>
-      </div>
-      <div class="int-card">
-        <div class="int-name">IRS / EIN</div>
-        <div class="int-status is-alert">⚠ NAME UPDATE NEEDED</div>
-      </div>
-      <div class="int-card">
-        <div class="int-name">MACU XXXX6402</div>
-        <div class="int-status is-alert">🚨 PAYMENT RETURNED</div>
-      </div>
-      <div class="int-card">
-        <div class="int-name">GH Pages CI</div>
-        <div class="int-status is-building">⚠ FAILS = NORMAL</div>
-      </div>
-    </div>
+    <!-- BROAD_COCKPIT_GENERATED_START -->
+    <section id="tab-main" class="tab-panel active">
+      <section class="grid two-col">
+        <section class="card">
+          <h2>Priorities</h2>
+          <ol class="generated-list">
+            <li class="generated-item" data-source-key="priority::use-projects-and-done-as-the-active-completion-loop-so-finished-launch-work-drops-out-of-main-instead-of-lingering-as-stale-blockers"
+                data-source-label="Priority"
+                data-source-text="Use Projects and Done as the active completion loop so finished launch work drops out of Main instead of lingering as stale blockers."
+                data-auto-seed="true">
+              <div class="generated-copy">Use Projects and Done as the active completion loop so finished launch work drops out of Main instead of lingering as stale blockers.</div>
+              <div class="generated-actions">
+                <button type="button" class="track-btn">Track in Projects</button>
+                <span class="generated-status"></span>
+              </div>
+            </li>
 
-    <div class="panel-title">⬡ WORKFLOW BLUEPRINT — WHAT TO BUILD</div>
+            <li class="generated-item" data-source-key="priority::update-current-handoff-state-for-the-new-llc-and-ein-path-so-the-next-cockpit-run-does-not-recreate-the-old-may-11-edc-irs-blocker-story"
+                data-source-label="Priority"
+                data-source-text="Update current handoff state for the new LLC and EIN path so the next cockpit run does not recreate the old May 11 / EDC / IRS blocker story."
+                data-auto-seed="true">
+              <div class="generated-copy">Update current handoff state for the new LLC and EIN path so the next cockpit run does not recreate the old May 11 / EDC / IRS blocker story.</div>
+              <div class="generated-actions">
+                <button type="button" class="track-btn">Track in Projects</button>
+                <span class="generated-status"></span>
+              </div>
+            </li>
 
-    <div class="file-card" onclick="window.open('../../02_ghl/launch_kit/form-workflow-next-steps.md')">
-      <div class="file-icon">🔁</div>
-      <div class="file-info">
-        <div class="file-name">form-workflow-next-steps.md</div>
-        <div class="file-desc">Exact workflow steps — triggers, actions, no SMS branch</div>
-      </div>
-      <div class="file-status fs-ready">✓ USE THIS</div>
-    </div>
+            <li class="generated-item" data-source-key="priority::process-live-lead-carrier-and-licensing-admin-activity-that-is-still-current"
+                data-source-label="Priority"
+                data-source-text="Process live lead, carrier, and licensing/admin activity that is still current."
+                data-auto-seed="true">
+              <div class="generated-copy">Process live lead, carrier, and licensing/admin activity that is still current.</div>
+              <div class="generated-actions">
+                <button type="button" class="track-btn">Track in Projects</button>
+                <span class="generated-status"></span>
+              </div>
+            </li>
 
-    <div class="file-card" onclick="window.open('../../02_ghl/launch_kit/workflow-blueprint.md')">
-      <div class="file-icon">📋</div>
-      <div class="file-info">
-        <div class="file-name">workflow-blueprint.md</div>
-        <div class="file-desc">Full workflow blueprint — reference</div>
-      </div>
-      <div class="file-status fs-ready">✓ READY</div>
-    </div>
+            <li class="generated-item" data-source-key="priority::keep-older-static-a2p-edc-craig-and-irs-call-history-out-of-the-active-cockpit-unless-it-is-still-operationally-live"
+                data-source-label="Priority"
+                data-source-text="Keep older static A2P, EDC, Craig, and IRS call history out of the active cockpit unless it is still operationally live."
+                data-auto-seed="true">
+              <div class="generated-copy">Keep older static A2P, EDC, Craig, and IRS call history out of the active cockpit unless it is still operationally live.</div>
+              <div class="generated-actions">
+                <button type="button" class="track-btn">Track in Projects</button>
+                <span class="generated-status"></span>
+              </div>
+            </li>
+            </ol>
+        </section>
+        <section class="card">
+          <h2>Important Schedule Blocks</h2>
+          <ul class="plain-list"><li>8:30 AM-10:00 AM America/Phoenix - [EVERMORE] Repair GitHub Pages deployment failure</li><li>10:00 AM-12:00 PM America/Phoenix - [EVERMORE] Confirm Meta Test Events</li><li>12:00 PM-1:00 PM America/Phoenix - Lunch + reset</li><li>1:00 PM-3:00 PM America/Phoenix - [EVERMORE] Activate email-only nurture in GHL</li><li>3:00 PM-5:00 PM America/Phoenix - [EVERMORE] Lead follow-ups + licensing/admin</li><li>5:00 PM-6:00 PM America/Phoenix - Dinner + reset</li><li>6:00 PM-8:00 PM America/Phoenix - [EVERMORE] Creative production + HeyGen reauthentication</li></ul>
+        </section>
+        <section class="card">
+          <h2>Actionable Follow-Ups</h2>
+          <ul class="generated-list">
+            <li class="generated-item" data-source-key="follow-up::mark-the-completed-ghl-build-out-lead-test-cloudflare-api-rotation-and-meta-pixel-install-work-as-done-in-the-project-flow-instead-of-leaving-them-in-active-main-state"
+                data-source-label="Follow-Up"
+                data-source-text="Mark the completed GHL build-out, lead test, Cloudflare API rotation, and Meta Pixel install work as done in the project flow instead of leaving them in active Main state."
+                data-auto-seed="true">
+              <div class="generated-copy">Mark the completed GHL build-out, lead test, Cloudflare API rotation, and Meta Pixel install work as done in the project flow instead of leaving them in active Main state.</div>
+              <div class="generated-actions">
+                <button type="button" class="track-btn">Track in Projects</button>
+                <span class="generated-status"></span>
+              </div>
+            </li>
 
-    <div class="file-card" onclick="window.open('../../02_ghl/launch_kit/test-checklist.md')">
-      <div class="file-icon">✅</div>
-      <div class="file-info">
-        <div class="file-name">test-checklist.md</div>
-        <div class="file-desc">9-point checklist for fake-lead test</div>
-      </div>
-      <div class="file-status fs-ready">✓ READY</div>
-    </div>
+            <li class="generated-item" data-source-key="follow-up::carry-forward-the-new-llc-approval-and-new-ein-path-as-the-real-a2p-dependency-not-the-retired-old-llc-irs-call-blocker"
+                data-source-label="Follow-Up"
+                data-source-text="Carry forward the new LLC approval and new EIN path as the real A2P dependency, not the retired old-LLC IRS call blocker."
+                data-auto-seed="true">
+              <div class="generated-copy">Carry forward the new LLC approval and new EIN path as the real A2P dependency, not the retired old-LLC IRS call blocker.</div>
+              <div class="generated-actions">
+                <button type="button" class="track-btn">Track in Projects</button>
+                <span class="generated-status"></span>
+              </div>
+            </li>
 
-    <div class="file-card" onclick="window.open('../../02_ghl/launch_kit/chatgpt-handoff-a2p-update.md')">
-      <div class="file-icon">📡</div>
-      <div class="file-info">
-        <div class="file-name">chatgpt-handoff-a2p-update.md</div>
-        <div class="file-desc">A2P submission log — what was submitted May 3</div>
-      </div>
-      <div class="file-status fs-alert">⚠ BLOCKED STATUS</div>
-    </div>
+            <li class="generated-item" data-source-key="follow-up::dan-hoskin-lead-9707463-needs-contact-and-appointment-confirmation-the-monday-2026-06-15-10-00-am-note-is-only-an-internal-self-forward-so-far"
+                data-source-label="Follow-Up"
+                data-source-text="Dan Hoskin lead 9707463 needs contact and appointment confirmation; the Monday, 2026-06-15 10:00 AM note is only an internal self-forward so far."
+                data-auto-seed="true">
+              <div class="generated-copy">Dan Hoskin lead 9707463 needs contact and appointment confirmation; the Monday, 2026-06-15 10:00 AM note is only an internal self-forward so far.</div>
+              <div class="generated-actions">
+                <button type="button" class="track-btn">Track in Projects</button>
+                <span class="generated-status"></span>
+              </div>
+            </li>
 
-    <div class="file-card" onclick="window.open('../../00_START_HERE/active/rooms/A2P_REGISTRATION/HELPERS.md')">
-      <div class="file-icon">🆘</div>
-      <div class="file-info">
-        <div class="file-name">A2P_REGISTRATION/HELPERS.md</div>
-        <div class="file-desc">Rejection help guide — IRS name mismatch path</div>
-      </div>
-      <div class="file-status fs-alert">⚠ CONSULT NOW</div>
-    </div>
+            <li class="generated-item" data-source-key="follow-up::thomas-draney-now-has-a-goat-lead-an-approved-ethos-policy-ptsn009006160-application-7365821-and-a-latest-united-of-omaha-note-saying-no-further-e-sign-action-is-needed"
+                data-source-label="Follow-Up"
+                data-source-text="Thomas Draney now has a GOAT lead, an approved Ethos policy PTSN009006160 / application 7365821, and a latest United of Omaha note saying no further e-sign action is needed."
+                data-auto-seed="true">
+              <div class="generated-copy">Thomas Draney now has a GOAT lead, an approved Ethos policy PTSN009006160 / application 7365821, and a latest United of Omaha note saying no further e-sign action is needed.</div>
+              <div class="generated-actions">
+                <button type="button" class="track-btn">Track in Projects</button>
+                <span class="generated-status"></span>
+              </div>
+            </li>
 
-    <div class="next-title">⬡ BATTLE PLAN — MAY 7–10, 2026</div>
+            <li class="generated-item" data-source-key="follow-up::integrity-order-5429731-delivered-10-texas-leads-reconcile-those-leads-against-current-service-state-and-launch-rules-before-spend-or-automation-assumptions"
+                data-source-label="Follow-Up"
+                data-source-text="Integrity order 5429731 delivered 10 Texas leads; reconcile those leads against current service-state and launch rules before spend or automation assumptions."
+                data-auto-seed="true">
+              <div class="generated-copy">Integrity order 5429731 delivered 10 Texas leads; reconcile those leads against current service-state and launch rules before spend or automation assumptions.</div>
+              <div class="generated-actions">
+                <button type="button" class="track-btn">Track in Projects</button>
+                <span class="generated-status"></span>
+              </div>
+            </li>
 
-    <div class="action-card red-alert">
-      <div class="action-num red">🚨 PRIORITY 1 — IRS / A2P UNBLOCK</div>
-      <div class="action-text">Call IRS: 1-800-829-4933 · Mon–Fri 7AM–7PM. Get CP575 EIN letter with correct company name. If IRS shows old name: update it. Then submit all docs to GHL. This unblocks SMS + ads — nothing else can launch until this clears.</div>
-    </div>
-    <div class="action-card red-alert">
-      <div class="action-num red">🚨 PRIORITY 2 — MACU PAYMENT RETURNED</div>
-      <div class="action-text">Log in to macu.com. Consumer Loan XXXX6402 payment returned. Update payment method or manually pay to avoid late fees and delinquency marks.</div>
-    </div>
-    <div class="action-card red-alert">
-      <div class="action-num red">🚨 PRIORITY 3 — PUSH KVN V2 (PARALLEL)</div>
-      <div class="action-text">workers.dev is blank — KVN not deployed. Push Kevin V2 upgrade. Three.js + Ready Player Me path. PBR materials, lipsync, gaze, voice. See rooms/KEVIN_V2/SPEC.md. Do this in parallel while IRS resolves.</div>
-    </div>
-    <div class="action-card urgent">
-      <div class="action-num orange">OPEN — STEPS 7 + 8 — GHL WORKFLOW (UNCONFIRMED)</div>
-      <div class="action-text">Build "Evermore Website Lead Intake" in GHL. Submit test lead, verify 9 checklist items, publish when all pass. No SMS branch yet.</div>
-    </div>
-    <div class="action-card urgent">
-      <div class="action-num orange">OPEN — CF TOKEN ROTATION — SECURITY</div>
-      <div class="action-text">dash.cloudflare.com → Profile → API Tokens. Revoke old exposed token. Create new scoped token. Update wrangler locally. Do not paste token into any HTML.</div>
-    </div>
-    <div class="action-card normal">
-      <div class="action-num">TOMORROW MAY 8 — A2P CHECK · 9AM (CALENDARED)</div>
-      <div class="action-text">GHL → Settings → Phone Numbers → A2P 10DLC. Day 5 since submission. If approved (unlikely while IRS blocker stands): flip SMS ON. If still blocked: prioritize IRS call today.</div>
-    </div>
-    <div class="action-card normal">
-      <div class="action-num">ANYTIME — INTEGRITY CONNECT · UNDERWRITING UPDATE</div>
-      <div class="action-text">Integrity Connect email May 6: updated underwriting tool released. Log in to review new accuracy features. ZIP 85260 Cherry Pick lead may still be in queue — log in, claim if available, call within 5 min. 3 attempts in 24h required.</div>
-    </div>
+            <li class="generated-item" data-source-key="follow-up::sircon-receipt-confirms-texas-license-print-and-compliance-transaction-8786357-confirmation-371363565"
+                data-source-label="Follow-Up"
+                data-source-text="Sircon receipt confirms Texas license-print and compliance transaction 8786357 / confirmation 371363565."
+                data-auto-seed="true">
+              <div class="generated-copy">Sircon receipt confirms Texas license-print and compliance transaction 8786357 / confirmation 371363565.</div>
+              <div class="generated-actions">
+                <button type="button" class="track-btn">Track in Projects</button>
+                <span class="generated-status"></span>
+              </div>
+            </li>
 
-  </div>
-</div>
+            <li class="generated-item" data-source-key="follow-up::goat-replacements-were-approved-for-minerva-hidalgo-lead-9679765-and-patricia-poucher-lead-9693000-confirm-the-replacement-delivery-path"
+                data-source-label="Follow-Up"
+                data-source-text="GOAT replacements were approved for Minerva Hidalgo lead 9679765 and Patricia Poucher lead 9693000; confirm the replacement-delivery path."
+                data-auto-seed="true">
+              <div class="generated-copy">GOAT replacements were approved for Minerva Hidalgo lead 9679765 and Patricia Poucher lead 9693000; confirm the replacement-delivery path.</div>
+              <div class="generated-actions">
+                <button type="button" class="track-btn">Track in Projects</button>
+                <span class="generated-status"></span>
+              </div>
+            </li>
+            </ul>
+        </section>
+        <section class="card">
+          <h2>Blockers and Risks</h2>
+          <ul class="generated-list">
+            <li class="generated-item" data-source-key="blocker::highlevel-unavailable-crm-appointments-workflows-and-funnel-proof-cannot-be-verified-live-in-this-session"
+                data-source-label="Blocker"
+                data-source-text="HighLevel unavailable: CRM, appointments, workflows, and funnel proof cannot be verified live in this session."
+                data-auto-seed="true">
+              <div class="generated-copy">HighLevel unavailable: CRM, appointments, workflows, and funnel proof cannot be verified live in this session.</div>
+              <div class="generated-actions">
+                <button type="button" class="track-btn">Track in Projects</button>
+                <span class="generated-status"></span>
+              </div>
+            </li>
 
-<!-- STATUS + STOP CONDITIONS -->
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--border);background:var(--bg2);">
-  <div style="padding:18px 24px;border-right:1px solid var(--border);">
-    <div class="panel-title" style="margin-bottom:10px;">⬡ MAY 7, 2026 — TODAY'S STATUS + RECENT HISTORY</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;font-size:10px;color:var(--text);line-height:1.55;">
-      <div><span style="color:#4ade80;">✓</span> evermorelife.org LIVE — all 5 routes confirmed (CF Pages)</div>
-      <div><span style="color:#4ade80;">✓</span> A2P submitted May 3 — BLOCKED on IRS company name mismatch</div>
-      <div><span style="color:#4ade80;">✓</span> GHL forms embedded · workflow blueprint ready to build</div>
-      <div><span style="color:#4ade80;">✓</span> Sarah agent LIVE on workers.dev</div>
-      <div><span style="color:#4ade80;">✓</span> TikTok Shop active (lucidus23) · May Creator Picks email received</div>
-      <div><span style="color:#4ade80;">✓</span> Integrity Connect: new underwriting tool email May 6</div>
-      <div><span style="color:#F87171;">🚨</span> A2P BLOCKED — IRS name mismatch · CP575 + IRS update required</div>
-      <div><span style="color:#F87171;">🚨</span> KVN NOT DEPLOYED — workers.dev blank · push V2 upgrade</div>
-      <div><span style="color:#F87171;">🚨</span> MACU Consumer Loan XXXX6402 — payment returned · fix now</div>
-      <div><span style="color:var(--orange);">⚠</span> GHL Workflow Steps 7+8 — unconfirmed if built/published</div>
-      <div><span style="color:var(--orange);">⚠</span> CF Token Rotation — open if not yet rotated</div>
-      <div><span style="color:#60a5fa;">📡</span> A2P check TOMORROW May 8 · 9:00 AM — confirmed in calendar</div>
+            <li class="generated-item" data-source-key="blocker::older-handoffs-still-encode-retired-may-11-edc-old-llc-a2p-blocker-context-and-can-pollute-future-snapshots-if-not-overridden"
+                data-source-label="Blocker"
+                data-source-text="Older handoffs still encode retired May 11 / EDC / old-LLC A2P blocker context and can pollute future snapshots if not overridden."
+                data-auto-seed="true">
+              <div class="generated-copy">Older handoffs still encode retired May 11 / EDC / old-LLC A2P blocker context and can pollute future snapshots if not overridden.</div>
+              <div class="generated-actions">
+                <button type="button" class="track-btn">Track in Projects</button>
+                <span class="generated-status"></span>
+              </div>
+            </li>
+
+            <li class="generated-item" data-source-key="blocker::project-completion-state-is-now-clearer-in-the-ui-but-a-durable-automation-readable-project-store-still-needs-explicit-alignment-if-it-is-meant-to-drive-future-runs"
+                data-source-label="Blocker"
+                data-source-text="Project completion state is now clearer in the UI, but a durable automation-readable project store still needs explicit alignment if it is meant to drive future runs."
+                data-auto-seed="true">
+              <div class="generated-copy">Project completion state is now clearer in the UI, but a durable automation-readable project store still needs explicit alignment if it is meant to drive future runs.</div>
+              <div class="generated-actions">
+                <button type="button" class="track-btn">Track in Projects</button>
+                <span class="generated-status"></span>
+              </div>
+            </li>
+
+            <li class="generated-item" data-source-key="blocker::state-service-status-and-texas-routing-still-need-one-current-canonical-handoff-so-live-leads-are-not-interpreted-against-older-assumptions"
+                data-source-label="Blocker"
+                data-source-text="State-service status and Texas routing still need one current canonical handoff so live leads are not interpreted against older assumptions."
+                data-auto-seed="true">
+              <div class="generated-copy">State-service status and Texas routing still need one current canonical handoff so live leads are not interpreted against older assumptions.</div>
+              <div class="generated-actions">
+                <button type="button" class="track-btn">Track in Projects</button>
+                <span class="generated-status"></span>
+              </div>
+            </li>
+            </ul>
+        </section>
+      </section>
+      <section class="grid two-col">
+        <section class="card">
+          <h2>Today / Done / Next / Blockers</h2>
+          <div class="brief">
+            <div class="brief-row"><strong>Today:</strong> Clean active cockpit state, preserve current lead and licensing follow-up, and stop stale completed launch work from cluttering active focus.</div>
+            <div class="brief-row"><strong>Done:</strong> Operator corrected the current state: prior May 11 / EDC / old LLC A2P blocker items are retired, GHL build-out is done, the lead test is done, Cloudflare API rotation is done, and Meta Pixel install work is done.</div>
+            <div class="brief-row"><strong>Next:</strong> Use Projects as the completion layer for generated work, archive finished items into Done, and keep the current operating handoff aligned with the new LLC and EIN path.</div>
+            <div class="brief-row"><strong>Blockers:</strong> HighLevel connector is unavailable for live verification in this session; several handoff docs still describe retired blockers; the current A2P path now depends on the new LLC approval and new EIN flow rather than the old IRS-call blocker.</div>
+          </div>
+        </section>
+        <section class="card">
+          <h2>Source Health</h2>
+          <div class="sources"><span class="source-pill"><strong>gmail:</strong> verified on kurrea7@gmail.com; 24h scan filtered to business and actionable mail only</span><span class="source-pill"><strong>calendar:</strong> verified on kurrea7@gmail.com; today&#x27;s schedule read from primary calendar in America/Phoenix</span><span class="source-pill"><strong>repo:</strong> verified dirty tree; current local cockpit and handoff surfaces updated to remove stale static work from active view</span><span class="source-pill"><strong>highLevel:</strong> unavailable; no callable authenticated HighLevel connector in this session</span></div>
+        </section>
+      </section>
+    </section>
+    <!-- BROAD_COCKPIT_GENERATED_END -->
+
+    <section id="tab-projects" class="tab-panel">
+      <section class="projects-shell">
+        <section class="card">
+          <h2>Projects Source Of Truth</h2>
+          <div class="projects-intro">
+            <strong>Use Projects to mark work off.</strong> Generated priorities, follow-ups,
+            and blockers can be tracked here. Once a linked project is marked done,
+            it disappears from Main and moves into Done.
+          </div>
+        </section>
+        <section class="card">
+          <h2>Add Custom Project</h2>
+          <div class="project-add">
+            <input id="custom-project-title" class="project-input" type="text" placeholder="Add a project title">
+            <button type="button" class="track-btn" id="add-custom-project">Add Project</button>
+          </div>
+        </section>
+        <section class="card">
+          <h2>Active Projects</h2>
+          <div id="active-project-list" class="project-list"></div>
+          <div id="active-projects-empty" class="empty-state hide">No active projects yet.</div>
+        </section>
+      </section>
+    </section>
+
+    <section id="tab-done" class="tab-panel">
+      <section class="card">
+        <h2>Completed Work</h2>
+        <div id="done-project-list" class="project-list"></div>
+        <div id="done-projects-empty" class="empty-state hide">Nothing has been marked done yet.</div>
+      </section>
+    </section>
+
+    <div class="footer">
+      Local broad cockpit file: /Users/k9smac/Desktop/EVERMORE-LIFE/00_START_HERE/active/cockpit/EVERMORE_COCKPIT.html<br>
+      This page is regenerated from the latest broad snapshot while project completion state stays local in the browser.
     </div>
-    <div style="margin-top:12px;font-size:9px;color:var(--text-dim);letter-spacing:0.05em;line-height:1.5;">
-      MAY 3: Site live, A2P submitted. MAY 4–6: Discovered A2P BLOCKED on IRS name mismatch — GHL confirmed. KVN also down. MACU payment returned. MAY 7 (TODAY): IRS call + CP575 top priority. Push KVN V2. Fix MACU. Build GHL workflow. MAY 8: A2P check in calendar at 9AM. When IRS/A2P clears: SMS ON → ads launch.
-    </div>
-  </div>
+  </main>
 
-  <div style="padding:18px 24px;">
-    <div class="panel-title" style="margin-bottom:10px;color:#F87171;">⬡ STOP CONDITIONS · DO NOT TOUCH WHILE A2P BLOCKED</div>
-    <div style="display:grid;grid-template-columns:1fr;gap:6px;font-size:10px;color:var(--text);line-height:1.55;">
-      <div style="padding:7px 10px;background:var(--lred);border:1px solid rgba(248,113,113,0.3);border-radius:3px;">
-        <span style="color:#F87171;font-weight:bold;">⚠ FREEZE</span> Do NOT change A2P wording, opt-in URL, Privacy Policy, Terms, or SMS consent language while under TCR review
-      </div>
-      <div style="padding:7px 10px;background:var(--lred);border:1px solid rgba(248,113,113,0.3);border-radius:3px;">
-        <span style="color:#F87171;font-weight:bold;">⚠ HOLD</span> Do NOT send any marketing SMS until A2P is approved by TCR
-      </div>
-      <div style="padding:7px 10px;background:var(--lred);border:1px solid rgba(248,113,113,0.3);border-radius:3px;">
-        <span style="color:#F87171;font-weight:bold;">⚠ WAIT</span> Do NOT launch paid ads before: GHL workflow built + test passed + A2P approved
-      </div>
-      <div style="padding:7px 10px;background:var(--lred);border:1px solid rgba(248,113,113,0.3);border-radius:3px;">
-        <span style="color:#F87171;font-weight:bold;">⚠ SECURITY</span> Rotate old Cloudflare API token — do NOT paste any token into browser HTML
-      </div>
-      <div style="padding:7px 10px;background:var(--lred);border:1px solid rgba(248,113,113,0.3);border-radius:3px;">
-        <span style="color:#F87171;font-weight:bold;">⚠ IRS GATE</span> A2P cannot clear until IRS shows correct company name and CP575 is submitted to GHL
-      </div>
-    </div>
-  </div>
-</div>
+  <script id="broad-snapshot-json" type="application/json">{"date":"2026-06-14","mission":"Reconcile the active Evermore cockpit with operator-confirmed completed work and keep only live work in the active queue.","nextAction":"Move retired launch items into Projects and Done, then keep active focus on the new LLC/EIN approval path plus current lead and licensing follow-up.","brief":{"today":"Clean active cockpit state, preserve current lead and licensing follow-up, and stop stale completed launch work from cluttering active focus.","done":"Operator corrected the current state: prior May 11 / EDC / old LLC A2P blocker items are retired, GHL build-out is done, the lead test is done, Cloudflare API rotation is done, and Meta Pixel install work is done.","next":"Use Projects as the completion layer for generated work, archive finished items into Done, and keep the current operating handoff aligned with the new LLC and EIN path.","blockers":"HighLevel connector is unavailable for live verification in this session; several handoff docs still describe retired blockers; the current A2P path now depends on the new LLC approval and new EIN flow rather than the old IRS-call blocker."},"priorities":["Use Projects and Done as the active completion loop so finished launch work drops out of Main instead of lingering as stale blockers.","Update current handoff state for the new LLC and EIN path so the next cockpit run does not recreate the old May 11 / EDC / IRS blocker story.","Process live lead, carrier, and licensing/admin activity that is still current.","Keep older static A2P, EDC, Craig, and IRS call history out of the active cockpit unless it is still operationally live."],"schedule":["8:30 AM-10:00 AM America/Phoenix - [EVERMORE] Repair GitHub Pages deployment failure","10:00 AM-12:00 PM America/Phoenix - [EVERMORE] Confirm Meta Test Events","12:00 PM-1:00 PM America/Phoenix - Lunch + reset","1:00 PM-3:00 PM America/Phoenix - [EVERMORE] Activate email-only nurture in GHL","3:00 PM-5:00 PM America/Phoenix - [EVERMORE] Lead follow-ups + licensing/admin","5:00 PM-6:00 PM America/Phoenix - Dinner + reset","6:00 PM-8:00 PM America/Phoenix - [EVERMORE] Creative production + HeyGen reauthentication"],"followUps":["Mark the completed GHL build-out, lead test, Cloudflare API rotation, and Meta Pixel install work as done in the project flow instead of leaving them in active Main state.","Carry forward the new LLC approval and new EIN path as the real A2P dependency, not the retired old-LLC IRS call blocker.","Dan Hoskin lead 9707463 needs contact and appointment confirmation; the Monday, 2026-06-15 10:00 AM note is only an internal self-forward so far.","Thomas Draney now has a GOAT lead, an approved Ethos policy PTSN009006160 / application 7365821, and a latest United of Omaha note saying no further e-sign action is needed.","Integrity order 5429731 delivered 10 Texas leads; reconcile those leads against current service-state and launch rules before spend or automation assumptions.","Sircon receipt confirms Texas license-print and compliance transaction 8786357 / confirmation 371363565.","GOAT replacements were approved for Minerva Hidalgo lead 9679765 and Patricia Poucher lead 9693000; confirm the replacement-delivery path."],"risks":["HighLevel unavailable: CRM, appointments, workflows, and funnel proof cannot be verified live in this session.","Older handoffs still encode retired May 11 / EDC / old-LLC A2P blocker context and can pollute future snapshots if not overridden.","Project completion state is now clearer in the UI, but a durable automation-readable project store still needs explicit alignment if it is meant to drive future runs.","State-service status and Texas routing still need one current canonical handoff so live leads are not interpreted against older assumptions."],"sources":{"gmail":"verified on kurrea7@gmail.com; 24h scan filtered to business and actionable mail only","calendar":"verified on kurrea7@gmail.com; today's schedule read from primary calendar in America/Phoenix","repo":"verified dirty tree; current local cockpit and handoff surfaces updated to remove stale static work from active view","highLevel":"unavailable; no callable authenticated HighLevel connector in this session"},"generatedAt":"2026-06-14T16:58:22Z","generatedBy":"evermore-cockpit-morning-update"}</script>
+  <script>
+    const STORAGE_KEY = "evermore-broad-cockpit-manual-v1";
+    const snapshot = JSON.parse(document.getElementById("broad-snapshot-json").textContent);
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-note">EVERMORE LIFE LLC · FINAL EXPENSE DIVISION · <span id="last-update">--</span></div>
-  <div style="display:flex;align-items:center;gap:12px;">
-    <div class="footer-ver" id="prog-label">v5.0 · MAY 7 · A2P BLOCKED / IRS · KVN DOWN · MACU PAYMENT · 60% COMPLETE</div>
-    <button onclick="location.reload()" style="background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:'Courier New',monospace;font-size:9px;letter-spacing:0.1em;padding:4px 14px;border-radius:3px;cursor:pointer;">↺ REFRESH</button>
-  </div>
-</footer>
+    function nowIso() {
+      return new Date().toISOString();
+    }
 
-<script>
-function updateClock() {
-  const now = new Date();
-  document.getElementById('clock').textContent = now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}) + ' · ' + now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
-updateClock();
-document.getElementById('last-update').textContent = 'UPDATED MAY 7 · COWORK AUTO-REFRESH · A2P BLOCKED / IRS GATE';
-setInterval(updateClock, 1000);
-</script>
+    function defaultState() {
+      return {
+        projects: [],
+        dismissedSourceKeys: []
+      };
+    }
+
+    function loadState() {
+      try {
+        const raw = window.localStorage.getItem(STORAGE_KEY);
+        if (!raw) return defaultState();
+        const parsed = JSON.parse(raw);
+        return {
+          projects: Array.isArray(parsed.projects) ? parsed.projects : [],
+          dismissedSourceKeys: Array.isArray(parsed.dismissedSourceKeys) ? parsed.dismissedSourceKeys : []
+        };
+      } catch (error) {
+        return defaultState();
+      }
+    }
+
+    function saveState(state) {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function uid() {
+      return "project-" + Math.random().toString(36).slice(2, 10) + "-" + Date.now().toString(36);
+    }
+
+    function getProjectBySourceKey(state, sourceKey) {
+      return state.projects.find((project) => project.sourceKey === sourceKey) || null;
+    }
+
+    function ensureSeedProjects(state) {
+      let changed = false;
+      document.querySelectorAll(".generated-item[data-auto-seed='true']").forEach((item) => {
+        const sourceKey = item.dataset.sourceKey;
+        if (!sourceKey) return;
+        if (state.dismissedSourceKeys.includes(sourceKey)) return;
+        if (getProjectBySourceKey(state, sourceKey)) return;
+        state.projects.push({
+          id: uid(),
+          title: item.dataset.sourceText || "Untitled project",
+          notes: "",
+          status: "active",
+          sourceKey,
+          sourceLabel: item.dataset.sourceLabel || "Generated",
+          sourceText: item.dataset.sourceText || "",
+          createdAt: nowIso(),
+          updatedAt: nowIso()
+        });
+        changed = true;
+      });
+      return changed;
+    }
+
+    function setActiveTab(tabId) {
+      document.querySelectorAll(".tab-button[data-tab-target]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.tabTarget === tabId);
+      });
+      document.querySelectorAll(".tab-panel").forEach((panel) => {
+        panel.classList.toggle("active", panel.id === tabId);
+      });
+    }
+
+    function createProjectFromItem(state, item) {
+      const sourceKey = item.dataset.sourceKey;
+      const existing = getProjectBySourceKey(state, sourceKey);
+      if (existing) return existing;
+      const project = {
+        id: uid(),
+        title: item.dataset.sourceText || "Untitled project",
+        notes: "",
+        status: "active",
+        sourceKey,
+        sourceLabel: item.dataset.sourceLabel || "Generated",
+        sourceText: item.dataset.sourceText || "",
+        createdAt: nowIso(),
+        updatedAt: nowIso()
+      };
+      state.projects.push(project);
+      return project;
+    }
+
+    function updateCounts(state) {
+      const activeCount = state.projects.filter((project) => project.status !== "done").length;
+      const doneCount = state.projects.filter((project) => project.status === "done").length;
+      document.getElementById("count-projects").textContent = String(activeCount);
+      document.getElementById("count-done").textContent = String(doneCount);
+    }
+
+    function renderGeneratedItems(state) {
+      document.querySelectorAll(".generated-item").forEach((item) => {
+        const sourceKey = item.dataset.sourceKey;
+        const project = getProjectBySourceKey(state, sourceKey);
+        const statusNode = item.querySelector(".generated-status");
+        const button = item.querySelector(".track-btn");
+        const dismissed = state.dismissedSourceKeys.includes(sourceKey);
+
+        if ((project && project.status === "done") || dismissed) {
+          item.classList.add("hide");
+          return;
+        }
+
+        item.classList.remove("hide");
+
+        if (project) {
+          statusNode.textContent = project.status === "active" ? "Tracked in Projects" : "Completed";
+          button.textContent = "Open in Projects";
+        } else {
+          statusNode.textContent = "Not yet tracked";
+          button.textContent = "Track in Projects";
+        }
+      });
+    }
+
+    function projectMeta(project) {
+      const parts = [];
+      if (project.sourceLabel) parts.push(`<span class="meta-pill">${project.sourceLabel}</span>`);
+      if (project.updatedAt) parts.push(`<span class="meta-pill">Updated ${new Date(project.updatedAt).toLocaleString()}</span>`);
+      return parts.join("");
+    }
+
+    function renderProjects(state) {
+      const activeList = document.getElementById("active-project-list");
+      const doneList = document.getElementById("done-project-list");
+      const activeEmpty = document.getElementById("active-projects-empty");
+      const doneEmpty = document.getElementById("done-projects-empty");
+
+      const activeProjects = state.projects.filter((project) => project.status !== "done");
+      const doneProjects = state.projects.filter((project) => project.status === "done");
+
+      activeList.innerHTML = "";
+      doneList.innerHTML = "";
+
+      activeProjects.forEach((project) => {
+        const wrapper = document.createElement("article");
+        wrapper.className = "project-card";
+        wrapper.innerHTML = `
+          <input class="project-title-input" data-project-id="${project.id}" data-field="title" value="${escapeHtml(project.title)}" />
+          <div class="project-meta">${projectMeta(project)}</div>
+          <textarea class="project-notes" data-project-id="${project.id}" data-field="notes" placeholder="Project notes">${escapeHtml(project.notes || "")}</textarea>
+          <div class="project-actions">
+            <button type="button" class="save-btn" data-action="save" data-project-id="${project.id}">Save</button>
+            <button type="button" class="ghost-btn" data-action="done" data-project-id="${project.id}">Mark Done</button>
+            <button type="button" class="danger-btn" data-action="delete" data-project-id="${project.id}">Remove</button>
+          </div>
+        `;
+        activeList.appendChild(wrapper);
+      });
+
+      doneProjects.forEach((project) => {
+        const wrapper = document.createElement("article");
+        wrapper.className = "project-card";
+        wrapper.innerHTML = `
+          <div class="generated-copy">${escapeHtml(project.title)}</div>
+          <div class="project-meta">${projectMeta(project)}</div>
+          <div class="brief-row">${escapeHtml(project.notes || "No notes saved.")}</div>
+          <div class="project-actions">
+            <button type="button" class="ghost-btn" data-action="restore" data-project-id="${project.id}">Restore</button>
+            <button type="button" class="danger-btn" data-action="delete" data-project-id="${project.id}">Remove</button>
+          </div>
+        `;
+        doneList.appendChild(wrapper);
+      });
+
+      activeEmpty.classList.toggle("hide", activeProjects.length > 0);
+      doneEmpty.classList.toggle("hide", doneProjects.length > 0);
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function rerender(state) {
+      updateCounts(state);
+      renderGeneratedItems(state);
+      renderProjects(state);
+      saveState(state);
+    }
+
+    function updateProjectField(state, projectId, field, value) {
+      const project = state.projects.find((entry) => entry.id === projectId);
+      if (!project) return;
+      project[field] = value;
+      project.updatedAt = nowIso();
+    }
+
+    function markProjectDone(state, projectId) {
+      const project = state.projects.find((entry) => entry.id === projectId);
+      if (!project) return;
+      project.status = "done";
+      project.updatedAt = nowIso();
+    }
+
+    function restoreProject(state, projectId) {
+      const project = state.projects.find((entry) => entry.id === projectId);
+      if (!project) return;
+      project.status = "active";
+      project.updatedAt = nowIso();
+    }
+
+    function deleteProject(state, projectId) {
+      const project = state.projects.find((entry) => entry.id === projectId);
+      if (project && project.sourceKey && !state.dismissedSourceKeys.includes(project.sourceKey)) {
+        state.dismissedSourceKeys.push(project.sourceKey);
+      }
+      state.projects = state.projects.filter((entry) => entry.id !== projectId);
+    }
+
+    const state = loadState();
+    if (ensureSeedProjects(state)) {
+      saveState(state);
+    }
+    rerender(state);
+
+    document.querySelectorAll(".tab-button[data-tab-target]").forEach((button) => {
+      button.addEventListener("click", () => setActiveTab(button.dataset.tabTarget));
+    });
+
+    document.getElementById("reload-page").addEventListener("click", () => window.location.reload());
+
+    document.querySelectorAll(".generated-item .track-btn").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        const item = event.currentTarget.closest(".generated-item");
+        const project = createProjectFromItem(state, item);
+        project.updatedAt = nowIso();
+        rerender(state);
+        setActiveTab("tab-projects");
+      });
+    });
+
+    document.getElementById("add-custom-project").addEventListener("click", () => {
+      const input = document.getElementById("custom-project-title");
+      const title = input.value.trim();
+      if (!title) return;
+      state.projects.push({
+        id: uid(),
+        title,
+        notes: "",
+        status: "active",
+        sourceKey: "",
+        sourceLabel: "Custom",
+        sourceText: "",
+        createdAt: nowIso(),
+        updatedAt: nowIso()
+      });
+      input.value = "";
+      rerender(state);
+      setActiveTab("tab-projects");
+    });
+
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+      const projectId = button.dataset.projectId;
+      const action = button.dataset.action;
+
+      if (action === "save") {
+        const titleInput = document.querySelector(`.project-title-input[data-project-id="${projectId}"]`);
+        const notesInput = document.querySelector(`.project-notes[data-project-id="${projectId}"]`);
+        updateProjectField(state, projectId, "title", titleInput ? titleInput.value.trim() : "");
+        updateProjectField(state, projectId, "notes", notesInput ? notesInput.value : "");
+      }
+
+      if (action === "done") {
+        const titleInput = document.querySelector(`.project-title-input[data-project-id="${projectId}"]`);
+        const notesInput = document.querySelector(`.project-notes[data-project-id="${projectId}"]`);
+        updateProjectField(state, projectId, "title", titleInput ? titleInput.value.trim() : "");
+        updateProjectField(state, projectId, "notes", notesInput ? notesInput.value : "");
+        markProjectDone(state, projectId);
+      }
+
+      if (action === "restore") {
+        restoreProject(state, projectId);
+        setActiveTab("tab-projects");
+      }
+
+      if (action === "delete") {
+        deleteProject(state, projectId);
+      }
+
+      rerender(state);
+    });
+  </script>
 </body>
 </html>

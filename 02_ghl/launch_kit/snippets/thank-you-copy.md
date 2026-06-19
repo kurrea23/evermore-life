@@ -16,7 +16,7 @@ Headline:
 
 Body:
 
-`A licensed Evermore Life agent will review your request and reach out shortly. Keep an eye on your phone and email so we can help you compare available coverage options.`
+`A licensed Evermore Life Insurance LLC agent will review your request and reach out shortly. Keep an eye on your phone and email so we can help you compare available coverage options.`
 
 Primary button:
 
@@ -28,7 +28,7 @@ Primary button URL:
 
 Secondary button:
 
-`Email Evermore Life`
+`Email Evermore Life Insurance LLC`
 
 Secondary button URL:
 
