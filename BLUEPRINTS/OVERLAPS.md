@@ -17,6 +17,22 @@ shows.
 
 ---
 
+### 2026-06-19 - Score tracker route depends on source and static host alignment
+
+- **Surfaces:** Public website source + GitHub + static host route handling
+- **Finding:** The score tracker is now packaged as `score-tracker/index.html`
+  so the intended public URL can be `/score-tracker`, but live availability
+  still depends on the host serving folder indexes after the commit reaches
+  `origin/main`.
+- **Evidence:** `score-tracker/index.html`,
+  `BLUEPRINTS/reports/2026-06-19_score-tracker-clean-route.md`
+- **Impact:** The repo can contain the correct clean URL structure while the
+  live route remains unavailable if Pages/Cloudflare has not refreshed or does
+  not route the folder index as expected.
+- **Next move:** After push, verify `https://evermorelife.org/score-tracker`
+  live and record the result.
+- **Status:** open
+
 ### 2026-06-18 - Recruiting page can drift between source, KV, and Pages
 
 - **Surfaces:** Website source + Cloudflare Worker + Cloudflare KV +

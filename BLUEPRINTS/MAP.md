@@ -32,6 +32,7 @@ flowchart LR
 | What should an operator do next? | `CODEX_MASTER_HANDOFF.md` and relevant handoff | Confirm it is still current |
 | What is the public-site source? | `01_website/current/` | Compare with the live GHL page |
 | Where is the private recruiting-page draft? | `01_website/v2/pages/recruiting.html` and the `/recruiting` proxy mapping | Keep noindex and verify the route after an approved deploy |
+| Where is the score tracker clean URL source? | `score-tracker/index.html` | Verify `https://evermorelife.org/score-tracker` after push or deploy before calling it live |
 | How are state-specific pages built? | `01_website/state-pages/` | Validate state mode, regenerate drafts, and verify live routing before publish |
 | How should GHL be built? | `02_ghl/launch_kit/` | Verify inside GHL before completion |
 | What campaign assets exist? | `04_content_narrative/` | Check destination URLs and publish state |
@@ -45,6 +46,7 @@ flowchart LR
 | --- | --- | --- |
 | Daily command and active rooms | Human operator + cockpit | `00_START_HERE/active/` |
 | Website and funnel | GHL + repository source | `01_website/` |
+| Score tracker static route | Public website source + static host | `score-tracker/index.html` |
 | Recruiting page draft | Human operator + website owners | `01_website/v2/pages/recruiting.html` plus `/recruiting` proxy route |
 | State-page expansion | Human operator + website/GHL owners | `01_website/state-pages/` plus verified service and workflow evidence |
 | CRM, forms, workflows, nurture | GHL | `02_ghl/` plus verified live evidence |
