@@ -28,6 +28,10 @@ The growth calculator now has the same structure at
 | The growth calculator has no local asset dependencies requiring route rewrites | `rg -n "href=|src=|url\\(" growth-calculator/index.html` showed only Google Fonts and an empty logo `src` | high |
 | Live production route was checked after push and still returned 404 | `curl -I https://evermorelife.org/score-tracker` returned `HTTP/2 404` with `x-evermore-deployment: cloudflare-pages-proxy` on 2026-06-20 UTC | high |
 | Cloudflare Pages origin route was checked after push and still returned 404 | `curl -I https://evermore-life.pages.dev/score-tracker/` returned `HTTP/2 404` on 2026-06-20 UTC | high |
+| GitHub `main` has the score tracker route file | `curl -I https://raw.githubusercontent.com/kurrea23/evermore-life/main/score-tracker/index.html` returned `HTTP/2 200` on 2026-06-20 UTC | high |
+| GitHub `main` has the growth calculator route file | `curl -I https://raw.githubusercontent.com/kurrea23/evermore-life/main/growth-calculator/index.html` returned `HTTP/2 200` on 2026-06-20 UTC | high |
+| Cloudflare Pages origin still does not serve either new folder route | `curl -I https://evermore-life.pages.dev/score-tracker/` and `curl -I https://evermore-life.pages.dev/growth-calculator/` returned `HTTP/2 404` after the growth-calculator push | high |
+| Cloudflare dashboard cache purge was blocked by authentication | The in-app browser opened `https://dash.cloudflare.com/` and showed the Cloudflare sign-in screen | high |
 
 ## Map
 
@@ -47,7 +51,12 @@ None captured. This was a file placement and route packaging change.
 - Live `evermorelife.org/score-tracker` was not yet available from the current
   Cloudflare Pages proxy response after the first route push, despite the
   source being committed and pushed to `origin/main`.
-- Live `evermorelife.org/growth-calculator` still needs post-push verification.
+- Live `evermorelife.org/growth-calculator` was also unavailable from the
+  current Cloudflare Pages proxy response after the growth-calculator route
+  push.
+- Cloudflare cache purge could not be completed from the dashboard because the
+  in-app browser was not authenticated to Cloudflare, and no local Cloudflare
+  API token or `wrangler` binary was available.
 - The original generation history for `Score-Tracker.html` was not present in
   this worktree's git history; the source was recovered from the adjacent local
   Evermore workspace.
@@ -60,9 +69,9 @@ Cloudflare/Pages routing staying aligned.
 
 ## Recommended Next Move
 
-Trigger or inspect the Cloudflare Pages deployment for `origin/main`, then
-purge Cloudflare cache if needed and verify both clean routes return the new
-folder indexes.
+Log into Cloudflare, inspect or trigger the Pages deployment for `origin/main`,
+purge cache if needed, and verify both clean routes return the new folder
+indexes.
 
 ## Files Changed
 
