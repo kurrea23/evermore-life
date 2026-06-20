@@ -20,7 +20,8 @@ The score tracker now has a repo-root folder route at
 | Source HTML was recovered from the local Evermore workspace | `/Users/k9smac/Desktop/EVERMORE-LIFE/Score-Tracker.html` | high |
 | Clean route file exists in this repo | `score-tracker/index.html` | high |
 | The page has no local asset dependencies requiring route rewrites | `rg -n "href=|src=|url\\(" score-tracker/index.html` showed only Google Fonts, an empty logo `src`, and a generated download link | high |
-| Live production route was not verified in this local commit step | No post-push browser check was completed before this report | high |
+| Live production route was checked after push and still returned 404 | `curl -I https://evermorelife.org/score-tracker` returned `HTTP/2 404` with `x-evermore-deployment: cloudflare-pages-proxy` on 2026-06-20 UTC | high |
+| Cloudflare Pages origin route was checked after push and still returned 404 | `curl -I https://evermore-life.pages.dev/score-tracker/` returned `HTTP/2 404` on 2026-06-20 UTC | high |
 
 ## Map
 
@@ -36,8 +37,9 @@ None captured. This was a file placement and route packaging change.
 
 ## Unknown Or Unavailable
 
-- Live `evermorelife.org/score-tracker` availability remains unverified until
-  the commit is pushed and the production host refreshes.
+- Live `evermorelife.org/score-tracker` is not yet available from the current
+  Cloudflare Pages proxy response, despite the source being committed and
+  pushed to `origin/main`.
 - The original generation history for `Score-Tracker.html` was not present in
   this worktree's git history; the source was recovered from the adjacent local
   Evermore workspace.
@@ -49,8 +51,8 @@ Cloudflare/Pages routing staying aligned.
 
 ## Recommended Next Move
 
-After push, verify `https://evermorelife.org/score-tracker` in a browser and
-record whether the live host serves the new folder index.
+Trigger or inspect the Cloudflare Pages deployment for `origin/main`, then
+verify `https://evermorelife.org/score-tracker` returns the new folder index.
 
 ## Files Changed
 

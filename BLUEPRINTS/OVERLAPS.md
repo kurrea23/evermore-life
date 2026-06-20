@@ -29,8 +29,8 @@ shows.
 - **Impact:** The repo can contain the correct clean URL structure while the
   live route remains unavailable if Pages/Cloudflare has not refreshed or does
   not route the folder index as expected.
-- **Next move:** After push, verify `https://evermorelife.org/score-tracker`
-  live and record the result.
+- **Next move:** Trigger or inspect the Cloudflare Pages deployment for
+  `origin/main`, then verify `https://evermorelife.org/score-tracker` live.
 - **Status:** open
 
 ### 2026-06-18 - Recruiting page can drift between source, KV, and Pages
