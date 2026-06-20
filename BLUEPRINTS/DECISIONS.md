@@ -20,13 +20,16 @@ do not rewrite history.
 
 - **Status:** approved
 - **Decision:** Place the score tracker at `score-tracker/index.html` instead
-  of serving `Score-Tracker.html` from the repository root.
+  of serving `Score-Tracker.html` from the repository root. Place the growth
+  calculator at `growth-calculator/index.html` instead of serving
+  `Growth-Calculator.html` from the repository root.
 - **Why:** The operator explicitly requested the clean URL
-  `evermorelife.org/score-tracker` with no file extension.
-- **Consequences:** Static hosting should serve the tracker through the folder
-  index route after the change is pushed and production refreshes. Live route
-  verification is still required before calling the URL live.
-- **Evidence:** `score-tracker/index.html`,
+  `evermorelife.org/score-tracker` with no file extension, then requested the
+  same move for the growth calculator.
+- **Consequences:** Static hosting should serve both tools through folder index
+  routes after the changes are pushed and production refreshes. Live route
+  verification is still required before calling the URLs live.
+- **Evidence:** `score-tracker/index.html`, `growth-calculator/index.html`,
   `BLUEPRINTS/reports/2026-06-19_score-tracker-clean-route.md`
 - **Owner:** Evermore operator
 

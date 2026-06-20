@@ -17,20 +17,20 @@ shows.
 
 ---
 
-### 2026-06-19 - Score tracker route depends on source and static host alignment
+### 2026-06-19 - Standalone calculator routes depend on source and static host alignment
 
 - **Surfaces:** Public website source + GitHub + static host route handling
-- **Finding:** The score tracker is now packaged as `score-tracker/index.html`
-  so the intended public URL can be `/score-tracker`, but live availability
-  still depends on the host serving folder indexes after the commit reaches
-  `origin/main`.
-- **Evidence:** `score-tracker/index.html`,
+- **Finding:** The score tracker and growth calculator are now packaged as
+  folder indexes so the intended public URLs can be `/score-tracker` and
+  `/growth-calculator`, but live availability still depends on the host serving
+  folder indexes after the commits reach `origin/main`.
+- **Evidence:** `score-tracker/index.html`, `growth-calculator/index.html`,
   `BLUEPRINTS/reports/2026-06-19_score-tracker-clean-route.md`
 - **Impact:** The repo can contain the correct clean URL structure while the
   live route remains unavailable if Pages/Cloudflare has not refreshed or does
   not route the folder index as expected.
 - **Next move:** Trigger or inspect the Cloudflare Pages deployment for
-  `origin/main`, then verify `https://evermorelife.org/score-tracker` live.
+  `origin/main`, purge cache if needed, then verify both clean URLs live.
 - **Status:** open
 
 ### 2026-06-18 - Recruiting page can drift between source, KV, and Pages
