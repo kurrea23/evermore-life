@@ -16,6 +16,20 @@ do not rewrite history.
 
 ---
 
+### 2026-06-20 - Manually deploy Pages to repair standalone calculator routes
+
+- **Status:** approved
+- **Decision:** Use Wrangler to manually deploy the tracked `main` tree to the
+  Cloudflare Pages project `evermore-life`, then purge Cloudflare cache.
+- **Why:** GitHub `main` contained the clean route files, but the live apex and
+  Pages origin still returned 404 because the Pages project was serving a stale
+  deployment.
+- **Consequences:** `/score-tracker` and `/growth-calculator` now resolve live
+  through the Pages origin behind the `evermore-life-live` Worker proxy.
+  Cloudflare Pages Git auto-deploy behavior still needs later inspection.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-20_calculator-routes-live-repair.md`
+- **Owner:** Evermore operator
+
 ### 2026-06-19 - Serve score tracker from a clean folder URL
 
 - **Status:** approved

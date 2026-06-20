@@ -29,9 +29,9 @@ shows.
 - **Impact:** The repo can contain the correct clean URL structure while the
   live route remains unavailable if Pages/Cloudflare has not refreshed or does
   not route the folder index as expected.
-- **Next move:** Trigger or inspect the Cloudflare Pages deployment for
-  `origin/main`, purge cache if needed, then verify both clean URLs live.
-- **Status:** open
+- **Next move:** Later, inspect why Cloudflare Pages did not auto-deploy from
+  GitHub `main`.
+- **Status:** completed
 
 ### 2026-06-18 - Recruiting page can drift between source, KV, and Pages
 
