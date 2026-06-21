@@ -16,6 +16,21 @@ do not rewrite history.
 
 ---
 
+### 2026-06-21 - Build Agent Suite backend in an isolated release branch
+
+- **Status:** approved
+- **Decision:** Build the full Agent Suite backend in
+  `codex/agent-suite-backend-v1` and keep production deploy, push, and cache
+  purge approval-gated until local review passes.
+- **Why:** The existing preview branch contained mixed local suite and backend
+  work, while the full Agent Suite changes introduce a new D1 schema, API
+  Worker, auth flow, and owner dashboard route.
+- **Consequences:** Work can be tested locally without disturbing the prior
+  suite preview or live site. The owner/team surface uses `/team` so the
+  existing cockpit can keep `/dashboard`.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-21_agent-suite-backend-v1.md`
+- **Owner:** Evermore operator
+
 ### 2026-06-20 - Manually deploy Pages to repair standalone calculator routes
 
 - **Status:** approved

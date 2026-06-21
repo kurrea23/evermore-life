@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  "name": "evermore-score-tracker-api",
+  "main": "./worker.js",
+  "compatibility_date": "2026-06-20",
+  "observability": {
+    "enabled": true
+  },
+  "routes": [
+    {
+      "pattern": "api.evermorelife.org/*",
+      "zone_name": "evermorelife.org"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "evermore-agent-db",
+      "database_id": "afb5d41e-b2cb-4c64-b65c-4e99a61c1738"
+    }
+  ],
+  "vars": {
+    "ALLOWED_ORIGINS": "https://evermorelife.org,https://www.evermorelife.org,http://127.0.0.1:8000,http://localhost:8000,http://127.0.0.1:8001,http://localhost:8001"
+  }
+}

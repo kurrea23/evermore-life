@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evermore Team Dashboard</title>
+<meta name="theme-color" content="#0b1019">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0b1019 radial-gradient(1200px 640px at 75% -10%,#17243e 0,#0b1019 58%);color:#e9eef7;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.page{max-width:1180px;margin:0 auto;padding:30px 20px 80px}h1{font-family:Palatino,Georgia,serif;margin:0 0 8px;font-size:34px}.sub{color:#8c9cb5;margin-bottom:22px}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}.metric{background:#121a2a;border:1px solid #253650;border-radius:10px;padding:16px}.metric .label{color:#8c9cb5;font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}.metric .value{font-size:28px;font-weight:800;margin-top:6px}.metric.gold .value{color:#d4b576}.metric.green .value{color:#3dd68c}.panel{background:#121a2a;border:1px solid #253650;border-radius:12px;overflow:hidden}table{width:100%;border-collapse:collapse}th,td{padding:12px 14px;border-bottom:1px solid #1e2d45;text-align:left}th{font-size:11px;color:#8c9cb5;text-transform:uppercase;letter-spacing:.08em;cursor:pointer}td{font-size:14px}.name{font-weight:800;color:#fff}.muted{color:#8c9cb5}.error{padding:18px;color:#f87171}@media(max-width:800px){.metrics{grid-template-columns:1fr 1fr}.panel{overflow-x:auto}}@media(max-width:520px){.metrics{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="page">
+  <h1>Team Dashboard</h1>
+  <div class="sub">Agency activity and production from connected agent score trackers.</div>
+  <section class="metrics">
+    <div class="metric"><div class="label">Agents</div><div class="value" id="agentsCount">0</div></div>
+    <div class="metric"><div class="label">Policies This Week</div><div class="value" id="policiesWeek">0</div></div>
+    <div class="metric gold"><div class="label">Premium This Week</div><div class="value" id="premiumWeek">$0</div></div>
+    <div class="metric green"><div class="label">Commission This Week</div><div class="value" id="commissionWeek">$0</div></div>
+  </section>
+  <section class="panel">
+    <table>
+      <thead>
+        <tr>
+          <th data-sort="name">Agent</th>
+          <th data-sort="today.dials">Dials Today</th>
+          <th data-sort="today.contacted">Contacts Today</th>
+          <th data-sort="today.issued">Issued Today</th>
+          <th data-sort="week.dials">Dials Week</th>
+          <th data-sort="week.contacted">Contacts Week</th>
+          <th data-sort="week.issued">Issued Week</th>
+          <th data-sort="week.total_premium">Premium</th>
+          <th data-sort="week.total_commission">Commission</th>
+        </tr>
+      </thead>
+      <tbody id="agentRows"><tr><td colspan="9" class="muted">Loading...</td></tr></tbody>
+    </table>
+  </section>
+</main>
+<script src="/agent-suite-auth.js"></script>
+<script>
+if (EvermoreAgentSuite.requireAuth()) {
+  const currentUser = EvermoreAgentSuite.user();
+  if (currentUser.role !== "owner") window.location.replace("/score-tracker/");
+  EvermoreAgentSuite.installTopNav("Team Dashboard");
+}
+
+let rows = [];
+let sortKey = "week.issued";
+let sortDir = -1;
+const money = (value) => "$" + Math.round(Number(value || 0)).toLocaleString("en-US");
+const get = (object, path) => path.split(".").reduce((acc, key) => acc && acc[key], object);
+
+async function loadDashboard() {
+  try {
+    const data = await EvermoreAgentSuite.api("/owner/agents");
+    rows = data.agents || [];
+    document.getElementById("agentsCount").textContent = rows.length;
+    document.getElementById("policiesWeek").textContent = data.agency.policies_issued || data.agency.issued || 0;
+    document.getElementById("premiumWeek").textContent = money(data.agency.total_premium);
+    document.getElementById("commissionWeek").textContent = money(data.agency.total_commission);
+    renderRows();
+  } catch (err) {
+    document.getElementById("agentRows").innerHTML = `<tr><td colspan="9" class="error">${err.message || "Server error."}</td></tr>`;
+  }
+}
+
+function renderRows() {
+  const tbody = document.getElementById("agentRows");
+  const sorted = [...rows].sort((a, b) => {
+    const av = get(a.summary, sortKey) ?? a[sortKey] ?? "";
+    const bv = get(b.summary, sortKey) ?? b[sortKey] ?? "";
+    return String(av).localeCompare(String(bv), undefined, { numeric: true }) * sortDir;
+  });
+  tbody.innerHTML = sorted.length ? sorted.map((agent) => `
+    <tr>
+      <td><div class="name">${agent.name || "Agent"}</div><div class="muted">${agent.email || ""}</div></td>
+      <td>${agent.summary.today.dials || 0}</td>
+      <td>${agent.summary.today.contacted || 0}</td>
+      <td>${agent.summary.today.issued || 0}</td>
+      <td>${agent.summary.week.dials || 0}</td>
+      <td>${agent.summary.week.contacted || 0}</td>
+      <td>${agent.summary.week.issued || 0}</td>
+      <td>${money(agent.summary.week.total_premium)}</td>
+      <td>${money(agent.summary.week.total_commission)}</td>
+    </tr>
+  `).join("") : '<tr><td colspan="9" class="muted">No agents yet.</td></tr>';
+}
+
+document.querySelectorAll("th[data-sort]").forEach((th) => {
+  th.addEventListener("click", () => {
+    const next = th.dataset.sort;
+    sortDir = next === sortKey ? sortDir * -1 : -1;
+    sortKey = next;
+    renderRows();
+  });
+});
+
+loadDashboard();
+</script>
+</body>
+</html>

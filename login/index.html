@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evermore Agent Login</title>
+<meta name="theme-color" content="#0b1019">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0b1019 radial-gradient(900px 520px at 80% 0,#17243e 0,#0b1019 58%);color:#e9eef7;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:24px}.card{width:min(420px,100%);background:#121a2a;border:1px solid #253650;border-radius:14px;padding:28px;box-shadow:0 20px 70px rgba(0,0,0,.45)}h1{font-family:Palatino,Georgia,serif;margin:0 0 6px;color:#fff;font-size:30px}.sub{color:#d4b576;font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;margin-bottom:22px}label{display:block;color:#8c9cb5;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin:14px 0 6px}input{width:100%;padding:13px 14px;border-radius:9px;border:1px solid #2a3a57;background:#0e1626;color:#fff;font:inherit}input:focus{outline:none;border-color:#d4b576;box-shadow:0 0 0 3px #d4b57622}button{width:100%;margin-top:18px;border:0;border-radius:10px;padding:13px 16px;background:linear-gradient(135deg,#e3c68a,#c5a35e);color:#1d1505;font-weight:800;font:inherit;cursor:pointer}.links{margin-top:18px;display:flex;justify-content:space-between;gap:12px;font-size:13px}.links a{color:#d4b576;text-decoration:none;font-weight:700}.error{min-height:20px;color:#f87171;font-size:13px;margin-top:12px}.fine{color:#8c9cb5;font-size:12px;margin-top:18px;line-height:1.5}
+</style>
+</head>
+<body>
+<main class="card">
+  <h1>Evermore Login</h1>
+  <div class="sub">Agent Suite</div>
+  <form id="loginForm">
+    <label for="email">Email</label>
+    <input id="email" name="email" type="email" autocomplete="email" required>
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" required>
+    <button type="submit">Login</button>
+    <div class="error" id="error"></div>
+  </form>
+  <div class="links">
+    <a href="/signup/">Create account</a>
+    <a href="/score-tracker/">Score Tracker</a>
+  </div>
+  <div class="fine">One login opens the tracker, calculator, and owner dashboard access when your role allows it.</div>
+</main>
+<script src="/agent-suite-auth.js"></script>
+<script>
+document.getElementById("loginForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const error = document.getElementById("error");
+  error.textContent = "";
+  try {
+    const response = await fetch(`${EvermoreAgentSuite.API_BASE}/auth/login`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+      }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || "Server error.");
+    EvermoreAgentSuite.saveSession(data);
+    window.location.replace("/score-tracker/");
+  } catch (err) {
+    error.textContent = err.message || "Server error.";
+  }
+});
+</script>
+</body>
+</html>

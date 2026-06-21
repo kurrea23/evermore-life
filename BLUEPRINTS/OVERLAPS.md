@@ -17,6 +17,36 @@ shows.
 
 ---
 
+### 2026-06-21 - Owner dashboard route renamed to avoid cockpit dashboard
+
+- **Surfaces:** Agent Suite backend + existing Cloudflare apex Worker + cockpit
+- **Finding:** The Agent Suite branch originally added `dashboard/index.html`
+  for owner production visibility, while the live `evermore-life-live` Worker
+  already handles `/dashboard` as the private Evermore cockpit. The Agent Suite
+  owner surface is now `team/index.html` for `/team`.
+- **Evidence:** `team/index.html`,
+  `01_website/v2/cloudflare/evermore-live-proxy.js`,
+  `BLUEPRINTS/reports/2026-06-21_agent-suite-backend-v1.md`
+- **Impact:** `/dashboard` can remain the cockpit, and `/team` can serve the
+  Agent Suite owner/team view without route collision.
+- **Next move:** Verify `/team` after static deploy.
+- **Status:** decided
+
+### 2026-06-21 - Agent Suite release needs API, D1, static pages, and cache alignment
+
+- **Surfaces:** Static pages + Cloudflare Worker + D1 + Cloudflare Pages
+- **Finding:** The static pages now depend on `https://api.evermorelife.org/api`
+  for login and data sync, so publishing only the pages or only the Worker will
+  leave the suite unusable.
+- **Evidence:** `agent-suite-auth.js`,
+  `01_website/agent-suite-api/cloudflare/wrangler.agent-suite-api.jsonc`,
+  `BLUEPRINTS/reports/2026-06-21_agent-suite-backend-v1.md`
+- **Impact:** Live release requires ordered setup: D1 create/bind, migration,
+  Worker deploy, then static route deploy and cache purge.
+- **Next move:** Run the release checklist only after local review and explicit
+  deploy approval.
+- **Status:** open
+
 ### 2026-06-19 - Standalone calculator routes depend on source and static host alignment
 
 - **Surfaces:** Public website source + GitHub + static host route handling
