@@ -1,0 +1,133 @@
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  name TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'agent' CHECK (role IN ('agent', 'owner')),
+  agency_id TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  token TEXT NOT NULL UNIQUE,
+  expires_at TEXT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS clients (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  first_name TEXT,
+  middle_name TEXT,
+  last_name TEXT,
+  preferred_name TEXT,
+  call_date TEXT,
+  lead_source TEXT,
+  email TEXT,
+  phone TEXT,
+  address TEXT,
+  city TEXT,
+  state TEXT,
+  zip TEXT,
+  date_of_birth TEXT,
+  age TEXT,
+  gender TEXT,
+  height TEXT,
+  weight TEXT,
+  coverage_for TEXT,
+  existing_coverage TEXT,
+  has_permanent TEXT,
+  goal TEXT,
+  tobacco_use TEXT,
+  smoker TEXT,
+  health_notes TEXT,
+  medications TEXT,
+  meds_current TEXT,
+  meds_past TEXT,
+  diabetes TEXT,
+  a1c TEXT,
+  major_conditions TEXT,
+  surgeries TEXT,
+  doctor_name TEXT,
+  doctor_phone TEXT,
+  employer TEXT,
+  occupation TEXT,
+  annual_income TEXT,
+  coverage_amount TEXT,
+  product_type TEXT,
+  gold_cov TEXT,
+  gold_prem TEXT,
+  silver_cov TEXT,
+  silver_prem TEXT,
+  bronze_cov TEXT,
+  bronze_prem TEXT,
+  option_chosen TEXT,
+  coverage_type TEXT,
+  marital TEXT,
+  birth_state TEXT,
+  ssn TEXT,
+  dl_number TEXT,
+  dl_state TEXT,
+  dl_exp TEXT,
+  dl_history TEXT,
+  carrier TEXT,
+  policy_number TEXT,
+  final_coverage TEXT,
+  final_premium TEXT,
+  effective_date TEXT,
+  status TEXT,
+  appt_date_time TEXT,
+  premium TEXT,
+  payment_mode TEXT,
+  bank_name TEXT,
+  bank_type TEXT,
+  bank_state TEXT,
+  routing TEXT,
+  routing_last4 TEXT,
+  account TEXT,
+  account_last4 TEXT,
+  account_type TEXT,
+  pay_day TEXT,
+  ben1_name TEXT,
+  ben1_rel TEXT,
+  ben1_phone TEXT,
+  ben2_name TEXT,
+  ben2_rel TEXT,
+  ben2_phone TEXT,
+  referrals TEXT,
+  beneficiaries_json TEXT NOT NULL DEFAULT '[]',
+  notes TEXT,
+  intake_json TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS score_days (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  date TEXT NOT NULL,
+  counters_json TEXT NOT NULL DEFAULT '{}',
+  feed_json TEXT NOT NULL DEFAULT '[]',
+  premiums_json TEXT NOT NULL DEFAULT '[]',
+  session_seconds INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE (user_id, date),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS goals (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL UNIQUE,
+  goals_json TEXT NOT NULL DEFAULT '{}',
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token);
+CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);
+CREATE INDEX IF NOT EXISTS idx_clients_user_updated ON clients(user_id, updated_at);
+CREATE INDEX IF NOT EXISTS idx_score_days_user_date ON score_days(user_id, date);
+CREATE INDEX IF NOT EXISTS idx_users_role_agency ON users(role, agency_id);

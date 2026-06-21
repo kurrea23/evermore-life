@@ -39,6 +39,7 @@ h1,h2,h3{font-family:Palatino,'Palatino Linotype',Georgia,serif}
 .tb-logo{width:32px;height:32px;flex-shrink:0}
 .tb-title{font-family:Palatino,Georgia,serif;font-size:17px;color:#fff;flex:1}
 .tb-date{font-size:12px;color:var(--muted);flex:1;text-align:right}
+.tb-agent{font-size:11px;color:var(--gold);font-weight:700;margin-top:2px}
 .view-pills{display:flex;gap:4px;margin-top:8px}
 .pill{padding:5px 12px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--line);color:var(--muted);cursor:pointer;background:transparent;font-family:inherit;transition:all .15s}
 .pill.active{background:var(--gold-soft);border-color:var(--gold);color:var(--gold)}
@@ -212,6 +213,7 @@ h1,h2,h3{font-family:Palatino,'Palatino Linotype',Georgia,serif}
       <img class="tb-logo" id="topLogo" src="" alt="">
       <div>
         <div class="tb-title">Score Tracker</div>
+        <div class="tb-agent" id="agentNameLabel"></div>
         <div style="font-size:11px;color:var(--muted)" id="topDate"></div>
       </div>
       <div style="flex:1"></div>
@@ -343,7 +345,12 @@ h1,h2,h3{font-family:Palatino,'Palatino Linotype',Georgia,serif}
 <!-- TOAST -->
 <div id="toast"></div>
 
+<script src="/agent-suite-auth.js"></script>
 <script>
+if (EvermoreAgentSuite.requireAuth()) {
+  EvermoreAgentSuite.installTopNav("Score Tracker");
+}
+
 /* ══════════════════════════════════════════
    LOGO
 ══════════════════════════════════════════ */
@@ -354,6 +361,7 @@ document.getElementById('topLogo').src = 'data:image/png;base64,iVBORw0KGgoAAAAN
 ══════════════════════════════════════════ */
 const STORE_KEY = 'evermore-score-tracker-v1';
 const GOALS_KEY = 'evermore-score-goals-v1';
+const SYNC_QUEUE_KEY = 'evermore-score-sync-queue-v1';
 
 const DEFAULT_GOALS = {
   dials:100, contacted:20, conversations:8,
@@ -384,7 +392,11 @@ function loadData(){
   try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || {days:{}}; }
   catch(e){ return {days:{}}; }
 }
-function saveData(d){ localStorage.setItem(STORE_KEY, JSON.stringify(d)); }
+function writeCache(d){ localStorage.setItem(STORE_KEY, JSON.stringify(d)); }
+function saveData(d){
+  writeCache(d);
+  queueScoreSync(today());
+}
 
 function loadGoals(){
   try{ return Object.assign({}, DEFAULT_GOALS, JSON.parse(localStorage.getItem(GOALS_KEY))); }
@@ -398,6 +410,7 @@ function saveGoals(){
   });
   localStorage.setItem(GOALS_KEY, JSON.stringify(g));
   goals = g;
+  saveGoalsCloud(g);
   render();
   showToast('Goals saved ✓');
 }
@@ -663,8 +676,11 @@ function getBottleneck(convs){
 function setView(v){
   currentView=v;
   document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
-  event.target.classList.add('active');
+  const clicked = window.event && window.event.target;
+  if(clicked) clicked.classList.add('active');
+  else document.querySelectorAll('.pill').forEach(p=>{ if(p.textContent.toLowerCase().startsWith(v.slice(0,4))) p.classList.add('active'); });
   render();
+  loadCloudForView(v);
 }
 function switchTab(t){
   currentTab=t;
@@ -688,6 +704,8 @@ function render(){
 
   // Top bar
   const now=new Date();
+  const agent = EvermoreAgentSuite.user();
+  document.getElementById('agentNameLabel').textContent = agent.name ? `Agent: ${agent.name}` : '';
   document.getElementById('topDate').textContent = now.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
   document.getElementById('topDials').textContent = tc.dials + ' dials';
 
@@ -913,11 +931,113 @@ function showToast(msg){
 }
 
 /* ══════════════════════════════════════════
+   CLOUD SYNC
+══════════════════════════════════════════ */
+function syncQueue(){
+  try { return JSON.parse(localStorage.getItem(SYNC_QUEUE_KEY)) || []; }
+  catch(e){ return []; }
+}
+function setSyncQueue(queue){
+  localStorage.setItem(SYNC_QUEUE_KEY, JSON.stringify([...new Set(queue)].sort()));
+}
+function queueScoreSync(dt){
+  if(!EvermoreAgentSuite.token()) return;
+  const queue = syncQueue();
+  if(!queue.includes(dt)) queue.push(dt);
+  setSyncQueue(queue);
+  clearTimeout(queueScoreSync.timer);
+  queueScoreSync.timer = setTimeout(flushScoreSync, 400);
+}
+async function flushScoreSync(){
+  if(!navigator.onLine || !EvermoreAgentSuite.token()) return;
+  const queue = syncQueue();
+  const remaining = [];
+  for(const dt of queue){
+    try { await pushScoreDay(dt); }
+    catch(e){ remaining.push(dt); }
+  }
+  setSyncQueue(remaining);
+}
+async function pushScoreDay(dt){
+  const data = loadData();
+  const day = data.days[dt];
+  if(!day) return;
+  await EvermoreAgentSuite.api(`/scores/${dt}`, {
+    method:'POST',
+    body:JSON.stringify({
+      counters: day.counters || {},
+      feed: day.feed || [],
+      premiums: day.premiums || [],
+      sessionTime: day.sessionTime || 0,
+      session_seconds: day.sessionTime || 0
+    })
+  });
+}
+function mergeCloudDays(days){
+  if(!days || typeof days !== 'object') return;
+  const data = loadData();
+  data.days = data.days || {};
+  Object.entries(days).forEach(([dt, day]) => {
+    data.days[dt] = {
+      counters: day.counters || {},
+      feed: day.feed || [],
+      premiums: day.premiums || [],
+      sessionTime: day.sessionTime || day.session_seconds || 0
+    };
+  });
+  writeCache(data);
+}
+async function loadCloudDay(dt){
+  if(!navigator.onLine || !EvermoreAgentSuite.token()) return;
+  try {
+    const result = await EvermoreAgentSuite.api(`/scores/${dt}`);
+    mergeCloudDays({[dt]: result.data || {}});
+    render();
+  } catch(e) {
+    showToast('Offline cache active');
+  }
+}
+async function loadCloudForView(view){
+  if(!navigator.onLine || !EvermoreAgentSuite.token()) return;
+  const dates = getDatesForView(view);
+  const from = view === 'all' ? '1970-01-01' : (dates[0] || today());
+  const to = view === 'all' ? today() : (dates[dates.length-1] || today());
+  try {
+    const result = await EvermoreAgentSuite.api(`/scores?from=${from}&to=${to}`);
+    mergeCloudDays(result.days || {});
+    render();
+  } catch(e) {
+    showToast('Offline cache active');
+  }
+}
+async function loadGoalsCloud(){
+  if(!navigator.onLine || !EvermoreAgentSuite.token()) return;
+  try {
+    const result = await EvermoreAgentSuite.api('/goals');
+    if(result.goals && Object.keys(result.goals).length){
+      localStorage.setItem(GOALS_KEY, JSON.stringify(Object.assign({}, DEFAULT_GOALS, result.goals)));
+      goals = loadGoals();
+      render();
+    }
+  } catch(e) {}
+}
+async function saveGoalsCloud(nextGoals){
+  if(!navigator.onLine || !EvermoreAgentSuite.token()) return;
+  try {
+    await EvermoreAgentSuite.api('/goals', {method:'POST', body:JSON.stringify({goals:nextGoals})});
+  } catch(e) {}
+}
+window.addEventListener('online', () => { flushScoreSync(); loadCloudForView(currentView); });
+
+/* ══════════════════════════════════════════
    INIT
 ══════════════════════════════════════════ */
 getDayData(today()); // ensure today exists
 goals=loadGoals();
 render();
+loadCloudDay(today());
+loadGoalsCloud();
+flushScoreSync();
 </script>
 </body>
 </html>
