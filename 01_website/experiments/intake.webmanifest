@@ -1,0 +1,20 @@
+{
+  "name": "Evermore Life Client Intake",
+  "short_name": "Evermore Intake",
+  "description": "Local encrypted client intake for Evermore Life.",
+  "id": "/intake",
+  "start_url": "/intake",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b1019",
+  "theme_color": "#0b1019",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/intake-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

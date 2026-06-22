@@ -3,6 +3,10 @@ const APEX_HOST = "evermorelife.org";
 const DASHBOARD_ASSET_PATH = "/EVERMORE_COCKPIT_v2.html";
 const SARAH_ASSET_PATH = "/Sarah_Evermore_AI_v2.html";
 const KEVIN_ASSET_PATH = "/kevin_v2.html";
+const INTAKE_ASSET_PATH = "/Client-Intake.html";
+const INTAKE_MANIFEST_PATH = "/intake.webmanifest";
+const INTAKE_SW_PATH = "/intake-sw.js";
+const INTAKE_ICON_PATH = "/intake-icon.svg";
 const DASHBOARD_COOKIE_NAME = "__Host-evermore_dashboard";
 const DASHBOARD_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const COCKPIT_STATE_KEY = "cockpit-v2-state";
@@ -14,6 +18,8 @@ const CLEAN_REDIRECTS = new Map([
   ["/chat.html", "/chat"],
   ["/sarah.html", "/sarah"],
   ["/kevin.html", "/kevin"],
+  ["/intake.html", "/intake"],
+  ["/Client-Intake.html", "/intake"],
   ["/privacy.html", "/privacy"],
   ["/terms.html", "/terms"],
   ["/thank-you.html", "/thank-you"],
@@ -33,6 +39,8 @@ const CLEAN_REDIRECTS = new Map([
   ["/01_website/v2/pages/sarah.html", "/sarah"],
   ["/01_website/experiments/kevin_v2", "/kevin"],
   ["/01_website/experiments/kevin_v2.html", "/kevin"],
+  ["/01_website/experiments/Client-Intake", "/intake"],
+  ["/01_website/experiments/Client-Intake.html", "/intake"],
   ["/01_website/v2/pages/privacy", "/privacy"],
   ["/01_website/v2/pages/privacy.html", "/privacy"],
   ["/01_website/v2/pages/terms", "/terms"],
@@ -71,6 +79,11 @@ export default {
 
     if (incomingUrl.pathname === "/api/kevin-chat") {
       return handleKevinChat(request, env);
+    }
+
+    const intakeAssetResponse = await maybeHandleIntakeAsset(request, env, incomingUrl);
+    if (intakeAssetResponse) {
+      return intakeAssetResponse;
     }
 
     const cleanPath = CLEAN_REDIRECTS.get(incomingUrl.pathname);
@@ -175,6 +188,38 @@ async function maybeHandleKevin(request, env, incomingUrl) {
   }
 
   return serveKevinAsset(request, env);
+}
+
+async function maybeHandleIntakeAsset(request, env, incomingUrl) {
+  if (incomingUrl.pathname === "/intake" || incomingUrl.pathname === "/intake/") {
+    return serveIntakeAsset(request, env);
+  }
+
+  if (incomingUrl.pathname === "/intake.webmanifest") {
+    return serveBundledAsset(request, env, INTAKE_MANIFEST_PATH, {
+      contentType: "application/manifest+json; charset=utf-8",
+      cacheControl: "public, max-age=300",
+      robots: "noindex, nofollow, noarchive",
+    });
+  }
+
+  if (incomingUrl.pathname === "/intake-sw.js") {
+    return serveBundledAsset(request, env, INTAKE_SW_PATH, {
+      contentType: "application/javascript; charset=utf-8",
+      cacheControl: "no-store",
+      robots: "noindex, nofollow, noarchive",
+    });
+  }
+
+  if (incomingUrl.pathname === "/intake-icon.svg") {
+    return serveBundledAsset(request, env, INTAKE_ICON_PATH, {
+      contentType: "image/svg+xml; charset=utf-8",
+      cacheControl: "public, max-age=86400",
+      robots: "noindex, nofollow, noarchive",
+    });
+  }
+
+  return null;
 }
 
 async function handleCockpitState(request, env) {
@@ -396,6 +441,58 @@ async function serveDashboardAsset(request, env) {
 
   const headers = privateHeaders(assetResponse.headers, { html: true });
   headers.set("x-evermore-deployment", "cloudflare-dashboard");
+  return new Response(request.method === "HEAD" ? null : assetResponse.body, {
+    status: 200,
+    headers,
+  });
+}
+
+async function serveIntakeAsset(request, env) {
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    return new Response("Method not allowed", {
+      status: 405,
+      headers: privateHeaders({ allow: "GET, HEAD" }),
+    });
+  }
+
+  const assetResponse = await env.DASHBOARD_ASSETS.fetch(`https://dashboard-assets.local${INTAKE_ASSET_PATH}`);
+  if (!assetResponse.ok) {
+    return new Response("Client intake is temporarily unavailable.", {
+      status: 502,
+      headers: privateHeaders(),
+    });
+  }
+
+  const headers = privateHeaders(assetResponse.headers, { html: true });
+  headers.set("x-evermore-deployment", "cloudflare-intake-pwa");
+  return new Response(request.method === "HEAD" ? null : assetResponse.body, {
+    status: 200,
+    headers,
+  });
+}
+
+async function serveBundledAsset(request, env, assetPath, options = {}) {
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    return new Response("Method not allowed", {
+      status: 405,
+      headers: responseHeaders(new Headers({ allow: "GET, HEAD" })),
+    });
+  }
+
+  const assetResponse = await env.DASHBOARD_ASSETS.fetch(`https://dashboard-assets.local${assetPath}`);
+  if (!assetResponse.ok) {
+    return new Response("Asset is temporarily unavailable.", {
+      status: 502,
+      headers: responseHeaders(new Headers()),
+    });
+  }
+
+  const headers = responseHeaders(assetResponse.headers);
+  headers.delete("content-length");
+  if (options.contentType) headers.set("content-type", options.contentType);
+  if (options.cacheControl) headers.set("cache-control", options.cacheControl);
+  if (options.robots) headers.set("x-robots-tag", options.robots);
+
   return new Response(request.method === "HEAD" ? null : assetResponse.body, {
     status: 200,
     headers,
