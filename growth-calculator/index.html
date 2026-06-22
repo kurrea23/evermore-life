@@ -165,13 +165,57 @@ td.center{text-align:center}
 
 /* ============ RESPONSIVE ============ */
 @media(max-width:640px){
-  .funnel-table{display:block;overflow-x:auto}
-  .funnel-table input[type=number]{width:72px}
-  .lift-input{width:56px}
+  html,body{overflow-x:hidden}
+  .page{padding:16px 14px 64px}
+  .hero{padding:28px 12px 20px}
+  .hero h1{font-size:1.5rem}
+  .hero-logo{width:92px;height:92px}
+  .card-body{padding:14px}
   .report-grid{grid-template-columns:1fr 1fr}
   .stat-chips{flex-direction:column}
   .summary-row{flex-direction:column;align-items:flex-start;gap:4px}
-  .hero h1{font-size:1.5rem}
+
+  /* Action buttons: full-width, easy to tap */
+  .action-bar{gap:8px}
+  .action-bar .btn{flex:1;text-align:center;padding:11px 14px}
+
+  /* --- Restack funnel tables into cards (no sideways scrolling) --- */
+  .funnel-table thead{display:none}
+  .funnel-table,.funnel-table tbody{display:block;width:100%}
+  .funnel-table tr{
+    display:flex;flex-wrap:wrap;gap:10px;
+    background:var(--card-head);border:1px solid var(--line);
+    border-radius:12px;padding:14px;margin-bottom:12px;
+  }
+  .funnel-table tr:last-child{margin-bottom:0}
+  .funnel-table td{
+    display:flex;flex-direction:column;gap:6px;
+    padding:0;border:none!important;text-align:left!important;vertical-align:top;
+  }
+  /* Stage / metric name spans the full width on top */
+  .funnel-table td:first-child{
+    flex:1 1 100%;padding-bottom:10px;
+    border-bottom:1px solid var(--line)!important;
+  }
+  /* The three value cells share one row beneath */
+  .funnel-table td:nth-child(2),
+  .funnel-table td:nth-child(3),
+  .funnel-table td:nth-child(4){flex:1 1 0;min-width:0;align-items:stretch}
+  .funnel-table td:nth-child(2)::before{content:"Current"}
+  .funnel-table td:nth-child(3)::before{content:"Lift %"}
+  .funnel-table td:nth-child(4)::before{content:"Optimized"}
+  .funnel-table td:nth-child(2)::before,
+  .funnel-table td:nth-child(3)::before,
+  .funnel-table td:nth-child(4)::before{
+    font-size:10px;color:var(--muted);font-weight:600;
+    letter-spacing:.06em;text-transform:uppercase;
+  }
+  /* Make inputs and result chips fill their cell */
+  .funnel-table input[type=number],
+  .lift-input,
+  .currency-prefix,.pct-suffix,
+  .currency-prefix input,.pct-suffix input{width:100%}
+  .optimized-val{display:block;width:100%;min-width:0;text-align:center}
 }
 @media(max-width:400px){
   .report-grid{grid-template-columns:1fr}
