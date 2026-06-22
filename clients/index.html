@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evermore Life — Client Pipeline</title>
+<meta name="theme-color" content="#0b1019">
+<style>
+/* ============ BASE ============ */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#0b1019;background-image:radial-gradient(1200px 600px at 80% -10%,#16233c 0%,#0b1019 55%);
+  background-attachment:fixed;color:#e9eef7;font-size:15px;min-height:100vh}
+h1,h2,h3{font-family:Palatino,"Palatino Linotype",Georgia,serif}
+a{text-decoration:none;color:inherit}
+
+/* ============ NAV ============ */
+#nav{background:#0d1525;border-bottom:1px solid #1e2f4a;padding:0 24px;display:flex;
+  align-items:center;gap:16px;height:56px;position:sticky;top:0;z-index:50}
+.navLogo{font-family:Palatino,Georgia,serif;font-size:17px;color:#d4b576;font-weight:700;
+  letter-spacing:.04em;white-space:nowrap}
+.navLinks{display:flex;gap:4px;flex:1;margin-left:8px}
+.navLinks a{padding:6px 12px;border-radius:7px;font-size:13px;color:#8fa3c2;transition:all .15s}
+.navLinks a:hover{background:#19243c;color:#d4b576}
+.navLinks a.active{background:#1d2c4a;color:#d4b576}
+.navRight{display:flex;align-items:center;gap:10px;margin-left:auto}
+.navUser{font-size:13px;color:#8fa3c2}
+.navUser strong{color:#d4b576}
+.navBtn{padding:6px 14px;border-radius:7px;font-size:13px;cursor:pointer;border:1px solid #34507d;
+  background:transparent;color:#a9bcd9;transition:all .15s}
+.navBtn:hover{background:#22324f;border-color:#d4b57688;color:#d4b576}
+
+/* ============ TOOLBAR ============ */
+#toolbar{padding:16px 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  border-bottom:1px solid #1a2740}
+#toolbar h2{font-size:20px;letter-spacing:.02em;margin-right:8px}
+.toolbarCount{font-size:13px;color:#8fa3c2;font-family:-apple-system,sans-serif}
+.tbSpacer{flex:1}
+#searchBox{padding:8px 12px;border:1px solid #2a3a57;border-radius:8px;background:#0e1626;
+  color:#e9eef7;font-size:13.5px;width:220px}
+#searchBox::placeholder{color:#5f6f8a}
+#searchBox:focus{outline:none;border-color:#d4b576;box-shadow:0 0 0 3px #d4b57622}
+.tbSelect{padding:8px 12px;border:1px solid #2a3a57;border-radius:8px;background:#0e1626;
+  color:#e9eef7;font-size:13.5px;cursor:pointer}
+.tbSelect:focus{outline:none;border-color:#d4b576}
+#refreshBtn{padding:8px 14px;border:1px solid #34507d;border-radius:8px;background:transparent;
+  color:#a9bcd9;font-size:13px;cursor:pointer;transition:all .15s}
+#refreshBtn:hover{background:#22324f;color:#d4b576}
+
+/* ============ PIPELINE BOARD ============ */
+#board{display:flex;gap:14px;padding:20px 24px 40px;overflow-x:auto;min-height:calc(100vh - 120px);
+  align-items:flex-start}
+#board::-webkit-scrollbar{height:6px}
+#board::-webkit-scrollbar-track{background:#0d1525}
+#board::-webkit-scrollbar-thumb{background:#2a3a57;border-radius:3px}
+
+.col{flex:0 0 260px;background:#0f1a2c;border:1px solid #1e2f4a;border-radius:12px;
+  display:flex;flex-direction:column;max-height:calc(100vh - 140px)}
+.colHead{padding:12px 14px 10px;display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid #1a2740;border-radius:12px 12px 0 0;flex-shrink:0}
+.colDot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.colName{font-size:13px;font-weight:700;letter-spacing:.03em;flex:1}
+.colCount{font-size:12px;color:#8fa3c2;background:#162035;border-radius:10px;
+  padding:2px 8px;font-family:-apple-system,sans-serif}
+.colCards{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px}
+.colCards::-webkit-scrollbar{width:4px}
+.colCards::-webkit-scrollbar-thumb{background:#2a3a57;border-radius:2px}
+
+/* ============ CLIENT CARD ============ */
+.card{background:#121e34;border:1px solid #1e3050;border-radius:9px;padding:12px 14px;
+  cursor:pointer;transition:all .15s;position:relative}
+.card:hover{border-color:#d4b57688;background:#16253e;transform:translateY(-1px);
+  box-shadow:0 4px 16px rgba(0,0,0,.4)}
+.cardName{font-size:14px;font-weight:700;color:#e9eef7;margin-bottom:4px}
+.cardPhone{font-size:12px;color:#8fa3c2;margin-bottom:6px}
+.cardMeta{display:flex;flex-direction:column;gap:3px}
+.cardRow{display:flex;align-items:center;gap:6px;font-size:12px;color:#7a8fa8}
+.cardRow span{color:#c0cfe6}
+.cardAppt{margin-top:7px;padding:5px 8px;background:#1a2d1a;border:1px solid #2a4a2a;
+  border-radius:6px;font-size:11.5px;color:#5fc98b;display:flex;align-items:center;gap:5px}
+.cardAppt.past{background:#2d1a1a;border-color:#4a2a2a;color:#e0726a}
+.cardAgent{margin-top:6px;font-size:11px;color:#6a7e9a;border-top:1px solid #1a2740;
+  padding-top:6px;margin-top:6px}
+.cardAgent span{color:#d4b576}
+.emptyCol{text-align:center;padding:24px 12px;color:#4a5e7a;font-size:13px}
+
+/* ============ LOADING / ERROR ============ */
+#loadState{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:60vh;gap:16px;color:#8fa3c2}
+.spinner{width:36px;height:36px;border:3px solid #1e2f4a;border-top-color:#d4b576;
+  border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ============ MODAL ============ */
+#overlay{display:none;position:fixed;inset:0;background:rgba(5,10,20,.75);z-index:100;
+  backdrop-filter:blur(4px)}
+#overlay.open{display:flex;align-items:center;justify-content:center;padding:20px}
+#modal{background:#111c30;border:1px solid #2a3a57;border-radius:16px;width:100%;max-width:580px;
+  max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+#modal::-webkit-scrollbar{width:5px}
+#modal::-webkit-scrollbar-thumb{background:#2a3a57;border-radius:3px}
+.modalHead{padding:20px 24px 16px;border-bottom:1px solid #1e2f4a;display:flex;
+  align-items:flex-start;gap:12px}
+.modalTitle{flex:1}
+.modalTitle h3{font-size:20px;margin-bottom:2px}
+.modalTitle .modalSub{font-size:13px;color:#8fa3c2}
+.modalClose{width:32px;height:32px;border:1px solid #2a3a57;border-radius:8px;background:transparent;
+  color:#8fa3c2;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .15s}
+.modalClose:hover{border-color:#d4b576;color:#d4b576}
+.modalBody{padding:20px 24px}
+.modalSection{margin-bottom:20px}
+.modalSection h4{font-size:11px;letter-spacing:.1em;color:#d4b576;text-transform:uppercase;
+  margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #1a2740}
+.modalGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.modalField{display:flex;flex-direction:column;gap:2px}
+.modalField label{font-size:11px;color:#6a7e9a;letter-spacing:.04em}
+.modalField span{font-size:14px;color:#e9eef7}
+.modalField span.empty{color:#3a4e6a;font-style:italic}
+.statusBadge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:12px;
+  font-weight:700;letter-spacing:.03em}
+.apptBox{background:#0d1a0d;border:1px solid #2a4a2a;border-radius:8px;padding:10px 14px;
+  display:flex;align-items:center;gap:10px;margin-top:8px}
+.apptBox .icon{font-size:20px}
+.apptBox .apptDetail{display:flex;flex-direction:column;gap:2px}
+.apptBox .apptDate{font-size:15px;color:#5fc98b;font-weight:600}
+.apptBox .apptLabel{font-size:11px;color:#4a6a4a}
+.apptBox.past .apptDate{color:#e0726a}
+.apptBox.past{background:#1a0d0d;border-color:#4a2a2a}
+
+/* ============ STATUS COLORS ============ */
+.s-ip   { --sc:#60a5fa } /* In Progress */
+.s-ab   { --sc:#d4b576 } /* Appointment Booked */
+.s-ap   { --sc:#a78bfa } /* Applied */
+.s-ia   { --sc:#34d399 } /* Instantly Approved */
+.s-fu   { --sc:#fb923c } /* Further Underwriting */
+.s-ok   { --sc:#5fc98b } /* Approved */
+.s-dc   { --sc:#e0726a } /* Declined */
+.s-fo   { --sc:#22d3ee } /* Follow Up */
+.s-ni   { --sc:#6b7280 } /* Not Interested */
+
+.colDot  { background: var(--sc) }
+.colName { color: var(--sc) }
+.statusBadge { background: color-mix(in srgb, var(--sc) 18%, transparent);
+               color: var(--sc); border: 1px solid color-mix(in srgb, var(--sc) 35%, transparent) }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="navLogo">Evermore Life</div>
+  <div class="navLinks">
+    <a href="/score-tracker/">Score Tracker</a>
+    <a href="/growth-calculator/">Growth Calculator</a>
+    <a href="/clients/" class="active">Pipeline</a>
+    <a href="/team/" id="teamLink" style="display:none">Team</a>
+  </div>
+  <div class="navRight">
+    <div class="navUser">Welcome, <strong id="userName">Agent</strong></div>
+    <button class="navBtn" onclick="logout()">Log Out</button>
+  </div>
+</nav>
+
+<!-- TOOLBAR -->
+<div id="toolbar">
+  <h2>Client Pipeline</h2>
+  <span class="toolbarCount" id="totalCount"></span>
+  <div class="tbSpacer"></div>
+  <input type="search" id="searchBox" placeholder="Search clients…" oninput="render()">
+  <select class="tbSelect" id="statusFilter" onchange="render()">
+    <option value="">All Statuses</option>
+    <option>In Progress</option>
+    <option>Appointment Booked</option>
+    <option>Applied</option>
+    <option>Instantly Approved</option>
+    <option>Further Underwriting</option>
+    <option>Approved</option>
+    <option>Declined</option>
+    <option>Follow Up</option>
+    <option>Not Interested</option>
+  </select>
+  <select class="tbSelect" id="agentFilter" onchange="render()" style="display:none">
+    <option value="">All Agents</option>
+  </select>
+  <button id="refreshBtn" onclick="loadClients()">↻ Refresh</button>
+</div>
+
+<!-- BOARD -->
+<div id="board">
+  <div id="loadState">
+    <div class="spinner"></div>
+    <div>Loading clients…</div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="overlay" onclick="closeModal(event)">
+  <div id="modal">
+    <div class="modalHead">
+      <div class="modalTitle">
+        <h3 id="mName"></h3>
+        <div class="modalSub" id="mSub"></div>
+      </div>
+      <button class="modalClose" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modalBody" id="mBody"></div>
+  </div>
+</div>
+
+<script>
+const API = 'https://api.evermorelife.org';
+const TOKEN_KEY = 'evermore-auth-token';
+const ROLE_KEY  = 'evermore-user-role';
+const NAME_KEY  = 'evermore-user-name';
+
+/* ── AUTH ── */
+const token = localStorage.getItem(TOKEN_KEY);
+if (!token) location.replace('/login/');
+const role = localStorage.getItem(ROLE_KEY) || 'agent';
+const myName = localStorage.getItem(NAME_KEY) || 'Agent';
+
+document.getElementById('userName').textContent = myName;
+if (role === 'owner') {
+  document.getElementById('teamLink').style.display = '';
+  document.getElementById('agentFilter').style.display = '';
+}
+
+function logout(){
+  [TOKEN_KEY, ROLE_KEY, NAME_KEY, 'evermore-auth-user'].forEach(k => localStorage.removeItem(k));
+  location.replace('/login/');
+}
+
+/* ── COLUMNS CONFIG ── */
+const COLUMNS = [
+  { key:'In Progress',           cls:'s-ip' },
+  { key:'Appointment Booked',    cls:'s-ab' },
+  { key:'Applied',               cls:'s-ap' },
+  { key:'Instantly Approved',    cls:'s-ia' },
+  { key:'Further Underwriting',  cls:'s-fu' },
+  { key:'Approved',              cls:'s-ok' },
+  { key:'Follow Up',             cls:'s-fo' },
+  { key:'Declined',              cls:'s-dc' },
+  { key:'Not Interested',        cls:'s-ni' },
+];
+
+/* ── DATA ── */
+let allClients = [];
+let agentMap   = {}; // id → name (owner only)
+
+async function loadClients(){
+  document.getElementById('board').innerHTML =
+    '<div id="loadState"><div class="spinner"></div><div>Loading clients…</div></div>';
+  try {
+    const res = await fetch(API + '/api/clients', {
+      headers:{ Authorization:'Bearer ' + token }
+    });
+    if (res.status === 401){ logout(); return; }
+    const data = await res.json();
+    allClients = data.clients || [];
+
+    // Owner: also load agents for filter
+    if (role === 'owner'){
+      const ar = await fetch(API + '/api/owner/agents', {
+        headers:{ Authorization:'Bearer ' + token }
+      });
+      if (ar.ok){
+        const ad = await ar.json();
+        const sel = document.getElementById('agentFilter');
+        sel.innerHTML = '<option value="">All Agents</option>';
+        (ad.agents || []).forEach(ag => {
+          agentMap[ag.id] = ag.name;
+          const o = document.createElement('option');
+          o.value = ag.id; o.textContent = ag.name;
+          sel.appendChild(o);
+        });
+      }
+    }
+    render();
+  } catch(e){
+    document.getElementById('board').innerHTML =
+      '<div id="loadState" style="color:#e0726a">Failed to load clients — check your connection.</div>';
+  }
+}
+
+/* ── FILTER + RENDER ── */
+function render(){
+  const q      = (document.getElementById('searchBox').value || '').toLowerCase();
+  const sf     = document.getElementById('statusFilter').value;
+  const af     = document.getElementById('agentFilter').value;
+
+  let list = allClients.filter(c => {
+    const name  = ((c.first_name||'') + ' ' + (c.last_name||'')).toLowerCase();
+    const phone = (c.phone||'').toLowerCase();
+    const carr  = (c.carrier||'').toLowerCase();
+    if (q && !name.includes(q) && !phone.includes(q) && !carr.includes(q)) return false;
+    if (sf && c.status !== sf) return false;
+    if (af && c.user_id !== af) return false;
+    return true;
+  });
+
+  document.getElementById('totalCount').textContent = list.length + ' client' + (list.length !== 1 ? 's' : '');
+
+  // Group by status
+  const groups = {};
+  COLUMNS.forEach(col => { groups[col.key] = []; });
+  const OTHER_KEY = 'In Progress';
+  list.forEach(c => {
+    const s = c.status || '';
+    if (groups[s] !== undefined) groups[s].push(c);
+    else groups[OTHER_KEY].push(c);
+  });
+
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+
+  COLUMNS.forEach(col => {
+    const cards = groups[col.key] || [];
+    const div = document.createElement('div');
+    div.className = 'col ' + col.cls;
+    div.innerHTML = `
+      <div class="colHead">
+        <div class="colDot"></div>
+        <div class="colName">${col.key}</div>
+        <div class="colCount">${cards.length}</div>
+      </div>
+      <div class="colCards" id="col-${col.cls}"></div>`;
+    board.appendChild(div);
+
+    const container = div.querySelector('.colCards');
+    if (cards.length === 0){
+      container.innerHTML = '<div class="emptyCol">No clients</div>';
+      return;
+    }
+    cards.forEach(c => {
+      container.appendChild(makeCard(c, col.cls));
+    });
+  });
+}
+
+function makeCard(c, cls){
+  const div = document.createElement('div');
+  div.className = 'card';
+  div.onclick = () => openModal(c, cls);
+
+  const name = [c.first_name, c.last_name].filter(Boolean).join(' ') || 'Unnamed';
+  const phone = c.phone || '';
+  const carrier = c.carrier || '';
+  const prem = c.final_premium || c.premium || '';
+  const cov  = c.final_coverage || c.coverage_amount || '';
+
+  let apptHtml = '';
+  if (c.appt_date_time){
+    const dt = new Date(c.appt_date_time);
+    const isPast = dt < new Date();
+    const label = dt.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})
+                + ' ' + dt.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    apptHtml = `<div class="cardAppt${isPast?' past':''}">📅 ${label}</div>`;
+  }
+
+  let agentHtml = '';
+  if (role === 'owner' && agentMap[c.user_id]){
+    agentHtml = `<div class="cardAgent">Agent: <span>${agentMap[c.user_id]}</span></div>`;
+  }
+
+  div.innerHTML = `
+    <div class="cardName">${name}</div>
+    ${phone ? `<div class="cardPhone">📞 ${phone}</div>` : ''}
+    <div class="cardMeta">
+      ${carrier ? `<div class="cardRow">Carrier <span>${carrier}</span></div>` : ''}
+      ${prem    ? `<div class="cardRow">Premium <span>$${prem}/mo</span></div>` : ''}
+      ${cov     ? `<div class="cardRow">Coverage <span>$${parseInt(cov).toLocaleString()}</span></div>` : ''}
+    </div>
+    ${apptHtml}
+    ${agentHtml}`;
+  return div;
+}
+
+/* ── MODAL ── */
+let currentClient = null;
+
+function openModal(c, cls){
+  currentClient = c;
+  const name = [c.first_name, c.last_name].filter(Boolean).join(' ') || 'Unnamed';
+  document.getElementById('mName').textContent = name;
+
+  const statusHtml = c.status
+    ? `<span class="statusBadge ${cls}">${c.status}</span>`
+    : '<span style="color:#4a5e7a">No status</span>';
+  document.getElementById('mSub').innerHTML = statusHtml;
+
+  const f = (val, fallback) => {
+    const v = val || fallback || '';
+    return v ? `<span>${v}</span>` : `<span class="empty">—</span>`;
+  };
+
+  let apptHtml = '';
+  if (c.appt_date_time){
+    const dt = new Date(c.appt_date_time);
+    const isPast = dt < new Date();
+    const dateStr = dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+    const timeStr = dt.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    apptHtml = `<div class="apptBox${isPast?' past':''}">
+      <div class="icon">📅</div>
+      <div class="apptDetail">
+        <div class="apptDate">${dateStr}</div>
+        <div class="apptLabel">${timeStr}${isPast?' · Past appointment':' · Upcoming'}</div>
+      </div>
+    </div>`;
+  }
+
+  const agentRow = (role === 'owner' && agentMap[c.user_id])
+    ? `<div class="modalSection"><h4>Agent</h4><div class="modalField"><span>${agentMap[c.user_id]}</span></div></div>`
+    : '';
+
+  document.getElementById('mBody').innerHTML = `
+    ${agentRow}
+
+    ${apptHtml ? `<div class="modalSection"><h4>Appointment</h4>${apptHtml}</div>` : ''}
+
+    <div class="modalSection">
+      <h4>Contact</h4>
+      <div class="modalGrid">
+        <div class="modalField"><label>Phone</label>${f(c.phone)}</div>
+        <div class="modalField"><label>Email</label>${f(c.email)}</div>
+        <div class="modalField"><label>State</label>${f(c.state)}</div>
+        <div class="modalField"><label>Lead Source</label>${f(c.lead_source)}</div>
+        <div class="modalField"><label>Call Date</label>${f(c.call_date)}</div>
+        <div class="modalField"><label>DOB</label>${f(c.date_of_birth)}</div>
+      </div>
+    </div>
+
+    <div class="modalSection">
+      <h4>Policy</h4>
+      <div class="modalGrid">
+        <div class="modalField"><label>Carrier</label>${f(c.carrier)}</div>
+        <div class="modalField"><label>Policy #</label>${f(c.policy_number)}</div>
+        <div class="modalField"><label>Coverage</label>${f(c.final_coverage ? '$'+parseInt(c.final_coverage).toLocaleString() : c.coverage_amount)}</div>
+        <div class="modalField"><label>Premium</label>${f(c.final_premium || c.premium ? '$'+(c.final_premium||c.premium)+'/mo' : '')}</div>
+        <div class="modalField"><label>Product</label>${f(c.product_type)}</div>
+        <div class="modalField"><label>Effective Date</label>${f(c.effective_date)}</div>
+      </div>
+    </div>
+
+    <div class="modalSection">
+      <h4>Health</h4>
+      <div class="modalGrid">
+        <div class="modalField"><label>Height</label>${f(c.height)}</div>
+        <div class="modalField"><label>Weight</label>${f(c.weight)}</div>
+        <div class="modalField"><label>Tobacco</label>${f(c.tobacco_use || c.smoker)}</div>
+        <div class="modalField"><label>Health Rating</label>${f(c.health_notes)}</div>
+        <div class="modalField"><label>Diabetes</label>${f(c.diabetes)}</div>
+        <div class="modalField"><label>A1C</label>${f(c.a1c)}</div>
+      </div>
+      ${c.major_conditions ? `<div class="modalField" style="margin-top:8px"><label>Conditions</label><span>${c.major_conditions}</span></div>` : ''}
+    </div>
+
+    ${(c.ben1_name||c.ben2_name) ? `<div class="modalSection">
+      <h4>Beneficiaries</h4>
+      <div class="modalGrid">
+        ${c.ben1_name ? `<div class="modalField"><label>Primary</label><span>${c.ben1_name}${c.ben1_rel?' · '+c.ben1_rel:''}</span></div>` : ''}
+        ${c.ben2_name ? `<div class="modalField"><label>Secondary</label><span>${c.ben2_name}${c.ben2_rel?' · '+c.ben2_rel:''}</span></div>` : ''}
+      </div>
+    </div>` : ''}
+
+    ${c.notes ? `<div class="modalSection">
+      <h4>Notes</h4>
+      <div style="font-size:14px;color:#c0cfe6;line-height:1.6;background:#0d1525;border-radius:8px;
+        padding:12px 14px;border:1px solid #1a2740">${c.notes}</div>
+    </div>` : ''}
+  `;
+
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e){
+  if (e && e.target !== document.getElementById('overlay')) return;
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ── INIT ── */
+loadClients();
+</script>
+</body>
+</html>
