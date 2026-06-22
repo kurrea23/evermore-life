@@ -31,6 +31,22 @@ do not rewrite history.
 - **Evidence:** `BLUEPRINTS/reports/2026-06-21_agent-suite-backend-v1.md`
 - **Owner:** Evermore operator
 
+### 2026-06-21 - Use Cloudflare-supported PBKDF2 work factor
+
+- **Status:** approved
+- **Decision:** Store new Agent Suite password hashes with PBKDF2-SHA256 at
+  100000 iterations, the maximum accepted by Cloudflare Workers SubtleCrypto in
+  this deployment.
+- **Why:** Live signup failed because Cloudflare rejected the previous 210000
+  iteration setting. The operator approved the 100000-iteration setting after
+  the tradeoff was explained.
+- **Consequences:** Passwords remain hashed with PBKDF2 and each stored hash
+  records its own iteration count for verification. New signups work on the
+  deployed Worker without lowering the auth contract to plain storage.
+- **Evidence:** `01_website/agent-suite-api/cloudflare/worker.js`,
+  `BLUEPRINTS/reports/2026-06-21_agent-suite-backend-v1.md`
+- **Owner:** Evermore operator
+
 ### 2026-06-20 - Manually deploy Pages to repair standalone calculator routes
 
 - **Status:** approved

@@ -1,5 +1,6 @@
 const SESSION_DAYS = 30;
 const MAX_JSON_BYTES = 350000;
+const PBKDF2_ITERATIONS = 100000;
 const CLIENT_COLUMNS = [
   "first_name", "middle_name", "last_name", "preferred_name", "call_date", "lead_source",
   "email", "phone", "address", "city", "state", "zip", "date_of_birth", "age", "gender",
@@ -26,13 +27,13 @@ export default {
       if (!url.pathname.startsWith("/api/")) return json(request, env, { error: "Not found." }, 404);
 
       if (url.pathname === "/api/auth/signup" && request.method === "POST") {
-        return handleSignup(request, env);
+        return await handleSignup(request, env);
       }
       if (url.pathname === "/api/auth/login" && request.method === "POST") {
-        return handleLogin(request, env);
+        return await handleLogin(request, env);
       }
       if (url.pathname === "/api/auth/logout" && request.method === "POST") {
-        return handleLogout(request, env);
+        return await handleLogout(request, env);
       }
 
       const auth = await requireUser(request, env);
@@ -40,44 +41,44 @@ export default {
       const user = auth.user;
 
       if (url.pathname === "/api/clients") {
-        if (request.method === "GET") return listClients(request, env, user);
-        if (request.method === "POST") return createClient(request, env, user);
+        if (request.method === "GET") return await listClients(request, env, user);
+        if (request.method === "POST") return await createClient(request, env, user);
         return methodNotAllowed(request, env, "GET, POST");
       }
 
       const clientMatch = url.pathname.match(/^\/api\/clients\/([^/]+)$/);
       if (clientMatch) {
-        if (request.method === "PUT") return updateClient(request, env, user, clientMatch[1]);
-        if (request.method === "DELETE") return deleteClient(request, env, user, clientMatch[1]);
+        if (request.method === "PUT") return await updateClient(request, env, user, clientMatch[1]);
+        if (request.method === "DELETE") return await deleteClient(request, env, user, clientMatch[1]);
         return methodNotAllowed(request, env, "PUT, DELETE");
       }
 
       if (url.pathname === "/api/goals") {
-        if (request.method === "GET") return getGoals(request, env, user);
-        if (request.method === "POST") return saveGoals(request, env, user);
+        if (request.method === "GET") return await getGoals(request, env, user);
+        if (request.method === "POST") return await saveGoals(request, env, user);
         return methodNotAllowed(request, env, "GET, POST");
       }
 
       if (url.pathname === "/api/scores") {
-        if (request.method === "GET") return listScores(request, env, user, url);
+        if (request.method === "GET") return await listScores(request, env, user, url);
         return methodNotAllowed(request, env, "GET");
       }
 
       const scoreMatch = url.pathname.match(/^\/api\/scores\/(\d{4}-\d{2}-\d{2})$/);
       if (scoreMatch) {
-        if (request.method === "GET") return getScoreDay(request, env, user, scoreMatch[1]);
-        if (request.method === "POST") return saveScoreDay(request, env, user, scoreMatch[1]);
+        if (request.method === "GET") return await getScoreDay(request, env, user, scoreMatch[1]);
+        if (request.method === "POST") return await saveScoreDay(request, env, user, scoreMatch[1]);
         return methodNotAllowed(request, env, "GET, POST");
       }
 
       if (url.pathname === "/api/owner/agents") {
-        if (request.method === "GET") return ownerAgents(request, env, user);
+        if (request.method === "GET") return await ownerAgents(request, env, user);
         return methodNotAllowed(request, env, "GET");
       }
 
       const ownerScoreMatch = url.pathname.match(/^\/api\/owner\/agents\/([^/]+)\/scores$/);
       if (ownerScoreMatch) {
-        if (request.method === "GET") return ownerAgentScores(request, env, user, ownerScoreMatch[1], url);
+        if (request.method === "GET") return await ownerAgentScores(request, env, user, ownerScoreMatch[1], url);
         return methodNotAllowed(request, env, "GET");
       }
 
@@ -476,8 +477,8 @@ async function readJson(request) {
 async function hashPassword(password) {
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const key = await pbkdf2Key(password, salt, ["deriveBits"]);
-  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", salt, iterations: 210000, hash: "SHA-256" }, key, 256);
-  return `pbkdf2_sha256$210000$${base64(salt)}$${base64(new Uint8Array(bits))}`;
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", salt, iterations: PBKDF2_ITERATIONS, hash: "SHA-256" }, key, 256);
+  return `pbkdf2_sha256$${PBKDF2_ITERATIONS}$${base64(salt)}$${base64(new Uint8Array(bits))}`;
 }
 
 async function verifyPassword(password, stored) {

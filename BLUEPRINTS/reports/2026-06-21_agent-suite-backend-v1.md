@@ -3,37 +3,38 @@
 - **Date:** 2026-06-21
 - **Agent or operator:** Codex
 - **Surface:** Evermore Life Agent Suite backend and private tool routes
-- **Mission:** Build a local, reviewable full backend lane for one-login access to Score Tracker, Growth Calculator, client data API, and owner dashboard without touching root `Client-Intake.html`.
-- **Approval level used:** draft
+- **Mission:** Deploy one-login access to the Score Tracker, Growth Calculator,
+  client data API, and owner team view without touching root `Client-Intake.html`.
+- **Approval level used:** execute
 
 ## Executive Finding
 
-The full Agent Suite backend is implemented locally on branch
-`codex/agent-suite-backend-v1` with an isolated Cloudflare Worker API intended
-for `api.evermorelife.org`. It is not deployed, pushed, or cache-purged.
+The Agent Suite backend is live. The Cloudflare Worker
+`evermore-score-tracker-api` serves `api.evermorelife.org/*`, the remote D1
+database `evermore-agent-db` is migrated, and the owner account can log in at
+`evermorelife.org/login` and land on the authenticated Score Tracker.
 
 ## Evidence
 
 | Claim | Evidence location | Confidence |
 | --- | --- | --- |
-| Cloudflare Worker API is isolated from the existing apex Worker | `01_website/agent-suite-api/cloudflare/wrangler.agent-suite-api.jsonc` | high |
-| D1 migration defines auth, sessions, clients, scores, and goals | `01_website/agent-suite-api/cloudflare/migrations/0001_agent_suite.sql` | high |
-| Password hashing uses PBKDF2 via SubtleCrypto | `01_website/agent-suite-api/cloudflare/worker.js` | high |
-| Login/signup pages exist as folder-index routes | `login/index.html`, `signup/index.html` | high |
-| Score Tracker is auth-gated and uses background score API sync | `score-tracker/index.html` | high |
-| Growth Calculator is auth-gated and prefills agent name | `growth-calculator/index.html` | high |
-| Team dashboard page exists as a static route | `team/index.html` | high |
-| Local static pages return 200 | `curl -I http://127.0.0.1:8001/{login,signup,score-tracker,growth-calculator,team}/` | high |
-| Worker bundle validates with Wrangler dry-run | `npx --yes wrangler@latest deploy --dry-run --config 01_website/agent-suite-api/cloudflare/wrangler.agent-suite-api.jsonc` | high |
-| SQL migration parses under SQLite | `sqlite3 :memory: ".read 01_website/agent-suite-api/cloudflare/migrations/0001_agent_suite.sql"` | high |
+| Remote D1 database exists and is bound to the Worker | `wrangler.agent-suite-api.jsonc` database ID `afb5d41e-b2cb-4c64-b65c-4e99a61c1738` | high |
+| Remote migration ran successfully | `npx --yes wrangler@latest d1 execute evermore-agent-db --file=01_website/agent-suite-api/cloudflare/migrations/0001_agent_suite.sql --config=01_website/agent-suite-api/cloudflare/wrangler.agent-suite-api.jsonc --remote` | high |
+| Worker deploy succeeded | `npx --yes wrangler@latest deploy --config=01_website/agent-suite-api/cloudflare/wrangler.agent-suite-api.jsonc`, version `8a5aee7b-4eae-4eae-af9d-0530f097e6a5` | high |
+| API route requires bearer auth | `curl https://api.evermorelife.org/api/scores/2026-06-21` returned 401 without a token | high |
+| Live login works end to end | In-app browser submitted `kurrea7@gmail.com` at `https://evermorelife.org/login/` and landed on `https://evermorelife.org/score-tracker/` showing agent `Keenan` | high |
+| Protected score read works | `GET https://api.evermorelife.org/api/scores/2026-06-22` with the live session token returned 200 | high |
+| Static private routes are live | `evermorelife.org/login`, `/signup`, `/score-tracker`, `/growth-calculator`, and `/team` returned 200 after Cloudflare Pages deploy | high |
+| Owner/team route avoids cockpit collision | `team/index.html` is the Agent Suite owner view; existing `/dashboard` remains reserved for the cockpit | high |
 
 ## Map
 
-The new API source lives under `01_website/agent-suite-api/cloudflare/` and is
-configured for `api.evermorelife.org/*`, keeping it separate from the existing
-`evermore-life-live` apex Worker in `01_website/v2/cloudflare/`.
+The API source lives under `01_website/agent-suite-api/cloudflare/` and is
+deployed to the existing Worker name `evermore-score-tracker-api` because the
+`api.evermorelife.org/*` route was already assigned there. The Worker binds D1
+as `env.DB`.
 
-Static private tool routes in this branch:
+Static private tool routes:
 
 - `login/index.html`
 - `signup/index.html`
@@ -42,41 +43,36 @@ Static private tool routes in this branch:
 - `team/index.html`
 - `agent-suite-auth.js`
 
-The browser helper stores session state in `localStorage` using
-`evermore-auth-token` plus companion user fields.
+Session state uses `localStorage` key `evermore-auth-token` plus companion user
+fields.
 
 ## Visual Evidence
 
-No screenshots were saved. The in-app browser was navigated to
-`http://127.0.0.1:8001/login/`, and DOM checks verified login/signup rendering
-plus redirects from protected routes to `/login/` when no token exists.
+No screenshot artifact was saved. Browser DOM verification confirmed the live
+Score Tracker loaded after login with top navigation, logout, and agent name
+visible.
 
 ## Unknown Or Unavailable
 
-- D1 database `evermore-agent-db` has not been created in Cloudflare from this
-  branch.
-- The migration has not been run against remote D1.
-- The Worker has not been deployed.
-- Production URLs were not verified for the new routes because publish/deploy
-  remains approval-gated.
-- Existing live `/dashboard` is already owned by the apex cockpit Worker. The
-  Agent Suite owner/team view was moved to `/team` to avoid that route
-  collision.
-- Owner account bootstrap depends on the Worker `OWNER_EMAILS` environment
-  variable.
+- Cloudflare cache purge was not separately required after the manual Pages
+  deploy because the verified live routes returned 200.
+- No production client-intake cloud integration was added in V1; the root
+  `Client-Intake.html` file was intentionally left untouched.
 
 ## Cross-Surface Overlaps
 
-- The owner/team dashboard uses `/team` so it does not conflict with the
-  existing cockpit dashboard route.
-- Cloudflare Pages source, the live apex Worker, and the new API Worker must be
-  deployed in a coordinated release to avoid local/source/live drift.
+- Agent Suite uses `/team` instead of `/dashboard` to avoid the existing cockpit
+  route.
+- Static routes and the API Worker must stay coordinated because the pages call
+  `https://api.evermorelife.org/api`.
+- Cloudflare Workers supports PBKDF2 through SubtleCrypto but rejected 210000
+  iterations. New password hashes now use the supported 100000-iteration maximum
+  while each stored hash keeps its iteration count for verification.
 
 ## Recommended Next Move
 
-Create or bind `evermore-agent-db`, set `OWNER_EMAILS`, run the D1 migration,
-then deploy the API Worker and test one real signup/login before pushing static
-pages live.
+Build the CRM pipeline view against the new `clients` API after local review of
+the live login and Score Tracker flow.
 
 ## Files Changed
 

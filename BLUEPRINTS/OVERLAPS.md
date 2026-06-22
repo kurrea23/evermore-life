@@ -29,8 +29,9 @@ shows.
   `BLUEPRINTS/reports/2026-06-21_agent-suite-backend-v1.md`
 - **Impact:** `/dashboard` can remain the cockpit, and `/team` can serve the
   Agent Suite owner/team view without route collision.
-- **Next move:** Verify `/team` after static deploy.
-- **Status:** decided
+- **Next move:** Build future owner/team functionality under `/team`, not
+  `/dashboard`.
+- **Status:** completed
 
 ### 2026-06-21 - Agent Suite release needs API, D1, static pages, and cache alignment
 
@@ -43,9 +44,23 @@ shows.
   `BLUEPRINTS/reports/2026-06-21_agent-suite-backend-v1.md`
 - **Impact:** Live release requires ordered setup: D1 create/bind, migration,
   Worker deploy, then static route deploy and cache purge.
-- **Next move:** Run the release checklist only after local review and explicit
-  deploy approval.
-- **Status:** open
+- **Next move:** Keep future CRM/client work aligned to the deployed API route
+  and D1 schema.
+- **Status:** completed
+
+### 2026-06-21 - Cloudflare PBKDF2 limits affect Agent Suite auth
+
+- **Surfaces:** Cloudflare Worker + Agent Suite authentication + D1 users table
+- **Finding:** Cloudflare Workers SubtleCrypto rejected PBKDF2 hashes above
+  100000 iterations in the live signup path, even though the code was otherwise
+  valid and the D1 migration was complete.
+- **Evidence:** `01_website/agent-suite-api/cloudflare/worker.js`,
+  `BLUEPRINTS/reports/2026-06-21_agent-suite-backend-v1.md`
+- **Impact:** Password-hashing parameters must be chosen inside the Worker
+  runtime limits or signup fails before any user row is created.
+- **Next move:** Preserve the stored hash format with explicit iteration counts
+  if future auth migrations change hashing settings.
+- **Status:** completed
 
 ### 2026-06-19 - Standalone calculator routes depend on source and static host alignment
 
