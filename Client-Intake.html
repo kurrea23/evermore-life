@@ -152,6 +152,14 @@
   .medal.silver{border-top:3px solid #9aa7bd} .medal.silver h4{color:#9aa7bd}
   .medal.bronze{border-top:3px solid #c0793a} .medal.bronze h4{color:#c0793a}
   .medal .field{margin-bottom:10px}
+  .quoteSet{border-bottom:1px solid var(--line)}
+  .quoteSet:last-child{border-bottom:0}
+  .quoteHead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:18px 18px 0;align-items:end}
+  .quoteTitle{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:800;margin:0 0 8px}
+  .quoteActions{display:flex;gap:8px;justify-content:flex-end;padding-bottom:10px}
+  .quoteRemove{min-width:38px;height:38px;padding:0}
+  .addQuoteWrap{padding:0 18px 18px}
+  #addQuoteBtn{width:100%;justify-content:center}
   .hint{font-size:11.5px;margin-top:4px;font-weight:500}
   /* toast */
   #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--card);
@@ -336,22 +344,13 @@
       </section>
 
       <section id="sec4"><h3><span class="step">4</span>Plan Options Quoted</h3>
-        <div class="medalRow">
-          <div class="medal gold"><h4>🥇 GOLD</h4>
-            <div class="field"><label>Coverage</label><input type="text" id="goldCov"></div>
-            <div class="field"><label>Monthly Premium</label><input type="text" id="goldPrem"></div></div>
-          <div class="medal silver"><h4>🥈 SILVER</h4>
-            <div class="field"><label>Coverage</label><input type="text" id="silverCov"></div>
-            <div class="field"><label>Monthly Premium</label><input type="text" id="silverPrem"></div></div>
-          <div class="medal bronze"><h4>🥉 BRONZE</h4>
-            <div class="field"><label>Coverage</label><input type="text" id="bronzeCov"></div>
-            <div class="field"><label>Monthly Premium</label><input type="text" id="bronzePrem"></div></div>
-        </div>
+        <div id="quoteGroups"></div>
+        <div class="addQuoteWrap"><button type="button" class="btn ghost" id="addQuoteBtn">+ Add Carrier Quote</button></div>
         <div class="grid" style="padding-top:0">
           <div class="field"><label>Option Chosen</label>
             <select id="optionChosen"><option value=""></option><option>Gold</option><option>Silver</option><option>Bronze</option></select></div>
           <div class="field"><label>Coverage Type</label>
-            <select id="coverageType"><option value=""></option><option>Permanent</option><option>Term</option></select></div>
+            <select id="coverageType"><option value=""></option><option>Permanent</option><option>Term</option><option>IUL</option></select></div>
         </div>
       </section>
 
@@ -391,7 +390,7 @@
       <section id="sec8"><h3><span class="step">8</span>Policy</h3>
         <div class="grid">
           <div class="field"><label>Carrier</label>
-            <select id="carrier"><option value=""></option><option>Americo</option><option>Mutual of Omaha</option><option>TransAmerica</option><option>Ethos</option><option>Other</option></select></div>
+            <select id="carrier"><option value=""></option><option>Mutual of Omaha</option><option>Americo</option><option>American-Amicable Group of Companies</option><option>Ethos</option><option>Aetna</option><option>Corebridge Financial</option><option>TransAmerica</option><option>Other</option></select></div>
           <div class="field"><label>Policy Number</label><input type="text" id="policyNumber"></div>
           <div class="field"><label>Coverage Amount</label><input type="text" id="finalCoverage"></div>
           <div class="field"><label>Monthly Premium</label><input type="text" id="finalPremium"></div>
@@ -697,9 +696,75 @@ async function openApp(){
 function lockApp(){ location.reload(); }
 
 /* ===================== FORM <-> DATA ===================== */
+const CARRIER_OPTIONS = ['Mutual of Omaha','Americo','American-Amicable Group of Companies','Ethos','Aetna','Corebridge Financial','TransAmerica','Other'];
+const QUOTE_TIERS = [
+  {key:'gold', label:'Gold', medal:'🥇', cls:'gold'},
+  {key:'silver', label:'Silver', medal:'🥈', cls:'silver'},
+  {key:'bronze', label:'Bronze', medal:'🥉', cls:'bronze'}
+];
+let quoteGroupCount = 0;
+const LEGACY_QUOTE_FIELDS = new Set(['quoteCarrier','goldCov','goldPrem','silverCov','silverPrem','bronzeCov','bronzePrem']);
+
+function escAttr(s){ return String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function carrierOptionsHtml(selected){
+  return '<option value=""></option>' + CARRIER_OPTIONS.map(c => '<option' + (c === selected ? ' selected' : '') + '>' + esc(c) + '</option>').join('');
+}
+function blankQuoteGroup(){
+  return {quoteCarrier:'', goldCov:'', goldPrem:'', silverCov:'', silverPrem:'', bronzeCov:'', bronzePrem:''};
+}
+function legacyQuoteGroup(o){
+  return {
+    quoteCarrier:(o && o.quoteCarrier) || '',
+    goldCov:(o && o.goldCov) || '',
+    goldPrem:(o && o.goldPrem) || '',
+    silverCov:(o && o.silverCov) || '',
+    silverPrem:(o && o.silverPrem) || '',
+    bronzeCov:(o && o.bronzeCov) || '',
+    bronzePrem:(o && o.bronzePrem) || ''
+  };
+}
+function readQuoteGroups(){
+  return Array.from(document.querySelectorAll('.quoteSet')).map(set => {
+    const group = {};
+    set.querySelectorAll('[data-quote-field]').forEach(el => group[el.dataset.quoteField] = (el.value || '').trim());
+    return group;
+  }).filter((group, index) => index === 0 || Object.values(group).some(Boolean));
+}
+function renderQuoteGroups(groups){
+  const host = document.getElementById('quoteGroups');
+  if (!host) return;
+  const safeGroups = Array.isArray(groups) && groups.length ? groups : [blankQuoteGroup()];
+  quoteGroupCount = safeGroups.length;
+  host.innerHTML = safeGroups.map((group, index) => {
+    const suffix = index === 0 ? '' : '_' + index;
+    const legacyId = id => index === 0 ? id : 'quote' + (index + 1) + id[0].toUpperCase() + id.slice(1);
+    const carrierId = index === 0 ? 'quoteCarrier' : 'quote' + (index + 1) + 'Carrier';
+    const medals = QUOTE_TIERS.map(tier => {
+      const covKey = tier.key + 'Cov';
+      const premKey = tier.key + 'Prem';
+      return '<div class="medal ' + tier.cls + '"><h4>' + tier.medal + ' ' + tier.label.toUpperCase() + '</h4>' +
+        '<div class="field"><label>Coverage</label><input type="text" id="' + legacyId(covKey) + '" data-quote-field="' + covKey + '" data-label="' + tier.label + ' coverage" value="' + escAttr(group[covKey]) + '"></div>' +
+        '<div class="field"><label>Monthly Premium</label><input type="text" id="' + legacyId(premKey) + '" data-quote-field="' + premKey + '" data-label="' + tier.label + ' premium" value="' + escAttr(group[premKey]) + '"></div></div>';
+    }).join('');
+    return '<div class="quoteSet" data-quote-index="' + index + '">' +
+      '<div class="quoteHead"><div><p class="quoteTitle">Carrier quote ' + (index + 1) + '</p>' +
+      '<div class="field"><label>Carrier</label><select id="' + carrierId + '" data-quote-field="quoteCarrier" data-label="Quote carrier">' + carrierOptionsHtml(group.quoteCarrier) + '</select></div></div>' +
+      '<div class="quoteActions">' + (index ? '<button type="button" class="btn ghost quoteRemove" title="Remove quote" data-remove-quote="' + index + '">×</button>' : '') + '</div></div>' +
+      '<div class="medalRow">' + medals + '</div></div>';
+  }).join('');
+  host.querySelectorAll('[data-remove-quote]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const groups = readQuoteGroups();
+      groups.splice(Number(btn.dataset.removeQuote), 1);
+      renderQuoteGroups(groups);
+      updateChips();
+    });
+  });
+}
+
 const FIELDS = ['callDate','leadSource','firstName','lastName','dob','age','phone','email','state',
  'coverageFor','existingCoverage','hasPermanent','goal',
- 'medsCurrent','medsPast','diabetes','a1c','majorConditions','surgeries','height','weight','smoker',
+ 'medsCurrent','medsPast','diabetes','a1c','majorConditions','surgeries','height','weight','smoker','quoteCarrier',
  'goldCov','goldPrem','silverCov','silverPrem','bronzeCov','bronzePrem','optionChosen','coverageType',
  'marital','birthState','address','ssn',
  'dlNumber','dlState','dlExp','dlHistory',
@@ -710,11 +775,21 @@ const FIELDS = ['callDate','leadSource','firstName','lastName','dob','age','phon
 
 function readForm(){
   const o = {};
-  FIELDS.forEach(f => o[f] = document.getElementById(f).value.trim());
+  FIELDS.forEach(f => {
+    const el = document.getElementById(f);
+    o[f] = el ? el.value.trim() : '';
+  });
+  o.quoteGroups = readQuoteGroups();
   return o;
 }
 function fillForm(o){
-  FIELDS.forEach(f => document.getElementById(f).value = (o && o[f]) || '');
+  const hasStructuredQuotes = !!(o && Array.isArray(o.quoteGroups) && o.quoteGroups.length);
+  renderQuoteGroups(hasStructuredQuotes ? o.quoteGroups : [legacyQuoteGroup(o)]);
+  FIELDS.forEach(f => {
+    if (hasStructuredQuotes && LEGACY_QUOTE_FIELDS.has(f)) return;
+    const el = document.getElementById(f);
+    if (el) el.value = (o && o[f]) || '';
+  });
   updateChips();
 }
 function newClient(){
@@ -730,6 +805,13 @@ function newClient(){
   if (isMobileLayout()) closeSidebar();
 }
 document.getElementById('newBtn').onclick = newClient;
+document.getElementById('addQuoteBtn').addEventListener('click', () => {
+  const groups = readQuoteGroups();
+  groups.push(blankQuoteGroup());
+  renderQuoteGroups(groups);
+  document.getElementById('quote' + groups.length + 'Carrier').focus();
+  updateChips();
+});
 
 document.getElementById('dob').addEventListener('change', e => {
   const d = new Date(e.target.value);
@@ -911,7 +993,7 @@ const LABELS = {
   medsCurrent:'Current medications', medsPast:'Past prescriptions', diabetes:'Diabetes', a1c:'A1C',
   majorConditions:'Major conditions', surgeries:'Surgeries', height:'Height', weight:'Weight', smoker:'Smoker',
   goldCov:'Gold coverage', goldPrem:'Gold premium', silverCov:'Silver coverage', silverPrem:'Silver premium',
-  bronzeCov:'Bronze coverage', bronzePrem:'Bronze premium', optionChosen:'Option chosen', coverageType:'Coverage type',
+  bronzeCov:'Bronze coverage', bronzePrem:'Bronze premium', quoteCarrier:'Quote carrier', optionChosen:'Option chosen', coverageType:'Coverage type',
   marital:'Marital status', birthState:'State of birth', address:'Mailing address', ssn:'SSN',
   dlNumber:'DL number', dlState:'DL state', dlExp:'DL expiration', dlHistory:'DUI/reckless history',
   bankName:'Bank', bankType:'Bank type', bankState:'Account opened in', routing:'Routing #', account:'Account #',
@@ -940,7 +1022,15 @@ function writeClipboardWithAutoClear(text, successMsg){
 function copySummary(){
   const d = readForm();
   let out = '=== CLIENT FILE: ' + d.firstName + ' ' + d.lastName + ' ===\n';
-  FIELDS.forEach(f => { if (d[f]) out += LABELS[f] + ': ' + d[f] + '\n'; });
+  FIELDS.forEach(f => {
+    if (LEGACY_QUOTE_FIELDS.has(f)) return;
+    if (d[f]) out += LABELS[f] + ': ' + d[f] + '\n';
+  });
+  (d.quoteGroups || []).forEach((group, index) => {
+    if (!Object.values(group).some(Boolean)) return;
+    out += '--- Carrier Quote ' + (index + 1) + ' ---\n';
+    Object.keys(group).forEach(key => { if (group[key]) out += (LABELS[key] || key) + ': ' + group[key] + '\n'; });
+  });
   writeClipboardWithAutoClear(out, '✓ Copied — clipboard clears in 60s');
 }
 function sectionText(sectionId){
@@ -951,7 +1041,7 @@ function sectionText(sectionId){
   let out = '=== ' + (meta ? meta.name.toUpperCase() : 'SECTION') + (name ? ': ' + name : '') + ' ===\n';
   section.querySelectorAll('input,select,textarea').forEach(el => {
     const val = (el.value || '').trim();
-    if (val) out += (LABELS[el.id] || el.id) + ': ' + val + '\n';
+    if (val) out += (el.dataset.label || LABELS[el.id] || el.id) + ': ' + val + '\n';
   });
   return out;
 }
