@@ -14,21 +14,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 h1,h2,h3{font-family:Palatino,"Palatino Linotype",Georgia,serif}
 a{text-decoration:none;color:inherit}
 
-/* ============ NAV ============ */
-#nav{background:#0d1525;border-bottom:1px solid #1e2f4a;padding:0 24px;display:flex;
-  align-items:center;gap:16px;height:56px;position:sticky;top:0;z-index:50}
-.navLogo{font-family:Palatino,Georgia,serif;font-size:17px;color:#d4b576;font-weight:700;
-  letter-spacing:.04em;white-space:nowrap}
-.navLinks{display:flex;gap:4px;flex:1;margin-left:8px}
-.navLinks a{padding:6px 12px;border-radius:7px;font-size:13px;color:#8fa3c2;transition:all .15s}
-.navLinks a:hover{background:#19243c;color:#d4b576}
-.navLinks a.active{background:#1d2c4a;color:#d4b576}
-.navRight{display:flex;align-items:center;gap:10px;margin-left:auto}
-.navUser{font-size:13px;color:#8fa3c2}
-.navUser strong{color:#d4b576}
-.navBtn{padding:6px 14px;border-radius:7px;font-size:13px;cursor:pointer;border:1px solid #34507d;
-  background:transparent;color:#a9bcd9;transition:all .15s}
-.navBtn:hover{background:#22324f;border-color:#d4b57688;color:#d4b576}
+/* Top nav is injected by /agent-suite-auth.js (installTopNav) — shared across all agent-suite pages */
 
 /* ============ TOOLBAR ============ */
 #toolbar{padding:16px 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
@@ -143,24 +129,30 @@ a{text-decoration:none;color:inherit}
 .colName { color: var(--sc) }
 .statusBadge { background: color-mix(in srgb, var(--sc) 18%, transparent);
                color: var(--sc); border: 1px solid color-mix(in srgb, var(--sc) 35%, transparent) }
+
+/* ============ MOBILE (≤640px) ============ */
+@media (max-width: 640px) {
+  /* Toolbar — stack search full-width below the filters */
+  #toolbar { padding: 12px 16px; gap: 8px }
+  #toolbar h2 { font-size: 17px }
+  #searchBox { width: 100%; order: 3; flex: 1 1 100% }
+  .tbSelect { font-size: 12px; padding: 6px 8px }
+  #refreshBtn { font-size: 12px; padding: 6px 10px }
+
+  /* Board — one column fills most of the screen, swipe between */
+  #board { padding: 16px 12px 80px; gap: 10px; min-height: calc(100vh - 160px) }
+  .col { flex: 0 0 min(260px, 80vw); max-height: calc(100vh - 180px) }
+
+  /* Modal — bottom-sheet style */
+  #overlay.open { align-items: flex-end; padding: 0 }
+  #modal { border-radius: 16px 16px 0 0; max-width: 100%; max-height: 92vh }
+  .modalHead { padding: 16px 20px 12px }
+  .modalBody { padding: 16px 20px }
+  .modalGrid { grid-template-columns: 1fr }
+}
 </style>
 </head>
 <body>
-
-<!-- NAV -->
-<nav id="nav">
-  <div class="navLogo">Evermore Life</div>
-  <div class="navLinks">
-    <a href="/score-tracker/">Score Tracker</a>
-    <a href="/growth-calculator/">Growth Calculator</a>
-    <a href="/clients/" class="active">Pipeline</a>
-    <a href="/team/" id="teamLink" style="display:none">Team</a>
-  </div>
-  <div class="navRight">
-    <div class="navUser">Welcome, <strong id="userName">Agent</strong></div>
-    <button class="navBtn" onclick="logout()">Log Out</button>
-  </div>
-</nav>
 
 <!-- TOOLBAR -->
 <div id="toolbar">
@@ -208,6 +200,7 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
+<script src="/agent-suite-auth.js"></script>
 <script>
 const API = 'https://api.evermorelife.org';
 const TOKEN_KEY = 'evermore-auth-token';
@@ -220,9 +213,9 @@ if (!token) location.replace('/login/');
 const role = localStorage.getItem(ROLE_KEY) || 'agent';
 const myName = localStorage.getItem(NAME_KEY) || 'Agent';
 
-document.getElementById('userName').textContent = myName;
+/* Shared gold top nav (injected by agent-suite-auth.js) — handles Pipeline active state + owner Team link */
+EvermoreAgentSuite.installTopNav('Client Pipeline');
 if (role === 'owner') {
-  document.getElementById('teamLink').style.display = '';
   document.getElementById('agentFilter').style.display = '';
 }
 

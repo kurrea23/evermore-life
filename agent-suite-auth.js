@@ -74,27 +74,41 @@
   function installTopNav(title) {
     if (document.getElementById("agentSuiteNav")) return;
     const currentUser = user();
-    const nav = document.createElement("div");
+    const role = currentUser.role || localStorage.getItem(ROLE_KEY);
+    const name = currentUser.name || localStorage.getItem(NAME_KEY) || "Agent";
+    const path = window.location.pathname;
+    const cls = (href) => (path.indexOf(href) === 0 ? ' class="active"' : "");
+    const nav = document.createElement("nav");
     nav.id = "agentSuiteNav";
     nav.innerHTML = `
-      <a href="/score-tracker/">Score Tracker</a>
-      <a href="/growth-calculator/">Growth Calculator</a>
-      ${(currentUser.role || localStorage.getItem(ROLE_KEY)) === "owner" ? '<a href="/team/">Team Dashboard</a>' : ""}
-      <span>${title || document.title || "Evermore"}</span>
-      <strong>${currentUser.name || localStorage.getItem(NAME_KEY) || ""}</strong>
-      <button type="button" id="agentSuiteLogout">Logout</button>
+      <div class="navLogo">Evermore Life</div>
+      <div class="navLinks">
+        <a href="/score-tracker/"${cls("/score-tracker/")}>Score Tracker</a>
+        <a href="/growth-calculator/"${cls("/growth-calculator/")}>Growth Calculator</a>
+        <a href="/clients/"${cls("/clients/")}>Pipeline</a>
+        ${role === "owner" ? `<a href="/team/"${cls("/team/")}>Team</a>` : ""}
+      </div>
+      <div class="navRight">
+        <div class="navUser">Welcome, <strong>${name}</strong></div>
+        <button type="button" id="agentSuiteLogout" class="navBtn">Log Out</button>
+      </div>
     `;
     document.body.prepend(nav);
     document.getElementById("agentSuiteLogout").addEventListener("click", logout);
     const style = document.createElement("style");
     style.textContent = `
-      body{padding-top:52px}
-      #agentSuiteNav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;gap:14px;padding:10px 16px;background:#09111f;border-bottom:1px solid #253650;color:#e9eef7;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-      #agentSuiteNav a{color:#d4b576;text-decoration:none;font-size:13px;font-weight:700}
-      #agentSuiteNav span{margin-left:auto;color:#8c9cb5;font-size:13px}
-      #agentSuiteNav strong{font-size:13px;color:#fff}
-      #agentSuiteNav button{border:1px solid #d4b57666;background:transparent;color:#d4b576;border-radius:8px;padding:7px 10px;font-weight:700;cursor:pointer}
-      @media(max-width:640px){#agentSuiteNav{gap:8px;overflow-x:auto}#agentSuiteNav span{display:none}#agentSuiteNav a,#agentSuiteNav strong,#agentSuiteNav button{white-space:nowrap;font-size:12px}}
+      #agentSuiteNav{background:#0d1525;border-bottom:1px solid #1e2f4a;padding:0 24px;display:flex;align-items:center;gap:16px;height:56px;position:sticky;top:0;z-index:1000;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+      #agentSuiteNav .navLogo{font-family:Palatino,Georgia,serif;font-size:17px;color:#d4b576;font-weight:700;letter-spacing:.04em;white-space:nowrap}
+      #agentSuiteNav .navLinks{display:flex;gap:4px;flex:1;margin-left:8px}
+      #agentSuiteNav .navLinks a{padding:6px 12px;border-radius:7px;font-size:13px;color:#8fa3c2;transition:all .15s;text-decoration:none}
+      #agentSuiteNav .navLinks a:hover{background:#19243c;color:#d4b576}
+      #agentSuiteNav .navLinks a.active{background:#1d2c4a;color:#d4b576}
+      #agentSuiteNav .navRight{display:flex;align-items:center;gap:10px;margin-left:auto}
+      #agentSuiteNav .navUser{font-size:13px;color:#8fa3c2;white-space:nowrap}
+      #agentSuiteNav .navUser strong{color:#d4b576}
+      #agentSuiteNav .navBtn{padding:6px 14px;border-radius:7px;font-size:13px;cursor:pointer;border:1px solid #34507d;background:transparent;color:#a9bcd9;transition:all .15s}
+      #agentSuiteNav .navBtn:hover{background:#22324f;border-color:#d4b57688;color:#d4b576}
+      @media(max-width:640px){#agentSuiteNav{padding:0 12px;gap:8px}#agentSuiteNav .navUser{display:none}#agentSuiteNav .navLinks{gap:2px;overflow-x:auto}#agentSuiteNav .navLinks a{padding:6px 8px;font-size:12px;white-space:nowrap}#agentSuiteNav .navLogo{font-size:15px}}
     `;
     document.head.appendChild(style);
   }
