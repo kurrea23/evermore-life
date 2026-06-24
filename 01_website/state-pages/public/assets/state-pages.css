@@ -388,6 +388,8 @@ footer {
   }
   .mobile-cta-bar a { padding: 14px; color: #fff; font-weight: 800; text-align: center; text-decoration: none; }
   .mobile-cta-bar a:last-child { background: #c8a96e; color: #0d1b4b; }
+  .hero-bg { display: none; }
+  .hero-veil { display: none; }
 }
 
 @media (max-width: 560px) {
