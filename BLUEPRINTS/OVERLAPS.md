@@ -17,6 +17,27 @@ shows.
 
 ---
 
+### 2026-07-02 - Intake vault, CRM dedupe, and owner-session safety are one loop
+
+- **Surfaces:** Client-Intake PWA + agent-suite-api Worker + Pipeline/Team pages
+- **Finding:** The intake app's local vault is the only holder of serverId
+  links, so any vault clear/restore silently forked client records server-side;
+  and because Pipeline/Team rendered client- and signup-supplied strings into
+  innerHTML unescaped, a synced record could execute script in the OWNER's
+  browser session. Duplicate prevention, 404 relink recovery, and HTML escaping
+  had to ship together: dedupe makes re-POSTs safe, which makes automatic 404
+  recovery safe, which is what keeps restored vaults from forking data.
+- **Evidence:** `BLUEPRINTS/reports/2026-07-02_final-polish-bow.md`,
+  `01_website/agent-suite-api/cloudflare/worker.js` (findExistingClient),
+  `01_website/experiments/Client-Intake.html` (syncClientToServer 404 path),
+  `clients/index.html`, `team/index.html`
+- **Impact:** Owner can open any client card without executing client-typed
+  HTML; devices can be wiped/restored without creating duplicate CRM rows.
+- **Next move:** Operator deploys all three surfaces, then runs the
+  end-to-end test: save client in /intake → appears once in /clients →
+  clear localStorage → re-save → still exactly one row.
+- **Status:** decided
+
 ### 2026-07-01 - A2P approval changes the GHL and paid-traffic gates
 
 - **Surfaces:** GHL Trust Center + GHL workflow + active A2P room + ads launch
@@ -35,6 +56,62 @@ shows.
 - **Next move:** Enable only consent-gated workflow SMS, test checked and
   unchecked consent with an owned number, verify STOP/START, then record
   non-secret results in the launch kit.
+- **Status:** open
+
+### 2026-07-01 - Unified Worker deploys must preserve intake and public routes together
+
+- **Surfaces:** Client intake PWA + Cloudflare Worker + state pages + Sarah +
+  recruiting + dashboards
+- **Finding:** `/intake` broke because the active Worker no longer contained
+  the intake route/PWA handlers even though newer public route work was present.
+  The repair forward-ported intake handling into the current Worker instead of
+  redeploying the older intake branch.
+- **Evidence:** `BLUEPRINTS/reports/2026-07-01_intake-route-restore.md`,
+  `01_website/v2/cloudflare/evermore-live-proxy.js`,
+  `01_website/experiments/Client-Intake.html`
+- **Impact:** Any Worker deploy from a partial branch can silently drop another
+  live route. The blast radius includes intake, state pages, Sarah, recruiting,
+  dashboard, and bundled app assets.
+- **Next move:** Require a shared Worker route sweep before every deploy:
+  `/intake`, `/intake.webmanifest`, `/intake-sw.js`, state pages, `/sarah`,
+  `/recruiting`, `/dashboard`, and `/dashboard-preview`.
+- **Status:** open
+
+### 2026-07-01 - Dirty git tree mixes deployed source, docs, state pages, and app work
+
+- **Surfaces:** Git hygiene + Cloudflare Worker + Blueprint memory + GHL docs +
+  state pages + Agent Suite
+- **Finding:** The local `main` checkout is behind `origin/main` by one commit
+  and contains no staged changes, but it has 28 modified tracked files and 23
+  untracked files spanning several unrelated lanes. The already-deployed
+  `/intake` restore is mixed with A2P docs, Blueprint reports, state-page
+  generated output, and campaign concepts.
+- **Evidence:** `BLUEPRINTS/reports/2026-07-01_git-branch-cleanup-handoff.md`,
+  `HANDOFF_CLAUDE_FABLE_5_GIT_CLEANUP.md`
+- **Impact:** A bulk commit or reset could either lose live Worker source
+  parity or sweep unrelated docs/content/state-page changes into the same
+  release.
+- **Next move:** Preserve the dirty checkout on a safety branch, then stage
+  explicit path groups by lane. Commit the Worker/intake source parity first.
+- **Status:** open
+
+### 2026-06-30 - Live page health and embedded 404 noise are separate checks
+
+- **Surfaces:** Public website + Sarah route + dashboard Worker auth + app/tool pages
+- **Finding:** The known public, state, app/tool, sitemap, robots, and dashboard
+  entry routes returned live `200` responses, but the `/sarah` page still links
+  to `/current/optin.html`, `/current/privacy.html`, and
+  `/current/terms.html`, which return 404. Dashboard login form actions also
+  return 404 on direct GET even though the Worker implements POST handlers.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-30_website-health-check.md`,
+  `01_website/experiments/sarah-final-expense.html`,
+  `01_website/v2/cloudflare/evermore-live-proxy.js`
+- **Impact:** Operators can see scattered 404s in crawlers or browser tooling
+  while the main page URLs still appear healthy, creating confusion about
+  whether the site itself is down.
+- **Next move:** Patch the Sarah links to canonical clean routes and decide
+  whether dashboard login GET routes should redirect to the parent login
+  screens.
 - **Status:** open
 
 ### 2026-06-27 - Sarah final-expense route connects page, Worker, and lead path
@@ -88,6 +165,116 @@ shows.
   pass/fail state before authorizing patches or deploys.
 - **Next move:** Use the map as the first stop before creating website/app
   patch worktrees.
+- **Status:** open
+
+### 2026-06-27 - Live homepage is reachable but lead-path proof is still separate
+
+- **Surfaces:** Public website + Cloudflare Pages proxy + GHL lead path
+- **Finding:** `https://evermorelife.org/`, `/optin`, `/privacy`, and the nav
+  logo asset returned live `HTTP/2 200` responses through the Cloudflare Pages
+  proxy, but this only proves route availability, not lead capture or workflow
+  health.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-27_evermorelife-org-live-visual-check.md`
+- **Impact:** The site can be shown to prospects, but paid activation and
+  funnel-health claims still depend on an approved controlled lead test through
+  `/optin`, CRM receipt, workflow firing, and tracking verification.
+- **Next move:** Capture a browser screenshot when browser tooling is
+  available, then run one approved end-to-end lead-path test.
+- **Status:** open
+
+### 2026-06-27 - GitHub Pages CI status is not full live-system proof
+
+- **Surfaces:** GitHub Actions + GitHub Pages + Cloudflare Worker + lead path
+- **Finding:** The latest visible GitHub Pages deployment run succeeded and no
+  open PRs were available for CI inspection, but Pages CI only proves the Pages
+  build/deploy surface. It does not prove Worker route behavior, public readback,
+  GHL lead capture, CRM workflow execution, or tracking.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-27_github-actions-ci-check.md`
+- **Impact:** Operators should not treat a green Pages deployment as proof that
+  the public funnel or paid-traffic path is healthy end to end.
+- **Next move:** When repairing a specific CI incident, provide a PR or Actions
+  run URL; when validating launch readiness, run separate live route and
+  lead-path checks.
+- **Status:** open
+
+### 2026-06-25 - Arizona main page spans generated state source, Pages origin, and Worker routing
+
+- **Surfaces:** State-page generator + Cloudflare Pages + Cloudflare Worker
+- **Finding:** The Arizona page at the Pages origin path is the same surface
+  mapped to the clean `evermorelife.org/arizona/` route, so source edits must
+  land in the state-page template/data/CSS and then be regenerated.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-25_arizona-main-page-source-update.md`,
+  `01_website/state-pages/templates/state-page.html`,
+  `01_website/v2/cloudflare/evermore-live-proxy.js`
+- **Impact:** Hand-editing generated Arizona HTML or only checking the Pages
+  path can create drift between source, origin, and the public clean route.
+- **Next move:** After any approved Arizona publish, verify both the Pages
+  origin URL and `https://evermorelife.org/arizona/`.
+- **Status:** open
+
+### 2026-06-25 - Project actionability depends on reconciling source truth before launch work
+
+- **Surfaces:** Public website + GHL lead path + content activation + cockpit
+- **Finding:** The repo has enough source material to execute, but the current
+  operating blockers are cross-surface truth conflicts: public route source,
+  active-state gate, lead-path proof, and durable cockpit task state.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-25_project-organization-swarm.md`,
+  `01_website/v2/cloudflare/evermore-live-proxy.js`,
+  `02_ghl/launch_kit/A2P_GAP_REPORT.md`,
+  `04_content_narrative/ad_campaign_scaffold/CONTENT_ACTIVATION_BOARD.md`,
+  `00_START_HERE/COCKPIT_UPDATE_HANDOFF.md`
+- **Impact:** More pages, ads, or content can increase drift unless the lead
+  path and state gate are made consistent first.
+- **Next move:** Run a focused lead-path reconciliation sprint before publishing,
+  SMS, A2P submission, or paid spend.
+- **Status:** open
+
+### 2026-06-25 - Active-state contract conflicts across website, GHL, and Meta content
+
+- **Surfaces:** State pages + GHL workflow + Meta/content activation
+- **Finding:** `states.json` marks Arizona, Texas, and Arkansas active, while
+  GHL and content launch docs disagree about whether Texas or Arkansas is the
+  pending state.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-25_project-organization-swarm.md`,
+  `01_website/state-pages/data/states.json`,
+  `02_ghl/launch_kit/STATE_SERVICE_GATE_UPDATE_HANDOFF.md`,
+  `02_ghl/launch_kit/GHL_WORKFLOW_COMPLETE_SPEC.md`,
+  `04_content_narrative/ad_campaign_scaffold/META_ADS_MANAGER_HANDOFF.md`
+- **Impact:** A wrong state gate can reject valid leads, accept unready leads,
+  or target ads to states that downstream workflows do not handle correctly.
+- **Next move:** Human-confirm the active-state contract, then update website,
+  GHL workflow docs, and campaign targeting together.
+- **Status:** open
+
+### 2026-06-25 - Paid activation is blocked by lead-path and tracking proof
+
+- **Surfaces:** Content activation + GHL workflow + Meta Pixel + public opt-in
+- **Finding:** Local content and drafts exist, but paid launch remains blocked
+  until `/optin`, form success, CRM/workflow receipt, `/thank-you` tracking, and
+  state targeting are proven end to end.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-25_project-organization-swarm.md`,
+  `00_START_HERE/ADS_LAUNCH_CONTROL.md`,
+  `04_content_narrative/ad_campaign_scaffold/CONTENT_ACTIVATION_BOARD.md`,
+  `02_ghl/launch_kit/A2P_GAP_REPORT.md`
+- **Impact:** Spend can start before capture, compliance, and follow-up are
+  actually working.
+- **Next move:** Keep paid ads on hold and run one controlled live lead test
+  after GHL form cleanup.
+- **Status:** open
+
+### 2026-06-25 - State-page mobile fixes must land in shared generated source
+
+- **Surfaces:** State-page template/CSS + generated Arizona/Texas/Arkansas pages
+- **Finding:** Mobile horizontal overflow on the state pages came from shared
+  layout CSS, not state-specific copy. The header CTA and trust bar affected all
+  generated active state pages.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-25_state-pages-mobile-overpass.md`,
+  `01_website/state-pages/assets/state-pages.css`,
+  `01_website/state-pages/public/assets/state-pages.css`
+- **Impact:** Hand-editing generated per-state HTML would create drift and miss
+  the common source of the mobile bug.
+- **Next move:** Keep mobile/layout fixes in `assets/state-pages.css`, then run
+  `python3 01_website/state-pages/scripts/build_state_pages.py` before review.
 - **Status:** open
 
 ### 2026-06-21 - Owner dashboard route renamed to avoid cockpit dashboard
@@ -151,6 +338,39 @@ shows.
   GitHub `main`.
 - **Status:** completed
 
+### 2026-06-19 - Carrier roster copy spans website, state pages, and GHL paste-ready assets
+
+- **Surfaces:** Public website + state pages + GHL launch-kit copy
+- **Finding:** Operator confirmed Evermore was approved by Americo, so Americo
+  needed to be added consistently across the active public pages, v2 and
+  retirement draft pages, generated state pages, state-page template, older
+  experiment copy, and GHL paste-ready copy.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-19_americo-carrier-copy-update.md`,
+  `01_website/current/index.html`, `01_website/current/optin.html`,
+  `01_website/state-pages/templates/state-page.html`,
+  `02_ghl/launch_kit/paste-ready/ghl-copy-station.html`
+- **Impact:** A carrier approval can become inconsistent if only the visible
+  site page is edited while generated pages or GHL paste-ready assets keep the
+  old roster.
+- **Next move:** After approved publish, verify the live public pages show
+  Americo anywhere carrier rosters are displayed.
+- **Status:** open
+
+### 2026-06-19 - Worker bridge is masking stale Pages output for Americo
+
+- **Surfaces:** GitHub main + Cloudflare Pages + Cloudflare Worker
+- **Finding:** GitHub `main` contains the Americo source update, but the live
+  Pages output initially remained on the previous Corebridge-only build. The
+  Worker now rewrites stale carrier copy to include Americo and seven-carrier
+  counts while Pages catches up.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-19_americo-live-publish.md`,
+  `01_website/v2/cloudflare/evermore-live-proxy.js`
+- **Impact:** Visitors see the correct carrier roster now, but production has a
+  temporary edge bridge that should not become permanent source drift.
+- **Next move:** Recheck Pages after the build settles, then remove the
+  Americo-specific Worker rewrite once origin output is current.
+- **Status:** open
+
 ### 2026-06-18 - Recruiting page can drift between source, KV, and Pages
 
 - **Surfaces:** Website source + Cloudflare Worker + Cloudflare KV +
@@ -197,7 +417,7 @@ shows.
   API-only patch.
 - **Status:** open
 
-## 2026-06-18 - Legal name must stay aligned across website and GHL copy
+### 2026-06-18 - Legal name must stay aligned across website and GHL copy
 
 - **Surfaces:** Public website + state pages + website proxy + GHL paste-ready
   copies + policy/consent copy
@@ -215,7 +435,7 @@ shows.
   and GHL forms display the approved legal name.
 - **Status:** open
 
-## 2026-06-18 - Local readiness is blocked by Git and live-route drift
+### 2026-06-18 - Local readiness is blocked by Git and live-route drift
 
 - **Surfaces:** Local repository + Cloudflare Worker + Cloudflare Pages +
   website compliance
@@ -234,18 +454,7 @@ shows.
   legal-name/Sarah fix branch is the release vehicle.
 - **Status:** open
 
-## 2026-06-14 - Repository readiness is not launch readiness
-
-- **Surfaces:** Website and campaign files + live GHL and Meta systems
-- **Finding:** Locally complete pages, workflows, and campaign assets do not
-  prove that the public lead path works.
-- **Evidence:** `SYSTEM_MAP.md`, `CODEX_MASTER_HANDOFF.md`
-- **Impact:** Spending or traffic can begin before capture and follow-up are
-  proven.
-- **Next move:** Run and document one controlled end-to-end lead test.
-- **Status:** open
-
-## 2026-06-15 - Recruiting page route is ready before its calendar destination
+### 2026-06-15 - Recruiting page route is ready before its calendar destination
 
 - **Surfaces:** Public website routing + recruiting operations + calendar
 - **Finding:** The repository now has a private, noindex recruiting page and a
@@ -260,7 +469,7 @@ shows.
   destination, replace the placeholder, then approve and verify deployment.
 - **Status:** open
 
-## 2026-06-15 - Arkansas state-page activation needs downstream live-route proof
+### 2026-06-15 - Arkansas state-page activation needs downstream live-route proof
 
 - **Surfaces:** State pages + GHL workflow + Sarah AI + Meta campaign handoffs
   + analytics
@@ -279,7 +488,18 @@ shows.
   tracking before changing indexing or campaign traffic.
 - **Status:** open
 
-## 2026-06-14 - State service status conflicts across website, GHL, Sarah, and ads
+### 2026-06-14 - Repository readiness is not launch readiness
+
+- **Surfaces:** Website and campaign files + live GHL and Meta systems
+- **Finding:** Locally complete pages, workflows, and campaign assets do not
+  prove that the public lead path works.
+- **Evidence:** `SYSTEM_MAP.md`, `CODEX_MASTER_HANDOFF.md`
+- **Impact:** Spending or traffic can begin before capture and follow-up are
+  proven.
+- **Next move:** Run and document one controlled end-to-end lead test.
+- **Status:** open
+
+### 2026-06-14 - State service status conflicts across website, GHL, Sarah, and ads
 
 - **Surfaces:** State pages + GHL workflow + Sarah AI + Meta campaign handoffs
 - **Finding:** The human operator confirmed Arizona and Texas as active and
@@ -296,7 +516,7 @@ shows.
   and campaign targeting before publishing or buying traffic.
 - **Status:** open
 
-## 2026-06-14 - Content production was disconnected from posting and paid activation
+### 2026-06-14 - Content production was disconnected from posting and paid activation
 
 - **Surfaces:** Local video clips + campaign narrative + organic posting + Meta
   Ads
@@ -317,7 +537,7 @@ shows.
   keeping paid promotion on hold until the documented gates pass.
 - **Status:** open
 
-## 2026-06-14 - Local content batch reached Meta organic Drafts
+### 2026-06-14 - Local content batch reached Meta organic Drafts
 
 - **Surfaces:** Local content narrative + live Meta Business Suite organic
   content
@@ -336,7 +556,7 @@ shows.
   approval-gated.
 - **Status:** open
 
-## 2026-06-14 - Local-first active-room links can block GitHub Pages packaging
+### 2026-06-14 - Local-first active-room links can block GitHub Pages packaging
 
 - **Surfaces:** Local-first navigation + GitHub Pages deployment
 - **Finding:** Eight tracked A2P room symlinks pointed one directory too shallow.
@@ -350,7 +570,7 @@ shows.
   evidence and verify tracked links before future public releases.
 - **Status:** completed
 
-## 2026-06-14 - Inbox lead flow is ahead of CRM proof and state-gate alignment
+### 2026-06-14 - Inbox lead flow is ahead of CRM proof and state-gate alignment
 
 - **Surfaces:** Gmail lead and carrier traffic + licensing admin + HighLevel +
   launch-state governance
@@ -368,7 +588,7 @@ shows.
   spending against new lead inventory.
 - **Status:** open
 
-## 2026-06-14 - Broad cockpit generation drifted from project completion state
+### 2026-06-14 - Broad cockpit generation drifted from project completion state
 
 - **Surfaces:** Local broad cockpit HTML + cockpit writer + operator handoffs
 - **Finding:** The broad cockpit writer was refreshing only one generated block
@@ -383,203 +603,4 @@ shows.
 - **Next move:** Keep Main generated and read-only, use Projects and Done for
   local completion flow, and choose a durable shared project-state store if
   future automations must read those completions.
-- **Status:** open
-
-## 2026-06-19 - Carrier roster copy spans website, state pages, and GHL paste-ready assets
-
-- **Surfaces:** Public website + state pages + GHL launch-kit copy
-- **Finding:** Operator confirmed Evermore was approved by Americo, so Americo
-  needed to be added consistently across the active public pages, v2 and
-  retirement draft pages, generated state pages, state-page template, older
-  experiment copy, and GHL paste-ready copy.
-- **Evidence:** `BLUEPRINTS/reports/2026-06-19_americo-carrier-copy-update.md`,
-  `01_website/current/index.html`, `01_website/current/optin.html`,
-  `01_website/state-pages/templates/state-page.html`,
-  `02_ghl/launch_kit/paste-ready/ghl-copy-station.html`
-- **Impact:** A carrier approval can become inconsistent if only the visible
-  site page is edited while generated pages or GHL paste-ready assets keep the
-  old roster.
-- **Next move:** After approved publish, verify the live public pages show
-  Americo anywhere carrier rosters are displayed.
-- **Status:** open
-
-## 2026-06-19 - Worker bridge is masking stale Pages output for Americo
-
-- **Surfaces:** GitHub main + Cloudflare Pages + Cloudflare Worker
-- **Finding:** GitHub `main` contains the Americo source update, but the live
-  Pages output initially remained on the previous Corebridge-only build. The
-  Worker now rewrites stale carrier copy to include Americo and seven-carrier
-  counts while Pages catches up.
-- **Evidence:** `BLUEPRINTS/reports/2026-06-19_americo-live-publish.md`,
-  `01_website/v2/cloudflare/evermore-live-proxy.js`
-- **Impact:** Visitors see the correct carrier roster now, but production has a
-  temporary edge bridge that should not become permanent source drift.
-- **Next move:** Recheck Pages after the build settles, then remove the
-  Americo-specific Worker rewrite once origin output is current.
-- **Status:** open
-
-## 2026-06-25 - Arizona main page spans generated state source, Pages origin, and Worker routing
-
-- **Surfaces:** State-page generator + Cloudflare Pages + Cloudflare Worker
-- **Finding:** The Arizona page at the Pages origin path is the same surface
-  mapped to the clean `evermorelife.org/arizona/` route, so source edits must
-  land in the state-page template/data/CSS and then be regenerated.
-- **Evidence:** `BLUEPRINTS/reports/2026-06-25_arizona-main-page-source-update.md`,
-  `01_website/state-pages/templates/state-page.html`,
-  `01_website/v2/cloudflare/evermore-live-proxy.js`
-- **Impact:** Hand-editing generated Arizona HTML or only checking the Pages
-  path can create drift between source, origin, and the public clean route.
-- **Next move:** After any approved Arizona publish, verify both the Pages
-  origin URL and `https://evermorelife.org/arizona/`.
-- **Status:** open
-
-## 2026-06-25 - Project actionability depends on reconciling source truth before launch work
-
-- **Surfaces:** Public website + GHL lead path + content activation + cockpit
-- **Finding:** The repo has enough source material to execute, but the current
-  operating blockers are cross-surface truth conflicts: public route source,
-  active-state gate, lead-path proof, and durable cockpit task state.
-- **Evidence:** `BLUEPRINTS/reports/2026-06-25_project-organization-swarm.md`,
-  `01_website/v2/cloudflare/evermore-live-proxy.js`,
-  `02_ghl/launch_kit/A2P_GAP_REPORT.md`,
-  `04_content_narrative/ad_campaign_scaffold/CONTENT_ACTIVATION_BOARD.md`,
-  `00_START_HERE/COCKPIT_UPDATE_HANDOFF.md`
-- **Impact:** More pages, ads, or content can increase drift unless the lead
-  path and state gate are made consistent first.
-- **Next move:** Run a focused lead-path reconciliation sprint before publishing,
-  SMS, A2P submission, or paid spend.
-- **Status:** open
-
-## 2026-06-25 - Active-state contract conflicts across website, GHL, and Meta content
-
-- **Surfaces:** State pages + GHL workflow + Meta/content activation
-- **Finding:** `states.json` marks Arizona, Texas, and Arkansas active, while
-  GHL and content launch docs disagree about whether Texas or Arkansas is the
-  pending state.
-- **Evidence:** `BLUEPRINTS/reports/2026-06-25_project-organization-swarm.md`,
-  `01_website/state-pages/data/states.json`,
-  `02_ghl/launch_kit/STATE_SERVICE_GATE_UPDATE_HANDOFF.md`,
-  `02_ghl/launch_kit/GHL_WORKFLOW_COMPLETE_SPEC.md`,
-  `04_content_narrative/ad_campaign_scaffold/META_ADS_MANAGER_HANDOFF.md`
-- **Impact:** A wrong state gate can reject valid leads, accept unready leads,
-  or target ads to states that downstream workflows do not handle correctly.
-- **Next move:** Human-confirm the active-state contract, then update website,
-  GHL workflow docs, and campaign targeting together.
-- **Status:** open
-
-## 2026-06-25 - Paid activation is blocked by lead-path and tracking proof
-
-- **Surfaces:** Content activation + GHL workflow + Meta Pixel + public opt-in
-- **Finding:** Local content and drafts exist, but paid launch remains blocked
-  until `/optin`, form success, CRM/workflow receipt, `/thank-you` tracking, and
-  state targeting are proven end to end.
-- **Evidence:** `BLUEPRINTS/reports/2026-06-25_project-organization-swarm.md`,
-  `00_START_HERE/ADS_LAUNCH_CONTROL.md`,
-  `04_content_narrative/ad_campaign_scaffold/CONTENT_ACTIVATION_BOARD.md`,
-  `02_ghl/launch_kit/A2P_GAP_REPORT.md`
-- **Impact:** Spend can start before capture, compliance, and follow-up are
-  actually working.
-- **Next move:** Keep paid ads on hold and run one controlled live lead test
-  after GHL form cleanup.
-- **Status:** open
-
-## 2026-06-25 - State-page mobile fixes must land in shared generated source
-
-- **Surfaces:** State-page template/CSS + generated Arizona/Texas/Arkansas pages
-- **Finding:** Mobile horizontal overflow on the state pages came from shared
-  layout CSS, not state-specific copy. The header CTA and trust bar affected all
-  generated active state pages.
-- **Evidence:** `BLUEPRINTS/reports/2026-06-25_state-pages-mobile-overpass.md`,
-  `01_website/state-pages/assets/state-pages.css`,
-  `01_website/state-pages/public/assets/state-pages.css`
-- **Impact:** Hand-editing generated per-state HTML would create drift and miss
-  the common source of the mobile bug.
-- **Next move:** Keep mobile/layout fixes in `assets/state-pages.css`, then run
-  `python3 01_website/state-pages/scripts/build_state_pages.py` before review.
-- **Status:** open
-
-## 2026-06-27 - Live homepage is reachable but lead-path proof is still separate
-
-- **Surfaces:** Public website + Cloudflare Pages proxy + GHL lead path
-- **Finding:** `https://evermorelife.org/`, `/optin`, `/privacy`, and the nav
-  logo asset returned live `HTTP/2 200` responses through the Cloudflare Pages
-  proxy, but this only proves route availability, not lead capture or workflow
-  health.
-- **Evidence:** `BLUEPRINTS/reports/2026-06-27_evermorelife-org-live-visual-check.md`
-- **Impact:** The site can be shown to prospects, but paid activation and
-  funnel-health claims still depend on an approved controlled lead test through
-  `/optin`, CRM receipt, workflow firing, and tracking verification.
-- **Next move:** Capture a browser screenshot when browser tooling is
-  available, then run one approved end-to-end lead-path test.
-- **Status:** open
-
-## 2026-06-27 - GitHub Pages CI status is not full live-system proof
-
-- **Surfaces:** GitHub Actions + GitHub Pages + Cloudflare Worker + lead path
-- **Finding:** The latest visible GitHub Pages deployment run succeeded and no
-  open PRs were available for CI inspection, but Pages CI only proves the Pages
-  build/deploy surface. It does not prove Worker route behavior, public readback,
-  GHL lead capture, CRM workflow execution, or tracking.
-- **Evidence:** `BLUEPRINTS/reports/2026-06-27_github-actions-ci-check.md`
-- **Impact:** Operators should not treat a green Pages deployment as proof that
-  the public funnel or paid-traffic path is healthy end to end.
-- **Next move:** When repairing a specific CI incident, provide a PR or Actions
-  run URL; when validating launch readiness, run separate live route and
-  lead-path checks.
-- **Status:** open
-
-## 2026-06-30 - Live page health and embedded 404 noise are separate checks
-
-- **Surfaces:** Public website + Sarah route + dashboard Worker auth + app/tool pages
-- **Finding:** The known public, state, app/tool, sitemap, robots, and dashboard
-  entry routes returned live `200` responses, but the `/sarah` page still links
-  to `/current/optin.html`, `/current/privacy.html`, and
-  `/current/terms.html`, which return 404. Dashboard login form actions also
-  return 404 on direct GET even though the Worker implements POST handlers.
-- **Evidence:** `BLUEPRINTS/reports/2026-06-30_website-health-check.md`,
-  `01_website/experiments/sarah-final-expense.html`,
-  `01_website/v2/cloudflare/evermore-live-proxy.js`
-- **Impact:** Operators can see scattered 404s in crawlers or browser tooling
-  while the main page URLs still appear healthy, creating confusion about
-  whether the site itself is down.
-- **Next move:** Patch the Sarah links to canonical clean routes and decide
-  whether dashboard login GET routes should redirect to the parent login
-  screens.
-- **Status:** open
-
-## 2026-07-01 - Unified Worker deploys must preserve intake and public routes together
-
-- **Surfaces:** Client intake PWA + Cloudflare Worker + state pages + Sarah +
-  recruiting + dashboards
-- **Finding:** `/intake` broke because the active Worker no longer contained
-  the intake route/PWA handlers even though newer public route work was present.
-  The repair forward-ported intake handling into the current Worker instead of
-  redeploying the older intake branch.
-- **Evidence:** `BLUEPRINTS/reports/2026-07-01_intake-route-restore.md`,
-  `01_website/v2/cloudflare/evermore-live-proxy.js`,
-  `01_website/experiments/Client-Intake.html`
-- **Impact:** Any Worker deploy from a partial branch can silently drop another
-  live route. The blast radius includes intake, state pages, Sarah, recruiting,
-  dashboard, and bundled app assets.
-- **Next move:** Require a shared Worker route sweep before every deploy:
-  `/intake`, `/intake.webmanifest`, `/intake-sw.js`, state pages, `/sarah`,
-  `/recruiting`, `/dashboard`, and `/dashboard-preview`.
-- **Status:** open
-
-## 2026-07-01 - Dirty git tree mixes deployed source, docs, state pages, and app work
-
-- **Surfaces:** Git hygiene + Cloudflare Worker + Blueprint memory + GHL docs +
-  state pages + Agent Suite
-- **Finding:** The local `main` checkout is behind `origin/main` by one commit
-  and contains no staged changes, but it has 28 modified tracked files and 23
-  untracked files spanning several unrelated lanes. The already-deployed
-  `/intake` restore is mixed with A2P docs, Blueprint reports, state-page
-  generated output, and campaign concepts.
-- **Evidence:** `BLUEPRINTS/reports/2026-07-01_git-branch-cleanup-handoff.md`,
-  `HANDOFF_CLAUDE_FABLE_5_GIT_CLEANUP.md`
-- **Impact:** A bulk commit or reset could either lose live Worker source
-  parity or sweep unrelated docs/content/state-page changes into the same
-  release.
-- **Next move:** Preserve the dirty checkout on a safety branch, then stage
-  explicit path groups by lane. Commit the Worker/intake source parity first.
 - **Status:** open
