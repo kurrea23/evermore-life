@@ -271,7 +271,6 @@
     <div id="clientList"></div>
     <div id="sidebarFoot">
       <button onclick="linkFolder()" id="linkBtn" title="Pick a folder — an encrypted backup is written there automatically every time you save">📁 Auto-Backup</button>
-      <button onclick="exportCSV()" title="Export all clients to a spreadsheet (SSN/banking excluded)">📊 Spreadsheet</button>
       <button onclick="exportBackup()" title="Download an encrypted backup file">⬇ Backup</button>
       <button onclick="document.getElementById('importFile').click()" title="Restore from a backup file">⬆ Restore</button>
       <button onclick="lockApp()">🔒 Lock</button>
@@ -291,7 +290,6 @@
       <div id="topActions">
         <button class="btn primary" onclick="saveClient()">💾 Save Client</button>
         <button class="btn ghost" onclick="copySummary()">📋 Copy Summary</button>
-        <button class="btn ghost" onclick="window.print()">🖨 Print</button>
         <button class="btn danger" onclick="deleteClient()">Delete</button>
       </div>
     </div>
@@ -426,6 +424,11 @@
 <div id="toast"></div>
 
 <script>
+/* ===================== AGENT SUITE GATE =====================
+   The intake is part of the Agent Suite: you must be logged in as an
+   Evermore agent to open it. Local vault encryption still applies below. */
+if (!localStorage.getItem('evermore-auth-token')) location.replace('/login/?next=%2Fintake');
+
 /* ===================== CRYPTO (wrapped master key + recovery code) =====================
    The data is encrypted with a random master key K.
    K is stored twice: wrapped by your password, and wrapped by your recovery code.
@@ -692,6 +695,7 @@ async function openApp(){
   resetIdle();
   await initDir();
   await maybeRestoreDraft();
+  setTimeout(() => { backfillSync(); }, 1500); // quiet catch-up sync to the CRM
 }
 function lockApp(){ location.reload(); }
 
@@ -845,6 +849,7 @@ async function saveClient(){
   document.getElementById('formTitle').textContent = data.firstName + ' ' + data.lastName;
   flash('✓ Saved');
   writeAutoBackup();
+  syncClientToServer(data); // background CRM sync — fire and forget
 }
 function findDuplicate(data){
   const ph = (data.phone||'').replace(/\D/g,'');
@@ -855,6 +860,7 @@ async function deleteClient(){
   if (currentId === null){ newClient(); return; }
   const c = clients.find(x => x.id === currentId);
   if (!confirm('Delete ' + (c ? c.firstName + ' ' + c.lastName : 'this client') + '? This cannot be undone.')) return;
+  if (c && c.serverId){ syncApi('/clients/' + c.serverId, { method: 'DELETE' }).catch(() => {}); }
   clients = clients.filter(x => x.id !== currentId);
   await persist();
   renderList();
@@ -1220,19 +1226,59 @@ document.getElementById('routing').addEventListener('input', e => {
 });
 
 /* ===================== CSV EXPORT ===================== */
-function exportCSV(){
-  if (!clients.length){ flash('No clients yet', true); return; }
-  const SKIP = ['ssn','routing','account','dlNumber'];
-  const cols = FIELDS.filter(f => !SKIP.includes(f));
-  const head = cols.map(c => LABELS[c]).join(',');
-  const rows = clients.map(c => cols.map(f =>
-    '"' + String(c[f]||'').replace(/"/g,'""').replace(/\r?\n/g,' ') + '"').join(','));
-  const blob = new Blob(['﻿' + head + '\n' + rows.join('\n')], {type:'text/csv;charset=utf-8'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'evermore-clients-' + new Date().toISOString().slice(0,10) + '.csv';
-  a.click(); URL.revokeObjectURL(a.href);
-  flash('✓ Spreadsheet exported');
+/* ===================== TAP-TO-COPY =====================
+   Click a field's label — or double-click/double-tap the box itself —
+   to copy that one value for pasting into carrier applications. */
+function copyFieldValue(el){
+  if (!el || !el.value) return;
+  navigator.clipboard.writeText(el.value).then(() => flash('📋 Copied'), () => {});
+}
+document.addEventListener('click', e => {
+  const lb = e.target.closest('.field > label');
+  if (!lb) return;
+  copyFieldValue(lb.parentElement.querySelector('input,textarea,select'));
+});
+document.addEventListener('dblclick', e => {
+  const el = e.target.closest('#main input, #main textarea, #main select');
+  if (el) copyFieldValue(el);
+});
+
+/* ===================== AGENT SUITE BACKGROUND SYNC =====================
+   Every save quietly mirrors the client to the Agent Suite CRM
+   (api.evermorelife.org). Nothing changes on screen; if you're offline
+   the record is flagged and re-synced next time. */
+const SYNC_API = 'https://api.evermorelife.org/api';
+function syncHeaders(){
+  return { 'content-type': 'application/json', authorization: 'Bearer ' + (localStorage.getItem('evermore-auth-token') || '') };
+}
+async function syncApi(path, options = {}){
+  const res = await fetch(SYNC_API + path, { ...options, headers: syncHeaders() });
+  if (res.status === 401){ location.replace('/login/?next=%2Fintake'); throw new Error('login required'); }
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'sync failed');
+  return data;
+}
+async function syncClientToServer(c){
+  try {
+    const payload = { ...c };
+    delete payload.serverId; delete payload.syncPending;
+    if (c.serverId){
+      await syncApi('/clients/' + c.serverId, { method: 'PUT', body: JSON.stringify(payload) });
+    } else {
+      const out = await syncApi('/clients', { method: 'POST', body: JSON.stringify(payload) });
+      c.serverId = out.id;
+    }
+    c.syncPending = false;
+    await persist();
+  } catch (e) {
+    c.syncPending = true;
+    try { await persist(); } catch(_) {}
+  }
+}
+async function backfillSync(){
+  for (const c of clients){
+    if (!c.serverId || c.syncPending) await syncClientToServer(c);
+  }
 }
 
 /* ===================== THEME TOGGLE ===================== */
