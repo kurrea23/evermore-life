@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Evermore Clickable System Map</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #647084;
+      --line: #d9dee8;
+      --paper: #f7f5ef;
+      --panel: #ffffff;
+      --website: #1f6f68;
+      --app: #334e86;
+      --ops: #7b5a20;
+      --risk: #9b2f2f;
+      --ok: #2c7a4b;
+      --unknown: #7a6a2c;
+      --shadow: 0 14px 38px rgba(23, 32, 51, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    a { color: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(247, 245, 239, 0.94);
+      backdrop-filter: blur(12px);
+    }
+
+    .topbar-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 26px;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .tool {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 6px;
+      padding: 8px 11px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    .wrap {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .notice {
+      border: 1px solid #e1c46b;
+      background: #fff8df;
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #594717;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .lane {
+      grid-column: span 4;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.72);
+      border-radius: 8px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .lane.wide { grid-column: span 6; }
+    .lane.full { grid-column: 1 / -1; }
+
+    .lane-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 10px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+
+    .lane h2 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    .owner {
+      border-radius: 999px;
+      padding: 4px 8px;
+      color: white;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .owner.website { background: var(--website); }
+    .owner.app { background: var(--app); }
+    .owner.ops { background: var(--ops); }
+    .owner.shared { background: var(--risk); }
+
+    .cards {
+      display: grid;
+      gap: 10px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 3px 7px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .badge.live { background: #e2f4e9; color: var(--ok); }
+    .badge.review { background: #fff1c6; color: var(--unknown); }
+    .badge.shared { background: #f9dddd; color: var(--risk); }
+    .badge.local { background: #e7ecf8; color: var(--app); }
+
+    .desc {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .links a, .links button {
+      border: 1px solid var(--line);
+      background: #f9fafc;
+      border-radius: 6px;
+      padding: 7px 9px;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .links a:hover, .links button:hover, .tool:hover {
+      border-color: #9ba9be;
+      background: #eef2f8;
+    }
+
+    details {
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .checklist {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .check {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px;
+      align-items: start;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      font-size: 13px;
+    }
+
+    .check input {
+      width: 18px;
+      height: 18px;
+      margin-top: 1px;
+    }
+
+    .check strong { display: block; }
+    .check span { color: var(--muted); }
+
+    @media (max-width: 1060px) {
+      .lane, .lane.wide { grid-column: span 6; }
+      .checklist { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 720px) {
+      .topbar-inner { grid-template-columns: 1fr; }
+      .toolbar { justify-content: flex-start; }
+      .lane, .lane.wide { grid-column: 1 / -1; }
+      .checklist { grid-template-columns: 1fr; }
+      h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <h1>Evermore Clickable System Map</h1>
+        <div class="subtitle">Open links, check routes, and keep website/app work separated. Local map only. No deploy actions.</div>
+      </div>
+      <nav class="toolbar" aria-label="Primary map links">
+        <a class="tool" href="./MAP.md">Blueprint Map</a>
+        <a class="tool" href="./OVERLAPS.md">Overlaps</a>
+        <a class="tool" href="./DECISIONS.md">Decisions</a>
+        <a class="tool" href="./reports/2026-06-27_website-app-partition.md">Split Report</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="notice">
+      Use this as a control panel. Live links show what a visitor sees. Source links show what should be changed. Any change to the shared Worker needs website and app awareness before deploy.
+    </div>
+
+    <section class="grid" aria-label="System surfaces">
+      <section class="lane wide" id="website">
+        <div class="lane-header">
+          <h2>Stable Website Base</h2>
+          <span class="owner website">Website</span>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <div class="card-title"><h3>Public Home</h3><span class="badge live">live route</span></div>
+            <p class="desc">Main public website route. Patch source in `01_website/v2`, not root shims.</p>
+            <div class="links">
+              <a href="https://evermorelife.org/" target="_blank" rel="noreferrer">Live /</a>
+              <a href="../01_website/v2/pages/index.html">Source</a>
+              <a href="../index.html">Root shim</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-title"><h3>Lead Path Pages</h3><span class="badge review">verify</span></div>
+            <p class="desc">Opt-in, thank-you, privacy, and terms must stay consistent for lead capture, A2P, and ads.</p>
+            <div class="links">
+              <a href="https://evermorelife.org/optin" target="_blank" rel="noreferrer">Live optin</a>
+              <a href="https://evermorelife.org/thank-you" target="_blank" rel="noreferrer">Live thank-you</a>
+              <a href="https://evermorelife.org/privacy" target="_blank" rel="noreferrer">Live privacy</a>
+              <a href="https://evermorelife.org/terms" target="_blank" rel="noreferrer">Live terms</a>
+              <a href="../01_website/v2/pages/optin.html">Optin source</a>
+              <a href="../01_website/v2/pages/thank-you.html">Thank-you source</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-title"><h3>Sarah And Chat</h3><span class="badge review">mixed</span></div>
+            <p class="desc">Public route exists, but Sarah can touch experiment/private assets through the Worker.</p>
+            <div class="links">
+              <a href="https://evermorelife.org/sarah" target="_blank" rel="noreferrer">Live Sarah</a>
+              <a href="https://evermorelife.org/chat" target="_blank" rel="noreferrer">Live chat</a>
+              <a href="../01_website/v2/pages/sarah.html">Sarah source</a>
+              <a href="../01_website/v2/pages/chat.html">Chat source</a>
+              <a href="../01_website/experiments/Sarah_Evermore_AI_v2.html">Experiment asset</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-title"><h3>Recruiting</h3><span class="badge shared">KV/Worker</span></div>
+            <p class="desc">Route has special Worker/KV history. Verify live before treating source as published.</p>
+            <div class="links">
+              <a href="https://evermorelife.org/recruiting" target="_blank" rel="noreferrer">Live recruiting</a>
+              <a href="../01_website/v2/pages/recruiting.html">Source</a>
+              <a href="../HANDOFF_recruiting_deploy.md">Handoff</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="lane wide" id="states">
+        <div class="lane-header">
+          <h2>State Pages</h2>
+          <span class="owner website">Website</span>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <div class="card-title"><h3>Arizona</h3><span class="badge live">main state page</span></div>
+            <p class="desc">Generated state-page source is now the main Arizona route.</p>
+            <div class="links">
+              <a href="https://evermorelife.org/arizona/" target="_blank" rel="noreferrer">Live Arizona</a>
+              <a href="../01_website/state-pages/public/arizona/index.html">Generated file</a>
+              <a href="../01_website/state-pages/data/states.json">State data</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-title"><h3>Texas</h3><span class="badge review">verify</span></div>
+            <div class="links">
+              <a href="https://evermorelife.org/texas/" target="_blank" rel="noreferrer">Live Texas</a>
+              <a href="../01_website/state-pages/public/texas/index.html">Generated file</a>
+              <a href="../01_website/state-pages/templates/state-page.html">Template</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-title"><h3>Arkansas</h3><span class="badge review">verify</span></div>
+            <div class="links">
+              <a href="https://evermorelife.org/arkansas/" target="_blank" rel="noreferrer">Live Arkansas</a>
+              <a href="../01_website/state-pages/public/arkansas/index.html">Generated file</a>
+              <a href="../01_website/state-pages/README.md">State system</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-title"><h3>Generator</h3><span class="badge local">local</span></div>
+            <p class="desc">Make state edits in data, template, or CSS, then regenerate. Do not hand-edit generated state HTML unless debugging.</p>
+            <div class="links">
+              <a href="../01_website/state-pages/scripts/build_state_pages.py">Build script</a>
+              <a href="../01_website/state-pages/assets/state-pages.css">CSS source</a>
+              <a href="../01_website/state-pages/STATE_PAGE_QA.md">QA checklist</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="lane wide" id="app">
+        <div class="lane-header">
+          <h2>Agent App And Tools</h2>
+          <span class="owner app">App</span>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <div class="card-title"><h3>Private Suite Shell</h3><span class="badge local">auth-gated</span></div>
+            <p class="desc">Login, signup, team, and client pipeline belong to the app lane.</p>
+            <div class="links">
+              <a href="https://evermorelife.org/login/" target="_blank" rel="noreferrer">Live login</a>
+              <a href="https://evermorelife.org/signup/" target="_blank" rel="noreferrer">Live signup</a>
+              <a href="https://evermorelife.org/team/" target="_blank" rel="noreferrer">Live team</a>
+              <a href="https://evermorelife.org/clients/" target="_blank" rel="noreferrer">Live clients</a>
+              <a href="../login/index.html">Login source</a>
+              <a href="../agent-suite-auth.js">Auth source</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-title"><h3>Standalone Tools</h3><span class="badge local">tool routes</span></div>
+            <p class="desc">These are app/tool routes, even though they sit at root clean URLs.</p>
+            <div class="links">
+              <a href="https://evermorelife.org/score-tracker/" target="_blank" rel="noreferrer">Live score tracker</a>
+              <a href="https://evermorelife.org/growth-calculator/" target="_blank" rel="noreferrer">Live growth calculator</a>
+              <a href="../score-tracker/index.html">Score source</a>
+              <a href="../growth-calculator/index.html">Growth source</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-title"><h3>Agent Suite API</h3><span class="badge shared">backend</span></div>
+            <p class="desc">Private Worker and D1 backend. Check health before calling app live.</p>
+            <div class="links">
+              <a href="https://api.evermorelife.org/api/health" target="_blank" rel="noreferrer">API health</a>
+              <a href="../01_website/agent-suite-api/cloudflare/worker.js">Worker source</a>
+              <a href="../01_website/agent-suite-api/cloudflare/wrangler.agent-suite-api.jsonc">Wrangler config</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="lane wide" id="shared">
+        <div class="lane-header">
+          <h2>Shared Infrastructure</h2>
+          <span class="owner shared">Dual Review</span>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <div class="card-title"><h3>Live Proxy Worker</h3><span class="badge shared">danger zone</span></div>
+            <p class="desc">This Worker bridges public website, app routes, dashboard/cockpit, and experiments.</p>
+            <div class="links">
+              <a href="../01_website/v2/cloudflare/evermore-live-proxy.js">Worker source</a>
+              <a href="../01_website/v2/cloudflare/wrangler.live-proxy.jsonc">Wrangler config</a>
+              <a href="../BLUEPRINTS/reports/2026-06-27_website-app-partition.md">Boundary report</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-title"><h3>Root Static Compatibility</h3><span class="badge review">host glue</span></div>
+            <p class="desc">Root files may be shims or Pages compatibility. Confirm before editing.</p>
+            <div class="links">
+              <a href="../index.html">Root index</a>
+              <a href="../404.html">Root 404</a>
+              <a href="../thank-you.html">Root thank-you</a>
+              <a href="../robots.txt">Root robots</a>
+              <a href="../sitemap.xml">Root sitemap</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="lane wide" id="ghl">
+        <div class="lane-header">
+          <h2>GHL And Lead Path</h2>
+          <span class="owner ops">Ops</span>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <div class="card-title"><h3>GHL Launch Kit</h3><span class="badge review">approval-gated</span></div>
+            <p class="desc">Native GHL form, workflows, A2P, and launch proof live here.</p>
+            <div class="links">
+              <a href="../02_ghl/launch_kit/00_README.md">Start here</a>
+              <a href="../02_ghl/launch_kit/01_live-build-runbook.md">Build runbook</a>
+              <a href="../02_ghl/launch_kit/06_a2p-registration-pack.md">A2P pack</a>
+              <a href="../02_ghl/launch_kit/A2P_GAP_REPORT.md">A2P gap report</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-title"><h3>Current GHL Mirror</h3><span class="badge review">source conflict</span></div>
+            <p class="desc">This five-page set is still documented as paste-ready GHL source. Reconcile with `v2` before major changes.</p>
+            <div class="links">
+              <a href="../01_website/current/index.html">Current home</a>
+              <a href="../01_website/current/optin.html">Current optin</a>
+              <a href="../01_website/current/privacy.html">Current privacy</a>
+              <a href="../00_START_HERE/active/now/">Active now folder</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="lane wide" id="content">
+        <div class="lane-header">
+          <h2>Content, Ads, And Cockpit</h2>
+          <span class="owner ops">Ops</span>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <div class="card-title"><h3>Campaign Control</h3><span class="badge review">paid gated</span></div>
+            <div class="links">
+              <a href="../04_content_narrative/ad_campaign_scaffold/CONTENT_ACTIVATION_BOARD.md">Activation board</a>
+              <a href="../04_content_narrative/ad_campaign_scaffold/META_ADS_MANAGER_HANDOFF.md">Meta handoff</a>
+              <a href="../04_content_narrative/CAMPAIGN_COCKPIT.html">Campaign cockpit</a>
+              <a href="../00_START_HERE/ADS_LAUNCH_CONTROL.md">Ads launch control</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-title"><h3>Daily Cockpit</h3><span class="badge local">local ops</span></div>
+            <div class="links">
+              <a href="../00_START_HERE/active/cockpit/EVERMORE_COCKPIT.html">Active cockpit</a>
+              <a href="../00_START_HERE/active/">Active folder</a>
+              <a href="../04_tools/scripts/">Scripts</a>
+              <a href="../01_website/experiments/">Experiments</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="lane full" id="check">
+        <div class="lane-header">
+          <h2>Manual Verification Checklist</h2>
+          <span class="owner ops">Local Save</span>
+        </div>
+        <div class="checklist">
+          <label class="check"><input type="checkbox" data-check="home"><span><strong>Home loads</strong><span>Open live `/` and confirm no obvious error page.</span></span></label>
+          <label class="check"><input type="checkbox" data-check="lead"><span><strong>Lead path loads</strong><span>Open `/optin`, `/thank-you`, `/privacy`, `/terms`.</span></span></label>
+          <label class="check"><input type="checkbox" data-check="states"><span><strong>State routes load</strong><span>Arizona, Texas, and Arkansas return real pages.</span></span></label>
+          <label class="check"><input type="checkbox" data-check="tools"><span><strong>Tools load</strong><span>Score tracker and growth calculator route correctly.</span></span></label>
+          <label class="check"><input type="checkbox" data-check="auth"><span><strong>Auth shell loads</strong><span>Login/signup/team/clients are not public website files.</span></span></label>
+          <label class="check"><input type="checkbox" data-check="api"><span><strong>API health checked</strong><span>`api.evermorelife.org` responds before app work is called healthy.</span></span></label>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const KEY = "evermore-clickable-system-map-checks";
+    const saved = JSON.parse(localStorage.getItem(KEY) || "{}");
+    document.querySelectorAll("[data-check]").forEach((box) => {
+      box.checked = Boolean(saved[box.dataset.check]);
+      box.addEventListener("change", () => {
+        saved[box.dataset.check] = box.checked;
+        localStorage.setItem(KEY, JSON.stringify(saved));
+      });
+    });
+  </script>
+</body>
+</html>

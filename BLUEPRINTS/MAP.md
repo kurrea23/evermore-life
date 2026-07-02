@@ -2,8 +2,9 @@
 
 **Purpose:** Own and operate an evidence-backed lead-to-sale system.
 
-**Current compass:** Finish and verify the complete lead path before increasing
-traffic or spend.
+**Current compass:** A2P is approved/textable. Finish and verify the complete
+lead path, including consent-gated SMS behavior, before increasing traffic or
+spend.
 
 ## System Context
 
@@ -31,11 +32,15 @@ flowchart LR
 | How does infrastructure connect? | `SYSTEM_MAP.md` | Verify time-sensitive live claims |
 | What should an operator do next? | `CODEX_MASTER_HANDOFF.md` and relevant handoff | Confirm it is still current |
 | What is the public-site source? | `01_website/current/` | Compare with the live GHL page |
+| What is the stable website patch lane? | `01_website/v2/` and `01_website/state-pages/` | Patch in a clone/worktree and verify live before promotion |
+| Where is the live Sarah final-expense route? | `01_website/experiments/sarah-final-expense.html` and `/sarah` in `01_website/v2/cloudflare/evermore-live-proxy.js` | Verify `https://evermorelife.org/sarah` after Worker deploy before calling it live |
+| Where is the live client-intake app? | `01_website/experiments/Client-Intake.html`, intake PWA assets, and `/intake` in `01_website/v2/cloudflare/evermore-live-proxy.js` | Verify `https://evermorelife.org/intake`, `/intake.webmanifest`, `/intake-sw.js`, and `/intake-icon.svg` after Worker deploy |
+| What is the app/tool patch lane? | `agent-suite-auth.js`, root app/tool folders, and `01_website/agent-suite-api/cloudflare/` | Keep separate from public website patches unless explicitly scoped |
 | Where is the private recruiting-page draft? | `01_website/v2/pages/recruiting.html` and the `/recruiting` proxy mapping | Keep noindex and verify the route after an approved deploy |
 | Where are the standalone tool clean URL sources? | `score-tracker/index.html` and `growth-calculator/index.html` | Verify `https://evermorelife.org/score-tracker` and `https://evermorelife.org/growth-calculator` after push or deploy before calling them live |
 | Where is the Agent Suite backend source? | `01_website/agent-suite-api/cloudflare/` plus `agent-suite-auth.js` | Verify D1 database creation, migrations, Worker deploy, and `api.evermorelife.org` health before calling it live |
 | How are state-specific pages built? | `01_website/state-pages/` | Validate state mode, regenerate drafts, and verify live routing before publish |
-| How should GHL be built? | `02_ghl/launch_kit/` | Verify inside GHL before completion |
+| How should GHL be built and SMS activated? | `02_ghl/launch_kit/` | A2P is approved per operator confirmation; verify consent, opt-out, workflow, and Trust Center status inside GHL before completion |
 | What campaign assets exist? | `04_content_narrative/` | Check destination URLs and publish state |
 | What content is ready to edit, post, or promote? | `04_content_narrative/ad_campaign_scaffold/CONTENT_ACTIVATION_BOARD.md` | Verify real files, approvals, live routing, and paid gates |
 | What automation is safe to run? | `04_tools/` and its handoffs | Review command and approval level first |
@@ -47,8 +52,12 @@ flowchart LR
 | --- | --- | --- |
 | Daily command and active rooms | Human operator + cockpit | `00_START_HERE/active/` |
 | Website and funnel | GHL + repository source | `01_website/` |
+| Stable website base | Website agent | `01_website/v2/` and `01_website/state-pages/` |
+| Sarah final-expense landing route | Website agent + Cloudflare Worker | `01_website/experiments/sarah-final-expense.html` plus `/sarah` in `01_website/v2/cloudflare/evermore-live-proxy.js` |
+| Client-intake PWA route | Human operator + Cloudflare Worker asset bundle | `01_website/experiments/Client-Intake.html`, `01_website/experiments/intake.*`, and `/intake` in `01_website/v2/cloudflare/evermore-live-proxy.js` |
 | Standalone static tool routes | Public website source + static host | `score-tracker/index.html` and `growth-calculator/index.html` |
 | Agent Suite private backend | Cloudflare Worker + D1 + static tool pages | `01_website/agent-suite-api/cloudflare/`, `login/index.html`, `signup/index.html`, `team/index.html`, `agent-suite-auth.js`, `score-tracker/index.html`, `growth-calculator/index.html` |
+| Agent app/tool base | App agent | `agent-suite-auth.js`, `login/`, `signup/`, `team/`, `clients/`, `score-tracker/`, `growth-calculator/`, `01_website/agent-suite-api/cloudflare/` |
 | Recruiting page draft | Human operator + website owners | `01_website/v2/pages/recruiting.html` plus `/recruiting` proxy route |
 | State-page expansion | Human operator + website/GHL owners | `01_website/state-pages/` plus verified service and workflow evidence |
 | CRM, forms, workflows, nurture | GHL | `02_ghl/` plus verified live evidence |
@@ -64,3 +73,6 @@ flowchart LR
 - A report records a survey. A decision changes direction.
 - When a route changes, update this map and cite the report or decision that
   caused the change.
+- Website and app/tool patches should move through separate clones/worktrees.
+  Treat `01_website/v2/cloudflare/evermore-live-proxy.js` as shared
+  infrastructure requiring website and app awareness before deploy.

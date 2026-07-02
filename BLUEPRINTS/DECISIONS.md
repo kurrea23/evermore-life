@@ -16,6 +16,43 @@ do not rewrite history.
 
 ---
 
+### 2026-06-27 - Make Sarah the final-expense landing page
+
+- **Status:** approved
+- **Decision:** Serve the operator-selected final-expense landing page at
+  `https://evermorelife.org/sarah` by copying it into the Worker asset bundle
+  as `01_website/experiments/sarah-final-expense.html` and pointing the live
+  Sarah route at that copy.
+- **Why:** The operator approved the page as strong enough to go live and
+  explicitly requested that `/sarah` use this HTML while preserving the
+  original code.
+- **Consequences:** The previous Sarah asset remains in the repository, but
+  live `/sarah` now resolves to the final-expense page. Lead submission still
+  requires separate GHL/webhook verification before campaign traffic is treated
+  as fully proven.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-27_sarah-final-expense-live-route.md`,
+  `01_website/experiments/sarah-final-expense.html`,
+  `01_website/v2/cloudflare/evermore-live-proxy.js`
+- **Owner:** Evermore operator
+
+### 2026-06-27 - Separate website and app patch lanes
+
+- **Status:** approved
+- **Decision:** Treat the public website and the Agent Suite/app/tool system as
+  separate project lanes. The website lane owns the always-on public website
+  base. The app lane owns private suite pages, standalone tools, and the Agent
+  Suite backend. The shared live proxy requires extra review because it can
+  affect both lanes.
+- **Why:** The operator identified repeated breakage from mixed website/app
+  changes and requested two separate agents/projects: one for the Evermore
+  website and assets, and one for the app and assets.
+- **Consequences:** Future patches should be developed on a clone/worktree
+  instead of directly on the base. Website changes should not touch app/tool
+  files unless explicitly scoped, and app changes should not touch public
+  website files unless explicitly scoped. Deploys remain approval-gated.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-27_website-app-partition.md`
+- **Owner:** Evermore operator
+
 ### 2026-06-21 - Build Agent Suite backend in an isolated release branch
 
 - **Status:** approved
@@ -244,4 +281,102 @@ do not rewrite history.
   temporary Americo-specific rewrite that should be removed after Pages origin
   output reflects GitHub `main` directly.
 - **Evidence:** `BLUEPRINTS/reports/2026-06-19_americo-live-publish.md`
+- **Owner:** Evermore operator
+
+### 2026-06-25 - Treat the generated Arizona state page as the main Arizona page
+
+- **Status:** approved
+- **Decision:** Use the generated state-page system as the source for the main
+  Arizona page and keep the clean public route as `https://evermorelife.org/arizona/`.
+- **Why:** The operator asked for the Pages-backed Arizona state-page path to be
+  the main Arizona page, and the existing Worker route already maps the clean
+  public route to that generated output.
+- **Consequences:** Arizona page edits should be made in state-page source files
+  and regenerated before publish. The page should use the homepage text-logo
+  treatment and absolute Evermore home links instead of generated-path relative
+  logo assets.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-25_arizona-main-page-source-update.md`
+- **Owner:** Evermore operator
+
+### 2026-06-25 - Use lead-path reconciliation as the next organizing sprint
+
+- **Status:** proposed
+- **Decision:** Make the next project-organizing sprint a lead-path
+  reconciliation sprint, not a content expansion or page expansion sprint.
+- **Why:** The swarm found that public routes, GHL form/workflow proof,
+  state-service gates, content targeting, and cockpit state are connected.
+  The smallest useful organizing move is to make one lead path provable from
+  public page to CRM/workflow/tracking before increasing publishing or spend.
+- **Consequences:** Work should prioritize GHL form cleanup, state-gate
+  confirmation, `/thank-you` tracking, and one controlled lead test. Publishing,
+  SMS, A2P submission, and ad spend remain approval-gated.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-25_project-organization-swarm.md`
+- **Owner:** Evermore operator
+
+### 2026-06-25 - Patch state-page mobile layout at shared CSS source
+
+- **Status:** approved
+- **Decision:** Fix state-page mobile overflow in the shared state-page
+  stylesheet and regenerate state pages, instead of hand-editing each generated
+  state HTML file.
+- **Why:** The operator requested a full state-page mobile optimization pass
+  with as few edits as possible, and the overflow came from shared header and
+  trust-bar CSS used by every generated state page.
+- **Consequences:** On mobile, the desktop nav quote CTA is hidden because the
+  sticky mobile CTA remains available, the trust stats render as a grid, and
+  very narrow screens tighten the text-logo header spacing. Publishing and live
+  verification remain approval-gated.
+- **Evidence:** `BLUEPRINTS/reports/2026-06-25_state-pages-mobile-overpass.md`
+- **Owner:** Evermore operator
+
+### 2026-07-01 - Restore intake by forward-porting into the current unified Worker
+
+- **Status:** approved
+- **Decision:** Restore the live `/intake` PWA route by adding the missing
+  intake route handlers and assets into the current Worker source, not by
+  rolling back to the older intake branch.
+- **Why:** The operator approved a quick repair after `/intake` returned 404.
+  The prior intake branch had the route, but the current Worker also contained
+  newer Sarah, state-page, recruiting, dashboard, and rewrite behavior that
+  should not be lost.
+- **Consequences:** Future Worker deploys must preserve existing shared routes
+  and verify intake plus public route health before closing. Intake assets must
+  remain in `01_website/experiments` because that is the configured Worker asset
+  bundle directory.
+- **Evidence:** `BLUEPRINTS/reports/2026-07-01_intake-route-restore.md`
+- **Owner:** Evermore operator
+
+### 2026-07-01 - Treat A2P as approved and move to consent-gated SMS activation
+
+- **Status:** approved
+- **Decision:** Update Evermore operating docs from A2P pending/hold to A2P
+  approved/textable, and make the next SMS step consent-gated workflow
+  activation plus owned-number STOP/START testing.
+- **Why:** The operator confirmed on 2026-07-01 that A2P approval was received
+  and textability is available.
+- **Consequences:** SMS is no longer blocked by A2P approval, but it remains
+  constrained to contacts with recorded optional SMS consent who are not opted
+  out or DND. Paid ads remain gated until one controlled lead path proves CRM,
+  workflow, tracking, and consent-gated SMS behavior. Do not store private GHL
+  Trust Center screenshots, secrets, or customer data in repo reports.
+- **Evidence:** `BLUEPRINTS/reports/2026-07-01_a2p-approval-textability-update.md`
+- **Owner:** Evermore operator
+
+### 2026-07-01 - Hand off git cleanup as lane-by-lane work, not one bulk commit
+
+- **Status:** approved
+- **Decision:** Hand the dirty branch to Claude Fable 5 with an explicit
+  lane-by-lane cleanup plan. The tree should be preserved first, then staged
+  with explicit paths by lane instead of using `git add .` or a bulk reset.
+- **Why:** The operator asked to outline the whole branch, identify what is
+  committed and uncommitted, and hand the cleanup/optimization work to Claude.
+  The current tree mixes deployed Worker source parity, A2P/GHL docs,
+  Blueprint memory, state-page generated output, content concepts, and Agent
+  Suite optimization surfaces.
+- **Consequences:** The first cleanup lane should be the already-deployed
+  Worker/intake restore so source control matches production. Agent Suite login
+  and backend optimization should be handled separately from public website and
+  state-page route work.
+- **Evidence:** `BLUEPRINTS/reports/2026-07-01_git-branch-cleanup-handoff.md`,
+  `HANDOFF_CLAUDE_FABLE_5_GIT_CLEANUP.md`
 - **Owner:** Evermore operator
