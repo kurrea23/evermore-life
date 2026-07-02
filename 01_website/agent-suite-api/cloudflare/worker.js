@@ -230,10 +230,20 @@ async function listClients(request, env, user) {
 async function createClient(request, env, user) {
   const body = await readJson(request);
   if (body.error) return json(request, env, { error: body.error }, body.status);
-  const { client } = normalizeClient(body.value);
+  const normalized = normalizeClient(body.value);
+  // Dedupe: if the intake app lost its server link (vault cleared or restored
+  // from backup) it re-POSTs the same client. Match on the intake's local id
+  // (stored inside intake_json) or on phone + name, and update that row
+  // instead of creating a duplicate. The caller gets the existing id back so
+  // it can re-link.
+  const existing = await findExistingClient(env, user.id, normalized);
+  if (existing) {
+    await applyClientUpdate(env, user.id, existing.id, existing.intake_json, normalized);
+    return json(request, env, { ok: true, id: existing.id, deduped: true });
+  }
   const id = crypto.randomUUID();
-  await writeClient(env, user.id, id, client, null);
-  return json(request, env, { id, client: { id, ...client } }, 201);
+  await writeClient(env, user.id, id, normalized.client, null);
+  return json(request, env, { id, client: { id, ...normalized.client } }, 201);
 }
 
 async function updateClient(request, env, user, id) {
@@ -241,14 +251,50 @@ async function updateClient(request, env, user, id) {
   if (body.error) return json(request, env, { error: body.error }, body.status);
   const existing = await env.DB.prepare("SELECT intake_json FROM clients WHERE id = ? AND user_id = ?").bind(id, user.id).first();
   if (!existing) return json(request, env, { error: "Client not found." }, 404);
-  const { client, provided, source } = normalizeClient(body.value);
-  // Partial update: merge new intake data over the existing record instead of wiping unsent fields.
-  const previousIntake = parseJson(await decryptValue(env, existing.intake_json), {});
+  const normalized = normalizeClient(body.value);
+  const { updated } = await applyClientUpdate(env, user.id, id, existing.intake_json, normalized);
+  if (!updated.length) return json(request, env, { error: "No recognized fields to update." }, 400);
+  return json(request, env, { ok: true, updated });
+}
+
+// Shared by PUT and by POST-dedupe: partial update that merges intake_json
+// over the existing record instead of wiping unsent fields.
+async function applyClientUpdate(env, userId, id, existingIntakeJson, { client, provided, source }) {
+  const previousIntake = parseJson(await decryptValue(env, existingIntakeJson), {});
   client.intake_json = JSON.stringify({ ...previousIntake, ...source });
   const columns = CLIENT_COLUMNS.filter((column) => provided.has(column));
-  if (!columns.length) return json(request, env, { error: "No recognized fields to update." }, 400);
-  await writeClient(env, user.id, id, client, columns);
-  return json(request, env, { ok: true, updated: columns });
+  if (!columns.length) return { updated: [] };
+  await writeClient(env, userId, id, client, columns);
+  return { updated: columns };
+}
+
+async function findExistingClient(env, userId, { client, source }) {
+  const intakeId = cleanString(source.id);
+  const phoneDigits = digitsOnly(client.phone);
+  const first = String(client.first_name || "").toLowerCase();
+  const last = String(client.last_name || "").toLowerCase();
+  if (!intakeId && phoneDigits.length < 10) return null;
+  const result = await env.DB.prepare(
+    "SELECT id, phone, first_name, last_name, intake_json FROM clients WHERE user_id = ?",
+  ).bind(userId).all();
+  const rows = result.results || [];
+  // Strongest signal first: the intake app's own local record id.
+  if (intakeId) {
+    for (const row of rows) {
+      const intake = parseJson(await decryptValue(env, row.intake_json), {});
+      if (cleanString(intake.id) === intakeId) return row;
+    }
+  }
+  // Fallback: same phone AND same first+last name. Phone alone is not enough —
+  // spouses legitimately share a number.
+  if (phoneDigits.length >= 10 && first && last) {
+    for (const row of rows) {
+      if (digitsOnly(row.phone) === phoneDigits
+        && String(row.first_name || "").toLowerCase() === first
+        && String(row.last_name || "").toLowerCase() === last) return row;
+    }
+  }
+  return null;
 }
 
 async function deleteClient(request, env, user, id) {
@@ -260,9 +306,17 @@ async function ownerAgents(request, env, user) {
   if (user.role !== "owner") return json(request, env, { error: "Owner access required." }, 403);
   const today = new Date().toISOString().slice(0, 10);
   const weekStart = dateDaysAgo(6);
-  const users = await env.DB.prepare(
-    "SELECT id, email, name, role, agency_id, created_at FROM users WHERE role = 'agent' ORDER BY created_at DESC",
-  ).all();
+  // Agency scoping: an owner with an agency_id sees only their agency's agents
+  // (plus legacy agents that never set one). An owner without an agency_id
+  // sees everyone — unchanged behavior for the current single-agency setup.
+  const scope = cleanString(user.agency_id || "");
+  const users = scope
+    ? await env.DB.prepare(
+        "SELECT id, email, name, role, agency_id, created_at FROM users WHERE role = 'agent' AND (agency_id = ? OR agency_id IS NULL OR agency_id = '') ORDER BY created_at DESC",
+      ).bind(scope).all()
+    : await env.DB.prepare(
+        "SELECT id, email, name, role, agency_id, created_at FROM users WHERE role = 'agent' ORDER BY created_at DESC",
+      ).all();
   const scores = await env.DB.prepare(
     "SELECT user_id, date, counters_json, premiums_json, session_seconds FROM score_days WHERE date >= ? AND date <= ?",
   ).bind(weekStart, today).all();
@@ -292,6 +346,11 @@ async function ownerAgentScores(request, env, user, agentId, url) {
   const to = validDate(url.searchParams.get("to")) || new Date().toISOString().slice(0, 10);
   const agent = await env.DB.prepare("SELECT id, email, name, role, agency_id, created_at FROM users WHERE id = ?").bind(agentId).first();
   if (!agent) return json(request, env, { error: "Agent not found." }, 404);
+  // Same agency scoping as /api/owner/agents (404, not 403, to avoid confirming the id exists).
+  const scope = cleanString(user.agency_id || "");
+  if (scope && cleanString(agent.agency_id || "") && cleanString(agent.agency_id) !== scope) {
+    return json(request, env, { error: "Agent not found." }, 404);
+  }
   const result = await env.DB.prepare(
     "SELECT * FROM score_days WHERE user_id = ? AND date >= ? AND date <= ? ORDER BY date ASC",
   ).bind(agentId, from, to).all();
@@ -668,8 +727,12 @@ function nowIso() {
 }
 
 function last4(value) {
-  const digits = String(value || "").replace(/\D/g, "");
+  const digits = digitsOnly(value);
   return digits ? digits.slice(-4) : "";
+}
+
+function digitsOnly(value) {
+  return String(value || "").replace(/\D/g, "");
 }
 
 function safeDetail(error) {

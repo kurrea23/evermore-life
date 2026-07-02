@@ -131,5 +131,6 @@
     api,
     logout,
     installTopNav,
+    escapeHtml,
   };
 })();

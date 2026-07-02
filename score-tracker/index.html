@@ -350,6 +350,7 @@ h1,h2,h3{font-family:Palatino,'Palatino Linotype',Georgia,serif}
 if (EvermoreAgentSuite.requireAuth()) {
   EvermoreAgentSuite.installTopNav("Score Tracker");
 }
+const esc = EvermoreAgentSuite.escapeHtml; // notes typed into the feed must not reach innerHTML raw
 
 /* ══════════════════════════════════════════
    LOGO
@@ -823,9 +824,9 @@ function render(){
       allFeed.slice(0,100).forEach(f=>{
         const div=document.createElement('div');
         div.className='feed-item';
-        div.innerHTML=`<div class="feed-dot" style="background:${f.color||'#fff'}"></div>
-          <div><div class="feed-label">${f.label}</div>${f.dt!==today()?`<div class="feed-note">${f.dt}</div>`:''}</div>
-          <div class="feed-time">${f.time}</div>`;
+        div.innerHTML=`<div class="feed-dot" style="background:${esc(f.color||'#fff')}"></div>
+          <div><div class="feed-label">${esc(f.label)}</div>${f.dt!==today()?`<div class="feed-note">${esc(f.dt)}</div>`:''}</div>
+          <div class="feed-time">${esc(f.time)}</div>`;
         fl.appendChild(div);
       });
     }

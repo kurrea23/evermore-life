@@ -214,6 +214,7 @@ if (role === 'owner') {
 }
 
 const logout = EvermoreAgentSuite.logout;
+const esc    = EvermoreAgentSuite.escapeHtml; // client-typed data must never reach innerHTML raw
 
 /* ── COLUMNS CONFIG ── */
 const COLUMNS = [
@@ -337,15 +338,15 @@ function makeCard(c, cls){
 
   let agentHtml = '';
   if (role === 'owner' && agentMap[c.user_id]){
-    agentHtml = `<div class="cardAgent">Agent: <span>${agentMap[c.user_id]}</span></div>`;
+    agentHtml = `<div class="cardAgent">Agent: <span>${esc(agentMap[c.user_id])}</span></div>`;
   }
 
   div.innerHTML = `
-    <div class="cardName">${name}</div>
-    ${phone ? `<div class="cardPhone">📞 ${phone}</div>` : ''}
+    <div class="cardName">${esc(name)}</div>
+    ${phone ? `<div class="cardPhone">📞 ${esc(phone)}</div>` : ''}
     <div class="cardMeta">
-      ${carrier ? `<div class="cardRow">Carrier <span>${carrier}</span></div>` : ''}
-      ${prem    ? `<div class="cardRow">Premium <span>$${prem}/mo</span></div>` : ''}
+      ${carrier ? `<div class="cardRow">Carrier <span>${esc(carrier)}</span></div>` : ''}
+      ${prem    ? `<div class="cardRow">Premium <span>$${esc(prem)}/mo</span></div>` : ''}
       ${cov     ? `<div class="cardRow">Coverage <span>$${parseInt(cov).toLocaleString()}</span></div>` : ''}
     </div>
     ${apptHtml}
@@ -362,13 +363,13 @@ function openModal(c, cls){
   document.getElementById('mName').textContent = name;
 
   const statusHtml = c.status
-    ? `<span class="statusBadge ${cls}">${c.status}</span>`
+    ? `<span class="statusBadge ${cls}">${esc(c.status)}</span>`
     : '<span style="color:#4a5e7a">No status</span>';
   document.getElementById('mSub').innerHTML = statusHtml;
 
   const f = (val, fallback) => {
     const v = val || fallback || '';
-    return v ? `<span>${v}</span>` : `<span class="empty">—</span>`;
+    return v ? `<span>${esc(v)}</span>` : `<span class="empty">—</span>`;
   };
 
   let apptHtml = '';
@@ -387,7 +388,7 @@ function openModal(c, cls){
   }
 
   const agentRow = (role === 'owner' && agentMap[c.user_id])
-    ? `<div class="modalSection"><h4>Agent</h4><div class="modalField"><span>${agentMap[c.user_id]}</span></div></div>`
+    ? `<div class="modalSection"><h4>Agent</h4><div class="modalField"><span>${esc(agentMap[c.user_id])}</span></div></div>`
     : '';
 
   document.getElementById('mBody').innerHTML = `
@@ -429,21 +430,21 @@ function openModal(c, cls){
         <div class="modalField"><label>Diabetes</label>${f(c.diabetes)}</div>
         <div class="modalField"><label>A1C</label>${f(c.a1c)}</div>
       </div>
-      ${c.major_conditions ? `<div class="modalField" style="margin-top:8px"><label>Conditions</label><span>${c.major_conditions}</span></div>` : ''}
+      ${c.major_conditions ? `<div class="modalField" style="margin-top:8px"><label>Conditions</label><span>${esc(c.major_conditions)}</span></div>` : ''}
     </div>
 
     ${(c.ben1_name||c.ben2_name) ? `<div class="modalSection">
       <h4>Beneficiaries</h4>
       <div class="modalGrid">
-        ${c.ben1_name ? `<div class="modalField"><label>Primary</label><span>${c.ben1_name}${c.ben1_rel?' · '+c.ben1_rel:''}</span></div>` : ''}
-        ${c.ben2_name ? `<div class="modalField"><label>Secondary</label><span>${c.ben2_name}${c.ben2_rel?' · '+c.ben2_rel:''}</span></div>` : ''}
+        ${c.ben1_name ? `<div class="modalField"><label>Primary</label><span>${esc(c.ben1_name)}${c.ben1_rel?' · '+esc(c.ben1_rel):''}</span></div>` : ''}
+        ${c.ben2_name ? `<div class="modalField"><label>Secondary</label><span>${esc(c.ben2_name)}${c.ben2_rel?' · '+esc(c.ben2_rel):''}</span></div>` : ''}
       </div>
     </div>` : ''}
 
     ${c.notes ? `<div class="modalSection">
       <h4>Notes</h4>
       <div style="font-size:14px;color:#c0cfe6;line-height:1.6;background:#0d1525;border-radius:8px;
-        padding:12px 14px;border:1px solid #1a2740">${c.notes}</div>
+        padding:12px 14px;border:1px solid #1a2740">${esc(c.notes)}</div>
     </div>` : ''}
   `;
 

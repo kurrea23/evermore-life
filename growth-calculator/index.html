@@ -515,7 +515,7 @@ function calc() {
   // ---- Report meta ----
   const agent = $('agentName').value || 'Agent';
   const company = $('companyName').value || 'Evermore Life LLC';
-  $('printMeta').innerHTML = `Agent: ${agent}<br>Date: ${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}`;
+  $('printMeta').innerHTML = `Agent: ${EvermoreAgentSuite.escapeHtml(agent)}<br>Date: ${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}`;
   $('reportDate').textContent = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
 
   const workDays = n('workDays') || 6;

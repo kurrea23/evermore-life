@@ -53,6 +53,7 @@ let sortKey = "week.issued";
 let sortDir = -1;
 const money = (value) => "$" + Math.round(Number(value || 0)).toLocaleString("en-US");
 const get = (object, path) => path.split(".").reduce((acc, key) => acc && acc[key], object);
+const esc = EvermoreAgentSuite.escapeHtml; // agent names/emails are set at signup — never trust them in innerHTML
 
 async function loadDashboard() {
   try {
@@ -64,7 +65,7 @@ async function loadDashboard() {
     document.getElementById("commissionWeek").textContent = money(data.agency.total_commission);
     renderRows();
   } catch (err) {
-    document.getElementById("agentRows").innerHTML = `<tr><td colspan="9" class="error">${err.message || "Server error."}</td></tr>`;
+    document.getElementById("agentRows").innerHTML = `<tr><td colspan="9" class="error">${esc(err.message || "Server error.")}</td></tr>`;
   }
 }
 
@@ -77,7 +78,7 @@ function renderRows() {
   });
   tbody.innerHTML = sorted.length ? sorted.map((agent) => `
     <tr>
-      <td><div class="name">${agent.name || "Agent"}</div><div class="muted">${agent.email || ""}</div></td>
+      <td><div class="name">${esc(agent.name || "Agent")}</div><div class="muted">${esc(agent.email || "")}</div></td>
       <td>${agent.summary.today.dials || 0}</td>
       <td>${agent.summary.today.contacted || 0}</td>
       <td>${agent.summary.today.issued || 0}</td>
