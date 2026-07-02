@@ -19,9 +19,7 @@
 
 <!-- NAV -->
 <nav class="site-nav" role="navigation" aria-label="Main navigation">
-  <a href="../../../../index.html" class="nav-logo" aria-label="Evermore Life Insurance LLC home">
-    <img src="../assets/evermorelife-llc-logo-nav.png" alt="Evermore Life Insurance LLC" />
-  </a>
+  <a href="https://evermorelife.org/" class="nav-logo" aria-label="Evermore Life Insurance LLC home">Evermore <span>Life Insurance LLC</span></a>
   <ul class="nav-links" id="navLinks">
     <li><a href="#products">Products</a></li>
     <li><a href="#how-it-works">How It Works</a></li>
@@ -251,9 +249,7 @@
 <footer>
   <div class="footer-grid">
     <div class="footer-col">
-      <a href="../../../../index.html" class="footer-brand" aria-label="Evermore Life Insurance LLC home">
-        <img src="../assets/evermorelife-llc-logo-nav.png" alt="Evermore Life Insurance LLC" />
-      </a>
+      <a href="https://evermorelife.org/" class="footer-brand" aria-label="Evermore Life Insurance LLC home">Evermore <span>Life Insurance LLC</span></a>
       <p>Independent life insurance brokerage helping Arkansas families protect what matters most.</p>
     </div>
     <div class="footer-col">
@@ -415,40 +411,6 @@
   } else {
     initCharts();
   }
-})();
-</script>
-
-<script>
-// Hero kicker: stay hidden while the clip plays, then pop in as it freezes on
-// the last frame. Falls back to simply showing the kicker if there is no video,
-// reduced motion is preferred, autoplay is blocked, or the video errors.
-(function() {
-  var kicker = document.querySelector('.hero-kicker');
-  if (!kicker) return;
-  var video = document.querySelector('.hero-bg');
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (!video || reduce) { kicker.classList.add('kicker-shown'); return; }
-
-  kicker.classList.add('kicker-armed');
-  var done = false;
-  function reveal() {
-    if (done) return;
-    done = true;
-    kicker.classList.remove('kicker-armed');
-    kicker.classList.add('kicker-in');
-  }
-
-  video.addEventListener('ended', reveal);
-  video.addEventListener('error', function() { setTimeout(reveal, 200); });
-
-  // Safety net in case 'ended' never fires (e.g. autoplay blocked).
-  function scheduleFallback() {
-    var ms = (video.duration && isFinite(video.duration)) ? (video.duration + 0.8) * 1000 : 9000;
-    setTimeout(reveal, ms);
-  }
-  if (video.readyState >= 1) scheduleFallback();
-  else video.addEventListener('loadedmetadata', scheduleFallback);
 })();
 </script>
 

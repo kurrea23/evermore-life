@@ -220,8 +220,8 @@ footer {
 
 /* Homepage structure parity */
 .site-nav { height: 68px; padding-block: 0; box-shadow: 0 2px 12px rgba(0,0,0,0.18); }
-.nav-logo { display: flex; align-items: center; flex-shrink: 0; }
-.nav-logo img { display: block; width: auto; height: 62px; }
+.nav-logo { display: flex; align-items: center; flex-shrink: 0; color: #fff; font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; text-decoration: none; }
+.nav-logo span { color: #c8a96e; }
 .nav-toggle { display: none; flex-direction: column; gap: 5px; padding: 8px; border: 0; background: none; cursor: pointer; }
 .nav-toggle span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; }
 
@@ -346,8 +346,8 @@ footer {
 .why-card h4 { color: #0d1b4b; }
 .why-card p { color: #6b7c99; }
 
-.footer-brand { display: inline-flex; width: min(260px, 100%); margin-bottom: 16px; }
-.footer-brand img { display: block; width: 100%; height: auto; }
+.footer-brand { display: inline-flex; margin-bottom: 16px; color: #fff; text-decoration: none; }
+.footer-brand span { color: #c8a96e; }
 .mobile-cta-bar { display: none; }
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
 .reveal.visible { opacity: 1; transform: none; }
@@ -358,7 +358,8 @@ footer {
 
 @media (max-width: 768px) {
   .site-nav { height: 60px; }
-  .nav-logo img { height: 48px; }
+  .nav-logo { font-size: 1.15rem; }
+  .nav-cta { display: none; }
   .nav-links {
     position: absolute;
     top: 60px;
@@ -370,7 +371,13 @@ footer {
   }
   .nav-links.open { display: flex; }
   .nav-toggle { display: flex; }
-  .trust-bar-inner { gap: 24px; }
+  .trust-bar-inner {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .trust-item { min-width: 0; }
+  .trust-item .num { overflow-wrap: anywhere; }
   .trust-divider { display: none; }
   .viz-grid, .gap-card, .why-grid { grid-template-columns: 1fr; }
   .steps-row { flex-direction: column; align-items: center; gap: 28px; }
@@ -393,8 +400,14 @@ footer {
 @media (max-width: 560px) {
   .products-grid { grid-template-columns: 1fr; }
   .hero-carriers { display: none; }
+  .trust-bar-inner { grid-template-columns: 1fr; }
   .dataviz-section { padding: 50px 20px; }
   .viz-card { padding: 24px; }
+}
+
+@media (max-width: 360px) {
+  nav { padding-inline: 16px; }
+  .nav-logo { font-size: 1rem; letter-spacing: 0; }
 }
 
 /* HERO BACKGROUND VIDEO + BRAND KICKER (optional per state) */
