@@ -35,6 +35,9 @@ Worker: `01_website/agent-suite-api/cloudflare/worker.js` → `evermore-score-tr
   operator 2026-07-02, wrangler confirmed). Values prefixed `enc:v1:`.
   Legacy plaintext rows still read fine; they encrypt on next write.
   **If DATA_KEY is ever lost, encrypted data is unrecoverable.**
+  DATA_KEY was rotated 2026-07-02 before any real data was saved; the
+  operator holds a backup copy in a locked note. No data was encrypted
+  under the first (unbacked-up) key.
 - XSS fix: user display name is HTML-escaped in the shared nav
   (`agent-suite-auth.js`).
 - 500 responses no longer leak `error.message` (logged to console instead).
