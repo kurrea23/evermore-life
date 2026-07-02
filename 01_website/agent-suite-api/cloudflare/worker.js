@@ -1,4 +1,6 @@
 const SESSION_DAYS = 30;
+const ENC_PREFIX = "enc:v1:";
+const SENSITIVE_COLUMNS = ["ssn", "routing", "account", "dl_number", "intake_json"];
 const MAX_JSON_BYTES = 350000;
 const PBKDF2_ITERATIONS = 100000;
 const CLIENT_COLUMNS = [
@@ -84,7 +86,8 @@ export default {
 
       return json(request, env, { error: "Not found." }, 404);
     } catch (error) {
-      return json(request, env, { error: "Server error.", detail: safeDetail(error) }, 500);
+      console.error("agent-suite-api error:", safeDetail(error));
+      return json(request, env, { error: "Server error." }, 500);
     }
   },
 };
@@ -220,26 +223,32 @@ async function saveGoals(request, env, user) {
 
 async function listClients(request, env, user) {
   const result = await env.DB.prepare("SELECT * FROM clients WHERE user_id = ? ORDER BY updated_at DESC").bind(user.id).all();
-  return json(request, env, { clients: (result.results || []).map(clientRowToObject) });
+  const clients = await Promise.all((result.results || []).map((row) => clientRowToObject(env, row)));
+  return json(request, env, { clients });
 }
 
 async function createClient(request, env, user) {
   const body = await readJson(request);
   if (body.error) return json(request, env, { error: body.error }, body.status);
-  const client = normalizeClient(body.value);
+  const { client } = normalizeClient(body.value);
   const id = crypto.randomUUID();
-  await writeClient(env, user.id, id, client, false);
+  await writeClient(env, user.id, id, client, null);
   return json(request, env, { id, client: { id, ...client } }, 201);
 }
 
 async function updateClient(request, env, user, id) {
   const body = await readJson(request);
   if (body.error) return json(request, env, { error: body.error }, body.status);
-  const existing = await env.DB.prepare("SELECT id FROM clients WHERE id = ? AND user_id = ?").bind(id, user.id).first();
+  const existing = await env.DB.prepare("SELECT intake_json FROM clients WHERE id = ? AND user_id = ?").bind(id, user.id).first();
   if (!existing) return json(request, env, { error: "Client not found." }, 404);
-  const client = normalizeClient(body.value);
-  await writeClient(env, user.id, id, client, true);
-  return json(request, env, { ok: true, client: { id, ...client } });
+  const { client, provided, source } = normalizeClient(body.value);
+  // Partial update: merge new intake data over the existing record instead of wiping unsent fields.
+  const previousIntake = parseJson(await decryptValue(env, existing.intake_json), {});
+  client.intake_json = JSON.stringify({ ...previousIntake, ...source });
+  const columns = CLIENT_COLUMNS.filter((column) => provided.has(column));
+  if (!columns.length) return json(request, env, { error: "No recognized fields to update." }, 400);
+  await writeClient(env, user.id, id, client, columns);
+  return json(request, env, { ok: true, updated: columns });
 }
 
 async function deleteClient(request, env, user, id) {
@@ -289,12 +298,17 @@ async function ownerAgentScores(request, env, user, agentId, url) {
   return json(request, env, { agent: publicUser(agent), days: rowsToDays(result.results || []) });
 }
 
-async function writeClient(env, userId, id, client, updateOnly) {
+async function writeClient(env, userId, id, client, updateColumns) {
   const now = nowIso();
-  if (updateOnly) {
-    const assignments = CLIENT_COLUMNS.map((column) => `${column} = ?`).join(", ");
+  const stored = { ...client };
+  for (const column of SENSITIVE_COLUMNS) {
+    if (stored[column]) stored[column] = await encryptValue(env, stored[column]);
+  }
+  if (updateColumns) {
+    const assignments = updateColumns.map((column) => `${column} = ?`).join(", ");
+    const values = updateColumns.map((column) => stored[column] ?? "");
     await env.DB.prepare(`UPDATE clients SET ${assignments}, updated_at = ? WHERE id = ? AND user_id = ?`)
-      .bind(...clientValues(client), now, id, userId)
+      .bind(...values, now, id, userId)
       .run();
     return;
   }
@@ -302,7 +316,7 @@ async function writeClient(env, userId, id, client, updateOnly) {
   await env.DB.prepare(
     `INSERT INTO clients (id, user_id, ${CLIENT_COLUMNS.join(", ")}, created_at, updated_at)
      VALUES (?, ?, ${placeholders}, ?, ?)`,
-  ).bind(id, userId, ...clientValues(client), now, now).run();
+  ).bind(id, userId, ...CLIENT_COLUMNS.map((column) => stored[column] ?? ""), now, now).run();
 }
 
 function normalizeScoreDay(value) {
@@ -338,8 +352,11 @@ function rowsToDays(rows) {
 function normalizeClient(value) {
   const source = objectOrEmpty(value.client || value);
   const client = {};
+  const provided = new Set();
+  const has = (...keys) => keys.some((key) => source[key] !== undefined && source[key] !== null);
   const assign = (column, ...keys) => {
     client[column] = cleanString(firstValue(source, column, ...keys));
+    if (has(column, ...keys)) provided.add(column);
   };
 
   assign("first_name", "firstName");
@@ -349,6 +366,7 @@ function normalizeClient(value) {
   assign("call_date", "callDate");
   assign("lead_source", "leadSource");
   client.email = cleanEmail(firstValue(source, "email"));
+  if (has("email")) provided.add("email");
   assign("phone");
   assign("address");
   assign("city");
@@ -409,8 +427,10 @@ function normalizeClient(value) {
   assign("bank_state", "bankState");
   assign("routing");
   client.routing_last4 = last4(firstValue(source, "routing_last4", "routingNumber", "routing"));
+  if (has("routing_last4", "routingNumber", "routing")) provided.add("routing_last4");
   assign("account");
   client.account_last4 = last4(firstValue(source, "account_last4", "accountNumber", "account"));
+  if (has("account_last4", "accountNumber", "account")) provided.add("account_last4");
   assign("account_type", "accountType");
   assign("pay_day", "payDay");
   assign("ben1_name", "ben1Name");
@@ -421,21 +441,55 @@ function normalizeClient(value) {
   assign("ben2_phone", "ben2Phone");
   assign("referrals");
   client.beneficiaries_json = JSON.stringify(Array.isArray(source.beneficiaries) ? source.beneficiaries : parseJson(source.beneficiaries_json, []));
+  if (has("beneficiaries", "beneficiaries_json")) provided.add("beneficiaries_json");
   client.notes = cleanString(source.notes);
+  if (has("notes")) provided.add("notes");
   client.intake_json = JSON.stringify(source);
-  return client;
+  provided.add("intake_json");
+  return { client, provided, source };
 }
 
-function clientValues(client) {
-  return CLIENT_COLUMNS.map((column) => client[column] ?? "");
+async function clientRowToObject(env, row) {
+  const out = { ...row };
+  for (const column of SENSITIVE_COLUMNS) {
+    if (out[column]) out[column] = await decryptValue(env, out[column]);
+  }
+  out.beneficiaries = parseJson(out.beneficiaries_json, []);
+  out.intake = parseJson(out.intake_json, {});
+  return out;
 }
 
-function clientRowToObject(row) {
-  return {
-    ...row,
-    beneficiaries: parseJson(row.beneficiaries_json, []),
-    intake: parseJson(row.intake_json, {}),
-  };
+async function dataKey(env) {
+  if (!env.DATA_KEY) return null;
+  try {
+    return await crypto.subtle.importKey("raw", fromBase64(env.DATA_KEY), "AES-GCM", false, ["encrypt", "decrypt"]);
+  } catch {
+    return null;
+  }
+}
+
+async function encryptValue(env, value) {
+  const text = String(value || "");
+  if (!text || text.startsWith(ENC_PREFIX)) return text;
+  const key = await dataKey(env);
+  if (!key) return text; // no key configured yet: store as-is so nothing breaks pre-rollout
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const cipher = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(text)));
+  return `${ENC_PREFIX}${base64(iv)}:${base64(cipher)}`;
+}
+
+async function decryptValue(env, value) {
+  const text = String(value || "");
+  if (!text.startsWith(ENC_PREFIX)) return text; // legacy plaintext rows
+  const key = await dataKey(env);
+  if (!key) return "";
+  const [ivRaw, cipherRaw] = text.slice(ENC_PREFIX.length).split(":");
+  try {
+    const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: fromBase64(ivRaw) }, key, fromBase64(cipherRaw));
+    return new TextDecoder().decode(plain);
+  } catch {
+    return "";
+  }
 }
 
 function emptySummary() {
