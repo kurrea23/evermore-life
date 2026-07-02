@@ -101,11 +101,11 @@ Still required before spending:
 
 ## Guide 03 - A2P, Nurture, Sarah, And Booking
 
-**Status: Non-A2P assets complete; A2P and GHL workflow activation remain.**
+**Status: A2P approved/textable per operator confirmation; GHL workflow activation and SMS testing remain.**
 
 Completed and verified:
 
-- A2P submission explicitly placed on hold pending EIN.
+- A2P approval/textability confirmed by the operator on July 1, 2026.
 - Four-file evidence pack captured:
   `01-optin-form-and-consent.png`, `02-sms-consent-closeup.png`,
   `03-privacy-page.png`, and `04-terms-page.png`.
@@ -113,7 +113,7 @@ Completed and verified:
   `00_START_HERE/active/rooms/A2P_REGISTRATION/screenshots_to_take/`.
 - Compliant five-email nurture sequence completed with the live booking URL.
 - Compliant SMS nurture drafts completed with the live booking URL.
-- SMS remains inactive pending EIN, submission, and approval.
+- SMS remains inactive until consent-gated workflow activation and owned-number STOP/START testing pass.
 - Full Sarah GHL conversation-tree reference completed with the booking URL.
 - Standalone Sarah flow verified live at `https://evermorelife.org/sarah`.
 - `Evermore Life Coverage Review` calendar created.

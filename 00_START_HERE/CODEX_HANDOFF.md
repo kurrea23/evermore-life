@@ -28,7 +28,7 @@ The `active/` folder is the live daily workspace. Everything symlinks back to th
 
 | Folder | What it is | Codex Action |
 |---|---|---|
-| `active/rooms/A2P_REGISTRATION/` | A2P 10DLC SMS registration task | Check `HELPERS.md` for AI instructions; verify gaps with `02_ghl/CODEX_HANDOFF.md` Task E |
+| `active/rooms/A2P_REGISTRATION/` | A2P 10DLC SMS activation task | Check `HELPERS.md` for AI instructions; verify approval/textability and consent-gated SMS with `02_ghl/CODEX_HANDOFF.md` Task E |
 | `active/rooms/KEVIN_V2/` | Kevin AI v2 spec | Secondary priority — spec in `SPEC.md` |
 
 ---
@@ -36,10 +36,10 @@ The `active/` folder is the live daily workspace. Everything symlinks back to th
 ## Active Rooms Status
 
 ### A2P_REGISTRATION
-- **What:** Submit A2P 10DLC registration to allow SMS marketing via GHL
-- **Why it matters:** SMS automations are blocked until this approves. Email nurture can run now, SMS cannot.
+- **What:** Confirm approved A2P 10DLC status and activate consent-gated SMS via GHL
+- **Why it matters:** A2P is approved/textable; SMS can support speed-to-lead only after consent and opt-out checks are proven.
 - **Files:** `active/rooms/A2P_REGISTRATION/README.md`, `HELPERS.md`, `YOU_DO_THIS.md`
-- **Codex task:** Verify live URLs match the registration pack. Build gap report. See `02_ghl/CODEX_HANDOFF.md` Task E.
+- **Codex task:** Verify docs match the approved use case. Keep private proof out of repo. See `02_ghl/CODEX_HANDOFF.md` Task E.
 
 ### KEVIN_V2
 - **What:** Kevin AI v2 spec — secondary AI persona
@@ -61,7 +61,7 @@ The `active/` folder is the live daily workspace. Everything symlinks back to th
       ↓
 5. First $10/day AZ and AR campaign launches
       ↓
-6. EIN arrives → A2P submitted and approved
+6. A2P approval/textability confirmed and SMS branch tested
       ↓
 7. SMS nurture sequence activated
       ↓

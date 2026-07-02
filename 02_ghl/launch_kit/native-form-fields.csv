@@ -2,7 +2,7 @@ order,label,ghl_field_type,required,options_or_notes
 1,First Name,Contact First Name,yes,Standard contact field
 2,Last Name,Contact Last Name,yes,Standard contact field
 3,Phone Number,Contact Phone,yes,Required for call follow-up; SMS only if optional consent is checked
-4,Email Address,Contact Email,no,Useful while A2P is pending
+4,Email Address,Contact Email,no,Useful for email follow-up and non-SMS contacts
 5,Age,Custom Number,yes,Accept ages 18-85
 6,State,Custom Dropdown,yes,US states or launch states
 7,Coverage Type Interested In,Custom Dropdown,no,Not sure yet|Final Expense|Term Life|Indexed Universal Life (IUL)|Whole Life|Mortgage Protection|Multiple / Need guidance

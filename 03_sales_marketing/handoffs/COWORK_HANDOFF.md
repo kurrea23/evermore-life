@@ -53,7 +53,7 @@ Use GHL-native lead capture first.
 4. Keep SMS consent optional and unchecked.
 5. Add visible Privacy and Terms links near the form.
 6. Create workflow: `Evermore Website Lead Intake`.
-7. Do not enable SMS actions until A2P is approved.
+7. Enable SMS actions only after confirming A2P approval/textability and consent-gated workflow checks.
 8. Publish pages only after final review.
 9. Test fake lead.
 10. Take A2P screenshot and submit registration.
@@ -152,8 +152,8 @@ Note:
 6. Publish pages only after review.
 7. Submit fake lead with SMS unchecked and checked.
 8. Confirm contact, tag, opportunity, owner notification, email, and call task.
-9. Confirm no SMS sends before A2P approval.
-10. Submit A2P with `a2p-registration-pack.md` after live page screenshot is ready.
+9. Confirm SMS sends only for checked-consent owned-number tests.
+10. Record non-secret A2P approval/textability and STOP/START test results after live page screenshot is ready.
 
 ## Stop Conditions
 
@@ -165,4 +165,3 @@ Pause before:
 - Creating or rotating private tokens.
 - Entering passwords, 2FA codes, or password-manager values.
 - Uploading private documents or business IDs.
-

@@ -25,7 +25,8 @@ Do not publish paid campaigns yet. The public site is reachable, but tracking an
 | Gate | Current Evidence | Pass Condition | Owner |
 | --- | --- | --- | --- |
 | Meta Pixel | Pixel `1895928277755643` is live; source verification confirms PageView, opt-in ViewContent, and thank-you Lead event code | Confirm events appear inside Meta Test Events | Lucidus in Meta |
-| Lead workflow | Native GHL form is live; downstream actions unverified | Test lead creates contact, consent, tag, opportunity, notification, email, and call task | Lucidus in GHL |
+| Lead workflow | Native GHL form is live; downstream actions and SMS branch still need current proof | Test lead creates contact, consent, tag, opportunity, notification, email, call task, and consent-gated SMS behavior | Lucidus in GHL |
+| A2P/SMS | A2P approved/textable per operator confirmation; repo does not store private proof | Owned-number test proves SMS sends only with consent and STOP/START works | Lucidus in GHL |
 | Lead attribution | GHL form currently uses inline thank-you; `/thank-you` Lead event may not fire | Redirect successful form submission to `/thank-you` or configure a verified form-success Lead event | Lucidus in GHL + Codex |
 | Campaign destination | `FUNNEL_PAGE.html` is local and contains placeholder links | Use a reviewed live URL with working privacy, terms, and Sarah/quote CTA | Codex |
 | Ad package | Campaign copy exists; upload package and creatives do not | At least one compliant ad has final copy, creative, destination, tracking, audience, and budget | Codex + Lucidus |
@@ -57,7 +58,7 @@ Launch one small campaign before building the whole nine-ad system:
 6. Build `04_content_narrative/META_ADS_UPLOAD_PACKAGE.md` for the first launch slice.
 7. Produce and approve the first creative.
 8. Build the email nurture sequence and activate it.
-9. Keep SMS automation disabled until A2P approval is confirmed.
+9. Activate only consent-gated SMS automation and verify with an owned number.
 10. Publish the first campaign only after every blocking gate above passes.
 
 ## Required Manual Inputs
@@ -73,11 +74,11 @@ Launch one small campaign before building the whole nine-ad system:
 - Standalone funnel CTA, legal links, state claims, and high-risk promise language corrected locally; it still needs hosting and review.
 - Meta Ads upload package built; account fields and final creative remain.
 - Full Sarah conversation tree built; standalone live Sarah flow verified at `/sarah`; GHL AI configuration still requires account access.
-- Email and SMS nurture documents built; SMS remains disabled until A2P approval.
+- Email and SMS nurture documents built; SMS can now be activated only after consent-gated workflow testing.
 - GHL workflow spec built; the current browser account cannot operate the protected workflow editor.
 - `Evermore Life Coverage Review` calendar is created and live at `https://api.leadconnectorhq.com/widget/booking/NzsTTtQ0xBDAMXVhly7L`.
 - The booking URL is wired into the email/SMS drafts, Sarah conversation-tree reference, and live `/thank-you` CTA.
-- A2P submission is on hold pending EIN. Evidence screenshots are saved in `/Users/k9smac/Desktop/A2P_Screenshots/`.
+- A2P is approved/textable per operator confirmation. Evidence screenshots are saved in `/Users/k9smac/Desktop/A2P_Screenshots/`; do not store private Trust Center screenshots or secrets in the repo.
 - Daily campaign scoreboard built.
 - Seven-video production prompt pack and 30-day organic calendar built.
 - Generate and approve creative assets. HeyGen requires reauthentication.
@@ -86,9 +87,9 @@ Launch one small campaign before building the whole nine-ad system:
 
 1. In the live GHL form, replace every privacy link with `https://evermorelife.org/privacy` and every terms link with `https://evermorelife.org/terms`.
 2. In the live GHL form, redirect successful submissions to `https://evermorelife.org/thank-you`, or configure and prove a form-success Meta Lead event.
-3. Configure and activate `Evermore Website Lead Intake` from `02_ghl/launch_kit/GHL_WORKFLOW_COMPLETE_SPEC.md`, leaving all SMS actions disabled.
-4. Submit one controlled Arizona test lead with SMS unchecked and verify the entire non-SMS workflow.
+3. Configure and activate `Evermore Website Lead Intake` from `02_ghl/launch_kit/GHL_WORKFLOW_COMPLETE_SPEC.md`, enabling only consent-gated SMS actions.
+4. Submit controlled test leads with SMS checked and unchecked; verify the full workflow and that SMS only sends to the opted-in owned number.
 5. Open Meta Test Events and confirm the deployed `PageView`, `ViewContent`, and `Lead` events.
 6. Reauthenticate HeyGen and generate `ELC_2026_Q2_LEAD_HowItWorks_9x16_v01`.
-7. After the EIN arrives, fix the remaining A2P gaps, submit, and activate SMS only after approval.
+7. Record non-secret A2P approval details and STOP/START test results in the GHL launch kit.
 8. Complete the account fields in `04_content_narrative/META_ADS_UPLOAD_PACKAGE.md` and approve the $10/day first-launch slice.

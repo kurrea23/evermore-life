@@ -2,27 +2,30 @@
 ## Unlock SMS, build your follow-up sequences, complete the machine
 **Do Guides 00–02 first. You need the fake lead test screenshots from Guide 00.**
 
-> **Current status, June 13, 2026:** A2P submission is on hold pending EIN.
-> Evidence screenshots, compliant nurture drafts, Sarah flow, and the live
-> booking calendar are ready. SMS stays disabled. See
+> **Current status, July 1, 2026:** A2P is approved and textability is
+> available per operator confirmation. Evidence screenshots, compliant nurture
+> drafts, Sarah flow, and the live booking calendar are ready. SMS should be
+> activated only behind recorded consent and opt-out/DND checks. See
 > `GUIDES_00_03_COMPLETION_HANDOFF.md`.
 
 ---
 
 ## What You're Doing in This Guide
 
-1. Submit A2P 10DLC registration (unlocks SMS in GHL)
+1. Confirm A2P 10DLC approval/textability in GHL Trust Center
 2. Build your email nurture sequence in GHL (5 emails)
-3. Build your SMS nurture sequence in GHL (activate after A2P approves)
+3. Build your SMS nurture sequence in GHL (activate only behind consent checks)
 4. Set up the Sarah AI conversation flow
 
 **Time estimate: 2–3 hours**
 
 ---
 
-## STEP 1 — A2P 10DLC Registration
+## STEP 1 — A2P 10DLC Approval Confirmation
 
-Without this, GHL will NOT let you send marketing SMS. This is not optional.
+Without this, GHL will NOT let you send marketing SMS. The operator confirmed
+approval on July 1, 2026; this step is now about recording non-secret proof and
+staying inside the approved use case.
 
 **All the content you need is already written in:**
 `02_ghl/launch_kit/a2p-registration-pack.md`
@@ -31,26 +34,26 @@ Without this, GHL will NOT let you send marketing SMS. This is not optional.
 
 **In GHL:**
 1. Go to: **Settings → Phone Numbers → SMS Registration / A2P**
-2. Click **Register Campaign / Brand**
-3. Fill in your brand info:
+2. Confirm the campaign/brand shows approved/textable
+3. Confirm your brand info:
    - Business Name: `Evermore Life Insurance LLC`
    - EIN: (your LLC EIN)
    - Business Type: LLC
    - Industry: Insurance
    - Website: `https://evermorelife.org`
 
-4. Register your campaign (use case):
+4. Confirm your campaign use case:
    - Use Case: **Mixed** or **Low Volume Mixed**
    - Campaign Description: (copy from `a2p-messaging-use-case-paste.md`)
    - Sample Message 1: `Evermore Life: Thanks for requesting a life insurance quote. Sarah here. I can help you review options and book a quick call. Reply STOP to opt out or HELP for help.`
    - Sample Message 2: `Evermore Life: Reminder for your scheduled life insurance consultation. Reply YES to confirm or reply STOP to opt out. Msg/data rates may apply.`
    - Sample Message 3: `Evermore Life: We received your quote request and can help compare options. What is the best time today for a quick call? Reply STOP to opt out or HELP for help.`
 
-5. Upload screenshots from Step 7 of Guide 00 (optin page, consent checkbox, privacy, terms)
+5. Confirm screenshots from Step 7 of Guide 00 remain saved for your records (optin page, consent checkbox, privacy, terms)
 
-6. Submit and wait — approval typically takes 1–7 business days
+6. Record only non-secret approval status, submission/campaign reference, and date in the A2P activation log
 
-**While you wait for A2P → build the SMS sequence now, just don't activate it yet.**
+**Now that A2P is approved → activate SMS only after the consent-gated workflow test passes.**
 
 ---
 
@@ -218,8 +221,9 @@ Hey {{contact.firstName}}, Sarah here. Most families are underinsured — took 2
 Hey {{contact.firstName}}, last one from me. Ready when you are: [LINK] Or just reply and I'll help. Reply STOP to opt out, HELP for help. -Sarah, Evermore Life
 ```
 
-**Keep this branch INACTIVE until A2P approval comes through.**
-When A2P approves → come back, flip the gate condition to active, publish.
+**Keep this branch inactive until you confirm SMS consent, DND/opt-out checks,
+and approved-use-case copy are in place.**
+Then flip the gate condition to active, publish, and test with your own number.
 
 ---
 

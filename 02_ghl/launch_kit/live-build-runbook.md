@@ -51,7 +51,7 @@ Use `workflow-blueprint.md`.
 
 Important:
 
-- Disable SMS actions until A2P is approved.
+- A2P is approved, so SMS actions may be enabled only behind recorded SMS consent and opt-out/DND checks.
 - Email and call task can run immediately.
 
 ## 4. Publish + Verify
@@ -62,11 +62,11 @@ After publishing:
 - Submit one fake lead with SMS unchecked.
 - Submit one fake lead with SMS checked.
 - Verify tags, consent state, opportunity, email, notification, and call task.
-- Confirm no SMS sent.
+- Confirm SMS sends only for the opted-in owned test contact and does not send for the unchecked-consent test.
 
-## 5. A2P Submission
+## 5. A2P Approval Record
 
-Use `a2p-registration-pack.md`.
+Use `a2p-registration-pack.md` as the approved-use-case reference.
 
 Screenshot must show:
 
@@ -77,3 +77,5 @@ Screenshot must show:
 - Full consent language
 - Privacy and Terms links
 
+Record the GHL Trust Center approval/textability status in `A2P_GAP_REPORT.md`
+before relying on SMS for live leads.

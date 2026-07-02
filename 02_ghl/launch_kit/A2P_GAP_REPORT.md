@@ -1,7 +1,9 @@
 # A2P Gap Report
 
-**Verified:** June 13, 2026  
-**Status:** HOLD pending EIN. Do not submit or activate SMS until the EIN arrives and A2P is approved.
+**Verified:** July 1, 2026
+**Status:** A2P approved per operator confirmation. Textability is available.
+Repo-side docs are updated; live GHL Trust Center proof, submission ID/campaign
+ID, and first owned-number SMS test still need to be recorded.
 
 ## Live Evidence Verified
 
@@ -61,12 +63,18 @@ The live GHL form configuration shows an inline thank-you message and no redirec
 
 **Required action in GHL:** Redirect successful submissions to `https://evermorelife.org/thank-you`, or configure a reliable Lead event directly on successful GHL form submission.
 
-### 5. EIN and A2P submission are pending
+### 5. A2P approval confirmed by operator
 
-The user explicitly placed A2P submission on hold while waiting for the EIN. No submission ID, approval status, or approved messaging campaign evidence is present.
+On July 1, 2026, the operator confirmed A2P approval and textability. No secret,
+submission ID, campaign ID, or private account screenshot is stored in this repo.
 
-**Required action after EIN arrives:** Resolve the remaining form gaps, submit in GHL Trust Center, then record the submission ID.
+**Required action in GHL:** Record non-secret approval evidence, confirm the
+approved use case, then run an owned-number SMS test through the consent-gated
+workflow branch.
 
 ## Submission Decision
 
-**HOLD PENDING EIN.** Keep every SMS action disabled. After the EIN arrives, fix the canonical form links and exact consent-copy mismatch, confirm submission behavior, then submit the A2P campaign.
+**APPROVED / TEXTABLE.** SMS may be enabled only for contacts with recorded
+optional SMS consent who are not opted out or DND. Keep paid traffic gated until
+the controlled lead test proves contact creation, opportunity creation,
+notification/email/task creation, tracking, and consent-gated SMS behavior.

@@ -1,6 +1,8 @@
 # Evermore Life Forms + Workflow Next Steps
 
-Do not change A2P registration language while the campaign is under review. Build the workflow without SMS first. Add SMS only after approval.
+A2P is approved. Do not change the approved registration language unless the
+GHL/TCR compliance impact is reviewed. SMS can be added only inside consent and
+opt-out checks.
 
 ## 1. Verify Forms
 
@@ -72,15 +74,13 @@ Add these actions in order:
    - Call new Evermore website lead
    - Due immediately or next business day
 
-## 4. Do Not Add Yet
+## 4. Add Consent-Gated SMS
 
-Do not add SMS actions until A2P is approved.
-
-After approval, add SMS only inside an if/else branch:
+Add SMS only inside an if/else branch:
 
 If SMS consent is checked:
 
-- Send short confirmation / appointment follow-up SMS.
+- Send short confirmation / appointment follow-up SMS using the approved A2P use case.
 
 If SMS consent is not checked:
 
@@ -102,5 +102,6 @@ Then confirm:
 - Internal email arrives
 - Confirmation email arrives
 - Task is created
+- SMS sends only when consent is checked and the owned test number is textable
 
 If all pass, turn the workflow from Draft to Publish.

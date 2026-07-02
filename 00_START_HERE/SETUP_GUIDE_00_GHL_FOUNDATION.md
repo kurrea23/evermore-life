@@ -188,7 +188,7 @@ This is the most important step. Do not run ads until this passes.
    - [ ] You got an internal notification
    - [ ] Welcome email sent to test email
    - [ ] Call task created
-   - [ ] NO SMS sent (correct — A2P not approved yet)
+   - [ ] SMS sends only if consent is checked and the approved/textable branch is active
 5. Delete the test contact after
 
 **If any of these fail → stop and fix before moving to next guide.**

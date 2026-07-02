@@ -1,11 +1,11 @@
 # Evermore SMS Nurture Sequence
 
-**Build now; activate only after A2P approval.**
+**A2P approved; activate only after consent-gated workflow testing.**
 
 Every send requires:
 
 - Explicit optional SMS consent recorded on the contact.
-- Approved A2P campaign.
+- Approved A2P campaign/textability.
 - Contact is not DND or opted out.
 - The lead has not booked and has not entered a terminal pipeline stage.
 

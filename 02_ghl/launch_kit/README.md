@@ -10,7 +10,7 @@ Use this kit to build the live GoHighLevel funnel. The current source pages in `
 4. Add the workflow from `workflow-blueprint.md`.
 5. Publish pages on `evermorelife.org`.
 6. Submit one fake lead and verify GHL contact/opportunity/workflow.
-7. Take A2P screenshot and use `a2p-registration-pack.md`.
+7. Because A2P is approved, activate only the consent-gated SMS branches and verify with an owned test number before using SMS on real leads.
 
 ## Recommended Page Ownership
 
@@ -23,14 +23,14 @@ Use this kit to build the live GoHighLevel funnel. The current source pages in `
 
 - Do not paste private API tokens or webhook secrets into public page code.
 - Do not put a GHL Private Integration Token in public page code.
-- Do not send SMS from workflows until A2P is approved.
-- Do not submit A2P until `/optin`, `/privacy`, and `/terms` are public and match the campaign copy.
+- Do not send SMS unless the contact gave optional SMS consent and is not opted out or DND.
+- Do not change the approved A2P use case, opt-in language, privacy policy, terms, or sample-message pattern without checking GHL/TCR compliance impact first.
 
 ## Files In This Kit
 
 - `native-form-field-map.md` - exact GHL form fields and consent text.
 - `workflow-blueprint.md` - exact launch workflow to build in GHL.
-- `a2p-registration-pack.md` - paste-ready A2P campaign fields.
+- `a2p-registration-pack.md` - approved A2P campaign reference fields.
 - `page-build-guide.md` - page-by-page GHL builder instructions.
 - `test-checklist.md` - what must pass before ads.
 - `snippets/` - body-only copy/snippets for GHL pages.

@@ -15,7 +15,7 @@ Native GoHighLevel form embedded on `/optin`.
 | 1 | First Name | Contact first name | Yes | Standard contact field |
 | 2 | Last Name | Contact last name | Yes | Standard contact field |
 | 3 | Phone Number | Contact phone | Yes | Required for call follow-up, but SMS requires optional consent |
-| 4 | Email Address | Contact email | No | Useful while A2P is pending |
+| 4 | Email Address | Contact email | No | Useful for email follow-up and non-SMS contacts |
 | 5 | Age | Custom field: number or single-line | Yes | Accept ages 18-85 |
 | 6 | State | Custom field: dropdown | Yes | Include all US states, or at minimum launch states |
 | 7 | Coverage Type Interested In | Custom field: dropdown | No | Options below |

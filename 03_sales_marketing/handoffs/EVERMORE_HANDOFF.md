@@ -79,7 +79,7 @@ Required before ads:
 4. Upload/publish the updated pages in GoHighLevel.
 5. Submit one fake lead from the public domain.
 6. Confirm the contact appears in GHL with name, phone, email, SMS consent, source page, and UTM fields.
-7. Confirm the right workflow fires, but do not send marketing SMS until A2P is approved.
+7. Confirm the right workflow fires, and send SMS only through the approved consent-gated branch.
 
 Private Integration option:
 
@@ -174,8 +174,8 @@ Minimum workflow:
 2. Add tag: `evermore-life-lead`.
 3. Create opportunity in `New Lead`.
 4. Notify owner immediately.
-5. If A2P approved and SMS consent is true, send compliant first SMS.
-6. Send email immediately even if A2P is pending.
+5. If SMS consent is true and the contact is not opted out/DND, send compliant first SMS.
+6. Send email immediately regardless of SMS consent.
 7. Create call task due now.
 8. If no contact after first call, move to `Called - No Answer`.
 

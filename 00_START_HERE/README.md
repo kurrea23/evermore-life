@@ -10,18 +10,18 @@ That folder is your daily workspace. Everything inside is a symlink to the real 
 | --- | --- |
 | `active/cockpit/` | The mission cockpit. Open `EVERMORE_COCKPIT.html`. |
 | `active/now/` | The 5 public site files (`index`, `optin`, `thank-you`, `privacy`, `terms`). These are the source of truth for what gets pasted into GoHighLevel. |
-| `active/next_in_ghl/` | The GHL launch kit, numbered in build order. Start at `00_README.md`, then `01_live-build-runbook.md`. This is the **critical path** to A2P approval. |
+| `active/next_in_ghl/` | The GHL launch kit, numbered in build order. Start at `00_README.md`, then `01_live-build-runbook.md`. A2P is approved; this is now the **critical path** to safe SMS activation and lead-path proof. |
 | `active/handoffs/` | `01_COWORK_HANDOFF.md` (what Codex did) and `02_EVERMORE_HANDOFF.md` (full launch playbook). |
 | `active/run/` | The four scripts you actually invoke this week: `wire_ghl_webhook.sh`, `wire_pixel.sh`, `deploy_sarah.sh`, `deploy_kvn.sh`. |
 | `active/rooms/` | One folder per active task. Each room has a `README.md` (overview), `YOU_DO_THIS.md` (no-AI playbook), `HELPERS.md` (which AI does what), and pre-staged files. The cockpit's "ROOMS" panel and the active step both link in here. Current rooms: `A2P_REGISTRATION/` (your focus), `KEVIN_V2/` (parallel spec). |
 
 ## Critical-path mission
 
-1. Build native GHL form + 5 pages on `evermorelife.org`
-2. Build the lead intake workflow (SMS actions disabled until A2P approves)
-3. Submit one fake lead and verify the contact, tag, opportunity, owner notify, email, and call task all fire
-4. Submit A2P 10DLC registration with `06_a2p-registration-pack.md`
-5. Install Meta Pixel and launch a small test ad
+1. Confirm native GHL form + 5 pages on `evermorelife.org`
+2. Activate the lead intake workflow with SMS branches allowed only for opted-in contacts
+3. Submit one fake lead and verify the contact, tag, opportunity, owner notify, email, call task, and consent-gated SMS behavior
+4. Record A2P approval/textability evidence in the GHL launch kit
+5. Install/verify Meta Pixel and launch a small test ad only after the lead path passes
 6. First booked appointment → first sale
 
 Full detail in `active/cockpit/EVERMORE_COCKPIT.html`.

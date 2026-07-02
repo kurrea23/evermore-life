@@ -57,10 +57,10 @@ Files built to paste directly into GHL:
 | Sarah AI bot | ✅ LIVE | Full conversation tree needed |
 | Lead pipeline | ✅ LIVE | Verify stages match recommended list |
 | GHL webhook wired | ❓ VERIFY | Run `04_tools/scripts/wire_ghl_webhook.sh` and test |
-| A2P 10DLC | ❓ IN PROGRESS | Submit with `a2p-registration-pack.md` |
-| SMS automations | ⛔ HOLD | Cannot send marketing SMS until A2P approved |
+| A2P 10DLC | ✅ APPROVED | Record approval/textability evidence from GHL Trust Center |
+| SMS automations | ✅ CAN ACTIVATE | Enable only consent-gated, compliant workflow SMS and test with owned number first |
 | Email automations | ✅ CAN SEND | Not gated by A2P |
-| 5-day SMS nurture | 📋 NOT BUILT | Build after A2P approval |
+| 5-day SMS nurture | 📋 READY TO BUILD/ACTIVATE | Use `SMS_NURTURE_SEQUENCE.md`; only send to opted-in contacts |
 | 5-email nurture | 📋 NOT BUILT | Build now (not gated) |
 
 ---
@@ -91,8 +91,8 @@ Based on `launch_kit/workflow-blueprint.md`, build a complete GHL workflow spec:
 6. Send internal notification: "New lead: [First Name] [Last Name] — [Phone] — [State] — Goal: [Coverage Goal]"
 7. Send email: Welcome email (use `EMAIL_NURTURE_SEQUENCE.md` Email 1 when built)
 8. Create task: "Call [First Name] within 5 minutes" — due: now
-9. Wait: IF SMS consent = true AND A2P approved → send SMS Day 1
-10. Wait 24 hours → SMS Day 2 (if consented + A2P)
+9. Wait: IF SMS consent = true AND contact is not DND/opted out → send SMS Day 1
+10. Wait 24 hours → SMS Day 2 (if consented and still textable)
 11. Wait 48 hours → SMS Day 3
 12. Wait 96 hours → SMS Day 5
 
@@ -132,7 +132,7 @@ Not gated by A2P. Can go live immediately.
 
 Output: `02_ghl/launch_kit/EMAIL_NURTURE_SEQUENCE.md`
 
-### Task D — Build 5-day SMS nurture sequence (build now, activate after A2P)
+### Task D — Build and activate 5-day SMS nurture sequence
 Reference: `a2p-registration-pack.md` for compliant language
 
 **Day 1 (1 hour after form):**
@@ -149,12 +149,12 @@ Reference: `a2p-registration-pack.md` for compliant language
 
 Output: `02_ghl/launch_kit/SMS_NURTURE_SEQUENCE.md`
 
-### Task E — A2P registration verification
+### Task E — A2P approval verification
 1. Open `launch_kit/a2p-registration-pack.md`
 2. Check each item against what's currently live at evermorelife.org
 3. Confirm: opt-in URL live, privacy URL live, terms URL live, sample messages match current SMS templates
 4. Flag any gaps as a list in `launch_kit/A2P_GAP_REPORT.md`
-5. If all green: document as ready for submission
+5. Document the GHL Trust Center approval/textability status and any limits in `launch_kit/A2P_GAP_REPORT.md`
 
 ---
 

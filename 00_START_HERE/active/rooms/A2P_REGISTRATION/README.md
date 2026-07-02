@@ -1,7 +1,7 @@
 # A2P 10DLC REGISTRATION — ROOM
 
-> **Mission:** Get Evermore Life approved to send SMS through GoHighLevel.
-> **Status gate:** This unblocks SMS in the workflow AND lets ads scale safely.
+> **Mission:** Preserve A2P approval and safely activate SMS through GoHighLevel.
+> **Status gate:** A2P is approved/textable; now prove the consent-gated SMS workflow before scaling ads.
 > **Owner:** YOU (human). Kevin keeps you on task. Helpers (Coworker / Codex / Claude) only fill in support roles.
 
 ---
@@ -30,11 +30,11 @@ A2P_REGISTRATION/
 
 ## The 5 phases (high level)
 
-1. **Pre-flight** — Confirm the public pages are live and match the campaign copy.
-2. **Screenshot** — One screenshot of `evermorelife.org/optin` showing form + SMS consent + privacy/terms links.
-3. **Paste** — Copy the campaign description, opt-in flow, sample messages from `paste_into_ghl/` into GHL's A2P form.
-4. **Submit** — Submit the campaign in GHL. Wait for The Campaign Registry approval (typically 1–7 days).
-5. **Verify** — When approved, flip SMS actions ON in the workflow and run a live test send to your own phone.
+1. **Pre-flight** — Confirm the public pages are live and still match the approved campaign copy.
+2. **Record** — Save non-secret approval evidence from GHL Trust Center outside public docs, and record only safe status details here.
+3. **Activate** — Flip on only the approved consent-gated SMS workflow actions.
+4. **Verify** — Run a live test send to your own phone, including STOP/START behavior.
+5. **Operate** — Use SMS only for opted-in, textable contacts under the approved use case.
 
 Open `YOU_DO_THIS.md` for the exact click-by-click version.
 
@@ -42,9 +42,9 @@ Open `YOU_DO_THIS.md` for the exact click-by-click version.
 
 ## Why YOU do this one (not AI)
 
-A2P registration is the gate that controls whether your business can text people in the U.S. **You need to know how this works.** If something gets rejected, if a campaign needs re-submission a year from now, if a carrier flags a message — you need to be able to handle it without spinning up a session. That's why this room is structured for human execution first, AI second.
+A2P registration is the gate that controls whether your business can text people in the U.S. **You need to know how this works.** Now that approval is in, the risk moves to staying inside the approved use case, honoring consent/STOP, and keeping proof organized. That's why this room is structured for human execution first, AI second.
 
-AI helps with: editing copy if a field is too long, drafting responses if you get a rejection, double-checking that page text matches campaign text. AI does NOT touch: the GHL form submission, the live screenshot, the phone where the test message arrives.
+AI helps with: checking copy against the approved use case, updating local docs, drafting compliant workflow steps, and documenting non-secret status. AI does NOT touch: sending live SMS to customers, changing the approved campaign use case, or storing private account screenshots/secrets in the repo.
 
 ---
 
@@ -53,6 +53,7 @@ AI helps with: editing copy if a field is too long, drafting responses if you ge
 - Pages on `evermorelife.org` aren't published yet, OR
 - Opt-in checkbox isn't visible/unchecked on the live page, OR
 - Privacy + Terms links aren't visible on the opt-in page, OR
-- Sample message text in GHL doesn't match what's in `paste_into_ghl/01_a2p-registration-pack.md`
+- The workflow would text contacts without recorded consent, OR
+- Sample message text in GHL no longer matches the approved campaign/use case
 
 If any of these are true, back up to the cockpit, finish Step 5–7, then come back here.
