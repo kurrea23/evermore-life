@@ -1255,7 +1255,11 @@ async function syncApi(path, options = {}){
   const res = await fetch(SYNC_API + path, { ...options, headers: syncHeaders() });
   if (res.status === 401){ location.replace('/login/?next=%2Fintake'); throw new Error('login required'); }
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || 'sync failed');
+  if (!res.ok){
+    const err = new Error(data.error || 'sync failed');
+    err.status = res.status;
+    throw err;
+  }
   return data;
 }
 async function syncClientToServer(c){
@@ -1263,7 +1267,18 @@ async function syncClientToServer(c){
     const payload = { ...c };
     delete payload.serverId; delete payload.syncPending;
     if (c.serverId){
-      await syncApi('/clients/' + c.serverId, { method: 'PUT', body: JSON.stringify(payload) });
+      try {
+        await syncApi('/clients/' + c.serverId, { method: 'PUT', body: JSON.stringify(payload) });
+      } catch (e) {
+        if (e && e.status === 404){
+          // Server row is gone (deleted there, or this vault was restored from
+          // an old backup). Re-POST — the server dedupes on intake id / phone,
+          // so this relinks to the right row instead of duplicating.
+          c.serverId = null;
+          const out = await syncApi('/clients', { method: 'POST', body: JSON.stringify(payload) });
+          c.serverId = out.id;
+        } else { throw e; }
+      }
     } else {
       const out = await syncApi('/clients', { method: 'POST', body: JSON.stringify(payload) });
       c.serverId = out.id;
