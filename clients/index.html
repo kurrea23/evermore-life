@@ -202,16 +202,10 @@ a{text-decoration:none;color:inherit}
 
 <script src="/agent-suite-auth.js"></script>
 <script>
-const API = 'https://api.evermorelife.org';
-const TOKEN_KEY = 'evermore-auth-token';
-const ROLE_KEY  = 'evermore-user-role';
-const NAME_KEY  = 'evermore-user-name';
-
-/* ── AUTH ── */
-const token = localStorage.getItem(TOKEN_KEY);
-if (!token) location.replace('/login/');
-const role = localStorage.getItem(ROLE_KEY) || 'agent';
-const myName = localStorage.getItem(NAME_KEY) || 'Agent';
+/* ── AUTH (shared helper handles token, headers, and 401 redirect) ── */
+EvermoreAgentSuite.requireAuth();
+const role   = EvermoreAgentSuite.user().role || localStorage.getItem(EvermoreAgentSuite.ROLE_KEY) || 'agent';
+const myName = EvermoreAgentSuite.user().name || localStorage.getItem(EvermoreAgentSuite.NAME_KEY) || 'Agent';
 
 /* Shared gold top nav (injected by agent-suite-auth.js) — handles Pipeline active state + owner Team link */
 EvermoreAgentSuite.installTopNav('Client Pipeline');
@@ -219,10 +213,7 @@ if (role === 'owner') {
   document.getElementById('agentFilter').style.display = '';
 }
 
-function logout(){
-  [TOKEN_KEY, ROLE_KEY, NAME_KEY, 'evermore-auth-user'].forEach(k => localStorage.removeItem(k));
-  location.replace('/login/');
-}
+const logout = EvermoreAgentSuite.logout;
 
 /* ── COLUMNS CONFIG ── */
 const COLUMNS = [
@@ -245,20 +236,13 @@ async function loadClients(){
   document.getElementById('board').innerHTML =
     '<div id="loadState"><div class="spinner"></div><div>Loading clients…</div></div>';
   try {
-    const res = await fetch(API + '/api/clients', {
-      headers:{ Authorization:'Bearer ' + token }
-    });
-    if (res.status === 401){ logout(); return; }
-    const data = await res.json();
+    const data = await EvermoreAgentSuite.api('/clients');
     allClients = data.clients || [];
 
     // Owner: also load agents for filter
     if (role === 'owner'){
-      const ar = await fetch(API + '/api/owner/agents', {
-        headers:{ Authorization:'Bearer ' + token }
-      });
-      if (ar.ok){
-        const ad = await ar.json();
+      try {
+        const ad = await EvermoreAgentSuite.api('/owner/agents');
         const sel = document.getElementById('agentFilter');
         sel.innerHTML = '<option value="">All Agents</option>';
         (ad.agents || []).forEach(ag => {
@@ -267,7 +251,7 @@ async function loadClients(){
           o.value = ag.id; o.textContent = ag.name;
           sel.appendChild(o);
         });
-      }
+      } catch(e){ /* agent filter is optional; board still renders */ }
     }
     render();
   } catch(e){

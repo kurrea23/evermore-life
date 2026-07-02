@@ -71,11 +71,15 @@
     window.location.replace("/login/");
   }
 
+  function escapeHtml(value) {
+    return String(value || "").replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+  }
+
   function installTopNav(title) {
     if (document.getElementById("agentSuiteNav")) return;
     const currentUser = user();
     const role = currentUser.role || localStorage.getItem(ROLE_KEY);
-    const name = currentUser.name || localStorage.getItem(NAME_KEY) || "Agent";
+    const name = escapeHtml(currentUser.name || localStorage.getItem(NAME_KEY) || "Agent");
     const path = window.location.pathname;
     const cls = (href) => (path.indexOf(href) === 0 ? ' class="active"' : "");
     const nav = document.createElement("nav");
