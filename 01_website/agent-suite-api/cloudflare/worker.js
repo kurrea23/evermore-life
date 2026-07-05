@@ -1,5 +1,13 @@
 const SESSION_DAYS = 30;
 const ENC_PREFIX = "enc:v1:";
+// Mirrored in /agent-suite-activity.js (EvermoreActivity.TYPES) — keep in sync.
+const ACTIVITY_TYPES = new Set([
+  "dial", "contact", "conversation", "appt_set", "appt_held",
+  "app_started", "app_submitted", "issued", "follow_up_set",
+  "referral_asked", "referral_received", "stage_change", "note",
+]);
+const ACTIVITY_NOTE_MAX = 500;
+const ACTIVITY_LIST_MAX = 200;
 const SENSITIVE_COLUMNS = ["ssn", "routing", "account", "dl_number", "intake_json"];
 const MAX_JSON_BYTES = 350000;
 const PBKDF2_ITERATIONS = 100000;
@@ -71,6 +79,18 @@ export default {
         if (request.method === "GET") return await getScoreDay(request, env, user, scoreMatch[1]);
         if (request.method === "POST") return await saveScoreDay(request, env, user, scoreMatch[1]);
         return methodNotAllowed(request, env, "GET, POST");
+      }
+
+      if (url.pathname === "/api/activities") {
+        if (request.method === "GET") return await listActivities(request, env, user, url);
+        if (request.method === "POST") return await createActivity(request, env, user);
+        return methodNotAllowed(request, env, "GET, POST");
+      }
+
+      const activityMatch = url.pathname.match(/^\/api\/activities\/([^/]+)$/);
+      if (activityMatch) {
+        if (request.method === "DELETE") return await deleteActivity(request, env, user, activityMatch[1]);
+        return methodNotAllowed(request, env, "DELETE");
       }
 
       if (url.pathname === "/api/owner/agents") {
@@ -300,6 +320,90 @@ async function findExistingClient(env, userId, { client, source }) {
 async function deleteClient(request, env, user, id) {
   await env.DB.prepare("DELETE FROM clients WHERE id = ? AND user_id = ?").bind(id, user.id).run();
   return json(request, env, { ok: true });
+}
+
+async function createActivity(request, env, user) {
+  const body = await readJson(request);
+  if (body.error) return json(request, env, { error: body.error }, body.status);
+  const source = objectOrEmpty(body.value);
+
+  const type = cleanString(source.type);
+  if (!ACTIVITY_TYPES.has(type)) return json(request, env, { error: "Unknown activity type." }, 400);
+
+  const clientId = cleanString(source.client_id || source.clientId);
+  let clientName = "";
+  if (clientId) {
+    const row = await env.DB.prepare(
+      "SELECT id, first_name, last_name FROM clients WHERE id = ? AND user_id = ?",
+    ).bind(clientId, user.id).first();
+    if (!row) return json(request, env, { error: "Client not found." }, 404);
+    clientName = [row.first_name, row.last_name].filter(Boolean).join(" ");
+  }
+
+  const note = cleanString(source.note).slice(0, ACTIVITY_NOTE_MAX);
+  const premiumRaw = Number(source.premium);
+  const premium = Number.isFinite(premiumRaw) && premiumRaw > 0 ? premiumRaw : null;
+  const meta = objectOrEmpty(source.meta || parseJson(source.meta_json, {}));
+
+  const activity = {
+    id: crypto.randomUUID(),
+    user_id: user.id,
+    client_id: clientId || null,
+    type,
+    note,
+    premium,
+    meta_json: JSON.stringify(meta),
+    created_at: nowIso(),
+  };
+  await env.DB.prepare(
+    "INSERT INTO activities (id, user_id, client_id, type, note, premium, meta_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+  ).bind(activity.id, activity.user_id, activity.client_id, activity.type, activity.note, activity.premium, activity.meta_json, activity.created_at).run();
+
+  return json(request, env, { activity: activityRowToObject({ ...activity, client_name: clientName }) }, 201);
+}
+
+async function listActivities(request, env, user, url) {
+  const clientId = cleanString(url.searchParams.get("client_id"));
+  const before = cleanString(url.searchParams.get("before"));
+  const limitRaw = Number(url.searchParams.get("limit"));
+  const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? Math.min(Math.floor(limitRaw), ACTIVITY_LIST_MAX) : 50;
+
+  const clauses = ["activities.user_id = ?"];
+  const binds = [user.id];
+  if (clientId) { clauses.push("activities.client_id = ?"); binds.push(clientId); }
+  if (before) { clauses.push("activities.created_at < ?"); binds.push(before); }
+
+  const result = await env.DB.prepare(
+    `SELECT activities.*, clients.first_name AS c_first, clients.last_name AS c_last
+     FROM activities LEFT JOIN clients ON clients.id = activities.client_id
+     WHERE ${clauses.join(" AND ")}
+     ORDER BY activities.created_at DESC
+     LIMIT ?`,
+  ).bind(...binds, limit).all();
+
+  const activities = (result.results || []).map((row) => activityRowToObject({
+    ...row,
+    client_name: [row.c_first, row.c_last].filter(Boolean).join(" "),
+  }));
+  return json(request, env, { activities });
+}
+
+async function deleteActivity(request, env, user, id) {
+  await env.DB.prepare("DELETE FROM activities WHERE id = ? AND user_id = ?").bind(id, user.id).run();
+  return json(request, env, { ok: true });
+}
+
+function activityRowToObject(row) {
+  return {
+    id: row.id,
+    client_id: row.client_id || null,
+    client_name: row.client_name || "",
+    type: row.type,
+    note: row.note || "",
+    premium: row.premium == null ? null : Number(row.premium),
+    meta: parseJson(row.meta_json, {}),
+    created_at: row.created_at,
+  };
 }
 
 async function ownerAgents(request, env, user) {
