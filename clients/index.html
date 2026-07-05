@@ -5,149 +5,182 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Evermore Life — Client Pipeline</title>
 <meta name="theme-color" content="#0b1019">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/agent-suite-ui.css">
 <style>
 /* ============ BASE ============ */
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  background:#0b1019;background-image:radial-gradient(1200px 600px at 80% -10%,#16233c 0%,#0b1019 55%);
-  background-attachment:fixed;color:#e9eef7;font-size:15px;min-height:100vh}
-h1,h2,h3{font-family:Palatino,"Palatino Linotype",Georgia,serif}
+body{font-family:var(--el-sans);
+  background:var(--el-bg);background-image:var(--el-bg-grad);
+  background-attachment:fixed;color:var(--el-ink);font-size:15px;min-height:100vh}
+h1,h2,h3{font-family:var(--el-serif)}
 a{text-decoration:none;color:inherit}
 
 /* Top nav is injected by /agent-suite-auth.js (installTopNav) — shared across all agent-suite pages */
 
 /* ============ TOOLBAR ============ */
 #toolbar{padding:16px 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-  border-bottom:1px solid #1a2740}
+  border-bottom:1px solid var(--el-line)}
 #toolbar h2{font-size:20px;letter-spacing:.02em;margin-right:8px}
-.toolbarCount{font-size:13px;color:#8fa3c2;font-family:-apple-system,sans-serif}
+.toolbarCount{font-size:13px;color:var(--el-muted);font-family:var(--el-sans)}
 .tbSpacer{flex:1}
-#searchBox{padding:8px 12px;border:1px solid #2a3a57;border-radius:8px;background:#0e1626;
-  color:#e9eef7;font-size:13.5px;width:220px}
+#searchBox{padding:8px 12px;border:1px solid var(--el-line2);border-radius:8px;background:var(--el-bg2);
+  color:var(--el-ink);font-size:13.5px;width:220px}
 #searchBox::placeholder{color:#5f6f8a}
-#searchBox:focus{outline:none;border-color:#d4b576;box-shadow:0 0 0 3px #d4b57622}
-.tbSelect{padding:8px 12px;border:1px solid #2a3a57;border-radius:8px;background:#0e1626;
-  color:#e9eef7;font-size:13.5px;cursor:pointer}
-.tbSelect:focus{outline:none;border-color:#d4b576}
-#refreshBtn{padding:8px 14px;border:1px solid #34507d;border-radius:8px;background:transparent;
+#searchBox:focus{outline:none;border-color:var(--el-gold);box-shadow:0 0 0 3px var(--el-gold-soft)}
+.tbSelect{padding:8px 12px;border:1px solid var(--el-line2);border-radius:8px;background:var(--el-bg2);
+  color:var(--el-ink);font-size:13.5px;cursor:pointer}
+.tbSelect:focus{outline:none;border-color:var(--el-gold)}
+#refreshBtn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid #34507d;border-radius:8px;background:transparent;
   color:#a9bcd9;font-size:13px;cursor:pointer;transition:all .15s}
-#refreshBtn:hover{background:#22324f;color:#d4b576}
+#refreshBtn:hover{background:#22324f;color:var(--el-gold)}
 
-/* ============ PIPELINE BOARD ============ */
+/* ============ PIPELINE BOARD (desktop) ============ */
 #board{display:flex;gap:14px;padding:20px 24px 40px;overflow-x:auto;min-height:calc(100vh - 120px);
   align-items:flex-start}
 #board::-webkit-scrollbar{height:6px}
 #board::-webkit-scrollbar-track{background:#0d1525}
-#board::-webkit-scrollbar-thumb{background:#2a3a57;border-radius:3px}
+#board::-webkit-scrollbar-thumb{background:var(--el-line2);border-radius:3px}
 
 .col{flex:0 0 260px;background:#0f1a2c;border:1px solid #1e2f4a;border-radius:12px;
   display:flex;flex-direction:column;max-height:calc(100vh - 140px)}
 .colHead{padding:12px 14px 10px;display:flex;align-items:center;gap:8px;
-  border-bottom:1px solid #1a2740;border-radius:12px 12px 0 0;flex-shrink:0}
-.colDot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.colName{font-size:13px;font-weight:700;letter-spacing:.03em;flex:1}
-.colCount{font-size:12px;color:#8fa3c2;background:#162035;border-radius:10px;
-  padding:2px 8px;font-family:-apple-system,sans-serif}
+  border-bottom:1px solid var(--el-line);border-radius:12px 12px 0 0;flex-shrink:0}
+.colDot{width:9px;height:9px;border-radius:50%;flex-shrink:0;background:var(--sc)}
+.colName{font-size:13px;font-weight:700;letter-spacing:.03em;flex:1;color:var(--sc)}
+.colCount{font-size:12px;color:var(--el-muted);background:#162035;border-radius:10px;
+  padding:2px 8px}
 .colCards{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px}
 .colCards::-webkit-scrollbar{width:4px}
-.colCards::-webkit-scrollbar-thumb{background:#2a3a57;border-radius:2px}
+.colCards::-webkit-scrollbar-thumb{background:var(--el-line2);border-radius:2px}
 
 /* ============ CLIENT CARD ============ */
 .card{background:#121e34;border:1px solid #1e3050;border-radius:9px;padding:12px 14px;
   cursor:pointer;transition:all .15s;position:relative}
-.card:hover{border-color:#d4b57688;background:#16253e;transform:translateY(-1px);
+.card:hover{border-color:var(--el-gold-line);background:#16253e;transform:translateY(-1px);
   box-shadow:0 4px 16px rgba(0,0,0,.4)}
-.cardName{font-size:14px;font-weight:700;color:#e9eef7;margin-bottom:4px}
-.cardPhone{font-size:12px;color:#8fa3c2;margin-bottom:6px}
+.cardName{font-size:14px;font-weight:700;color:var(--el-ink);margin-bottom:4px}
+.cardPhone{font-size:12px;color:var(--el-muted);margin-bottom:6px;display:flex;align-items:center;gap:5px}
 .cardMeta{display:flex;flex-direction:column;gap:3px}
 .cardRow{display:flex;align-items:center;gap:6px;font-size:12px;color:#7a8fa8}
 .cardRow span{color:#c0cfe6}
 .cardAppt{margin-top:7px;padding:5px 8px;background:#1a2d1a;border:1px solid #2a4a2a;
   border-radius:6px;font-size:11.5px;color:#5fc98b;display:flex;align-items:center;gap:5px}
 .cardAppt.past{background:#2d1a1a;border-color:#4a2a2a;color:#e0726a}
-.cardAgent{margin-top:6px;font-size:11px;color:#6a7e9a;border-top:1px solid #1a2740;
+.cardAgent{font-size:11px;color:#6a7e9a;border-top:1px solid var(--el-line);
   padding-top:6px;margin-top:6px}
-.cardAgent span{color:#d4b576}
+.cardAgent span{color:var(--el-gold)}
 .emptyCol{text-align:center;padding:24px 12px;color:#4a5e7a;font-size:13px}
+
+/* ============ MOBILE STAGE LIST (≤768px) ============ */
+#stageList{display:none;padding:14px 14px 40px}
+.stageSec{margin-bottom:10px;background:#0f1a2c;border:1px solid #1e2f4a;border-radius:12px;overflow:hidden}
+.stageHead{display:flex;align-items:center;gap:9px;padding:13px 15px;cursor:pointer;user-select:none;
+  -webkit-tap-highlight-color:transparent}
+.stageHead .colDot{width:9px;height:9px}
+.stageHead .stageName{font-size:13.5px;font-weight:700;flex:1;color:var(--sc)}
+.stageHead .chev{color:var(--el-dim);transition:transform .18s;display:flex}
+.stageSec.open .chev{transform:rotate(90deg)}
+.stageBody{display:none;padding:0 10px 10px;flex-direction:column;gap:8px}
+.stageSec.open .stageBody{display:flex}
 
 /* ============ LOADING / ERROR ============ */
 #loadState{display:flex;flex-direction:column;align-items:center;justify-content:center;
-  min-height:60vh;gap:16px;color:#8fa3c2}
-.spinner{width:36px;height:36px;border:3px solid #1e2f4a;border-top-color:#d4b576;
+  min-height:60vh;gap:16px;color:var(--el-muted)}
+.spinner{width:36px;height:36px;border:3px solid #1e2f4a;border-top-color:var(--el-gold);
   border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ============ MODAL ============ */
+/* ============ DETAIL MODAL ============ */
 #overlay{display:none;position:fixed;inset:0;background:rgba(5,10,20,.75);z-index:100;
   backdrop-filter:blur(4px)}
 #overlay.open{display:flex;align-items:center;justify-content:center;padding:20px}
-#modal{background:#111c30;border:1px solid #2a3a57;border-radius:16px;width:100%;max-width:580px;
+#modal{background:#111c30;border:1px solid var(--el-line2);border-radius:16px;width:100%;max-width:580px;
   max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.6)}
 #modal::-webkit-scrollbar{width:5px}
-#modal::-webkit-scrollbar-thumb{background:#2a3a57;border-radius:3px}
+#modal::-webkit-scrollbar-thumb{background:var(--el-line2);border-radius:3px}
 .modalHead{padding:20px 24px 16px;border-bottom:1px solid #1e2f4a;display:flex;
-  align-items:flex-start;gap:12px}
+  align-items:flex-start;gap:12px;position:sticky;top:0;background:#111c30;z-index:2}
 .modalTitle{flex:1}
-.modalTitle h3{font-size:20px;margin-bottom:2px}
-.modalTitle .modalSub{font-size:13px;color:#8fa3c2}
-.modalClose{width:32px;height:32px;border:1px solid #2a3a57;border-radius:8px;background:transparent;
-  color:#8fa3c2;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;
+.modalTitle h3{font-size:20px;margin-bottom:6px}
+.modalClose{width:32px;height:32px;border:1px solid var(--el-line2);border-radius:8px;background:transparent;
+  color:var(--el-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;
   flex-shrink:0;transition:all .15s}
-.modalClose:hover{border-color:#d4b576;color:#d4b576}
+.modalClose:hover{border-color:var(--el-gold);color:var(--el-gold)}
 .modalBody{padding:20px 24px}
 .modalSection{margin-bottom:20px}
-.modalSection h4{font-size:11px;letter-spacing:.1em;color:#d4b576;text-transform:uppercase;
-  margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #1a2740}
+.modalSection h4{font-size:11px;letter-spacing:.1em;color:var(--el-gold);text-transform:uppercase;
+  margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--el-line);
+  display:flex;align-items:center;justify-content:space-between;font-family:var(--el-sans)}
 .modalGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .modalField{display:flex;flex-direction:column;gap:2px}
 .modalField label{font-size:11px;color:#6a7e9a;letter-spacing:.04em}
-.modalField span{font-size:14px;color:#e9eef7}
+.modalField span{font-size:14px;color:var(--el-ink)}
 .modalField span.empty{color:#3a4e6a;font-style:italic}
-.statusBadge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:12px;
-  font-weight:700;letter-spacing:.03em}
+
+/* Status pill (tappable) */
+.statusPill{display:inline-flex;align-items:center;gap:7px;cursor:pointer;
+  padding:5px 12px;border-radius:20px;font-size:12.5px;font-weight:700;letter-spacing:.03em;
+  background:color-mix(in srgb,var(--sc) 16%,transparent);color:var(--sc);
+  border:1px solid color-mix(in srgb,var(--sc) 38%,transparent);transition:all .15s}
+.statusPill:hover{border-color:var(--sc)}
+.statusPill .pillEdit{opacity:.7;display:flex}
+
+/* Quick-log row */
+.qlogRow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.qlogBtn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:11px 6px;
+  background:#121e34;border:1px solid #1e3050;border-radius:10px;cursor:pointer;
+  color:#c5d0e6;font-family:var(--el-sans);font-size:11px;font-weight:600;transition:all .12s;
+  -webkit-tap-highlight-color:transparent}
+.qlogBtn:active{transform:scale(.94)}
+.qlogBtn:hover{border-color:var(--el-gold-line)}
+.qlogBtn .qlogIc{color:var(--qc,#8c9cb5)}
+
+/* Appointment box */
 .apptBox{background:#0d1a0d;border:1px solid #2a4a2a;border-radius:8px;padding:10px 14px;
-  display:flex;align-items:center;gap:10px;margin-top:8px}
-.apptBox .icon{font-size:20px}
-.apptBox .apptDetail{display:flex;flex-direction:column;gap:2px}
+  display:flex;align-items:center;gap:10px;margin-top:8px;color:#5fc98b}
+.apptBox .apptDetail{display:flex;flex-direction:column;gap:2px;flex:1}
 .apptBox .apptDate{font-size:15px;color:#5fc98b;font-weight:600}
 .apptBox .apptLabel{font-size:11px;color:#4a6a4a}
 .apptBox.past .apptDate{color:#e0726a}
-.apptBox.past{background:#1a0d0d;border-color:#4a2a2a}
+.apptBox.past{background:#1a0d0d;border-color:#4a2a2a;color:#e0726a}
+.apptEditBtn{background:none;border:1px solid var(--el-line2);border-radius:7px;color:var(--el-muted);
+  padding:5px 8px;cursor:pointer;display:flex;align-items:center;transition:all .15s}
+.apptEditBtn:hover{border-color:var(--el-gold);color:var(--el-gold)}
 
-/* ============ STATUS COLORS ============ */
-.s-ip   { --sc:#60a5fa } /* In Progress */
-.s-ab   { --sc:#d4b576 } /* Appointment Booked */
-.s-ap   { --sc:#a78bfa } /* Applied */
-.s-ia   { --sc:#34d399 } /* Instantly Approved */
-.s-fu   { --sc:#fb923c } /* Further Underwriting */
-.s-ok   { --sc:#5fc98b } /* Approved */
-.s-dc   { --sc:#e0726a } /* Declined */
-.s-fo   { --sc:#22d3ee } /* Follow Up */
-.s-ni   { --sc:#6b7280 } /* Not Interested */
+/* Activity history */
+.histItem{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.histItem:last-child{border-bottom:none}
+.histIc{color:var(--hc,#8c9cb5);margin-top:1px;flex-shrink:0}
+.histBody{flex:1;min-width:0}
+.histLabel{font-size:13px;color:var(--el-ink);font-weight:500}
+.histNote{font-size:12px;color:var(--el-muted);margin-top:1px;overflow-wrap:break-word}
+.histTime{font-size:11px;color:var(--el-dim);flex-shrink:0;margin-top:2px}
+.histEmpty{font-size:13px;color:var(--el-dim);padding:10px 0;font-style:italic}
 
-.colDot  { background: var(--sc) }
-.colName { color: var(--sc) }
-.statusBadge { background: color-mix(in srgb, var(--sc) 18%, transparent);
-               color: var(--sc); border: 1px solid color-mix(in srgb, var(--sc) 35%, transparent) }
+/* Notes editor */
+#notesArea{width:100%;min-height:88px;background:#0d1525;border:1px solid var(--el-line);border-radius:8px;
+  padding:12px 14px;color:#c0cfe6;font-family:var(--el-sans);font-size:14px;line-height:1.6;resize:vertical}
+#notesArea:focus{outline:none;border-color:var(--el-gold)}
+.notesSaveRow{display:flex;justify-content:flex-end;margin-top:8px;gap:8px}
 
-/* ============ MOBILE (≤640px) ============ */
-@media (max-width: 640px) {
-  /* Toolbar — stack search full-width below the filters */
+/* ============ MOBILE (≤768px) ============ */
+@media (max-width: 768px) {
   #toolbar { padding: 12px 16px; gap: 8px }
   #toolbar h2 { font-size: 17px }
   #searchBox { width: 100%; order: 3; flex: 1 1 100% }
   .tbSelect { font-size: 12px; padding: 6px 8px }
   #refreshBtn { font-size: 12px; padding: 6px 10px }
 
-  /* Board — one column fills most of the screen, swipe between */
-  #board { padding: 16px 12px 80px; gap: 10px; min-height: calc(100vh - 160px) }
-  .col { flex: 0 0 min(260px, 80vw); max-height: calc(100vh - 180px) }
+  #board { display: none }
+  #stageList { display: block }
 
-  /* Modal — bottom-sheet style */
+  /* Modal — full-screen sheet */
   #overlay.open { align-items: flex-end; padding: 0 }
-  #modal { border-radius: 16px 16px 0 0; max-width: 100%; max-height: 92vh }
+  #modal { border-radius: 16px 16px 0 0; max-width: 100%; max-height: 94vh }
   .modalHead { padding: 16px 20px 12px }
-  .modalBody { padding: 16px 20px }
+  .modalBody { padding: 16px 20px calc(24px + env(safe-area-inset-bottom)) }
   .modalGrid { grid-template-columns: 1fr }
 }
 </style>
@@ -161,24 +194,15 @@ a{text-decoration:none;color:inherit}
   <div class="tbSpacer"></div>
   <input type="search" id="searchBox" placeholder="Search clients…" oninput="render()">
   <select class="tbSelect" id="statusFilter" onchange="render()">
-    <option value="">All Statuses</option>
-    <option>In Progress</option>
-    <option>Appointment Booked</option>
-    <option>Applied</option>
-    <option>Instantly Approved</option>
-    <option>Further Underwriting</option>
-    <option>Approved</option>
-    <option>Declined</option>
-    <option>Follow Up</option>
-    <option>Not Interested</option>
+    <option value="">All Stages</option>
   </select>
   <select class="tbSelect" id="agentFilter" onchange="render()" style="display:none">
     <option value="">All Agents</option>
   </select>
-  <button id="refreshBtn" onclick="loadClients()">↻ Refresh</button>
+  <button id="refreshBtn" onclick="loadClients()"><span id="refreshIc"></span>Refresh</button>
 </div>
 
-<!-- BOARD -->
+<!-- DESKTOP BOARD -->
 <div id="board">
   <div id="loadState">
     <div class="spinner"></div>
@@ -186,28 +210,79 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
-<!-- MODAL -->
+<!-- MOBILE STAGE LIST -->
+<div id="stageList"></div>
+
+<!-- DETAIL MODAL -->
 <div id="overlay" onclick="closeModal(event)">
   <div id="modal">
     <div class="modalHead">
       <div class="modalTitle">
         <h3 id="mName"></h3>
-        <div class="modalSub" id="mSub"></div>
+        <div id="mStatusPill"></div>
       </div>
-      <button class="modalClose" onclick="closeModal()">✕</button>
+      <button class="modalClose" onclick="closeModal()" id="modalCloseBtn"></button>
     </div>
     <div class="modalBody" id="mBody"></div>
   </div>
 </div>
 
+<!-- STATUS PICKER SHEET -->
+<div class="el-sheet-bg hidden" id="statusSheet" onclick="closeStatusSheet(event)">
+  <div class="el-sheet">
+    <div class="el-sheet-handle"></div>
+    <div class="el-sheet-title">Move to Stage</div>
+    <div class="el-sheet-sub" id="statusSheetSub"></div>
+    <div id="statusOptions"></div>
+    <div id="apptPrompt" style="display:none;margin-top:12px">
+      <label style="display:block;font-size:11px;font-weight:600;color:var(--el-muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">Appointment Date &amp; Time</label>
+      <input type="datetime-local" class="el-input" id="apptInput">
+      <button class="el-btn gold" style="width:100%;margin-top:10px" onclick="confirmApptStatus()">Book Appointment</button>
+    </div>
+  </div>
+</div>
+
+<!-- APPOINTMENT EDIT SHEET -->
+<div class="el-sheet-bg hidden" id="apptSheet" onclick="closeApptSheet(event)">
+  <div class="el-sheet">
+    <div class="el-sheet-handle"></div>
+    <div class="el-sheet-title">Appointment</div>
+    <div class="el-sheet-sub" id="apptSheetSub"></div>
+    <input type="datetime-local" class="el-input" id="apptEditInput">
+    <div style="display:flex;gap:10px;margin-top:12px">
+      <button class="el-btn ghost" style="flex:1" onclick="saveAppt('')">Clear</button>
+      <button class="el-btn gold" style="flex:2" onclick="saveAppt()">Save Appointment</button>
+    </div>
+  </div>
+</div>
+
+<!-- ISSUED (PREMIUM) SHEET -->
+<div class="el-sheet-bg hidden" id="issuedSheet" onclick="closeIssuedSheet(event)">
+  <div class="el-sheet">
+    <div class="el-sheet-handle"></div>
+    <div class="el-sheet-title">Policy Issued</div>
+    <div class="el-sheet-sub" id="issuedSheetSub"></div>
+    <label style="display:block;font-size:11px;font-weight:600;color:var(--el-muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">Annual Premium ($)</label>
+    <input type="number" class="el-input" id="issuedPremium" inputmode="decimal" placeholder="e.g. 1200">
+    <label style="display:block;font-size:11px;font-weight:600;color:var(--el-muted);letter-spacing:.06em;text-transform:uppercase;margin:12px 0 6px">Carrier (optional)</label>
+    <input type="text" class="el-input" id="issuedCarrier" placeholder="Carrier name">
+    <button class="el-btn gold" style="width:100%;margin-top:14px" onclick="confirmIssuedLog()">Log Issued Policy</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="el-toast" id="toast"></div>
+
 <script src="/agent-suite-auth.js"></script>
+<script src="/agent-suite-icons.js"></script>
+<script src="/agent-suite-activity.js"></script>
 <script>
 /* ── AUTH (shared helper handles token, headers, and 401 redirect) ── */
 EvermoreAgentSuite.requireAuth();
 const role   = EvermoreAgentSuite.user().role || localStorage.getItem(EvermoreAgentSuite.ROLE_KEY) || 'agent';
 const myName = EvermoreAgentSuite.user().name || localStorage.getItem(EvermoreAgentSuite.NAME_KEY) || 'Agent';
 
-/* Shared gold top nav (injected by agent-suite-auth.js) — handles Pipeline active state + owner Team link */
+/* Shared gold top nav + mobile bottom nav (injected by agent-suite-auth.js) */
 EvermoreAgentSuite.installTopNav('Client Pipeline');
 if (role === 'owner') {
   document.getElementById('agentFilter').style.display = '';
@@ -215,23 +290,25 @@ if (role === 'owner') {
 
 const logout = EvermoreAgentSuite.logout;
 const esc    = EvermoreAgentSuite.escapeHtml; // client-typed data must never reach innerHTML raw
+const ic     = (name, opts) => EvermoreIcons.icon(name, opts);
+const ACT    = EvermoreActivity;
 
-/* ── COLUMNS CONFIG ── */
-const COLUMNS = [
-  { key:'In Progress',           cls:'s-ip' },
-  { key:'Appointment Booked',    cls:'s-ab' },
-  { key:'Applied',               cls:'s-ap' },
-  { key:'Instantly Approved',    cls:'s-ia' },
-  { key:'Further Underwriting',  cls:'s-fu' },
-  { key:'Approved',              cls:'s-ok' },
-  { key:'Follow Up',             cls:'s-fo' },
-  { key:'Declined',              cls:'s-dc' },
-  { key:'Not Interested',        cls:'s-ni' },
-];
+document.getElementById('refreshIc').innerHTML = ic('refresh', {size:14});
+document.getElementById('modalCloseBtn').innerHTML = ic('x', {size:16});
+
+/* ── COLUMNS: canonical stages from the shared module ── */
+const COLUMNS = ACT.STATUSES;
+const statusSel = document.getElementById('statusFilter');
+COLUMNS.forEach(s => {
+  const o = document.createElement('option');
+  o.value = s.key; o.textContent = s.key;
+  statusSel.appendChild(o);
+});
 
 /* ── DATA ── */
 let allClients = [];
 let agentMap   = {}; // id → name (owner only)
+let pendingDeepLink = new URLSearchParams(location.search).get('client') || '';
 
 async function loadClients(){
   document.getElementById('board').innerHTML =
@@ -255,6 +332,13 @@ async function loadClients(){
       } catch(e){ /* agent filter is optional; board still renders */ }
     }
     render();
+
+    // Deep link: /clients/?client=<id>
+    if (pendingDeepLink){
+      const target = allClients.find(c => c.id === pendingDeepLink);
+      pendingDeepLink = '';
+      if (target) openModal(target);
+    }
   } catch(e){
     document.getElementById('board').innerHTML =
       '<div id="loadState" style="color:#e0726a">Failed to load clients — check your connection.</div>';
@@ -262,12 +346,11 @@ async function loadClients(){
 }
 
 /* ── FILTER + RENDER ── */
-function render(){
-  const q      = (document.getElementById('searchBox').value || '').toLowerCase();
-  const sf     = document.getElementById('statusFilter').value;
-  const af     = document.getElementById('agentFilter').value;
-
-  let list = allClients.filter(c => {
+function filteredClients(){
+  const q  = (document.getElementById('searchBox').value || '').toLowerCase();
+  const sf = document.getElementById('statusFilter').value;
+  const af = document.getElementById('agentFilter').value;
+  return allClients.filter(c => {
     const name  = ((c.first_name||'') + ' ' + (c.last_name||'')).toLowerCase();
     const phone = (c.phone||'').toLowerCase();
     const carr  = (c.carrier||'').toLowerCase();
@@ -276,33 +359,42 @@ function render(){
     if (af && c.user_id !== af) return false;
     return true;
   });
+}
 
-  document.getElementById('totalCount').textContent = list.length + ' client' + (list.length !== 1 ? 's' : '');
-
-  // Group by status
+function groupByStatus(list){
   const groups = {};
   COLUMNS.forEach(col => { groups[col.key] = []; });
-  const OTHER_KEY = 'In Progress';
   list.forEach(c => {
     const s = c.status || '';
     if (groups[s] !== undefined) groups[s].push(c);
-    else groups[OTHER_KEY].push(c);
+    else groups['In Progress'].push(c);
   });
+  return groups;
+}
 
+function render(){
+  const list = filteredClients();
+  document.getElementById('totalCount').textContent = list.length + ' client' + (list.length !== 1 ? 's' : '');
+  const groups = groupByStatus(list);
+  renderBoard(groups);
+  renderStageList(groups);
+}
+
+function renderBoard(groups){
   const board = document.getElementById('board');
   board.innerHTML = '';
-
   COLUMNS.forEach(col => {
     const cards = groups[col.key] || [];
     const div = document.createElement('div');
-    div.className = 'col ' + col.cls;
+    div.className = 'col';
+    div.style.setProperty('--sc', col.color);
     div.innerHTML = `
       <div class="colHead">
         <div class="colDot"></div>
         <div class="colName">${col.key}</div>
         <div class="colCount">${cards.length}</div>
       </div>
-      <div class="colCards" id="col-${col.cls}"></div>`;
+      <div class="colCards"></div>`;
     board.appendChild(div);
 
     const container = div.querySelector('.colCards');
@@ -310,16 +402,46 @@ function render(){
       container.innerHTML = '<div class="emptyCol">No clients</div>';
       return;
     }
-    cards.forEach(c => {
-      container.appendChild(makeCard(c, col.cls));
-    });
+    cards.forEach(c => container.appendChild(makeCard(c)));
   });
 }
 
-function makeCard(c, cls){
+/* Mobile: vertical collapsible stage sections */
+let openStages = null; // persisted per render; default = stages that have clients
+function renderStageList(groups){
+  const wrap = document.getElementById('stageList');
+  wrap.innerHTML = '';
+  if (openStages === null){
+    openStages = new Set(COLUMNS.filter(c => (groups[c.key]||[]).length > 0).slice(0,3).map(c => c.key));
+  }
+  COLUMNS.forEach(col => {
+    const cards = groups[col.key] || [];
+    const sec = document.createElement('div');
+    sec.className = 'stageSec' + (openStages.has(col.key) ? ' open' : '');
+    sec.style.setProperty('--sc', col.color);
+    sec.innerHTML = `
+      <div class="stageHead">
+        <div class="colDot"></div>
+        <div class="stageName">${col.key}</div>
+        <div class="colCount">${cards.length}</div>
+        <div class="chev">${ic('chevron-right', {size:16})}</div>
+      </div>
+      <div class="stageBody"></div>`;
+    sec.querySelector('.stageHead').onclick = () => {
+      if (openStages.has(col.key)) openStages.delete(col.key); else openStages.add(col.key);
+      sec.classList.toggle('open');
+    };
+    const body = sec.querySelector('.stageBody');
+    if (cards.length === 0) body.innerHTML = '<div class="emptyCol">No clients</div>';
+    else cards.forEach(c => body.appendChild(makeCard(c)));
+    wrap.appendChild(sec);
+  });
+}
+
+function makeCard(c){
   const div = document.createElement('div');
   div.className = 'card';
-  div.onclick = () => openModal(c, cls);
+  div.onclick = () => openModal(c);
 
   const name = [c.first_name, c.last_name].filter(Boolean).join(' ') || 'Unnamed';
   const phone = c.phone || '';
@@ -328,12 +450,12 @@ function makeCard(c, cls){
   const cov  = c.final_coverage || c.coverage_amount || '';
 
   let apptHtml = '';
-  if (c.appt_date_time){
-    const dt = new Date(c.appt_date_time);
-    const isPast = dt < new Date();
-    const label = dt.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})
-                + ' ' + dt.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-    apptHtml = `<div class="cardAppt${isPast?' past':''}">📅 ${label}</div>`;
+  const appt = parseApptDate(c.appt_date_time);
+  if (appt){
+    const isPast = appt < new Date();
+    const label = appt.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})
+                + ' ' + appt.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    apptHtml = `<div class="cardAppt${isPast?' past':''}">${ic('calendar',{size:13})} ${label}</div>`;
   }
 
   let agentHtml = '';
@@ -343,7 +465,7 @@ function makeCard(c, cls){
 
   div.innerHTML = `
     <div class="cardName">${esc(name)}</div>
-    ${phone ? `<div class="cardPhone">📞 ${esc(phone)}</div>` : ''}
+    ${phone ? `<div class="cardPhone">${ic('phone',{size:12})} ${esc(phone)}</div>` : ''}
     <div class="cardMeta">
       ${carrier ? `<div class="cardRow">Carrier <span>${esc(carrier)}</span></div>` : ''}
       ${prem    ? `<div class="cardRow">Premium <span>$${esc(prem)}/mo</span></div>` : ''}
@@ -354,47 +476,80 @@ function makeCard(c, cls){
   return div;
 }
 
-/* ── MODAL ── */
+/* Lenient parse for the free-text appt_date_time column (legacy rows vary). */
+function parseApptDate(value){
+  if (!value) return null;
+  const dt = new Date(value);
+  return isNaN(dt.getTime()) ? null : dt;
+}
+
+/* ── DETAIL MODAL ── */
 let currentClient = null;
 
-function openModal(c, cls){
+function statusPillHtml(c){
+  const meta = ACT.statusMeta(c.status || 'In Progress');
+  return `<span class="statusPill" style="--sc:${meta.color}" onclick="openStatusSheet()">
+      ${esc(c.status || 'In Progress')} ${'<span class="pillEdit">' + ic('edit',{size:13}) + '</span>'}
+    </span>`;
+}
+
+function openModal(c){
   currentClient = c;
   const name = [c.first_name, c.last_name].filter(Boolean).join(' ') || 'Unnamed';
   document.getElementById('mName').textContent = name;
-
-  const statusHtml = c.status
-    ? `<span class="statusBadge ${cls}">${esc(c.status)}</span>`
-    : '<span style="color:#4a5e7a">No status</span>';
-  document.getElementById('mSub').innerHTML = statusHtml;
+  document.getElementById('mStatusPill').innerHTML = statusPillHtml(c);
 
   const f = (val, fallback) => {
     const v = val || fallback || '';
     return v ? `<span>${esc(v)}</span>` : `<span class="empty">—</span>`;
   };
 
+  const appt = parseApptDate(c.appt_date_time);
   let apptHtml = '';
-  if (c.appt_date_time){
-    const dt = new Date(c.appt_date_time);
-    const isPast = dt < new Date();
-    const dateStr = dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-    const timeStr = dt.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  if (appt){
+    const isPast = appt < new Date();
+    const dateStr = appt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+    const timeStr = appt.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
     apptHtml = `<div class="apptBox${isPast?' past':''}">
-      <div class="icon">📅</div>
+      ${ic('calendar-check',{size:20})}
       <div class="apptDetail">
         <div class="apptDate">${dateStr}</div>
         <div class="apptLabel">${timeStr}${isPast?' · Past appointment':' · Upcoming'}</div>
       </div>
+      <button class="apptEditBtn" onclick="openApptSheet()">${ic('edit',{size:14})}</button>
     </div>`;
+  } else {
+    apptHtml = `<button class="el-btn ghost" style="width:100%" onclick="openApptSheet()">${ic('calendar',{size:15})} Set Appointment</button>`;
   }
 
   const agentRow = (role === 'owner' && agentMap[c.user_id])
     ? `<div class="modalSection"><h4>Agent</h4><div class="modalField"><span>${esc(agentMap[c.user_id])}</span></div></div>`
     : '';
 
+  const quickTypes = ['dial','contact','conversation','appt_held','follow_up_set','issued'];
+  const qlogHtml = quickTypes.map(t => {
+    const def = ACT.TYPES[t];
+    return `<button class="qlogBtn" style="--qc:${def.color}" onclick="quickLog('${t}')">
+      <span class="qlogIc">${ic(def.icon,{size:19})}</span>${def.label}</button>`;
+  }).join('');
+
   document.getElementById('mBody').innerHTML = `
     ${agentRow}
 
-    ${apptHtml ? `<div class="modalSection"><h4>Appointment</h4>${apptHtml}</div>` : ''}
+    <div class="modalSection">
+      <h4>Quick Log</h4>
+      <div class="qlogRow">${qlogHtml}</div>
+    </div>
+
+    <div class="modalSection">
+      <h4>Appointment</h4>
+      ${apptHtml}
+    </div>
+
+    <div class="modalSection">
+      <h4>Activity</h4>
+      <div id="histList"><div class="histEmpty">Loading…</div></div>
+    </div>
 
     <div class="modalSection">
       <h4>Contact</h4>
@@ -441,25 +596,255 @@ function openModal(c, cls){
       </div>
     </div>` : ''}
 
-    ${c.notes ? `<div class="modalSection">
+    <div class="modalSection">
       <h4>Notes</h4>
-      <div style="font-size:14px;color:#c0cfe6;line-height:1.6;background:#0d1525;border-radius:8px;
-        padding:12px 14px;border:1px solid #1a2740">${esc(c.notes)}</div>
-    </div>` : ''}
+      <textarea id="notesArea" placeholder="Notes about this client…">${esc(c.notes || '')}</textarea>
+      <div class="notesSaveRow">
+        <button class="el-btn gold" onclick="saveNotes()">${ic('check',{size:14})} Save Notes</button>
+      </div>
+    </div>
   `;
 
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+  loadHistory();
 }
 
 function closeModal(e){
   if (e && e.target !== document.getElementById('overlay')) return;
   document.getElementById('overlay').classList.remove('open');
   document.body.style.overflow = '';
+  currentClient = null;
+}
+
+/* ── ACTIVITY HISTORY ── */
+async function loadHistory(){
+  if (!currentClient) return;
+  const el = document.getElementById('histList');
+  try {
+    const activities = await ACT.fetchActivities({ clientId: currentClient.id, limit: 40 });
+    if (!currentClient || !el.isConnected) return;
+    if (!activities.length){
+      el.innerHTML = '<div class="histEmpty">No activity yet — use Quick Log above.</div>';
+      return;
+    }
+    el.innerHTML = activities.map(a => {
+      const def = ACT.TYPES[a.type] || { label: a.type, icon: 'note', color: '#8c9cb5' };
+      let label = def.label;
+      let note = a.note || '';
+      if (a.type === 'stage_change' && a.meta && a.meta.to){
+        label = `Moved: ${esc(a.meta.from || '—')} → ${esc(a.meta.to)}`;
+        note = '';
+      }
+      if (a.type === 'issued' && a.premium) note = '$' + Math.round(a.premium).toLocaleString() + '/yr premium' + (note ? ' · ' + note : '');
+      return `<div class="histItem" style="--hc:${def.color}">
+        <span class="histIc">${ic(def.icon,{size:16})}</span>
+        <div class="histBody">
+          <div class="histLabel">${a.type === 'stage_change' ? label : esc(label)}</div>
+          ${note ? `<div class="histNote">${esc(note)}</div>` : ''}
+        </div>
+        <span class="histTime">${ACT.relativeTime(a.created_at)}</span>
+      </div>`;
+    }).join('');
+  } catch(e){
+    el.innerHTML = '<div class="histEmpty">Couldn\'t load activity (offline?).</div>';
+  }
+}
+
+/* ── QUICK LOG ── */
+async function quickLog(type){
+  if (!currentClient) return;
+  if (type === 'issued'){ openIssuedSheet(); return; }
+  const def = ACT.TYPES[type];
+  const clientName = [currentClient.first_name, currentClient.last_name].filter(Boolean).join(' ');
+  const result = await ACT.logActivity({
+    clientId: currentClient.id,
+    type,
+    feedNote: clientName,
+  });
+  showToast(def.label + ' logged', result.undo);
+  loadHistory();
+}
+
+/* ── ISSUED SHEET ── */
+function openIssuedSheet(){
+  if (!currentClient) return;
+  document.getElementById('issuedSheetSub').textContent =
+    [currentClient.first_name, currentClient.last_name].filter(Boolean).join(' ');
+  document.getElementById('issuedPremium').value = currentClient.final_premium || currentClient.premium || '';
+  document.getElementById('issuedCarrier').value = currentClient.carrier || '';
+  document.getElementById('issuedSheet').classList.remove('hidden');
+}
+function closeIssuedSheet(e){
+  if (e && !e.target.classList.contains('el-sheet-bg')) return;
+  document.getElementById('issuedSheet').classList.add('hidden');
+}
+async function confirmIssuedLog(){
+  if (!currentClient) return;
+  const premium = parseFloat(document.getElementById('issuedPremium').value) || 0;
+  const carrier = document.getElementById('issuedCarrier').value.trim();
+  const clientName = [currentClient.first_name, currentClient.last_name].filter(Boolean).join(' ');
+  document.getElementById('issuedSheet').classList.add('hidden');
+  const result = await ACT.logActivity({
+    clientId: currentClient.id,
+    type: 'issued',
+    premium,
+    carrier,
+    note: carrier,
+    feedNote: clientName + (carrier ? ' · ' + carrier : ''),
+  });
+  showToast('Policy issued logged', result.undo);
+  loadHistory();
+}
+
+/* ── STATUS SHEET ── */
+let pendingStatus = '';
+function openStatusSheet(){
+  if (!currentClient) return;
+  const wrap = document.getElementById('statusOptions');
+  document.getElementById('statusSheetSub').textContent =
+    [currentClient.first_name, currentClient.last_name].filter(Boolean).join(' ');
+  document.getElementById('apptPrompt').style.display = 'none';
+  wrap.style.display = '';
+  wrap.innerHTML = COLUMNS.map(s => `
+    <button class="el-opt${(currentClient.status||'In Progress') === s.key ? ' selected' : ''}" onclick="pickStatus('${s.key}')">
+      <span class="el-dot" style="width:9px;height:9px;border-radius:50%;background:${s.color};flex-shrink:0"></span>
+      <span>${s.key}</span>
+    </button>`).join('');
+  document.getElementById('statusSheet').classList.remove('hidden');
+}
+function closeStatusSheet(e){
+  if (e && !e.target.classList.contains('el-sheet-bg')) return;
+  document.getElementById('statusSheet').classList.add('hidden');
+}
+async function pickStatus(newStatus){
+  if (!currentClient || newStatus === currentClient.status){ closeStatusSheet(); return; }
+  if (newStatus === 'Appointment Booked'){
+    // Ask for the date/time before committing the stage.
+    pendingStatus = newStatus;
+    document.getElementById('statusOptions').style.display = 'none';
+    document.getElementById('apptPrompt').style.display = '';
+    const preset = parseApptDate(currentClient.appt_date_time);
+    document.getElementById('apptInput').value = preset ? toLocalInputValue(preset) : '';
+    return;
+  }
+  await applyStatus(newStatus, null);
+}
+async function confirmApptStatus(){
+  const raw = document.getElementById('apptInput').value;
+  await applyStatus(pendingStatus, raw || null);
+}
+async function applyStatus(newStatus, apptRaw){
+  const c = currentClient;
+  const oldStatus = c.status || 'In Progress';
+  closeStatusSheet();
+
+  const body = { status: newStatus };
+  if (apptRaw) body.apptDateTime = apptRaw;
+
+  // Optimistic UI
+  c.status = newStatus;
+  if (apptRaw) c.appt_date_time = apptRaw;
+  document.getElementById('mStatusPill').innerHTML = statusPillHtml(c);
+  render();
+
+  try {
+    await EvermoreAgentSuite.api('/clients/' + c.id, { method: 'PUT', body: JSON.stringify(body) });
+    ACT.logActivity({
+      clientId: c.id,
+      type: 'stage_change',
+      meta: { from: oldStatus, to: newStatus },
+      skipCounter: true,
+    });
+    // Booking an appointment through the stage move also counts as an Appt Set.
+    if (newStatus === 'Appointment Booked'){
+      ACT.logActivity({ clientId: c.id, type: 'appt_set', feedNote: [c.first_name, c.last_name].filter(Boolean).join(' ') });
+    }
+    showToast('Moved to ' + newStatus);
+    loadHistory();
+  } catch(e){
+    c.status = oldStatus; // roll back
+    document.getElementById('mStatusPill').innerHTML = statusPillHtml(c);
+    render();
+    showToast('Move failed — check connection');
+  }
+}
+
+/* ── APPOINTMENT SHEET ── */
+function openApptSheet(){
+  if (!currentClient) return;
+  document.getElementById('apptSheetSub').textContent =
+    [currentClient.first_name, currentClient.last_name].filter(Boolean).join(' ');
+  const preset = parseApptDate(currentClient.appt_date_time);
+  document.getElementById('apptEditInput').value = preset ? toLocalInputValue(preset) : '';
+  document.getElementById('apptSheet').classList.remove('hidden');
+}
+function closeApptSheet(e){
+  if (e && !e.target.classList.contains('el-sheet-bg')) return;
+  document.getElementById('apptSheet').classList.add('hidden');
+}
+async function saveAppt(forceValue){
+  const c = currentClient;
+  if (!c) return;
+  const raw = forceValue !== undefined ? forceValue : document.getElementById('apptEditInput').value;
+  document.getElementById('apptSheet').classList.add('hidden');
+  const prev = c.appt_date_time;
+  c.appt_date_time = raw;
+  try {
+    await EvermoreAgentSuite.api('/clients/' + c.id, { method: 'PUT', body: JSON.stringify({ apptDateTime: raw }) });
+    showToast(raw ? 'Appointment saved' : 'Appointment cleared');
+    openModal(c); // re-render modal with new appt box
+    render();
+  } catch(e){
+    c.appt_date_time = prev;
+    showToast('Save failed — check connection');
+  }
+}
+
+function toLocalInputValue(dt){
+  const pad = n => String(n).padStart(2, '0');
+  return dt.getFullYear() + '-' + pad(dt.getMonth()+1) + '-' + pad(dt.getDate())
+    + 'T' + pad(dt.getHours()) + ':' + pad(dt.getMinutes());
+}
+
+/* ── NOTES ── */
+async function saveNotes(){
+  const c = currentClient;
+  if (!c) return;
+  const notes = document.getElementById('notesArea').value;
+  try {
+    await EvermoreAgentSuite.api('/clients/' + c.id, { method: 'PUT', body: JSON.stringify({ notes }) });
+    c.notes = notes;
+    showToast('Notes saved');
+  } catch(e){
+    showToast('Save failed — check connection');
+  }
+}
+
+/* ── TOAST (with optional Undo) ── */
+let toastTimer = null;
+function showToast(msg, undoFn){
+  const t = document.getElementById('toast');
+  t.innerHTML = ic('check-circle',{size:15}) + ' ' + esc(msg) +
+    (undoFn ? ' <button id="toastUndo">Undo</button>' : '');
+  if (undoFn){
+    document.getElementById('toastUndo').onclick = async () => {
+      t.classList.remove('show');
+      await undoFn();
+      showToast('Undone');
+      loadHistory();
+    };
+  }
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), undoFn ? 4500 : 2200);
 }
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
+  if (e.key === 'Escape'){
+    closeModal();
+    document.querySelectorAll('.el-sheet-bg').forEach(s => s.classList.add('hidden'));
+  }
 });
 
 /* ── INIT ── */
