@@ -3,12 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Evermore Life Growth Calculator</title>
+<title>Evermore OptiMaxx — Growth Calculator</title>
 <meta name="theme-color" content="#0b1019">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Evermore Growth">
+<meta name="apple-mobile-web-app-title" content="OptiMaxx">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/agent-suite-ui.css">
+<style>
+/* ---- Autofill banner ---- */
+#autofillBanner{display:none;align-items:center;gap:12px;background:linear-gradient(135deg,#0f1d35,#13233f);
+  border:1px solid #d4b57644;border-radius:12px;padding:12px 16px;margin-bottom:16px}
+#autofillBanner .ab-icon{color:var(--gold);flex-shrink:0;display:flex}
+#autofillBanner .ab-text{flex:1;font-size:13px;color:#c5d0e6;line-height:1.5}
+#autofillBanner .ab-text strong{color:var(--gold)}
+#autofillBanner button{flex-shrink:0}
+@media(max-width:640px){#autofillBanner{flex-wrap:wrap}#autofillBanner button{flex:1 1 100%}}
+</style>
 <style>
 /* ============ BASE ============ */
 *{box-sizing:border-box;margin:0;padding:0}
@@ -228,7 +239,7 @@ td.center{text-align:center}
   <!-- Print header (visible only on print) -->
   <div class="print-header">
     <div>
-      <strong>Evermore Life Growth Calculator</strong><br>
+      <strong>Evermore OptiMaxx — Growth Report</strong><br>
       Evermore Life Insurance LLC
     </div>
     <div id="printMeta" style="text-align:right"></div>
@@ -237,15 +248,22 @@ td.center{text-align:center}
   <!-- Hero -->
   <div class="hero">
     <img class="hero-logo" id="heroLogo" src="" alt="Evermore Life LLC">
-    <h1>Evermore Life Growth Calculator</h1>
-    <div class="subtitle">Build Your Legacy Through Life Insurance</div>
-    <div class="tagline">Map your current sales funnel, set improvement targets, and see exactly what optimized performance looks like.</div>
+    <h1>OptiMaxx</h1>
+    <div class="subtitle">Optimize · Maximize · Evermore Life</div>
+    <div class="tagline">Your real funnel numbers, straight from your Score Tracker — set improvement targets and see exactly what optimized performance looks like.</div>
   </div>
 
   <!-- Action bar -->
   <div class="action-bar">
-    <button class="btn ghost" onclick="resetDefaults()">↺ Reset Defaults</button>
-    <button class="btn primary" onclick="window.print()">🖨 Print / Save Report</button>
+    <button class="btn ghost" onclick="resetDefaults()">Reset Defaults</button>
+    <button class="btn primary" onclick="window.print()">Print / Save Report</button>
+  </div>
+
+  <!-- Autofill banner -->
+  <div id="autofillBanner">
+    <span class="ab-icon" id="abIcon"></span>
+    <span class="ab-text" id="autofillText"></span>
+    <button class="btn ghost" onclick="loadMyNumbers(true)">Reload My Numbers</button>
   </div>
 
   <!-- Section 0: Report Info -->
@@ -282,7 +300,7 @@ td.center{text-align:center}
         </tr></thead>
         <tbody>
           <tr>
-            <td><div class="stage-label">Monthly Leads</div><div class="conv" id="conv-leads-day">— leads/day</div></td>
+            <td><div class="stage-label">Monthly Leads / Dials</div><div class="conv" id="conv-leads-day">— leads/day</div></td>
             <td class="center"><input type="number" id="leads" value="200" min="0" oninput="calc()"></td>
             <td class="center"><div class="pct-suffix"><input type="number" class="lift-input" id="lift-leads" value="20" min="0" max="500" oninput="calc()"><span>%</span></div></td>
             <td class="center"><span class="optimized-val" id="opt-leads">—</span></td>
@@ -473,26 +491,27 @@ td.center{text-align:center}
       <div class="summary-row highlight"><span class="label">Optimized First-Year Commission</span><span class="val" id="sum-opt-comm">—</span></div>
       <hr class="summary-divider">
       <div class="summary-row big-impact">
-        <span class="label">📈 Business Impact (Annual Commission Lift)</span>
+        <span class="label">Business Impact (Annual Commission Lift)</span>
         <span class="val" id="sum-impact">—</span>
       </div>
       <div class="summary-row big-impact" style="padding-top:0">
-        <span class="label">🏛 Legacy Value at Time of Sale</span>
+        <span class="label">Legacy Value at Time of Sale</span>
         <span class="val" id="sum-legacy">—</span>
       </div>
     </div>
   </div>
 
   <div style="text-align:center;color:var(--muted);font-size:12px;padding:20px 0">
-    Evermore Life Insurance LLC &nbsp;·&nbsp; Evermore Life Growth Calculator &nbsp;·&nbsp; <span id="reportDate"></span>
+    Evermore Life Insurance LLC &nbsp;·&nbsp; OptiMaxx Growth Calculator &nbsp;·&nbsp; <span id="reportDate"></span>
   </div>
 
 </div>
 
 <script src="/agent-suite-auth.js"></script>
+<script src="/agent-suite-icons.js"></script>
 <script>
 if (EvermoreAgentSuite.requireAuth()) {
-  EvermoreAgentSuite.installTopNav("Growth Calculator");
+  EvermoreAgentSuite.installTopNav("OptiMaxx");
 }
 
 // ---- Logo embed ----
@@ -665,11 +684,66 @@ function resetDefaults() {
   calc();
 }
 
+// ---- OptiMaxx autofill: real numbers from the Score Tracker (last 30 days) ----
+// Sets each "Current" input once from /api/scores, then calc(). Every input
+// stays editable — this never re-runs unless the user taps Reload.
+async function loadMyNumbers(manual){
+  if (!navigator.onLine || !EvermoreAgentSuite.token()) return false;
+  try {
+    const toStr = new Date().toISOString().slice(0,10);
+    const fromDate = new Date(); fromDate.setDate(fromDate.getDate() - 29);
+    const fromStr = fromDate.toISOString().slice(0,10);
+    const result = await EvermoreAgentSuite.api(`/scores?from=${fromStr}&to=${toStr}`);
+    const days = result.days || {};
+
+    const agg = {dials:0, contacted:0, conversations:0, apptsSet:0, apptsHeld:0, appsSubmitted:0, issued:0};
+    let premSum = 0, premCount = 0, activeDays = 0;
+    Object.values(days).forEach(day => {
+      const c = day.counters || {};
+      let any = false;
+      Object.keys(agg).forEach(k => { const v = Number(c[k] || 0); agg[k] += v; if (v > 0) any = true; });
+      (day.premiums || []).forEach(p => { premSum += Number(p.premium || 0); premCount += 1; any = true; });
+      if (any) activeDays += 1;
+    });
+
+    if (!activeDays){
+      if (manual){
+        $('autofillBanner').style.display = 'flex';
+        $('autofillText').innerHTML = 'No tracked activity in the last 30 days yet — log dials in the <strong>Score Tracker</strong> and your real numbers will load here automatically.';
+      }
+      return false;
+    }
+
+    $('leads').value = agg.dials;
+    $('contacts').value = agg.contacted;
+    $('convos').value = agg.conversations;
+    $('apptsSet').value = agg.apptsSet;
+    $('apptsHeld').value = agg.apptsHeld;
+    $('appsSubmitted').value = agg.appsSubmitted;
+    $('issuedPolicies').value = agg.issued;
+    if (premCount > 0) $('avgPremium').value = Math.round(premSum / premCount);
+    calc();
+
+    $('autofillBanner').style.display = 'flex';
+    $('autofillText').innerHTML = 'Loaded from your last 30 tracked days (<strong>' + activeDays +
+      ' active day' + (activeDays !== 1 ? 's' : '') + '</strong>) — every number stays editable. "Leads" = your dials.';
+    return true;
+  } catch(e){
+    if (manual){
+      $('autofillBanner').style.display = 'flex';
+      $('autofillText').textContent = 'Couldn\'t reach the server — showing manual numbers.';
+    }
+    return false;
+  }
+}
+
 // ---- Init ----
 $('reportDate').textContent = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
 const currentAgent = EvermoreAgentSuite.user();
 if (currentAgent.name && $('agentName')) $('agentName').value = currentAgent.name;
+if (window.EvermoreIcons) $('abIcon').innerHTML = EvermoreIcons.icon('spark', {size:20});
 calc();
+loadMyNumbers(false);
 </script>
 </body>
 </html>
