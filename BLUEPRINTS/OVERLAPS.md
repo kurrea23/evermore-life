@@ -17,6 +17,30 @@ shows.
 
 ---
 
+### 2026-07-05 - Pipeline, tracker, and intake now share two write paths that must stay in sync
+
+- **Surfaces:** Pipeline/Today pages + Score Tracker + Client-Intake PWA + agent-suite-api Worker
+- **Finding:** CRM integration created two shared contracts. (1) Daily counters
+  have ONE writer — the browser — through the Score Tracker's localStorage keys
+  (`evermore-score-tracker-v1`, `evermore-score-sync-queue-v1`); the pipeline
+  quick-log and any future page must bump counters via
+  `agent-suite-activity.js`, never by POSTing `/api/scores` increments
+  server-side, or days will double-count/clobber. (2) Pipeline stage moves and
+  appointment edits live server-side, and the intake vault now pulls
+  `status`/`appt_date_time` down (`refreshPipelineFields()` in `backfillSync()`)
+  before its full-record re-PUT — removing that pull re-opens the
+  stage-revert bug. The activity type list also exists twice by design
+  (worker allowlist + `EvermoreActivity.TYPES`) and must change in both places.
+- **Evidence:** `BLUEPRINTS/reports/2026-07-05_agent-suite-crm-integration.md`,
+  `agent-suite-activity.js`, `01_website/agent-suite-api/cloudflare/worker.js`,
+  `01_website/experiments/Client-Intake.html`
+- **Impact:** One feature now spans all three deploy surfaces (Pages,
+  agent-suite-api Worker, live-proxy Worker); partial deploys leave the loop
+  half-wired (e.g. quick-log 500s until the D1 migration runs).
+- **Next move:** Operator runs the deploy runbook in the 2026-07-05 report in
+  order (migration → API worker → Pages → live-proxy).
+- **Status:** open
+
 ### 2026-07-02 - Intake vault, CRM dedupe, and owner-session safety are one loop
 
 - **Surfaces:** Client-Intake PWA + agent-suite-api Worker + Pipeline/Team pages

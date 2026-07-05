@@ -57,7 +57,7 @@ flowchart LR
 | Client-intake PWA route | Human operator + Cloudflare Worker asset bundle | `01_website/experiments/Client-Intake.html`, `01_website/experiments/intake.*`, and `/intake` in `01_website/v2/cloudflare/evermore-live-proxy.js` |
 | Standalone static tool routes | Public website source + static host | `score-tracker/index.html` and `growth-calculator/index.html` |
 | Agent Suite private backend | Cloudflare Worker + D1 + static tool pages | `01_website/agent-suite-api/cloudflare/`, `login/index.html`, `signup/index.html`, `team/index.html`, `agent-suite-auth.js`, `score-tracker/index.html`, `growth-calculator/index.html` |
-| Agent app/tool base | App agent | `agent-suite-auth.js`, `login/`, `signup/`, `team/`, `clients/`, `score-tracker/`, `growth-calculator/`, `01_website/agent-suite-api/cloudflare/` |
+| Agent app/tool base | App agent | `agent-suite-auth.js`, `agent-suite-ui.css`, `agent-suite-icons.js`, `agent-suite-activity.js`, `login/`, `signup/`, `today/`, `team/`, `clients/`, `score-tracker/`, `growth-calculator/` (OptiMaxx), `01_website/agent-suite-api/cloudflare/` (incl. `/api/activities`) |
 | Recruiting page draft | Human operator + website owners | `01_website/v2/pages/recruiting.html` plus `/recruiting` proxy route |
 | State-page expansion | Human operator + website/GHL owners | `01_website/state-pages/` plus verified service and workflow evidence |
 | CRM, forms, workflows, nurture | GHL | `02_ghl/` plus verified live evidence |

@@ -16,6 +16,30 @@ do not rewrite history.
 
 ---
 
+### 2026-07-05 - Integrate the Agent Suite into one CRM with client-side counter ownership
+
+- **Status:** approved (operator approved the plan in-session; deploys remain operator-gated)
+- **Decision:** (1) Per-client activity lives in a new D1 `activities` table +
+  `/api/activities` endpoints — not stuffed into `score_days.feed_json`.
+  (2) The server never increments `score_days`; all daily-counter bumps go
+  through the Score Tracker's localStorage + sync queue, from any page, via
+  `agent-suite-activity.js` (single-writer rule that prevents double counting).
+  (3) `/today/` is the app home after login. (4) The premium design system is
+  three no-build static root files (`agent-suite-ui.css`,
+  `agent-suite-icons.js`, `agent-suite-activity.js`); the Growth Calculator is
+  rebranded OptiMaxx and auto-fills from real last-30-day scores.
+- **Why:** `POST /api/scores/:date` replaces whole days wholesale from the
+  tracker's offline-first cache, so any server-side increment would be
+  clobbered or double-counted; a dedicated activities table keeps client
+  history append-only and queryable per client.
+- **Consequences:** Deploy order matters (D1 migration before worker deploy);
+  the activity type allowlist is mirrored in worker.js and
+  `EvermoreActivity.TYPES`; the tracker's own bottom tabs became in-page pills
+  because the suite-wide mobile bottom nav owns the bottom edge.
+- **Evidence:** `BLUEPRINTS/reports/2026-07-05_agent-suite-crm-integration.md`,
+  branch `claude/agent-suite-crm-integration-8g1iz0`
+- **Owner:** Evermore operator (deploy runbook in the report)
+
 ### 2026-07-02 - Harden the Agent Suite as the final-polish "bow" pass
 
 - **Status:** approved (code); deploys remain operator-gated
