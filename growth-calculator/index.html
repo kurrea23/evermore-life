@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Evermore OptiMaxx — Growth Calculator</title>
+<title>Evermore Life Growth Calculator</title>
 <meta name="theme-color" content="#0b1019">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="OptiMaxx">
+<meta name="apple-mobile-web-app-title" content="Evermore Growth">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/agent-suite-ui.css">
@@ -239,7 +239,7 @@ td.center{text-align:center}
   <!-- Print header (visible only on print) -->
   <div class="print-header">
     <div>
-      <strong>Evermore OptiMaxx — Growth Report</strong><br>
+      <strong>Evermore Life Growth Calculator</strong><br>
       Evermore Life Insurance LLC
     </div>
     <div id="printMeta" style="text-align:right"></div>
@@ -248,8 +248,8 @@ td.center{text-align:center}
   <!-- Hero -->
   <div class="hero">
     <img class="hero-logo" id="heroLogo" src="" alt="Evermore Life LLC">
-    <h1>OptiMaxx</h1>
-    <div class="subtitle">Optimize · Maximize · Evermore Life</div>
+    <h1>Evermore Life Growth Calculator</h1>
+    <div class="subtitle">Build Your Legacy Through Life Insurance</div>
     <div class="tagline">Your real funnel numbers, straight from your Score Tracker — set improvement targets and see exactly what optimized performance looks like.</div>
   </div>
 
@@ -502,7 +502,7 @@ td.center{text-align:center}
   </div>
 
   <div style="text-align:center;color:var(--muted);font-size:12px;padding:20px 0">
-    Evermore Life Insurance LLC &nbsp;·&nbsp; OptiMaxx Growth Calculator &nbsp;·&nbsp; <span id="reportDate"></span>
+    Evermore Life Insurance LLC &nbsp;·&nbsp; Evermore Life Growth Calculator &nbsp;·&nbsp; <span id="reportDate"></span>
   </div>
 
 </div>
@@ -511,7 +511,7 @@ td.center{text-align:center}
 <script src="/agent-suite-icons.js"></script>
 <script>
 if (EvermoreAgentSuite.requireAuth()) {
-  EvermoreAgentSuite.installTopNav("OptiMaxx");
+  EvermoreAgentSuite.installTopNav("Growth Calculator");
 }
 
 // ---- Logo embed ----
@@ -684,7 +684,7 @@ function resetDefaults() {
   calc();
 }
 
-// ---- OptiMaxx autofill: real numbers from the Score Tracker (last 30 days) ----
+// ---- Autofill: real numbers from the Score Tracker (last 30 days) ----
 // Sets each "Current" input once from /api/scores, then calc(). Every input
 // stays editable — this never re-runs unless the user taps Reload.
 async function loadMyNumbers(manual){

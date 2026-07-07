@@ -90,8 +90,8 @@
         <a href="/today/"${cls("/today/")}>Today</a>
         <a href="/score-tracker/"${cls("/score-tracker/")}>Score Tracker</a>
         <a href="/clients/"${cls("/clients/")}>Pipeline</a>
-        <a href="/growth-calculator/"${cls("/growth-calculator/")}>OptiMaxx</a>
-        <a href="/intake">Intake</a>
+        <a href="/growth-calculator/"${cls("/growth-calculator/")}>Growth Calculator</a>
+        <a href="${intakeHref()}">Intake</a>
         ${role === "owner" ? `<a href="/team/"${cls("/team/")}>Team</a>` : ""}
       </div>
       <div class="navRight">
@@ -120,6 +120,14 @@
     document.head.appendChild(style);
   }
 
+  // The intake PWA is served by the live-proxy worker on evermorelife.org only,
+  // so link it absolutely from previews/local — a relative /intake 404s there.
+  function intakeHref() {
+    return /(^|\.)evermorelife\.org$/.test(window.location.hostname)
+      ? "/intake"
+      : "https://evermorelife.org/intake";
+  }
+
   // Mobile app-style bottom nav. Icons come from agent-suite-icons.js when the
   // page loads it; otherwise short text labels only (login/signup never call this).
   function installBottomNav(role) {
@@ -130,10 +138,10 @@
       { href: "/today/", label: "Today", icon: "home" },
       { href: "/score-tracker/", label: "Tracker", icon: "gauge" },
       { href: "/clients/", label: "Pipeline", icon: "pipeline" },
-      { href: "/growth-calculator/", label: "OptiMaxx", icon: "calculator" },
+      { href: "/growth-calculator/", label: "Growth", icon: "calculator" },
       role === "owner"
         ? { href: "/team/", label: "Team", icon: "users" }
-        : { href: "/intake", label: "Intake", icon: "clipboard" },
+        : { href: intakeHref(), label: "Intake", icon: "clipboard" },
     ];
     const nav = document.createElement("nav");
     nav.id = "agentSuiteBottomNav";
