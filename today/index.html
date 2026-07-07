@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evermore Life — Today</title>
+<meta name="theme-color" content="#0b1019">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/agent-suite-ui.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--el-sans);background:var(--el-bg);background-image:var(--el-bg-grad);
+  background-attachment:fixed;color:var(--el-ink);font-size:15px;min-height:100vh}
+h1,h2,h3{font-family:var(--el-serif)}
+a{text-decoration:none;color:inherit}
+
+.page{max-width:640px;margin:0 auto;padding:18px 16px 60px}
+
+/* ── Greeting ── */
+.greet{padding:10px 2px 4px}
+.greet h1{font-size:26px;color:#fff;letter-spacing:.01em}
+.greet h1 span{color:var(--el-gold)}
+.greet .date{font-size:13px;color:var(--el-muted);margin-top:3px}
+
+/* ── Stat tiles ── */
+.statGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+@media(max-width:420px){.statGrid{grid-template-columns:repeat(2,1fr)}}
+
+/* ── Goal bars ── */
+.goalRow{display:flex;align-items:center;gap:10px;padding:7px 0}
+.goalRow .gl{font-size:12.5px;color:var(--el-ink);min-width:86px;display:flex;align-items:center;gap:6px}
+.goalRow .el-bar{flex:1}
+.goalRow .gn{font-size:12px;color:var(--el-muted);min-width:48px;text-align:right}
+.goalRow .gn strong{color:#fff}
+
+/* ── List rows (appointments / hot list / activity) ── */
+.rowItem{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--el-card);
+  border:1px solid var(--el-line);border-radius:var(--el-r-sm);margin-bottom:8px;cursor:pointer;
+  transition:all .13s;-webkit-tap-highlight-color:transparent}
+.rowItem:hover{border-color:var(--el-gold-line);transform:translateY(-1px)}
+.rowItem .ri-ic{flex-shrink:0;color:var(--ric,var(--el-gold));display:flex}
+.rowItem .ri-body{flex:1;min-width:0}
+.rowItem .ri-title{font-size:14px;font-weight:600;color:var(--el-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rowItem .ri-sub{font-size:12px;color:var(--el-muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rowItem .ri-end{flex-shrink:0;text-align:right;font-size:12px;color:var(--el-dim)}
+.rowItem .ri-end .badge-mini{display:inline-block;padding:3px 9px;border-radius:14px;font-size:11px;font-weight:700;
+  background:color-mix(in srgb,var(--ric,#8c9cb5) 15%,transparent);color:var(--ric,#8c9cb5)}
+.rowItem.urgent{border-color:rgba(248,113,113,.4)}
+.emptyRow{font-size:13px;color:var(--el-dim);padding:14px;text-align:center;font-style:italic;
+  background:var(--el-card);border:1px dashed var(--el-line);border-radius:var(--el-r-sm)}
+
+/* ── Quick actions ── */
+.qaGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:420px){.qaGrid{grid-template-columns:repeat(2,1fr)}}
+.qa{display:flex;flex-direction:column;align-items:center;gap:7px;padding:16px 6px;
+  background:var(--el-card);border:1px solid var(--el-line);border-radius:12px;cursor:pointer;
+  transition:all .13s;color:var(--el-ink);font-size:11.5px;font-weight:600;text-align:center;
+  -webkit-tap-highlight-color:transparent}
+.qa:hover{border-color:var(--el-gold-line);transform:translateY(-1px)}
+.qa .qa-ic{color:var(--el-gold);display:flex}
+.qa.violet .qa-ic{color:var(--el-purple)}
+.qa.blue .qa-ic{color:var(--el-blue)}
+.qa.green .qa-ic{color:var(--el-good)}
+
+/* ── Session hint ── */
+#syncNote{font-size:11px;color:var(--el-dim);text-align:center;padding:18px 0 0}
+</style>
+</head>
+<body>
+
+<main class="page">
+
+  <!-- Greeting -->
+  <div class="greet">
+    <h1 id="greeting">Welcome back</h1>
+    <div class="date" id="todayDate"></div>
+  </div>
+
+  <!-- Today's numbers -->
+  <div class="statGrid" id="statGrid"></div>
+
+  <!-- Goals -->
+  <div class="el-sec">Daily Goals</div>
+  <div class="el-card" style="padding:12px 16px" id="goalCard">
+    <div class="emptyRow" style="border:none;background:none">Loading goals…</div>
+  </div>
+
+  <!-- Quick actions -->
+  <div class="el-sec">Quick Actions</div>
+  <div class="qaGrid">
+    <a class="qa" href="/intake"><span class="qa-ic" id="qa-intake"></span>New Intake</a>
+    <a class="qa blue" href="/score-tracker/"><span class="qa-ic" id="qa-track"></span>Track Activity</a>
+    <a class="qa violet" href="/clients/"><span class="qa-ic" id="qa-pipe"></span>Pipeline</a>
+    <a class="qa green" href="/growth-calculator/"><span class="qa-ic" id="qa-opti"></span>Growth Calc</a>
+  </div>
+
+  <!-- Upcoming appointments -->
+  <div class="el-sec">Upcoming Appointments</div>
+  <div id="apptList"><div class="emptyRow">Loading…</div></div>
+
+  <!-- Hot list -->
+  <div class="el-sec">Hot List</div>
+  <div id="hotList"><div class="emptyRow">Loading…</div></div>
+
+  <!-- Recent activity -->
+  <div class="el-sec">Recent Activity</div>
+  <div id="actList"><div class="emptyRow">Loading…</div></div>
+
+  <div id="syncNote"></div>
+</main>
+
+<script src="/agent-suite-auth.js"></script>
+<script src="/agent-suite-icons.js"></script>
+<script src="/agent-suite-activity.js"></script>
+<script>
+EvermoreAgentSuite.requireAuth();
+EvermoreAgentSuite.installTopNav('Today');
+
+const esc = EvermoreAgentSuite.escapeHtml;
+const ic  = (name, opts) => EvermoreIcons.icon(name, opts);
+const ACT = EvermoreActivity;
+
+/* ── Greeting ── */
+(function greet(){
+  const name = (EvermoreAgentSuite.user().name || 'Agent').split(' ')[0];
+  const h = new Date().getHours();
+  const part = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greeting').innerHTML = part + ', <span>' + esc(name) + '</span>';
+  document.getElementById('todayDate').textContent =
+    new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+})();
+
+/* ── Quick action icons ── */
+document.getElementById('qa-intake').innerHTML = ic('clipboard', {size:22});
+document.getElementById('qa-track').innerHTML  = ic('gauge', {size:22});
+document.getElementById('qa-pipe').innerHTML   = ic('pipeline', {size:22});
+document.getElementById('qa-opti').innerHTML   = ic('calculator', {size:22});
+
+/* ── Today's numbers: paint instantly from the tracker's local cache,
+      then reconcile with the server. ── */
+const STAT_DEFS = [
+  { id:'dials',         label:'Dials',    icon:'phone',     color:'#60a5fa' },
+  { id:'contacted',     label:'Contacts', icon:'check',     color:'#2dd4bf' },
+  { id:'apptsSet',      label:'Appts',    icon:'calendar',  color:'#d4b576' },
+  { id:'issued',        label:'Issued',   icon:'award',     color:'#3dd68c' },
+];
+const GOAL_DEFS = [
+  { id:'dials',         label:'Dials',    icon:'phone',     color:'#60a5fa' },
+  { id:'contacted',     label:'Contacts', icon:'check',     color:'#2dd4bf' },
+  { id:'conversations', label:'Convos',   icon:'chat',      color:'#a78bfa' },
+  { id:'apptsSet',      label:'Appts',    icon:'calendar',  color:'#d4b576' },
+  { id:'appsSubmitted', label:'Apps',     icon:'send',      color:'#fb923c' },
+  { id:'issued',        label:'Issued',   icon:'award',     color:'#3dd68c' },
+];
+
+function todayKey(){ return new Date().toISOString().slice(0,10); }
+
+function localCounters(){
+  try {
+    const data = JSON.parse(localStorage.getItem('evermore-score-tracker-v1')) || { days:{} };
+    return (data.days[todayKey()] || {}).counters || {};
+  } catch(e){ return {}; }
+}
+
+let counters = localCounters();
+let goals = {};
+
+function renderStats(){
+  document.getElementById('statGrid').innerHTML = STAT_DEFS.map(s => `
+    <div class="el-stat">
+      <div class="el-stat-label"><span style="color:${s.color}">${ic(s.icon,{size:13})}</span>${s.label}</div>
+      <div class="el-stat-val">${counters[s.id] || 0}</div>
+    </div>`).join('');
+}
+
+function renderGoals(){
+  const rows = GOAL_DEFS.filter(g => goals[g.id]).map(g => {
+    const val = counters[g.id] || 0;
+    const goal = goals[g.id];
+    const pct = Math.min(100, Math.round(val / goal * 100));
+    return `<div class="goalRow">
+      <span class="gl"><span style="color:${g.color}">${ic(g.icon,{size:13})}</span>${g.label}</span>
+      <div class="el-bar"><i class="${pct>=100?'done':''}" style="width:${pct}%"></i></div>
+      <span class="gn"><strong>${val}</strong>/${goal}</span>
+    </div>`;
+  });
+  document.getElementById('goalCard').innerHTML = rows.length
+    ? rows.join('')
+    : '<div class="emptyRow" style="border:none;background:none">Set daily goals in the Score Tracker to see progress here.</div>';
+}
+
+async function loadServerStats(){
+  try {
+    const [scoreRes, goalsRes] = await Promise.all([
+      EvermoreAgentSuite.api('/scores/' + todayKey()),
+      EvermoreAgentSuite.api('/goals'),
+    ]);
+    const serverCounters = (scoreRes.data || {}).counters || {};
+    // Server and local can drift (other device); show the larger of each —
+    // today's truth is whichever writer saw more taps.
+    const merged = { ...serverCounters };
+    Object.entries(localCounters()).forEach(([k, v]) => {
+      merged[k] = Math.max(Number(merged[k] || 0), Number(v || 0));
+    });
+    counters = merged;
+    goals = goalsRes.goals || {};
+    renderStats();
+    renderGoals();
+    document.getElementById('syncNote').textContent = '';
+  } catch(e){
+    document.getElementById('syncNote').textContent = 'Offline — showing this device\'s numbers.';
+    renderGoals();
+  }
+}
+
+/* ── Clients: appointments + hot list ── */
+function parseApptDate(value){
+  if (!value) return null;
+  const dt = new Date(value);
+  return isNaN(dt.getTime()) ? null : dt;
+}
+
+async function loadClients(){
+  let clients = [];
+  try {
+    const data = await EvermoreAgentSuite.api('/clients');
+    clients = data.clients || [];
+  } catch(e){
+    document.getElementById('apptList').innerHTML = '<div class="emptyRow">Couldn\'t load — offline?</div>';
+    document.getElementById('hotList').innerHTML = '<div class="emptyRow">Couldn\'t load — offline?</div>';
+    return;
+  }
+
+  /* Appointments: future first, soonest on top */
+  const now = new Date();
+  const upcoming = clients
+    .map(c => ({ c, dt: parseApptDate(c.appt_date_time) }))
+    .filter(x => x.dt && x.dt >= now)
+    .sort((a, b) => a.dt - b.dt)
+    .slice(0, 5);
+
+  document.getElementById('apptList').innerHTML = upcoming.length ? upcoming.map(({c, dt}) => {
+    const name = [c.first_name, c.last_name].filter(Boolean).join(' ') || 'Unnamed';
+    const when = dt.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})
+      + ' · ' + dt.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    const soon = (dt - now) < 24*3600*1000;
+    return `<a class="rowItem${soon ? ' urgent' : ''}" style="--ric:${soon ? '#f87171' : '#5fc98b'}" href="/clients/?client=${encodeURIComponent(c.id)}">
+      <span class="ri-ic">${ic('calendar-check',{size:19})}</span>
+      <span class="ri-body">
+        <span class="ri-title">${esc(name)}</span>
+        <span class="ri-sub">${esc(when)}${c.phone ? ' · ' + esc(c.phone) : ''}</span>
+      </span>
+      <span class="ri-end">${ic('chevron-right',{size:15})}</span>
+    </a>`;
+  }).join('') : '<div class="emptyRow">No upcoming appointments — book one from the Pipeline.</div>';
+
+  /* Hot list: stages that need action, most recently touched first */
+  const HOT = ['Follow Up', 'Further Underwriting', 'Appointment Booked'];
+  const hot = clients
+    .filter(c => HOT.includes(c.status))
+    .sort((a, b) => String(b.updated_at || '').localeCompare(String(a.updated_at || '')))
+    .slice(0, 5);
+
+  document.getElementById('hotList').innerHTML = hot.length ? hot.map(c => {
+    const name = [c.first_name, c.last_name].filter(Boolean).join(' ') || 'Unnamed';
+    const meta = ACT.statusMeta(c.status);
+    return `<a class="rowItem" style="--ric:${meta.color}" href="/clients/?client=${encodeURIComponent(c.id)}">
+      <span class="ri-ic">${ic('spark',{size:19})}</span>
+      <span class="ri-body">
+        <span class="ri-title">${esc(name)}</span>
+        <span class="ri-sub">${c.phone ? esc(c.phone) : '&nbsp;'}</span>
+      </span>
+      <span class="ri-end"><span class="badge-mini">${esc(c.status)}</span></span>
+    </a>`;
+  }).join('') : '<div class="emptyRow">Nothing waiting on you — go make some dials.</div>';
+}
+
+/* ── Recent activity ── */
+async function loadActivity(){
+  try {
+    const activities = await ACT.fetchActivities({ limit: 10 });
+    document.getElementById('actList').innerHTML = activities.length ? activities.map(a => {
+      const def = ACT.TYPES[a.type] || { label: a.type, icon: 'note', color: '#8c9cb5' };
+      let title = def.label;
+      if (a.type === 'stage_change' && a.meta && a.meta.to) title = 'Moved to ' + a.meta.to;
+      const sub = [a.client_name, a.premium ? '$' + Math.round(a.premium).toLocaleString() + '/yr' : '', a.note]
+        .filter(Boolean).join(' · ');
+      const link = a.client_id ? ` href="/clients/?client=${encodeURIComponent(a.client_id)}"` : '';
+      return `<a class="rowItem" style="--ric:${def.color}"${link}>
+        <span class="ri-ic">${ic(def.icon,{size:18})}</span>
+        <span class="ri-body">
+          <span class="ri-title">${esc(title)}</span>
+          ${sub ? `<span class="ri-sub">${esc(sub)}</span>` : ''}
+        </span>
+        <span class="ri-end">${ACT.relativeTime(a.created_at)}</span>
+      </a>`;
+    }).join('') : '<div class="emptyRow">No logged activity yet — tag a client in the Score Tracker or use Quick Log in the Pipeline.</div>';
+  } catch(e){
+    document.getElementById('actList').innerHTML = '<div class="emptyRow">Couldn\'t load activity — offline?</div>';
+  }
+}
+
+/* ── Init: local paint first, then server ── */
+renderStats();
+renderGoals();
+loadServerStats();
+loadClients();
+loadActivity();
+
+// Refresh stats if another tab (tracker/pipeline) bumps counters.
+window.addEventListener('storage', (e) => {
+  if (e.key === 'evermore-score-tracker-v1'){
+    counters = { ...counters, ...localCounters() };
+    renderStats();
+    renderGoals();
+  }
+});
+</script>
+</body>
+</html>

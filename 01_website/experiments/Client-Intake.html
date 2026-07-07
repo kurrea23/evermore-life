@@ -1290,7 +1290,25 @@ async function syncClientToServer(c){
     try { await persist(); } catch(_) {}
   }
 }
+async function refreshPipelineFields(){
+  // Pipeline stage moves and appointment edits happen on the server (the
+  // /clients board). Pull those two fields into the vault before re-syncing,
+  // so a stale local copy can never revert a stage move with its full PUT.
+  try {
+    const out = await syncApi('/clients');
+    const byId = new Map((out.clients || []).map(row => [row.id, row]));
+    let changed = false;
+    for (const c of clients){
+      const row = c.serverId ? byId.get(c.serverId) : null;
+      if (!row) continue;
+      if (row.status && row.status !== c.status){ c.status = row.status; changed = true; }
+      if (row.appt_date_time && row.appt_date_time !== c.apptDateTime){ c.apptDateTime = row.appt_date_time; changed = true; }
+    }
+    if (changed) await persist();
+  } catch (e) { /* offline or not logged in — sync will still run */ }
+}
 async function backfillSync(){
+  await refreshPipelineFields();
   for (const c of clients){
     if (!c.serverId || c.syncPending) await syncClientToServer(c);
   }

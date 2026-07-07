@@ -10,6 +10,7 @@
 <title>Evermore Score Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/agent-suite-ui.css">
 <style>
 /* ── RESET ── */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -32,7 +33,6 @@ h1,h2,h3{font-family:Palatino,'Palatino Linotype',Georgia,serif}
 #root{display:flex;flex-direction:column;height:100%;max-width:540px;margin:0 auto}
 #topbar{flex-shrink:0;background:var(--bg2);border-bottom:1px solid var(--line);padding:12px 16px 10px;position:sticky;top:0;z-index:50}
 #scroll-area{flex:1;overflow-y:auto;padding:0 12px 100px}
-#bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:540px;background:var(--bg2);border-top:1px solid var(--line);display:flex;z-index:50}
 
 /* ── TOP BAR ── */
 .tb-row{display:flex;align-items:center;gap:8px}
@@ -150,10 +150,21 @@ h1,h2,h3{font-family:Palatino,'Palatino Linotype',Georgia,serif}
 .feed-time{font-size:11px;color:var(--dim);flex-shrink:0}
 .feed-empty{text-align:center;color:var(--dim);font-size:13px;padding:24px 0}
 
-/* ── BOTTOM NAV ── */
-.nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 12px;border:none;background:transparent;color:var(--dim);font-size:10px;font-weight:600;letter-spacing:.04em;cursor:pointer;font-family:inherit;border-top:2px solid transparent;transition:all .15s}
-.nav-tab.active{color:var(--gold);border-top-color:var(--gold)}
-.nav-tab-icon{font-size:20px;margin-bottom:2px}
+/* ── PAGE TABS (Track / Feed / Report — in-page pills; the app-wide
+     bottom nav from agent-suite-auth.js owns the bottom edge on mobile) ── */
+.page-tabs{display:flex;gap:4px;margin-top:8px}
+.page-tabs .pill{display:inline-flex;align-items:center;gap:5px}
+
+/* ── CLIENT TAG CHIP ── */
+#clientChipRow{margin:2px 0 10px}
+#clientChip{display:flex;align-items:center;gap:9px;width:100%;padding:11px 14px;
+  background:var(--card);border:1px dashed var(--line2);border-radius:var(--r-sm);
+  color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;
+  transition:all .15s;-webkit-tap-highlight-color:transparent;text-align:left}
+#clientChip.tagged{border-style:solid;border-color:var(--gold);background:var(--gold-soft);color:var(--gold)}
+#clientChip .chipName{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#clientChip .chipClear{display:flex;color:var(--muted);padding:2px}
+#clientPickList{max-height:44vh;overflow-y:auto;margin-top:10px}
 
 /* ── MODAL ── */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:flex;align-items:flex-end;justify-content:center}
@@ -198,7 +209,7 @@ h1,h2,h3{font-family:Palatino,'Palatino Linotype',Georgia,serif}
 
 /* ── PRINT ── */
 @media print{
-  #bottom-nav,#session-bar,.act-btn-undo,.sess-btns,.report-btn,.reset-btn{display:none!important}
+  #session-bar,.act-btn-undo,.sess-btns,.report-btn,.reset-btn,.page-tabs,#clientChipRow,#agentSuiteBottomNav{display:none!important}
   body{background:#fff;color:#111}
   .card,.kpi,.act-btn,.goal-row,.conv-card,.prod-card,.bottleneck-card{background:#f9f9f9!important;border-color:#ccc!important;color:#111!important}
 }
@@ -228,6 +239,11 @@ h1,h2,h3{font-family:Palatino,'Palatino Linotype',Georgia,serif}
       <button class="pill" onclick="setView('month')">Month</button>
       <button class="pill" onclick="setView('all')">All Time</button>
     </div>
+    <div class="page-tabs">
+      <button class="pill active" onclick="switchTab('track')" id="nav-track">Track</button>
+      <button class="pill" onclick="switchTab('feed')" id="nav-feed">Feed</button>
+      <button class="pill" onclick="switchTab('report')" id="nav-report">Report</button>
+    </div>
   </div>
 
   <!-- SCROLL AREA -->
@@ -240,9 +256,7 @@ h1,h2,h3{font-family:Palatino,'Palatino Linotype',Georgia,serif}
         <div style="font-size:10px;color:var(--dim);margin-top:2px" id="sessStatus">No session</div>
       </div>
       <div class="sess-info" id="sessInfo"></div>
-      <div class="sess-btns" id="sessBtns">
-        <button class="sess-btn start" onclick="startSession()">▶ Start</button>
-      </div>
+      <div class="sess-btns" id="sessBtns"></div>
     </div>
 
     <!-- KPI CARDS -->
@@ -250,6 +264,11 @@ h1,h2,h3{font-family:Palatino,'Palatino Linotype',Georgia,serif}
 
     <!-- NAV TABS (inline content areas) -->
     <div id="tab-track">
+      <!-- CLIENT TAG (optional — taps log against this client) -->
+      <div id="clientChipRow">
+        <button id="clientChip" onclick="openClientPicker()"></button>
+      </div>
+
       <!-- ACTION BUTTONS -->
       <div class="sec-head"><h3>Activities</h3><div class="sec-head-line"></div></div>
       <div class="btn-grid" id="btnGrid"></div>
@@ -278,17 +297,17 @@ h1,h2,h3{font-family:Palatino,'Palatino Linotype',Georgia,serif}
 
     <div id="tab-report" class="hidden">
       <div class="sec-head"><h3>Reports &amp; Tools</h3><div class="sec-head-line"></div></div>
-      <button class="report-btn" onclick="copyReport()">📋 Copy Daily Report to Clipboard</button>
-      <button class="report-btn" onclick="window.print()">🖨 Print / Save Report</button>
+      <button class="report-btn" onclick="copyReport()">Copy Daily Report to Clipboard</button>
+      <button class="report-btn" onclick="window.print()">Print / Save Report</button>
       <div class="spacer"></div>
       <div class="sec-head"><h3>Daily Goals</h3><div class="sec-head-line"></div></div>
       <div class="goals-grid" id="goalsEditor"></div>
       <button class="report-btn" onclick="saveGoals()" style="border-color:var(--gold);color:var(--gold)">Save Goals</button>
       <div class="spacer"></div>
       <div class="sec-head"><h3>Data</h3><div class="sec-head-line"></div></div>
-      <button class="report-btn" onclick="exportData()">⬇ Export All Data (JSON)</button>
-      <button class="reset-btn" onclick="resetDay()">⚠ Reset Today's Data</button>
-      <button class="reset-btn" onclick="clearAll()">⚠ Clear All History</button>
+      <button class="report-btn" onclick="exportData()">Export All Data (JSON)</button>
+      <button class="reset-btn" onclick="resetDay()">Reset Today's Data</button>
+      <button class="reset-btn" onclick="clearAll()">Clear All History</button>
       <div class="spacer"></div>
       <div style="text-align:center;color:var(--dim);font-size:11px;padding:8px 0">
         Evermore Life Insurance LLC · Score Tracker · <span id="buildDate"></span>
@@ -296,26 +315,13 @@ h1,h2,h3{font-family:Palatino,'Palatino Linotype',Georgia,serif}
     </div>
 
   </div><!-- /scroll-area -->
-
-  <!-- BOTTOM NAV -->
-  <div id="bottom-nav">
-    <button class="nav-tab active" onclick="switchTab('track')" id="nav-track">
-      <span class="nav-tab-icon">⚡</span>TRACK
-    </button>
-    <button class="nav-tab" onclick="switchTab('feed')" id="nav-feed">
-      <span class="nav-tab-icon">📋</span>FEED
-    </button>
-    <button class="nav-tab" onclick="switchTab('report')" id="nav-report">
-      <span class="nav-tab-icon">📊</span>REPORT
-    </button>
-  </div>
 </div>
 
 <!-- POLICY ISSUED MODAL -->
 <div class="modal-bg hidden" id="issuedModal">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title">🏆 Policy Issued!</div>
+    <div class="modal-title">Policy Issued!</div>
     <div class="modal-sub">Enter policy details to track production</div>
     <label>Annual Premium ($)</label>
     <input type="number" id="m-premium" placeholder="850" inputmode="decimal" oninput="updateModalComm()">
@@ -342,10 +348,23 @@ h1,h2,h3{font-family:Palatino,'Palatino Linotype',Georgia,serif}
   </div>
 </div>
 
+<!-- CLIENT PICKER SHEET -->
+<div class="el-sheet-bg hidden" id="clientSheet" onclick="closeClientPicker(event)">
+  <div class="el-sheet">
+    <div class="el-sheet-handle"></div>
+    <div class="el-sheet-title">Working with…</div>
+    <div class="el-sheet-sub">Taps will also log to this client's history in the Pipeline.</div>
+    <input type="search" class="el-input" id="clientSearch" placeholder="Search clients…" oninput="renderClientPicker()">
+    <div id="clientPickList"></div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div id="toast"></div>
 
 <script src="/agent-suite-auth.js"></script>
+<script src="/agent-suite-icons.js"></script>
+<script src="/agent-suite-activity.js"></script>
 <script>
 if (EvermoreAgentSuite.requireAuth()) {
   EvermoreAgentSuite.installTopNav("Score Tracker");
@@ -370,20 +389,21 @@ const DEFAULT_GOALS = {
 };
 
 const ACTIVITIES = [
-  {id:'dials',        icon:'📞', label:'Dial',              sub:'+1 dial',           cls:'dial',    color:'#60a5fa', goal:true},
-  {id:'contacted',    icon:'✅', label:'Contacted',         sub:'made contact',      cls:'contact', color:'#2dd4bf', goal:true},
-  {id:'conversations',icon:'💬', label:'Conversation',      sub:'meaningful',        cls:'convo',   color:'#a78bfa', goal:true},
-  {id:'apptsSet',     icon:'📅', label:'Appt Set',          sub:'appointment booked',cls:'appt',   color:'#d4b576', goal:true},
-  {id:'apptsHeld',    icon:'🤝', label:'Appt Held',         sub:'showed up',         cls:'appt',   color:'#d4b576', goal:true},
-  {id:'appsStarted',  icon:'📋', label:'App Started',       sub:'application begun', cls:'app',    color:'#fb923c', goal:false},
-  {id:'appsSubmitted',icon:'📤', label:'App Submitted',     sub:'submitted to carrier',cls:'app',  color:'#fb923c', goal:true},
-  {id:'beneficiary',  icon:'👥', label:'Beneficiary',       sub:'info collected',    cls:'support',color:'#f472b6', goal:false},
-  {id:'payment',      icon:'💳', label:'Payment',           sub:'collected',         cls:'support',color:'#f472b6', goal:false},
-  {id:'issued',       icon:'🏆', label:'Policy Issued',     sub:'tap to log premium',cls:'issued', color:'#3dd68c', goal:true, modal:true},
-  {id:'followUpSet',  icon:'🔄', label:'Follow-Up Set',     sub:'call scheduled',    cls:'referral',color:'#f59e0b',goal:false},
-  {id:'referralAsked',icon:'🙋', label:'Referral Asked',    sub:'requested referral',cls:'referral',color:'#f59e0b',goal:false},
-  {id:'referralReceived',icon:'⭐',label:'Referral Rec\'d', sub:'got a referral',    cls:'referral',color:'#f59e0b',goal:false},
+  {id:'dials',        icon:'phone',    actType:'dial',              label:'Dial',              sub:'+1 dial',           cls:'dial',    color:'#60a5fa', goal:true},
+  {id:'contacted',    icon:'check',    actType:'contact',           label:'Contacted',         sub:'made contact',      cls:'contact', color:'#2dd4bf', goal:true},
+  {id:'conversations',icon:'chat',     actType:'conversation',      label:'Conversation',      sub:'meaningful',        cls:'convo',   color:'#a78bfa', goal:true},
+  {id:'apptsSet',     icon:'calendar', actType:'appt_set',          label:'Appt Set',          sub:'appointment booked',cls:'appt',   color:'#d4b576', goal:true},
+  {id:'apptsHeld',    icon:'handshake',actType:'appt_held',         label:'Appt Held',         sub:'showed up',         cls:'appt',   color:'#d4b576', goal:true},
+  {id:'appsStarted',  icon:'clipboard',actType:'app_started',       label:'App Started',       sub:'application begun', cls:'app',    color:'#fb923c', goal:false},
+  {id:'appsSubmitted',icon:'send',     actType:'app_submitted',     label:'App Submitted',     sub:'submitted to carrier',cls:'app',  color:'#fb923c', goal:true},
+  {id:'beneficiary',  icon:'users',    actType:null,                label:'Beneficiary',       sub:'info collected',    cls:'support',color:'#f472b6', goal:false},
+  {id:'payment',      icon:'card',     actType:null,                label:'Payment',           sub:'collected',         cls:'support',color:'#f472b6', goal:false},
+  {id:'issued',       icon:'award',    actType:'issued',            label:'Policy Issued',     sub:'tap to log premium',cls:'issued', color:'#3dd68c', goal:true, modal:true},
+  {id:'followUpSet',  icon:'refresh',  actType:'follow_up_set',     label:'Follow-Up Set',     sub:'call scheduled',    cls:'referral',color:'#f59e0b',goal:false},
+  {id:'referralAsked',icon:'hand',     actType:'referral_asked',    label:'Referral Asked',    sub:'requested referral',cls:'referral',color:'#f59e0b',goal:false},
+  {id:'referralReceived',icon:'star',  actType:'referral_received', label:'Referral Rec\'d',   sub:'got a referral',    cls:'referral',color:'#f59e0b',goal:false},
 ];
+const svgIc = (name, opts) => EvermoreIcons.icon(name, opts);
 
 const KPI_IDS = ['dials','contacted','conversations','apptsSet','apptsHeld','appsSubmitted','issued'];
 
@@ -413,7 +433,7 @@ function saveGoals(){
   goals = g;
   saveGoalsCloud(g);
   render();
-  showToast('Goals saved ✓');
+  showToast('Goals saved');
 }
 
 function getDayData(dt){
@@ -489,20 +509,20 @@ function startSession(){
   ACTIVITIES.forEach(a => sessCounters[a.id]=0);
   sessInterval = setInterval(tickSession,1000);
   renderSession();
-  showToast('Session started ▶');
+  showToast('Session started');
 }
 function pauseSession(){
   if(sessState!=='active') return;
   sessState='paused'; sessPauseAt=Date.now();
   clearInterval(sessInterval);
-  renderSession(); showToast('Session paused ⏸');
+  renderSession(); showToast('Session paused');
 }
 function resumeSession(){
   if(sessState!=='paused') return;
   sessPaused += Date.now()-sessPauseAt; sessPauseAt=null;
   sessState='active';
   sessInterval=setInterval(tickSession,1000);
-  renderSession(); showToast('Session resumed ▶');
+  renderSession(); showToast('Session resumed');
 }
 function endSession(){
   if(sessState==='idle') return;
@@ -517,7 +537,7 @@ function endSession(){
   d.days[dt].sessionTime = (d.days[dt].sessionTime||0) + Math.round(elapsed/1000);
   saveData(d);
   sessState='idle'; sessStart=null; sessPaused=0;
-  renderSession(); showToast('Session ended ✓');
+  renderSession(); showToast('Session ended');
 }
 function tickSession(){
   renderSessionTimer();
@@ -553,9 +573,96 @@ function renderSession(){
     ? `Dials: <span>${sc.dials}</span>  Contacts: <span>${sc.contacted}</span>  Convos: <span>${sc.conversations}</span>  Apps: <span>${sc.appsSubmitted}</span>  Issued: <span>${sc.issued}</span>`
     : '';
   const btns=document.getElementById('sessBtns');
-  if(sessState==='idle') btns.innerHTML='<button class="sess-btn start" onclick="startSession()">▶ Start</button>';
-  else if(sessState==='active') btns.innerHTML='<button class="sess-btn pause" onclick="pauseSession()">⏸</button><button class="sess-btn end" onclick="endSession()">■ End</button>';
-  else btns.innerHTML='<button class="sess-btn resume" onclick="resumeSession()">▶ Resume</button><button class="sess-btn end" onclick="endSession()">■ End</button>';
+  if(sessState==='idle') btns.innerHTML='<button class="sess-btn start" onclick="startSession()">'+svgIc('play',{size:12})+' Start</button>';
+  else if(sessState==='active') btns.innerHTML='<button class="sess-btn pause" onclick="pauseSession()">'+svgIc('pause',{size:12})+'</button><button class="sess-btn end" onclick="endSession()">'+svgIc('stop',{size:12})+' End</button>';
+  else btns.innerHTML='<button class="sess-btn resume" onclick="resumeSession()">'+svgIc('play',{size:12})+' Resume</button><button class="sess-btn end" onclick="endSession()">'+svgIc('stop',{size:12})+' End</button>';
+}
+
+/* ══════════════════════════════════════════
+   CLIENT TAGGING (optional — links taps to a Pipeline client)
+══════════════════════════════════════════ */
+const TAG_KEY = 'evermore-tracker-tagged-client-v1'; // sessionStorage {id, name, day}
+let pickerClients = null; // cached GET /api/clients for this page load
+
+function taggedClient(){
+  try {
+    const tag = JSON.parse(sessionStorage.getItem(TAG_KEY));
+    if (tag && tag.day === today()) return tag;
+  } catch(e){}
+  sessionStorage.removeItem(TAG_KEY);
+  return null;
+}
+function setTaggedClient(client){
+  if (client) sessionStorage.setItem(TAG_KEY, JSON.stringify({ id: client.id, name: client.name, day: today() }));
+  else sessionStorage.removeItem(TAG_KEY);
+  renderClientChip();
+}
+function renderClientChip(){
+  const chip = document.getElementById('clientChip');
+  const tag = taggedClient();
+  if (tag){
+    chip.className = 'tagged';
+    chip.classList.add('tagged');
+    chip.innerHTML = svgIc('user',{size:16}) +
+      '<span class="chipName">Working with: <strong>' + esc(tag.name) + '</strong></span>' +
+      '<span class="chipClear" onclick="event.stopPropagation();setTaggedClient(null)">' + svgIc('x',{size:15}) + '</span>';
+  } else {
+    chip.className = '';
+    chip.innerHTML = svgIc('user',{size:16}) +
+      '<span class="chipName">Tag a client (optional) — taps log to their history</span>' +
+      svgIc('chevron-right',{size:15});
+  }
+}
+async function openClientPicker(){
+  document.getElementById('clientSheet').classList.remove('hidden');
+  document.getElementById('clientSearch').value = '';
+  if (!pickerClients){
+    document.getElementById('clientPickList').innerHTML = '<div style="color:var(--dim);font-size:13px;padding:12px 2px">Loading clients…</div>';
+    try {
+      const data = await EvermoreAgentSuite.api('/clients');
+      pickerClients = (data.clients || []).map(c => ({
+        id: c.id,
+        name: [c.first_name, c.last_name].filter(Boolean).join(' ') || 'Unnamed',
+        status: c.status || 'In Progress',
+        updated: c.updated_at || '',
+      })).sort((a,b) => (a.updated < b.updated ? 1 : -1));
+    } catch(e){
+      pickerClients = null;
+      document.getElementById('clientPickList').innerHTML = '<div style="color:var(--danger);font-size:13px;padding:12px 2px">Couldn\'t load clients — check connection.</div>';
+      return;
+    }
+  }
+  renderClientPicker();
+}
+function closeClientPicker(e){
+  if (e && !e.target.classList.contains('el-sheet-bg')) return;
+  document.getElementById('clientSheet').classList.add('hidden');
+}
+function renderClientPicker(){
+  if (!pickerClients) return;
+  const q = (document.getElementById('clientSearch').value || '').toLowerCase();
+  const list = q
+    ? pickerClients.filter(c => c.name.toLowerCase().includes(q))
+    : pickerClients.slice(0, 8); // recent first
+  const tag = taggedClient();
+  document.getElementById('clientPickList').innerHTML =
+    '<button class="el-opt' + (!tag ? ' selected' : '') + '" onclick="pickClient(null)">' +
+      svgIc('x',{size:16}) + '<span>No client — just count</span></button>' +
+    list.map(c =>
+      '<button class="el-opt' + (tag && tag.id === c.id ? ' selected' : '') + '" onclick="pickClient(\'' + c.id + '\')">' +
+      svgIc('user',{size:16}) +
+      '<span>' + esc(c.name) + '<div class="el-opt-sub">' + esc(c.status) + '</div></span></button>'
+    ).join('') +
+    (list.length === 0 ? '<div style="color:var(--dim);font-size:13px;padding:10px 2px">No matches.</div>' : '');
+}
+function pickClient(id){
+  if (!id){ setTaggedClient(null); }
+  else {
+    const c = pickerClients.find(x => x.id === id);
+    if (c) setTaggedClient(c);
+  }
+  document.getElementById('clientSheet').classList.add('hidden');
+  showToast(id ? 'Tagged — taps now log to this client' : 'Tag cleared');
 }
 
 /* ══════════════════════════════════════════
@@ -564,15 +671,21 @@ function renderSession(){
 function increment(id){
   const act = ACTIVITIES.find(a=>a.id===id);
   if(act && act.modal){ openModal(); return; }
+  const tag = taggedClient();
   const d=loadData(); const dt=today();
   if(!d.days[dt]) getDayData(dt);
   d.days[dt].counters[id] = (d.days[dt].counters[id]||0)+1;
   const now=new Date();
   const timeStr=now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
-  d.days[dt].feed.unshift({time:timeStr, id, label:act?act.label:id, color:act?act.color:'#fff'});
+  const label=(act?act.label:id)+(tag?' — '+tag.name:'');
+  d.days[dt].feed.unshift({time:timeStr, id, label, color:act?act.color:'#fff'});
   if(d.days[dt].feed.length>200) d.days[dt].feed=d.days[dt].feed.slice(0,200);
   saveData(d);
   if(sessState==='active') sessCounters[id]=(sessCounters[id]||0)+1;
+  // Tagged: also write a per-client activity row (counter already bumped above).
+  if (tag && act && act.actType){
+    EvermoreActivity.logActivity({ clientId: tag.id, type: act.actType, skipCounter: true }).catch(()=>{});
+  }
   // animate button
   const btn=document.getElementById('actbtn-'+id);
   if(btn){btn.classList.remove('pressed');void btn.offsetWidth;btn.classList.add('pressed');}
@@ -614,19 +727,24 @@ function confirmIssued(){
   const commRate=parseFloat(document.getElementById('m-commRate').value)||80;
   const carrier=document.getElementById('m-carrier').value.trim();
   const note=document.getElementById('m-note').value.trim();
+  const tag=taggedClient();
   const d=loadData(); const dt=today();
   if(!d.days[dt]) getDayData(dt);
   d.days[dt].counters['issued']=(d.days[dt].counters['issued']||0)+1;
   if(premium>0) d.days[dt].premiums=(d.days[dt].premiums||[]).concat({premium,commRate,carrier,note});
   const now=new Date();
   const timeStr=now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
-  const noteStr=[carrier,note].filter(Boolean).join(' · ');
+  const noteStr=[tag&&tag.name,carrier,note].filter(Boolean).join(' · ');
   d.days[dt].feed.unshift({time:timeStr, id:'issued', label:'Policy Issued'+(noteStr?' — '+noteStr:''), color:'#3dd68c'});
   saveData(d);
   if(sessState==='active') sessCounters['issued']=(sessCounters['issued']||0)+1;
+  // Tagged: mirror to the client's history (day counter already bumped above).
+  if (tag){
+    EvermoreActivity.logActivity({ clientId: tag.id, type: 'issued', premium, commRate, carrier, note, skipCounter: true }).catch(()=>{});
+  }
   closeModal();
   render();
-  showToast('🏆 Policy issued! +$'+Math.round(premium*commRate/100).toLocaleString('en-US')+' commission');
+  showToast('Policy issued! +$'+Math.round(premium*commRate/100).toLocaleString('en-US')+' commission');
 }
 
 /* ══════════════════════════════════════════
@@ -714,14 +832,14 @@ function render(){
   const kpiRow = document.getElementById('kpiRow');
   kpiRow.innerHTML='';
   const kpiDefs=[
-    {id:'dials',label:'Dials',icon:'📞'},
-    {id:'contacted',label:'Contacts',icon:'✅'},
-    {id:'conversations',label:'Convos',icon:'💬'},
-    {id:'apptsSet',label:'Appts',icon:'📅'},
-    {id:'appsSubmitted',label:'Apps',icon:'📤'},
-    {id:'issued',label:'Issued',icon:'🏆'},
-    {id:'referralReceived',label:'Refs',icon:'⭐'},
-    {id:'apptsHeld',label:'Held',icon:'🤝'},
+    {id:'dials',label:'Dials',icon:'phone',color:'#60a5fa'},
+    {id:'contacted',label:'Contacts',icon:'check',color:'#2dd4bf'},
+    {id:'conversations',label:'Convos',icon:'chat',color:'#a78bfa'},
+    {id:'apptsSet',label:'Appts',icon:'calendar',color:'#d4b576'},
+    {id:'appsSubmitted',label:'Apps',icon:'send',color:'#fb923c'},
+    {id:'issued',label:'Issued',icon:'award',color:'#3dd68c'},
+    {id:'referralReceived',label:'Refs',icon:'star',color:'#f59e0b'},
+    {id:'apptsHeld',label:'Held',icon:'handshake',color:'#d4b576'},
   ];
   kpiDefs.forEach(k=>{
     const val=c[k.id]||0;
@@ -730,7 +848,7 @@ function render(){
     const done=pct!=null&&pct>=100;
     const div=document.createElement('div');
     div.className='kpi'+(k.id==='dials'?' highlight':'');
-    div.innerHTML=`<div class="kpi-icon">${k.icon}</div>
+    div.innerHTML=`<div class="kpi-icon" style="color:${k.color}">${svgIc(k.icon,{size:16})}</div>
       <div class="kpi-val">${val}</div>
       <div class="kpi-label">${k.label}</div>
       ${goalVal?`<div class="kpi-goal">${pct}%</div><div class="kpi-bar"><div class="kpi-bar-fill${done?' done':''}" style="width:${pct}%"></div></div>`:''}`;
@@ -746,7 +864,7 @@ function render(){
       const div=document.createElement('div');
       div.className='act-btn '+a.cls;
       div.id='actbtn-'+a.id;
-      div.innerHTML=`<div class="act-btn-icon">${a.icon}</div>
+      div.innerHTML=`<div class="act-btn-icon" style="color:${a.color}">${svgIc(a.icon,{size:22})}</div>
         <div class="act-btn-label">${a.label}</div>
         <div class="act-btn-sub">${a.sub}</div>
         <div class="act-btn-count">${val}</div>
@@ -783,11 +901,11 @@ function render(){
     const bn=getBottleneck(convs);
     const bc=document.getElementById('bottleneckCard');
     if(!bn){
-      bc.innerHTML='<div class="bottleneck-card good"><div class="bottleneck-icon">✅</div><div><div class="bottleneck-title">All Clear</div><div class="bottleneck-text">Not enough data yet — start logging activities to see your bottleneck.</div></div></div>';
+      bc.innerHTML='<div class="bottleneck-card good"><div class="bottleneck-icon" style="color:var(--good)">'+svgIc('check-circle',{size:22})+'</div><div><div class="bottleneck-title">All Clear</div><div class="bottleneck-text">Not enough data yet — start logging activities to see your bottleneck.</div></div></div>';
     } else if(bn.rate>0.4){
-      bc.innerHTML=`<div class="bottleneck-card good"><div class="bottleneck-icon">✅</div><div><div class="bottleneck-title">Looking Strong</div><div class="bottleneck-text">All conversion rates above 40%. Keep dialing and stay consistent.</div></div></div>`;
+      bc.innerHTML=`<div class="bottleneck-card good"><div class="bottleneck-icon" style="color:var(--good)">${svgIc('trend-up',{size:22})}</div><div><div class="bottleneck-title">Looking Strong</div><div class="bottleneck-text">All conversion rates above 40%. Keep dialing and stay consistent.</div></div></div>`;
     } else {
-      bc.innerHTML=`<div class="bottleneck-card"><div class="bottleneck-icon">⚠️</div><div><div class="bottleneck-title">Bottleneck: ${bn.label} (${(bn.rate*100).toFixed(1)}%)</div><div class="bottleneck-text">${bn.tip}</div></div></div>`;
+      bc.innerHTML=`<div class="bottleneck-card"><div class="bottleneck-icon" style="color:var(--warn)">${svgIc('spark',{size:22})}</div><div><div class="bottleneck-title">Bottleneck: ${bn.label} (${(bn.rate*100).toFixed(1)}%)</div><div class="bottleneck-text">${bn.tip}</div></div></div>`;
     }
 
     // Goals
@@ -801,7 +919,7 @@ function render(){
       const div=document.createElement('div');
       div.className='goal-row';
       div.innerHTML=`<div class="goal-top">
-        <div class="goal-label">${a.icon} ${a.label}</div>
+        <div class="goal-label"><span style="color:${a.color}">${svgIc(a.icon,{size:14})}</span> ${a.label}</div>
         <div class="goal-nums"><span class="cur">${val}</span> / ${goal} ${done?'<span class="done-check">✓</span>':''}</div>
       </div>
       <div class="goal-pbar"><div class="goal-pbar-fill${done?' done':''}" style="width:${pct}%"></div></div>
@@ -840,7 +958,7 @@ function render(){
       ACTIVITIES.filter(a=>a.goal).forEach(a=>{
         const div=document.createElement('div');
         div.className='goal-edit-item';
-        div.innerHTML=`<div class="goal-edit-label">${a.icon} ${a.label}</div>
+        div.innerHTML=`<div class="goal-edit-label"><span style="color:${a.color}">${svgIc(a.icon,{size:12})}</span> ${a.label}</div>
           <input type="number" class="goal-edit-input" id="ge-${a.id}" value="${goals[a.id]||0}" inputmode="numeric">`;
         ge.appendChild(div);
       });
@@ -865,7 +983,7 @@ function copyReport(){
   const dt=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
   const lines=[
-    `📊 EVERMORE SCORE TRACKER — DAILY REPORT`,
+    `EVERMORE SCORE TRACKER — DAILY REPORT`,
     `Date: ${dt}`,
     sessTime?`Session Time: ${fmtSecs(sessTime)}`:'',
     ``,
@@ -884,13 +1002,13 @@ function copyReport(){
     `PRODUCTION`,
     `• Annual Premium: ${fmtCur(totalAnnual)}`,
     `• Estimated Commission: ${fmtCur(totalComm)}`,
-    bn?`\n⚠ BOTTLENECK: ${bn.label} (${(bn.rate*100).toFixed(1)}%) — ${bn.tip}`:'',
+    bn?`\nBOTTLENECK: ${bn.label} (${(bn.rate*100).toFixed(1)}%) — ${bn.tip}`:'',
     ``,
     `— Evermore Life Insurance LLC`,
   ].filter(l=>l!==undefined);
 
   const text=lines.join('\n');
-  navigator.clipboard.writeText(text).then(()=>showToast('Report copied ✓')).catch(()=>showToast('Copy failed — try again'));
+  navigator.clipboard.writeText(text).then(()=>showToast('Report copied')).catch(()=>showToast('Copy failed — try again'));
 }
 
 /* ══════════════════════════════════════════
@@ -902,7 +1020,7 @@ function resetDay(){
   delete d.days[today()];
   saveData(d);
   render();
-  showToast('Today reset ✓');
+  showToast('Today reset');
 }
 function clearAll(){
   if(!confirm('Clear ALL history forever? This cannot be undone.')) return;
@@ -917,7 +1035,7 @@ function exportData(){
   const a=document.createElement('a'); a.href=url;
   a.download=`evermore-score-${today()}.json`; a.click();
   URL.revokeObjectURL(url);
-  showToast('Export downloaded ✓');
+  showToast('Export downloaded');
 }
 
 /* ══════════════════════════════════════════
@@ -1035,10 +1153,17 @@ window.addEventListener('online', () => { flushScoreSync(); loadCloudForView(cur
 ══════════════════════════════════════════ */
 getDayData(today()); // ensure today exists
 goals=loadGoals();
+renderClientChip();
 render();
 loadCloudDay(today());
 loadGoalsCloud();
 flushScoreSync();
+
+// Live-update when another suite page (Pipeline quick-log, Today) bumps a
+// counter through the shared localStorage store.
+window.addEventListener('storage', (e) => {
+  if (e.key === STORE_KEY) render();
+});
 </script>
 </body>
 </html>

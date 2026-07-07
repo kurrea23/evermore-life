@@ -31,7 +31,7 @@ REPO_URL="https://github.com/kurrea23/evermore-life.git"
 BRANCH="main"
 PAGES_PROJECT="evermore-life"
 LIVE_URL="https://evermorelife.org"
-CHECK_ROUTES=("/" "/growth-calculator/" "/score-tracker/")  # expect HTTP 200 after deploy
+CHECK_ROUTES=("/" "/growth-calculator/" "/score-tracker/" "/clients/" "/today/")  # expect HTTP 200 after deploy
 MIN_FILES=100          # a healthy build has ~349 files; <100 means something is wrong
 WORKDIR="$(mktemp -d /tmp/evermore-deploy.XXXXXX)"
 
@@ -65,7 +65,7 @@ say "Sanity-checking the build before deploy..."
 FILE_COUNT="$(find "$WORKDIR/site" -type f | wc -l | tr -d ' ')"
 [ "$FILE_COUNT" -ge "$MIN_FILES" ] \
   || die "Only $FILE_COUNT files found (expected >= $MIN_FILES). Aborting so we don't push an empty site."
-for must in "index.html" "growth-calculator/index.html" "score-tracker/index.html" "agent-suite-auth.js" "CNAME"; do
+for must in "index.html" "growth-calculator/index.html" "score-tracker/index.html" "today/index.html" "clients/index.html" "agent-suite-auth.js" "agent-suite-ui.css" "agent-suite-icons.js" "agent-suite-activity.js" "CNAME"; do
   [ -f "$WORKDIR/site/$must" ] || die "Expected file missing: $must — aborting."
 done
 ok "Build looks healthy ($FILE_COUNT files, key pages present)."
