@@ -41,6 +41,43 @@ shows.
   order (migration → API worker → Pages → live-proxy).
 - **Status:** open
 
+### 2026-07-13 - Inbound Intake sensitive storage differs from canonical Intake
+
+- **Surfaces:** Approved Inbound Client Intake Sheet + canonical Agent Suite Intake
+- **Finding:** `inbound-client-intake/index.html` serializes the complete form,
+  including SSN and banking fields, as plain JSON in browser storage. The
+  canonical `Client-Intake.html` has encrypted-vault and authenticated
+  server-backed persistence paths.
+- **Evidence:** `persist()` and `readForm()` in
+  `inbound-client-intake/index.html`, `encryptVault()` in
+  `01_website/experiments/Client-Intake.html`, and
+  `agent-suite-intake-continuity.js`
+- **Impact:** The approved workflow must not be represented as immediately
+  encrypting entered SSNs and should not be used with real client data until it
+  shares the canonical secure persistence path or excludes sensitive fields
+  from storage.
+- **Next move:** With implementation approval, connect the inbound intake sheet
+  to the canonical Agent Suite Intake storage contract while preserving its
+  current script and layout.
+- **Status:** open
+
+### 2026-07-13 - Inbound Intake approval is isolated from unrelated worktree lanes
+
+- **Surfaces:** Inbound Client Intake Sheet + Agent Suite continuity + state
+  pages + content/ad review + local generated outputs
+- **Finding:** The approved inbound lane was recovered from the mixed
+  `experiment/script-intake` checkout into a clean branch based on
+  `origin/main`; unrelated backend, state-page, creative, and generated-output
+  changes remain outside this release.
+- **Evidence:**
+  `BLUEPRINTS/reports/2026-07-13_inbound-intake-git-backup-audit.md` and branch
+  `codex/inbound-client-intake-sheet`
+- **Impact:** The inbound worksheet can be reviewed and backed up independently
+  without implying that the other local lanes are included or complete.
+- **Next move:** Review and merge the isolated draft PR separately, then triage
+  each remaining worktree lane on its own branch.
+- **Status:** completed
+
 ### 2026-07-02 - Intake vault, CRM dedupe, and owner-session safety are one loop
 
 - **Surfaces:** Client-Intake PWA + agent-suite-api Worker + Pipeline/Team pages

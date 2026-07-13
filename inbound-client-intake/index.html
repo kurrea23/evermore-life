@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evermore Life — Inbound Client Intake Sheet</title>
+<meta name="theme-color" content="#0b1019">
+<style>
+  /* ============ THEMES ============ */
+  :root[data-theme="dark"]{
+    --bg:#0b1019; --bg-grad:radial-gradient(1200px 600px at 80% -10%, #16233c 0%, #0b1019 55%);
+    --card:#121a2a; --card-head:#16203456; --ink:#e9eef7; --muted:#8c9cb5;
+    --line:#23304a; --input-bg:#0e1626; --input-border:#2a3a57;
+    --gold:#d4b576; --gold-soft:#d4b57622; --gold-ink:#1d1505;
+    --sidebar:linear-gradient(180deg,#0d1525,#101c33);
+    --hover:#19243c; --active:#1d2c4a;
+    --shadow:0 10px 36px rgba(0,0,0,.45);
+    --good:#5fc98b; --danger:#e0726a;
+    --script-bg:#0f1c2e; --script-border:#2b4066;
+  }
+  :root[data-theme="light"]{
+    --bg:#f5f3ee; --bg-grad:radial-gradient(1200px 600px at 80% -10%, #ffffff 0%, #f5f3ee 55%);
+    --card:#ffffff; --card-head:#f6f2e9; --ink:#1d2433; --muted:#6e7888;
+    --line:#e2ddd0; --input-bg:#fffdf9; --input-border:#d8d2c2;
+    --gold:#a8843c; --gold-soft:#a8843c1a; --gold-ink:#ffffff;
+    --sidebar:linear-gradient(180deg,#14203a,#1a2c50);
+    --hover:#22324f; --active:#2a3d61;
+    --shadow:0 8px 28px rgba(60,50,20,.10);
+    --good:#1d7a3c; --danger:#b6453c;
+    --script-bg:#fbf7ee; --script-border:#e6dcc4;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg);background-image:var(--bg-grad);background-attachment:fixed;
+    color:var(--ink);font-size:15px}
+  h1,h2,h3,.serif{font-family:Palatino,"Palatino Linotype",Georgia,serif}
+  #app{display:flex;height:100vh}
+  /* ============ SIDEBAR ============ */
+  #sidebar{width:272px;min-width:272px;background:var(--sidebar);color:#dce4f0;display:flex;flex-direction:column}
+  #sidebar header{padding:18px 16px 8px;display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+  #sidebar header img{width:185px;display:block}
+  #countLabel{color:#8fa3c2;font-size:11px;padding-left:4px}
+  #newBtn{margin:12px 16px 6px;padding:10px;border:none;border-radius:9px;
+    background:linear-gradient(135deg,#e3c68a,#c5a35e);color:#1d1505;font-weight:700;font-size:14px;cursor:pointer}
+  #newBtn:hover{filter:brightness(1.07)}
+  #search{margin:6px 16px;padding:8px 11px;border:1px solid #2c3d5e;border-radius:8px;background:#16233c;color:#fff;font-size:13.5px}
+  #search::placeholder{color:#7f93b5}
+  #search:focus{outline:none;border-color:#d4b576}
+  #clientList{flex:1;overflow-y:auto;margin-top:6px}
+  .clientItem{padding:10px 16px;cursor:pointer;border-left:3px solid transparent;transition:background .15s}
+  .clientItem:hover{background:var(--hover)}
+  .clientItem.active{background:var(--active);border-left-color:#d4b576}
+  .clientItem .nm{font-weight:600;font-size:14px;color:#fff}
+  .clientItem .meta{font-size:11.5px;color:#8fa3c2;margin-top:2px}
+  #sidebarFoot{padding:12px;border-top:1px solid #24344f;display:flex;gap:6px;flex-wrap:wrap}
+  #sidebarFoot button{flex:1 1 44%;padding:7px 2px;border:1px solid #34507d;background:transparent;color:#a9bcd9;
+    border-radius:7px;font-size:11.5px;cursor:pointer;white-space:nowrap}
+  #sidebarFoot button:hover{background:#22324f;border-color:#d4b57688}
+  #sidebarClose{display:none}
+  /* ============ MAIN ============ */
+  #main{flex:1;overflow-y:auto;padding:0 32px 90px;scroll-behavior:smooth}
+  #topBar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    padding:18px 0 10px;background:var(--bg);background-image:var(--bg-grad);background-attachment:fixed}
+  #topBar h2{margin:0;font-size:22px;flex:1;letter-spacing:.02em}
+  .assetBadge{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);
+    border:1px solid var(--gold);border-radius:6px;padding:3px 8px;font-weight:700}
+  .btn{padding:9px 16px;border:none;border-radius:9px;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s}
+  .btn.primary{background:linear-gradient(135deg,#e3c68a,#c5a35e);color:#1d1505;font-weight:700}
+  .btn.primary:hover{filter:brightness(1.07)}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+  .btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+  .btn.danger{background:transparent;border:1px solid var(--danger);color:var(--danger)}
+  .btn.danger:hover{background:var(--danger);color:#fff}
+  .btn.icon{padding:9px 11px}
+  #sidebarToggle,#actionsToggle{display:none}
+  #topActions{display:flex;gap:10px;flex-wrap:wrap}
+  #saveMsg{font-size:13px;font-weight:600;min-width:80px;color:var(--good)}
+  /* chips */
+  #chipNav{position:sticky;top:62px;z-index:9;display:flex;gap:6px;overflow-x:auto;padding:6px 0 12px;
+    background:var(--bg);background-image:var(--bg-grad);background-attachment:fixed}
+  .chip{flex-shrink:0;padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card);
+    color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s}
+  .chip:hover{border-color:var(--gold);color:var(--gold)}
+  .chip .dot{width:7px;height:7px;border-radius:50%;background:var(--line);transition:background .2s}
+  .chip.started .dot{background:var(--gold)}
+  .chip.done{border-color:var(--gold);color:var(--gold);background:var(--gold-soft)}
+  .chip.done .dot{display:none}
+  .chip.done::before{content:"✓";font-weight:800}
+  /* sections */
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:16px;
+    overflow:hidden;box-shadow:var(--shadow)}
+  section > h3{margin:0;padding:14px 18px;font-size:15px;background:var(--card-head);
+    border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;letter-spacing:.02em}
+  section > h3 .step{background:transparent;border:1px solid var(--gold);color:var(--gold);
+    border-radius:7px;font-size:11px;padding:2px 8px;font-family:-apple-system,sans-serif;font-weight:700}
+  .sectionCopy{margin-left:auto;padding:6px 9px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--muted);
+    font-size:12px;font-weight:700;cursor:pointer}
+  .sectionCopy:hover{border-color:var(--gold);color:var(--gold)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;padding:18px}
+  .transitionNote{margin:0 18px 18px;padding:11px 14px;border:1px solid var(--gold);border-radius:10px;
+    background:var(--gold-soft);color:var(--ink);font-size:13.5px;line-height:1.5}
+  .transitionNote b{color:var(--gold);text-transform:uppercase;letter-spacing:.08em;font-size:11.5px}
+  .field{display:flex;flex-direction:column;position:relative}
+  .field.wide{grid-column:1/-1}
+  label{font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+  input[type=text],input[type=date],input[type=email],input[type=tel],input[type=number],input[type=datetime-local],select,textarea{
+    padding:10px 11px;border:1px solid var(--input-border);border-radius:8px;font-size:14.5px;font-family:inherit;
+    background:var(--input-bg);color:var(--ink);width:100%;transition:border .15s,box-shadow .15s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-soft)}
+  textarea{resize:vertical;min-height:60px}
+  ::placeholder{color:var(--muted);opacity:.6}
+  input[type=date],input[type=datetime-local]{color-scheme:dark}
+  :root[data-theme="light"] input[type=date],:root[data-theme="light"] input[type=datetime-local]{color-scheme:light}
+  .masked{-webkit-text-security:disc}
+  .eyeBtn{position:absolute;right:8px;top:31px;background:none;border:none;cursor:pointer;font-size:15px;color:var(--muted);padding:2px 4px}
+  .eyeBtn:hover{color:var(--gold)}
+  .hasEye input{padding-right:36px}
+  /* checkbox knockout grid */
+  .checkGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px 18px;padding:6px 18px 4px}
+  .checkRow{display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:1px dashed var(--line)}
+  .checkRow input[type=checkbox]{width:18px;height:18px;margin-top:1px;accent-color:var(--gold);flex-shrink:0}
+  .checkRow label{text-transform:none;letter-spacing:0;font-size:13.5px;font-weight:500;color:var(--ink);margin:0;cursor:pointer}
+  .checkRow .flag{color:var(--danger);font-weight:700;font-size:11px;margin-left:4px}
+  .checkItem{min-width:0}
+  .followUp{display:none;margin:0 0 10px 27px;padding:12px;border:1px solid var(--script-border);border-radius:9px;
+    background:var(--gold-soft);grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .followUp.show{display:grid}
+  .followUp .field.wide{grid-column:1/-1}
+  .followUp label{font-size:10.5px}
+  .followUp input,.followUp select,.followUp textarea{font-size:13.5px;padding:8px 9px}
+  /* SCRIPT talk-track */
+  details.script{margin:0 18px 4px;border:1px solid var(--script-border);border-radius:11px;background:var(--script-bg);overflow:hidden}
+  details.script summary{cursor:pointer;padding:11px 14px;font-size:12.5px;font-weight:700;letter-spacing:.04em;
+    color:var(--gold);list-style:none;display:flex;align-items:center;gap:8px;user-select:none}
+  details.script summary::-webkit-details-marker{display:none}
+  details.script summary::before{content:"▸";transition:transform .15s;font-size:11px}
+  details.script[open] summary::before{transform:rotate(90deg)}
+  .scriptBody{padding:2px 16px 14px;font-size:13.5px;line-height:1.6}
+  .scriptBody .say{color:var(--ink);margin:8px 0}
+  .scriptBody .say::before{content:"“";color:var(--gold)}
+  .scriptBody .say::after{content:"”";color:var(--gold)}
+  .scriptBody .reb{margin:4px 0 4px 14px;padding-left:12px;border-left:2px solid var(--script-border);color:var(--muted);font-size:12.5px}
+  .scriptBody .reb b{color:var(--gold)}
+  .scriptBody .cue{color:var(--gold);font-weight:700;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;margin:12px 0 4px}
+  .quoteRef{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+  .quoteRef div{background:var(--input-bg);border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:12.5px}
+  .quoteRef b{color:var(--gold);display:block;margin-bottom:3px;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+  .cashValueNote{margin:14px 0 8px;padding:12px 14px;border:1px solid var(--gold);border-radius:10px;background:var(--gold-soft)}
+  .cashValueNote > b{display:block;color:var(--gold);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+  .cashValueNote .say{margin:5px 0}
+  .cashValueNote .cue{margin-top:8px}
+  .quoteSet{border-top:1px solid var(--line)}
+  .quoteSet:first-child{border-top:0}
+  .quoteHead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:18px 18px 0;align-items:end}
+  .quoteTitle{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:800;margin:0 0 8px}
+  .quoteActions{display:flex;gap:8px;justify-content:flex-end;padding-bottom:10px}
+  .quoteRemove{min-width:38px;height:38px;padding:0}
+  .medalRow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:18px}
+  .medal{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--input-bg)}
+  .medal h4{margin:0 0 10px;font-size:13px;letter-spacing:.1em;font-family:-apple-system,sans-serif}
+  .medal.gold{border-top:3px solid #d4af37}.medal.gold h4{color:#d4af37}
+  .medal.silver{border-top:3px solid #9aa7bd}.medal.silver h4{color:#9aa7bd}
+  .medal.bronze{border-top:3px solid #c0793a}.medal.bronze h4{color:#c0793a}
+  .medal .field + .field{margin-top:10px}
+  .addQuoteWrap{padding:0 18px 18px}
+  #addQuoteBtn{width:100%;justify-content:center}
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--card);
+    border:1px solid var(--gold);color:var(--ink);padding:10px 22px;border-radius:99px;font-size:13.5px;font-weight:600;
+    box-shadow:var(--shadow);transition:transform .25s;z-index:50}
+  #toast.show{transform:translateX(-50%) translateY(0)}
+  /* ============ MOBILE ============ */
+  #sidebarScrim{display:none}
+  @media (max-width:820px){
+    body{font-size:14px}
+    #app{height:100dvh;overflow:hidden}
+    #sidebar{position:fixed;inset:0 auto 0 0;z-index:40;width:min(84vw,318px);min-width:0;
+      transform:translateX(-100%);transition:transform .22s ease;box-shadow:18px 0 42px rgba(0,0,0,.45)}
+    #sidebar.open{transform:translateX(0)}
+    #sidebarClose{display:block;position:absolute;top:10px;right:10px;background:none;border:none;color:#9fb2d0;font-size:24px;cursor:pointer}
+    #sidebarScrim.show{display:block;position:fixed;inset:0;background:rgba(4,8,16,.55);z-index:35}
+    #main{padding:0 16px 80px}
+    #sidebarToggle,#actionsToggle{display:inline-flex}
+    #topActions{display:none;position:absolute;top:58px;right:12px;flex-direction:column;background:var(--card);
+      border:1px solid var(--line);border-radius:12px;padding:10px;box-shadow:var(--shadow);z-index:20}
+    #topActions.open{display:flex}
+    .grid{padding:14px}
+    .quoteRef{grid-template-columns:1fr}
+    .medalRow{grid-template-columns:1fr;padding:14px}
+    .quoteHead{padding:14px 14px 0}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="sidebar">
+    <button id="sidebarClose" title="Close">×</button>
+    <header>
+      <img src="data:image/png;base64,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" alt="Evermore Life LLC">
+      <small id="countLabel">0 clients</small>
+    </header>
+    <button id="newBtn">＋ New Client</button>
+    <input type="text" id="search" placeholder="Search name or phone…">
+    <div id="clientList"></div>
+    <div id="sidebarFoot">
+      <button onclick="exportBackup()" title="Download a JSON backup of all clients">⬇ Backup</button>
+      <button onclick="document.getElementById('importFile').click()" title="Restore from a backup file">⬆ Restore</button>
+      <button onclick="clearAll()" title="Remove all clients from this browser">🗑 Clear All</button>
+      <span style="flex:1 1 100%;font-size:10.5px;color:#5f6f8a;text-align:center;padding-top:4px">Approved inbound call workflow · saves to this browser only</span>
+      <input type="file" id="importFile" accept=".json" style="display:none">
+    </div>
+  </div>
+  <div id="sidebarScrim"></div>
+
+  <div id="main">
+    <div id="topBar">
+      <button class="btn icon ghost" id="sidebarToggle" title="Open clients">☰</button>
+      <h2 id="formTitle">New Client</h2>
+      <span class="assetBadge">Inbound Client Intake Sheet</span>
+      <span id="saveMsg"></span>
+      <button class="btn icon ghost" id="actionsToggle" title="Client actions">⋯</button>
+      <button class="btn icon ghost" id="themeBtn" title="Switch light/dark">☀️</button>
+      <div id="topActions">
+        <button class="btn primary" onclick="saveClient()">💾 Save Client</button>
+        <button class="btn ghost" onclick="copySummary()">📋 Copy Summary</button>
+        <button class="btn danger" onclick="deleteClient()">Delete</button>
+      </div>
+    </div>
+
+    <div id="chipNav"></div>
+
+    <form id="intakeForm" onsubmit="return false">
+
+      <!-- ========== SECTION 1 — THE OPENER ========== -->
+      <section id="sec1"><h3><span class="step">1</span>The Opener</h3>
+        <details class="script" open><summary>Call script — opener &amp; rebuttals</summary>
+          <div class="scriptBody">
+            <p class="say">This is (your name) with the Life Insurance Department on a recorded line. Are you calling for life insurance or final expense coverage?</p>
+            <p class="cue">Pause</p>
+            <p class="reb"><b>If yes / quote:</b> Great! I can help you find the most affordable monthly payments. Is that okay?</p>
+            <p class="reb"><b>If calling about benefits:</b> You do qualify for a death benefit up to $25,000. There is a monthly payment. Would you like to go over rates and coverage options?</p>
+            <p class="reb"><b>If caller says free:</b> Sorry, we do not offer free coverage. Have a great day! (hang up)</p>
+            <p class="reb"><b>If they ask if we're a specific carrier:</b> That is one of the carriers we work with. Were you looking to purchase life insurance or final expense coverage?</p>
+            <p class="reb"><b>If customer service:</b> You've reached the new business department… (give carrier's phone number, then disconnect)</p>
+            <p class="say">Okay, are we purchasing the insurance for yourself or a loved one?</p>
+            <p class="say">Perfect. What is (your/their) resident state and date of birth?</p>
+            <p class="cue">Identify the client's needs within 90 seconds · Do NOT hang up on valid leads</p>
+          </div>
+        </details>
+        <div class="grid">
+          <div class="field"><label>Date of Call</label><input type="date" data-field="callDate"></div>
+          <div class="field"><label>Calling About</label>
+            <select data-field="callingAbout"><option value=""></option><option>Quote / new coverage</option><option>Benefits inquiry</option><option>Add-on coverage</option><option>Customer service (route out)</option></select></div>
+          <div class="field"><label>Lead Source</label><input type="text" data-field="leadSource" value="Inbound"></div>
+          <div class="field"><label>Purchasing For</label>
+            <select data-field="coverageFor"><option value=""></option><option>Self</option><option>Loved one</option><option>Self + loved one</option></select></div>
+          <div class="field"><label>Resident State</label><input type="text" data-field="state"></div>
+          <div class="field"><label>Date of Birth</label><input type="date" data-field="dob"></div>
+          <div class="field"><label>Age</label><input type="number" data-field="age"></div>
+          <div class="field"><label>Passed 90-Sec Qualify?</label>
+            <select data-field="leadQualified"><option value=""></option><option>Yes — valid lead</option><option>No — did not qualify</option><option>Routed out</option></select></div>
+        </div>
+        <div class="transitionNote"><b>Transition:</b> Please spell your first and last name (reconfirm the spelling)</div>
+      </section>
+
+      <!-- ========== SECTION 2 — CLIENT BASICS ========== -->
+      <section id="sec2"><h3><span class="step">2</span>Client Basics</h3>
+        <details class="script"><summary>Call script — client basics</summary>
+          <div class="scriptBody">
+            <p class="say"><b>Once again, my name is (your name), and I'm a licensed agent in (client's resident state), and I'll be taking care of you today!</b></p>
+            <p class="say"><b>1.</b> Is this the best number in case we get disconnected?</p>
+            <p class="say"><b>2.</b> Are you able to receive text messages at that number?</p>
+            <p class="say"><b>3.</b> Great. What's your approximate height and weight?</p>
+            <p class="say"><b>4.</b> Are you using any nicotine or tobacco products?</p>
+          </div>
+        </details>
+        <div class="grid">
+          <div class="field"><label>Legal First Name</label><input type="text" data-field="firstName"></div>
+          <div class="field"><label>Legal Last Name</label><input type="text" data-field="lastName"></div>
+          <div class="field"><label>Best Callback Number</label><input type="tel" data-field="phone"></div>
+          <div class="field"><label>Can Receive Texts?</label>
+            <select data-field="canText"><option value=""></option><option>Yes</option><option>No</option></select></div>
+          <div class="field"><label>Height</label><input type="text" data-field="height" placeholder="5'8&quot;"></div>
+          <div class="field"><label>Weight (lbs)</label><input type="text" data-field="weight"></div>
+          <div class="field"><label>Nicotine / Tobacco</label>
+            <select data-field="smoker"><option value=""></option><option>Non-smoker</option><option>Smoker</option></select></div>
+        </div>
+        <div class="transitionNote"><b>Transition:</b> Do you currently have existing life insurance or final expense coverage?</div>
+      </section>
+
+      <!-- ========== SECTION 3 — EXISTING COVERAGE DISCOVERY ========== -->
+      <section id="sec3"><h3><span class="step">3</span>Discovery — Existing Coverage</h3>
+        <details class="script"><summary>Call script — existing coverage</summary>
+          <div class="scriptBody">
+            <p class="say">Do you currently have existing life insurance or final expense coverage?</p>
+            <p class="reb"><b>If no:</b> It sounds like getting coverage is very important to you — that way, God forbid something happens, your loved ones won't have to come out of pocket. Does that sound about right?</p>
+            <p class="reb"><b>If yes:</b> Were you looking to add on coverage, or just interested in finding something more affordable?</p>
+            <p class="reb"><b>If more affordable:</b> Which company are you with? How much coverage do you have and what are you paying? When did your policy go into effect?</p>
+          </div>
+        </details>
+        <div class="grid">
+          <div class="field"><label>Existing Coverage</label>
+            <select data-field="existingCoverage"><option value=""></option><option>None</option><option>Through employer</option><option>Personal</option><option>Employer + personal</option></select></div>
+          <div class="field"><label>Permanent Coverage In Place?</label>
+            <select data-field="hasPermanent"><option value=""></option><option>Yes</option><option>No</option></select></div>
+          <div class="field wide"><label>Current Coverage Details (carrier / amount / premium / effective date)</label><textarea data-field="existingDetails" placeholder="Only if adding on or replacing…"></textarea></div>
+          <div class="field"><label>Goal</label>
+            <select data-field="goal"><option value=""></option><option>Final expenses</option><option>Leave money behind</option><option>Cash value</option><option>Both</option></select></div>
+        </div>
+        <div class="transitionNote"><b>Transition:</b> Okay, got it. <span>(Remember to smile and keep your energy high.)</span></div>
+      </section>
+
+      <!-- ========== SECTION 4 — HOUSEHOLD & PAYMENT DISCOVERY ========== -->
+      <section id="sec4"><h3><span class="step">4</span>Discovery — Household &amp; Payment</h3>
+        <details class="script"><summary>Call script — household &amp; payment</summary>
+          <div class="scriptBody">
+            <p class="say"><b>1.</b> Are you single or married?</p>
+            <p class="say"><b>2.</b> Are you currently working or retired?</p>
+            <p class="say"><b>3.</b> Do you receive Social Security or disability?</p>
+            <p class="say"><b>4.</b> Okay. What state were you born in?</p>
+            <p class="say"><b>5.</b> Okay, great. Most insurance companies offer lower rates if you use a bank or credit union. Do you have a valid bank account or credit union?</p>
+            <p class="reb"><b>If no bank:</b> No worries. What payment method do you use for your bills?</p>
+          </div>
+        </details>
+        <div class="grid">
+          <div class="field"><label>Marital Status</label>
+            <select data-field="marital"><option value=""></option><option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option></select></div>
+          <div class="field"><label>Employment</label>
+            <select data-field="employment"><option value=""></option><option>Working</option><option>Retired</option><option>Disabled</option><option>Not working</option></select></div>
+          <div class="field"><label>Receives SS / Disability?</label>
+            <select data-field="ssIncome"><option value=""></option><option>Social Security</option><option>Disability</option><option>Both</option><option>Neither</option></select></div>
+          <div class="field"><label>State of Birth</label><input type="text" data-field="birthState"></div>
+          <div class="field"><label>Has Bank / Credit Union?</label>
+            <select data-field="hasBank"><option value=""></option><option>Yes</option><option>No — other payment method</option></select></div>
+          <div class="field"><label>Other Bill Payment Method</label><input type="text" data-field="paymentMethod" placeholder="Only if no bank or credit union…"></div>
+        </div>
+        <div class="transitionNote"><b>Transition:</b> Perfect. Thank you for that information.</div>
+      </section>
+
+      <!-- ========== SECTION 5 — HEALTH ========== -->
+      <section id="sec5"><h3><span class="step">5</span>Health Qualification</h3>
+        <details class="script"><summary>Call script — no-exam framing &amp; HIPAA</summary>
+          <div class="scriptBody">
+            <p class="say">Now, the way these products work is there's no medical exam or blood work required. I'll just ask you a few basic health questions to determine your eligibility. Is that okay?</p>
+            <p class="say">Before I continue, I need to disclose that all of your personal and health information is protected under HIPAA privacy laws, okay?</p>
+            <p class="reb"><b>If unsure about HIPAA:</b> HIPAA privacy laws ensure your personal and health information stays protected and confidential.</p>
+            <p class="say">Does that make sense?</p>
+            <p class="cue">Pause</p>
+            <p class="say">Okay, great 🙂</p>
+            <p class="say"><b>1.</b> Are you currently hospitalized, in a nursing home, psychiatric or correctional facility?</p>
+            <p class="say"><b>2.</b> Are you receiving or have been advised to receive home health or hospice care?</p>
+            <p class="say"><b>3.</b> Do you use a wheelchair or mobility scooter, or need assistance with daily living?</p>
+            <p class="cue">Short pause</p>
+            <p class="say">Okay. These next few will also be yes or no.</p>
+          </div>
+        </details>
+        <div class="checkGrid">
+          <div class="checkRow"><input type="checkbox" data-field="koFacility" id="koFacility"><label for="koFacility">Currently hospitalized, nursing home, psychiatric or correctional facility?<span class="flag">KO</span></label></div>
+          <div class="checkRow"><input type="checkbox" data-field="koHospice" id="koHospice"><label for="koHospice">Receiving / advised home health or hospice care?<span class="flag">KO</span></label></div>
+          <div class="checkRow"><input type="checkbox" data-field="koMobility" id="koMobility"><label for="koMobility">Wheelchair / mobility scooter, or needs help with daily living?<span class="flag">KO</span></label></div>
+          <div class="checkItem">
+            <div class="checkRow"><input type="checkbox" data-field="cLung" id="cLung"><label for="cLung">Lung disease, asthma, or COPD?</label></div>
+            <div class="followUp" id="follow_cLung" aria-hidden="true">
+              <div class="field"><label>Are you using inhalers or oxygen?</label>
+                <select data-field="lungTreatment"><option value=""></option><option>Inhalers</option><option>Oxygen</option><option>Inhalers + oxygen</option><option>Neither</option></select></div>
+              <div class="field"><label>Additional Details</label><input type="text" data-field="lungDetails" placeholder="Type, frequency, or notes…"></div>
+            </div>
+          </div>
+          <div class="checkItem">
+            <div class="checkRow"><input type="checkbox" data-field="cHeart" id="cHeart"><label for="cHeart">Heart attack, stroke, or blood clot?</label></div>
+            <div class="followUp" id="follow_cHeart" aria-hidden="true">
+              <div class="field"><label>Which Condition(s)?</label><input type="text" data-field="heartCondition" placeholder="Heart attack, stroke, clot…"></div>
+              <div class="field"><label>When Were You Diagnosed?</label><input type="text" data-field="heartDiagnosed" placeholder="Month/year or age…"></div>
+            </div>
+          </div>
+          <div class="checkRow"><input type="checkbox" data-field="cArtery" id="cArtery"><label for="cArtery">Artery disease, congestive heart failure, cardiomyopathy?</label></div>
+          <div class="checkItem">
+            <div class="checkRow"><input type="checkbox" data-field="cCancer" id="cCancer"><label for="cCancer">Cancer, leukemia, or lymphoma?</label></div>
+            <div class="followUp" id="follow_cCancer" aria-hidden="true">
+              <div class="field"><label>What Type?</label><input type="text" data-field="cancerType"></div>
+              <div class="field"><label>Currently Active?</label>
+                <select data-field="cancerActive"><option value=""></option><option>Yes</option><option>No</option></select></div>
+              <div class="field wide"><label>When Were You First Diagnosed?</label><input type="text" data-field="cancerDiagnosed" placeholder="Month/year or age…"></div>
+            </div>
+          </div>
+          <div class="checkItem">
+            <div class="checkRow"><input type="checkbox" data-field="cDiabetes" id="cDiabetes"><label for="cDiabetes">Diabetic?</label></div>
+            <div class="followUp" id="follow_cDiabetes" aria-hidden="true">
+              <div class="field"><label>Is That Insulin or Pills?</label>
+                <select data-field="diabetes"><option value=""></option><option>Pills</option><option>Insulin</option><option>Insulin + pills</option><option>Other treatment</option></select></div>
+              <div class="field"><label>How Many Diabetes Medications?</label>
+                <select data-field="diabetesMedCount"><option value=""></option><option>1</option><option>2</option><option>3 or more</option></select></div>
+              <div class="field"><label>Age When Diagnosed</label><input type="number" min="0" data-field="diabetesDiagnosedAge"></div>
+              <div class="field"><label>Last A1C</label><input type="text" data-field="a1c"></div>
+            </div>
+          </div>
+          <div class="checkRow"><input type="checkbox" data-field="cDiabComp" id="cDiabComp"><label for="cDiabComp">Diabetic complications — neuropathy, retinopathy, amputations?</label></div>
+          <div class="checkRow"><input type="checkbox" data-field="cKidney" id="cKidney"><label for="cKidney">Kidney or liver conditions?</label></div>
+          <div class="checkRow"><input type="checkbox" data-field="cMental" id="cMental"><label for="cMental">Anxiety, depression, or schizophrenia?</label></div>
+          <div class="checkRow"><input type="checkbox" data-field="cMemory" id="cMemory"><label for="cMemory">Dementia, Alzheimer's, or memory-loss treatment?<span class="flag">KO</span></label></div>
+          <div class="checkRow"><input type="checkbox" data-field="cSubstance" id="cSubstance"><label for="cSubstance">Alcohol or drug abuse?</label></div>
+          <div class="checkRow"><input type="checkbox" data-field="cTransplant" id="cTransplant"><label for="cTransplant">Organ/tissue transplant, lupus, or HIV/AIDS?<span class="flag">KO</span></label></div>
+          <div class="checkRow"><input type="checkbox" data-field="cFelony" id="cFelony"><label for="cFelony">Felony, DUI, or license suspended/revoked in past 5 yrs?</label></div>
+          <div class="checkItem">
+            <div class="checkRow"><input type="checkbox" data-field="cHosp2" id="cHosp2"><label for="cHosp2">Hospitalized 2+ consecutive nights in past 12 months?</label></div>
+            <div class="followUp" id="follow_cHosp2" aria-hidden="true">
+              <div class="field wide"><label>What Was the Reason for Hospitalization?</label><textarea data-field="hospitalReason"></textarea></div>
+            </div>
+          </div>
+          <div class="checkItem">
+            <div class="checkRow"><input type="checkbox" data-field="cMeds" id="cMeds"><label for="cMeds">Currently taking any prescription medications?</label></div>
+            <div class="followUp" id="follow_cMeds" aria-hidden="true">
+              <div class="field wide"><label>What Are They Prescribed For?</label><textarea data-field="medsCurrent" placeholder="Medication and reason…"></textarea></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid">
+          <div class="field wide"><label>Condition Details (which / when / active)</label><textarea data-field="conditionDetails" placeholder="Notes for any boxes checked above…"></textarea></div>
+        </div>
+        <div class="transitionNote"><b>Transition:</b> Okay, great. Thank you for that information.</div>
+      </section>
+
+      <!-- ========== SECTION 6 — BURIAL OR CREMATION ========== -->
+      <section id="sec6"><h3><span class="step">6</span>Burial or Cremation</h3>
+        <details class="script"><summary>Call script — burial or cremation</summary>
+          <div class="scriptBody">
+            <p class="say">Now, these are state-approved plans designed to cover 100% of burials, cremations, or any other final expenses your loved ones could incur. These policies pay out within one day of notification, so they're designed to take the burden off them, so they're not coming out of pocket or dealing with the financial stress of covering those costs when that time comes. Okay?</p>
+            <p class="say">Now, (client name), obviously tomorrow isn't promised for any of us. I'm sure you can imagine that at some point, we'll all pass away — and when that time comes, are you planning on a burial or a cremation?</p>
+            <p class="reb"><b>If burial:</b> Okay, got it. So having at least $10,000–$20,000 to cover the burial costs and service is what we're looking for, correct?</p>
+            <p class="reb"><b>If cremation:</b> Okay, got it. So having at least $7,000–$15,000 to cover the cremation costs and service is what we're looking for, correct?</p>
+            <p class="reb"><b>If undecided:</b> No worries, I understand. Most people are undecided. I'm asking to ensure you have adequate coverage regardless of the option you choose. Does that make sense?</p>
+          </div>
+        </details>
+        <div class="grid">
+          <div class="field"><label>Burial or Cremation</label>
+            <select data-field="finalPlan"><option value=""></option><option>Burial</option><option>Cremation</option><option>Undecided</option></select></div>
+          <div class="field"><label>Coverage Target</label><input type="text" data-field="coverageTarget" placeholder="e.g. $15,000"></div>
+        </div>
+        <div class="transitionNote"><b>Transition:</b> Now if, God forbid, you were to pass away tomorrow, who would you want to list as your beneficiary to receive your policy benefit?</div>
+      </section>
+
+      <!-- ========== SECTION 7 — BENEFICIARIES ========== -->
+      <section id="sec7"><h3><span class="step">7</span>Beneficiary</h3>
+        <details class="script"><summary>Call script — beneficiary &amp; split</summary>
+          <div class="scriptBody">
+            <p class="say">Now if, God forbid, you were to pass away tomorrow, who would you want to list as your beneficiary to receive your policy benefit?</p>
+            <p class="cue">Pause — if the client doesn't mention the full name, go ahead and ask</p>
+            <p class="reb"><b>If multiple beneficiaries:</b> And how did we want the benefit split between them?</p>
+          </div>
+        </details>
+        <div class="grid">
+          <div class="field"><label>Beneficiary 1 — Full Name</label><input type="text" data-field="ben1Name"></div>
+          <div class="field"><label>Relationship</label><input type="text" data-field="ben1Rel"></div>
+          <div class="field"><label>Phone</label><input type="tel" data-field="ben1Phone"></div>
+          <div class="field"><label>Beneficiary 2 — Full Name</label><input type="text" data-field="ben2Name"></div>
+          <div class="field"><label>Relationship</label><input type="text" data-field="ben2Rel"></div>
+          <div class="field"><label>Phone</label><input type="tel" data-field="ben2Phone"></div>
+          <div class="field"><label>Benefit Split</label><input type="text" data-field="benSplit" placeholder="e.g. 50 / 50"></div>
+        </div>
+      </section>
+
+      <!-- ========== SECTION 8 — IDENTIFY THE NEED ========== -->
+      <section id="sec8"><h3><span class="step">8</span>Identify the Need</h3>
+        <details class="script"><summary>Call script — deepen the conversation</summary>
+          <div class="scriptBody">
+            <p class="cue">Choose the questions that naturally fit the flow — there is no need to ask every question in one call</p>
+            <p class="say"><b>1.</b> Why is protecting (him/her/them) important to you?</p>
+            <p class="say"><b>2.</b> What would (his/her/their) situation look like if you didn't have coverage in place?</p>
+            <p class="say"><b>3.</b> Would they have the funds to cover your final expenses when that time comes?</p>
+            <p class="say"><b>4.</b> When do you feel is the best time to put this protection in place?</p>
+            <p class="say"><b>5.</b> How do you think they would feel knowing you've already taken care of this with coverage in place?</p>
+            <p class="say"><b>6.</b> And how do you think they would feel about you if something did happen, and you could have had this coverage in place but didn't?</p>
+            <p class="cue">Pause — allow the client time to reflect and respond; be sympathetic and respond with "I understand"</p>
+          </div>
+        </details>
+        <div class="grid">
+          <div class="field wide"><label>Motivation / Needs Notes</label><textarea data-field="needsNotes" placeholder="Why coverage matters to them, who they're protecting…"></textarea></div>
+        </div>
+        <div class="transitionNote"><b>Transition:</b> Okay, got it. Now I'll quickly highlight a few of your benefits and then we'll go over your coverage options. Do you have a pen and paper handy?</div>
+      </section>
+
+      <!-- ========== SECTION 9 — POLICY BENEFITS ========== -->
+      <section id="sec9"><h3><span class="step">9</span>Policy Benefits</h3>
+        <details class="script"><summary>Call script — whole life &amp; policy benefits</summary>
+          <div class="scriptBody">
+            <p class="say">Okay, got it. Now I'll quickly highlight a few of your benefits and then we'll go over your coverage options. Do you have a pen and paper handy?</p>
+            <p class="say">This is a whole life policy. Do you know what that is?</p>
+            <p class="reb"><b>If yes:</b> Great! As you know, this policy will be with you for the rest of your life. It doesn't expire regardless of age, and your monthly payments will stay locked in, so you won't have to worry about your premiums increasing or the benefits decreasing. Your coverage and payments are guaranteed.</p>
+            <p class="reb"><b>If no:</b> No worries! A whole life policy will be with you for the rest of your life. It doesn't expire regardless of age, and your monthly payments will stay locked in, so you won't have to worry about your premiums increasing or the benefits decreasing. Your coverage and payments are guaranteed. Does that make sense?</p>
+            <p class="say">Great. Please write down these three things:</p>
+            <p class="say"><b>1. Permanent protection</b> — the policy is designed to remain in force for your lifetime as long as the required premiums are paid.</p>
+            <p class="say"><b>2. Level premium and fixed rate</b> — your scheduled premium stays the same and your approved rate is locked in.</p>
+            <p class="say"><b>3. Day-one coverage goal</b> — my goal is to get you day-one coverage. If the carrier approves immediate coverage, the policy is issued, and the initial payment processes, your protection begins on the policy's effective date.</p>
+            <p class="say">The death benefit is generally paid income-tax-free directly to your named beneficiary, which normally keeps it out of probate.</p>
+            <p class="cue">Only discuss living benefits when health and the approved carrier and policy qualify; typically do not use this for Ethos unless the approval confirms it</p>
+            <p class="say">If living benefits are included and you qualify, you may be able to access a portion of the policy benefit after a qualifying chronic, critical, or terminal illness.</p>
+            <div class="cashValueNote">
+              <b>Cash value — only if the client asks</b>
+              <p class="say">These whole life policies build cash value over time. The cash value grows tax-deferred and may be accessed for emergencies such as chronic illness or disease, subject to the carrier's policy terms. A portion of the premium supports the policy's cash value, where it can grow according to the policy.</p>
+              <p class="cue">Only state that cash value can be withdrawn after two years when the approved carrier and policy confirm that access point</p>
+            </div>
+            <p class="say">Does that all make sense?</p>
+            <p class="cue">Pause</p>
+          </div>
+        </details>
+        <div class="grid">
+          <div class="field"><label>Coverage Type</label>
+            <select data-field="coverageType"><option value=""></option><option>Permanent / Whole Life</option><option>Term</option><option>IUL</option></select></div>
+        </div>
+        <div class="transitionNote"><b>Transition:</b> Okay, great. Now, my goal is to get you the max coverage.</div>
+      </section>
+
+      <!-- ========== SECTION 10 — MAXIMUM COVERAGE ========== -->
+      <section id="sec10"><h3><span class="step">10</span>Maximum Coverage &amp; Plan Options</h3>
+        <details class="script"><summary>Call script — quoting top-down &amp; reference amounts</summary>
+          <div class="scriptBody">
+            <p class="say">Okay, great. Now, my goal is to get you the max coverage, but we want to make sure that your premium will be affordable and can be maintained on a monthly basis. What is your approximate monthly income? A rough estimate is fine.</p>
+            <p class="say">Please grab a pen and paper. I'm working with the carriers to find the best fit for you, then we'll review rates and coverages so we can decide what works best. I'll give you a range of coverage amounts, and if you need more, just let me know and I'll adjust it.</p>
+            <p class="cue">Keep premium within 5–8% of monthly income · Quote top-down · Present all 3 coverage amounts first, then all 3 premiums</p>
+            <div class="quoteRef">
+              <div><b>General — Burial</b>$25,000 / $20,000 / $15,000</div>
+              <div><b>General — Cremation</b>$20,000 / $15,000 / $10,000</div>
+              <div><b>Older/Unhealthy — Burial</b>$15,000 / $11,000 / $7,000</div>
+              <div><b>Older/Unhealthy — Cremation</b>$10,000 / $7,000 / $5,000</div>
+            </div>
+            <p class="cue">5 second pause</p>
+            <p class="say">Now, if God forbid you were to pass away tomorrow, which coverage option would you feel comfortable leaving behind for (beneficiary)?</p>
+          </div>
+        </details>
+        <div class="grid">
+          <div class="field"><label>Approx. Monthly Income</label><input type="text" data-field="monthlyIncome" placeholder="rough estimate"></div>
+          <div class="field"><label>Quote Profile</label>
+            <select data-field="quotePreset"><option value=""></option><option value="generalBurial">General — Burial</option><option value="generalCremation">General — Cremation</option><option value="olderBurial">Older / Unhealthy — Burial</option><option value="olderCremation">Older / Unhealthy — Cremation</option></select></div>
+          <div class="field"><label>Option Chosen</label>
+            <select data-field="optionChosen"><option value=""></option><option>Gold</option><option>Silver</option><option>Bronze</option></select></div>
+        </div>
+        <div id="quoteGroups"></div>
+        <div class="addQuoteWrap"><button type="button" class="btn ghost" id="addQuoteBtn">+ Add Carrier Quote</button></div>
+        <div class="transitionNote"><b>Transition:</b> Okay, got it.</div>
+      </section>
+
+      <!-- ========== SECTION 11 — BANKING & CONTACT ========== -->
+      <section id="sec11"><h3><span class="step">11</span>Banking &amp; Contact</h3>
+        <details class="script"><summary>Call script — mailing &amp; banking</summary>
+          <div class="scriptBody">
+            <p class="say">Okay, got it!</p>
+            <p class="say"><b>1.</b> What's your mailing address where you'd like your policy mailed?</p>
+            <p class="say"><b>2.</b> And a good email address for you?</p>
+            <p class="say"><b>3.</b> And which bank are we using for your monthly payments?</p>
+            <p class="say"><b>4.</b> Is that checking or savings?</p>
+            <p class="reb"><b>Okay, great.</b> Go ahead and locate your checkbook or bank statement so we could verify the account and routing number.</p>
+            <p class="cue">5. Just to confirm I have the correct information: verify the account #, routing #, checking/savings, and bank name with the client</p>
+            <p class="say">After today's initial payment, your future payments will be on the (today's date) of each month, okay?</p>
+            <p class="reb"><b>If no:</b> Which date of each month would you like your recurring payments drafted?</p>
+          </div>
+        </details>
+        <div class="grid">
+          <div class="field wide"><label>Mailing Address</label><input type="text" data-field="address" placeholder="Street, City, State, ZIP"></div>
+          <div class="field"><label>Email</label><input type="email" data-field="email"></div>
+          <div class="field"><label>Bank Name</label><input type="text" data-field="bankName"></div>
+          <div class="field"><label>Bank Type</label>
+            <select data-field="bankType"><option value=""></option><option>Brick &amp; mortar</option><option>Online</option><option>Credit union</option></select></div>
+          <div class="field"><label>State Account Opened</label><input type="text" data-field="bankState"></div>
+          <div class="field"><label>Routing Number</label><input type="text" data-field="routing" autocomplete="off" inputmode="numeric"></div>
+          <div class="field hasEye"><label>Account Number</label><input type="text" data-field="account" class="masked" autocomplete="off"><button type="button" class="eyeBtn" data-for="account">👁</button></div>
+          <div class="field"><label>Account Type</label>
+            <select data-field="accountType"><option value=""></option><option>Checking</option><option>Savings</option></select></div>
+          <div class="field"><label>Recurring Draft Day</label><input type="text" data-field="payDay" placeholder="e.g. 3rd of each month"></div>
+        </div>
+        <div class="transitionNote"><b>Transition:</b> Okay, great! I've started working on your policy documents, and I'll be providing you with a policy number today.</div>
+      </section>
+
+      <!-- ========== SECTION 12 — POLICY SETUP & SSN ========== -->
+      <section id="sec12"><h3><span class="step">12</span>Policy Setup &amp; SSN</h3>
+        <details class="script"><summary>Call script — policy setup &amp; SSN</summary>
+          <div class="scriptBody">
+            <p class="say">Okay, great! I've started working on your policy documents, and I'll be providing you with a policy number today. I'm also attaching your nine-digit social to your policy. What is your nine-digit social?</p>
+            <p class="reb"><b>If client does NOT provide SSN:</b> Well, (client name), if God forbid anything happens to you and (beneficiary) didn't have the policy number, (he/she/they) can provide your social to the carrier to file a claim. Does that make sense?</p>
+            <p class="say">Okay, perfect!</p>
+            <p class="say">Again, my name is (your name), and I will be your agent for the life of your policy. If you ever have questions or need to make any changes, you can reach me directly at (your phone number).</p>
+          </div>
+        </details>
+        <details class="script"><summary>Alternate call script — simplified issue &amp; SSN</summary>
+          <div class="scriptBody">
+            <p class="cue">Read slowly</p>
+            <p class="say">Now, everything is simplified issue. That just means they won't send a doctor out to prick your finger, draw blood, or have you urinate in a cup or anything like that.</p>
+            <p class="say">Since COVID, many insurance carriers have expanded their use of what's called simplified issue. So, with your authorization, they'll generally verify your identity through your Social Security number and check the MIB, which is the Medical Information Bureau, along with your prescription history to determine whether you qualify for coverage. The exact checks depend on the carrier and policy.</p>
+            <p class="say">So, the main things they're looking for are that:</p>
+            <p class="reb"><b>✓</b> You don't have Stage 4 cancer.</p>
+            <p class="reb"><b>✓</b> You're not confined to a hospital bed 24 hours a day.</p>
+            <p class="reb"><b>✓</b> And I know it's kind of funny, but they mainly just want to make sure you're not on your final days trying to open up a life insurance policy, okay?</p>
+            <p class="cue">Laugh a little, if appropriate</p>
+            <p class="say">And I'm assuming you have your Social Security number memorized?</p>
+            <p class="cue">Wait for them to answer</p>
+            <p class="say">Perfect — I'm ready for that when you are.</p>
+            <p class="cue">Let them answer</p>
+            <p class="say">Okay, and do I have permission to read that back to you to make sure I entered it correctly before we continue?</p>
+            <p class="cue">If they refuse to provide their Social Security number</p>
+            <p class="reb">The reason the carrier asks for your Social Security number is to verify your identity. With your authorization, that's also how they'll review your past prescription and medical history and make their decision based on what they see. It's a standard part of the application process. So, if you have your Social Security number memorized, I'll go ahead and grab that from you now.</p>
+          </div>
+        </details>
+        <div class="grid">
+          <div class="field hasEye"><label>Social Security Number</label><input type="text" data-field="ssn" class="masked" placeholder="###-##-####" autocomplete="off"><button type="button" class="eyeBtn" data-for="ssn">👁</button></div>
+          <div class="field"><label>SSN Provided?</label>
+            <select data-field="ssnProvided"><option value=""></option><option>Yes</option><option>No</option></select></div>
+          <div class="field"><label>DL Number</label><input type="text" data-field="dlNumber" autocomplete="off"></div>
+          <div class="field"><label>DL State</label><input type="text" data-field="dlState"></div>
+          <div class="field"><label>DL Expiration</label><input type="date" data-field="dlExp"></div>
+          <div class="field"><label>DUI / Reckless History</label><input type="text" data-field="dlHistory" placeholder="None, or details…"></div>
+        </div>
+        <div class="transitionNote"><b>Transition:</b> You're going to receive a 6-digit code by text. I'll just need you to read that back to me when you receive it.</div>
+      </section>
+
+      <!-- ========== SECTION 13 — TEXT VERIFICATION ========== -->
+      <section id="sec13"><h3><span class="step">13</span>Text Verification</h3>
+        <details class="script"><summary>Call script — authorization code &amp; text signature</summary>
+          <div class="scriptBody">
+            <p class="say">Alright, you're going to receive a 6-digit code by text. I'll just need you to read that code back to me when you receive it.</p>
+            <p class="cue">Common sender-number prefixes — confirm the number shown in the carrier application</p>
+            <p class="reb"><b>AMERICO:</b> 877</p>
+            <p class="reb"><b>MUTUAL OF OMAHA:</b> 844</p>
+            <p class="reb"><b>TRANSAMERICA:</b> 469</p>
+            <p class="reb"><b>ETHOS:</b> 844</p>
+            <p class="say">You can just read that back to me when you get it.</p>
+            <p class="cue">If the carrier sends a signature link instead, have the client open and complete the link while you remain on the call</p>
+            <p class="cue">Once you receive the code</p>
+            <p class="say">Perfect! From here, I'll click through some questions you've already answered. Based on those, we may receive a preliminary green light, which means the application looks likely to move forward, or they may let us know that we need to explore other options you might qualify for. This is not final approval until the carrier confirms it.</p>
+            <p class="say">Give me just a couple of moments while I get some answers.</p>
+          </div>
+        </details>
+        <div class="grid">
+          <div class="field"><label>Verification Carrier</label>
+            <select data-field="verificationCarrier"><option value=""></option><option>Americo</option><option>Mutual of Omaha</option><option>TransAmerica</option><option>Ethos</option><option>Other</option></select></div>
+          <div class="field"><label>6-Digit Authorization Code (not saved)</label><input type="text" id="authorizationCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="######"></div>
+          <div class="field"><label>Verification Status</label>
+            <select data-field="textVerificationStatus"><option value=""></option><option>Code pending</option><option>Code verified</option><option>Signature link sent</option><option>Signature completed</option><option>Not required</option><option>Issue / retry needed</option></select></div>
+        </div>
+        <div class="transitionNote"><b>Transition:</b> Give me just a couple of moments while I get some answers.</div>
+      </section>
+
+      <!-- ========== SECTION 14 — POLICY CLOSE-OUT ========== -->
+      <section id="sec14"><h3><span class="step">14</span>Policy Close-Out</h3>
+        <details class="script"><summary>Call script — approval &amp; close-out</summary>
+          <div class="scriptBody">
+            <p class="cue">Finish the remaining carrier application questions while the client stays on the line. Use a brief hold only if needed.</p>
+            <p class="cue">Approved close-out — continue only after the carrier confirms approval</p>
+            <p class="say">Thank you again for your patience. Your application was approved!</p>
+            <p class="say">The carrier that approved your coverage is (carrier) for a coverage amount of (face amount), and for a monthly payment of (premium). Your coverage takes effect on (effective date), with recurring payments being drafted on the (recurring draft date) of each month. Your policy number is (policy number).</p>
+            <p class="say">If your payment is drafted before you receive your policy paperwork, that is normal. Insurance companies do not send policy documents immediately. Once the first payment has been processed, your policy will be mailed and should arrive within 10 to 14 business days. If your draft date has passed and the funds are still in your account, please leave them there.</p>
+            <p class="say">Payments can take up to 3 to 5 business days to fully process and reflect.</p>
+            <p class="say">And lastly, if your situation changes and the monthly payment becomes unaffordable, call me right away and I can adjust coverage so you can keep protection in place. If other agents contact you, you can let them know you have already purchased coverage.</p>
+            <p class="say">Thank you for trusting me with this. If you have any questions or need help with your policy, please don't hesitate to reach out.</p>
+            <p class="say">Is there anything else I can assist you with today?</p>
+          </div>
+        </details>
+        <div class="grid">
+          <div class="field"><label>Carrier</label>
+            <select data-field="carrier"><option value=""></option><option>Mutual of Omaha</option><option>Americo</option><option>American-Amicable</option><option>Ethos</option><option>Aetna</option><option>Corebridge Financial</option><option>TransAmerica</option><option>Other</option></select></div>
+          <div class="field"><label>Policy Number</label><input type="text" data-field="policyNumber"></div>
+          <div class="field"><label>Coverage Amount</label><input type="text" data-field="finalCoverage"></div>
+          <div class="field"><label>Monthly Premium</label><input type="text" data-field="finalPremium"></div>
+          <div class="field"><label>Effective Date</label><input type="date" data-field="effectiveDate"></div>
+          <div class="field"><label>Status</label>
+            <select data-field="status"><option value=""></option><option>Appointment Booked</option><option>Applied</option><option>Instantly Approved</option><option>Further Underwriting</option><option>Approved</option><option>Declined</option><option>Follow Up</option><option>Not Interested</option><option>In Progress</option></select></div>
+          <div class="field"><label>Appointment Date &amp; Time</label><input type="datetime-local" data-field="apptDateTime"></div>
+        </div>
+        <div class="transitionNote"><b>Transition:</b> Okay, now the last thing I always ask my families before I let you go here today: on a scale of 1 to 10, how did I do for you today?</div>
+      </section>
+
+      <!-- ========== SECTION 15 — REFERRALS ========== -->
+      <section id="sec15"><h3><span class="step">15</span>Referrals &amp; Notes</h3>
+        <details class="script"><summary>Call script — VIBS referral close</summary>
+          <div class="scriptBody">
+            <p class="cue"><b>V — Value rating</b></p>
+            <p class="say">Okay, now the last thing I always ask my families before I let you go here today: on a scale of 1 to 10, how did I do for you today?</p>
+            <p class="cue">Wait for their answer</p>
+            <p class="say">Awesome, thank you so much. It's been a pleasure to protect your family.</p>
+
+            <p class="cue"><b>I — Identify the benefit</b></p>
+            <p class="say">Now, out of everything we covered, what did you feel was most beneficial about what we went over?</p>
+            <p class="cue">Repeat their answer back and expand on it</p>
+
+            <p class="cue"><b>B — Beneficiary review</b></p>
+            <p class="say">Now obviously, like I mentioned before, I will make sure we go over your policy with your beneficiaries if needed so they know exactly how it works, God forbid something happens to you. In addition, I'll make sure they get access to the same information we went over with you. Would you like me to go over your full policy with them, or just the name of the company and the policy number?</p>
+            <p class="say">Okay, great. Other than your beneficiaries, I know there are people in your life who could benefit from this information. Let's start with (the person they mentioned earlier — brother, sister, parent, aunt, uncle, coworker, or best friend).</p>
+            <p class="say">What was your sister's name again? Okay, great. Does she have a (client area code) area code like you? Does she work days, nights, or is she not currently working? Does she have kids, and is she married?</p>
+
+            <p class="cue"><b>S — Support circle</b></p>
+            <p class="say">Anyone else you care about who would thank you for helping put them in a better spot if something happened?</p>
+            <p class="cue">Prompt softly: “Who's next?” Ask once more if it feels natural, then stop without pressure</p>
+
+            <p class="cue"><b>Recap and set expectations</b></p>
+            <p class="say">Perfect. So here's the game plan: I'll give them a quick call, just like I did with you. All I ask is that you give them a heads-up. Just say, “Hey, I talked with (your name). They helped me get my life insurance taken care of, and they're going to reach out to you. It's actually really good information.” Can you do that for me?</p>
+            <p class="cue">Pause and get verbal confirmation</p>
+            <p class="say">Awesome. And hey, if they're all set, no big deal. At the very least, I'll make sure they're in the best possible spot. If they do move forward, they'll owe you dinner — or at least a bottle of wine!</p>
+            <p class="say">Alright, (client name), please follow up with me as soon as that packet arrives if you have questions. I appreciate you thinking of the people you care about. That's what this is really about. Thanks again, and have a blessed day.</p>
+            <p class="cue">Compliance: a referral is not automatic consent for marketing texts. Use a client-led introduction or obtain the referred person's direct permission before texting, and honor any opt-out immediately.</p>
+          </div>
+        </details>
+        <div class="grid">
+          <div class="field"><label>Service Rating</label>
+            <select data-field="serviceRating"><option value=""></option><option>10</option><option>9</option><option>8</option><option>7</option><option>6</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="field"><label>Beneficiary Review Preference</label>
+            <select data-field="beneficiaryReview"><option value=""></option><option>Full policy review</option><option>Company and policy number only</option><option>Not now</option></select></div>
+          <div class="field wide"><label>Most Beneficial Takeaway</label><textarea data-field="benefitTakeaway" rows="2"></textarea></div>
+          <div class="field wide"><label>Referrals (name / phone / notes — one per line)</label><textarea data-field="referrals" rows="3"></textarea></div>
+          <div class="field wide"><label>Notes</label><textarea data-field="notes" rows="3"></textarea></div>
+        </div>
+      </section>
+
+    </form>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ============ APPROVED INBOUND CLIENT INTAKE — localStorage only ============ */
+const STORE = 'evermore_guided_intake_v1';
+let clients = [];
+let currentId = null;
+
+const $ = s => document.querySelector(s);
+const fieldEls = () => Array.from(document.querySelectorAll('[data-field]'));
+const HEALTH_FOLLOWUPS = [
+  {check:'cLung', panel:'follow_cLung'},
+  {check:'cHeart', panel:'follow_cHeart'},
+  {check:'cCancer', panel:'follow_cCancer'},
+  {check:'cDiabetes', panel:'follow_cDiabetes'},
+  {check:'cHosp2', panel:'follow_cHosp2'},
+  {check:'cMeds', panel:'follow_cMeds'}
+];
+const CARRIER_OPTIONS = ['Mutual of Omaha','Americo','American-Amicable Group of Companies','Ethos','Aetna','Corebridge Financial','TransAmerica','Other'];
+const QUOTE_TIERS = [
+  {key:'gold', label:'Gold', medal:'🥇', cls:'gold'},
+  {key:'silver', label:'Silver', medal:'🥈', cls:'silver'},
+  {key:'bronze', label:'Bronze', medal:'🥉', cls:'bronze'}
+];
+const QUOTE_PRESETS = {
+  generalBurial:{goldCov:'$25,000', silverCov:'$20,000', bronzeCov:'$15,000'},
+  generalCremation:{goldCov:'$20,000', silverCov:'$15,000', bronzeCov:'$10,000'},
+  olderBurial:{goldCov:'$15,000', silverCov:'$11,000', bronzeCov:'$7,000'},
+  olderCremation:{goldCov:'$10,000', silverCov:'$7,000', bronzeCov:'$5,000'}
+};
+
+function escAttr(s){ return String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function carrierOptionsHtml(selected){
+  return '<option value=""></option>' + CARRIER_OPTIONS.map(c => '<option' + (c === selected ? ' selected' : '') + '>' + esc(c) + '</option>').join('');
+}
+function blankQuoteGroup(presetKey){
+  return Object.assign({quoteCarrier:'', goldCov:'', goldPrem:'', silverCov:'', silverPrem:'', bronzeCov:'', bronzePrem:''}, QUOTE_PRESETS[presetKey] || {});
+}
+function legacyQuoteGroup(o){
+  return {
+    quoteCarrier:(o && o.quoteCarrier) || '', goldCov:(o && o.goldCov) || '', goldPrem:(o && o.goldPrem) || '',
+    silverCov:(o && o.silverCov) || '', silverPrem:(o && o.silverPrem) || '', bronzeCov:(o && o.bronzeCov) || '', bronzePrem:(o && o.bronzePrem) || ''
+  };
+}
+function readQuoteGroups(){
+  return Array.from(document.querySelectorAll('.quoteSet')).map(set => {
+    const group = {};
+    set.querySelectorAll('[data-quote-field]').forEach(el => { group[el.dataset.quoteField] = (el.value || '').trim(); });
+    return group;
+  }).filter((group, index) => index === 0 || Object.values(group).some(Boolean));
+}
+function renderQuoteGroups(groups){
+  const host = $('#quoteGroups');
+  if (!host) return;
+  const safeGroups = Array.isArray(groups) && groups.length ? groups : [blankQuoteGroup($('[data-field="quotePreset"]')?.value)];
+  host.innerHTML = safeGroups.map((group, index) => {
+    const legacyId = id => index === 0 ? id : 'quote' + (index + 1) + id[0].toUpperCase() + id.slice(1);
+    const carrierId = index === 0 ? 'quoteCarrier' : 'quote' + (index + 1) + 'Carrier';
+    const medals = QUOTE_TIERS.map(tier => {
+      const covKey = tier.key + 'Cov', premKey = tier.key + 'Prem';
+      return '<div class="medal ' + tier.cls + '"><h4>' + tier.medal + ' ' + tier.label.toUpperCase() + '</h4>' +
+        '<div class="field"><label>Coverage</label><input type="text" id="' + legacyId(covKey) + '" data-quote-field="' + covKey + '" value="' + escAttr(group[covKey]) + '"></div>' +
+        '<div class="field"><label>Monthly Premium</label><input type="text" id="' + legacyId(premKey) + '" data-quote-field="' + premKey + '" value="' + escAttr(group[premKey]) + '"></div></div>';
+    }).join('');
+    return '<div class="quoteSet" data-quote-index="' + index + '"><div class="quoteHead"><div><p class="quoteTitle">Carrier quote ' + (index + 1) + '</p>' +
+      '<div class="field"><label>Carrier</label><select id="' + carrierId + '" data-quote-field="quoteCarrier">' + carrierOptionsHtml(group.quoteCarrier) + '</select></div></div>' +
+      '<div class="quoteActions">' + (index ? '<button type="button" class="btn ghost quoteRemove" title="Remove quote" data-remove-quote="' + index + '">×</button>' : '') + '</div></div>' +
+      '<div class="medalRow">' + medals + '</div></div>';
+  }).join('');
+  host.querySelectorAll('[data-remove-quote]').forEach(btn => btn.addEventListener('click', () => {
+    const groups = readQuoteGroups();
+    groups.splice(Number(btn.dataset.removeQuote), 1);
+    renderQuoteGroups(groups);
+    updateChips();
+  }));
+}
+function inferQuotePreset(group){
+  if (!group) return '';
+  return Object.keys(QUOTE_PRESETS).find(key => ['goldCov','silverCov','bronzeCov'].every(field => group[field] === QUOTE_PRESETS[key][field])) || '';
+}
+function applyQuotePreset(presetKey){
+  const preset = QUOTE_PRESETS[presetKey];
+  if (!preset) return;
+  document.querySelectorAll('.quoteSet').forEach(set => {
+    Object.entries(preset).forEach(([field, value]) => {
+      const input = set.querySelector('[data-quote-field="'+field+'"]');
+      if (input) input.value = value;
+    });
+  });
+  updateChips();
+}
+
+function syncHealthFollowUps(){
+  HEALTH_FOLLOWUPS.forEach(({check, panel}) => {
+    const checkbox = $('[data-field="'+check+'"]');
+    const followUp = $('#'+panel);
+    const show = !!checkbox.checked;
+    followUp.classList.toggle('show', show);
+    followUp.setAttribute('aria-hidden', String(!show));
+    followUp.querySelectorAll('[data-field]').forEach(el => { el.disabled = !show; });
+  });
+}
+
+function load(){ try{ clients = JSON.parse(localStorage.getItem(STORE)) || []; }catch(e){ clients = []; } }
+function persist(){ localStorage.setItem(STORE, JSON.stringify(clients)); }
+
+function readForm(){
+  const o = {};
+  fieldEls().forEach(el => { o[el.dataset.field] = el.type === 'checkbox' ? el.checked : (el.disabled ? '' : (el.value || '').trim()); });
+  o.quoteGroups = readQuoteGroups();
+  Object.assign(o, o.quoteGroups[0] || blankQuoteGroup(o.quotePreset));
+  return o;
+}
+function fillForm(o){
+  fieldEls().forEach(el => {
+    const v = o ? o[el.dataset.field] : undefined;
+    if (el.type === 'checkbox') el.checked = !!v;
+    else el.value = (v == null ? '' : v);
+  });
+  const groups = o && Array.isArray(o.quoteGroups) && o.quoteGroups.length ? o.quoteGroups : [legacyQuoteGroup(o)];
+  renderQuoteGroups(groups);
+  const presetField = $('[data-field="quotePreset"]');
+  if (o && !presetField.value) presetField.value = inferQuotePreset(groups[0]);
+  syncHealthFollowUps();
+  updateChips();
+}
+function todayKey(){ const d = new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+function newClient(){
+  currentId = null;
+  fillForm(null);
+  $('#authorizationCode').value = '';
+  $('[data-field="callDate"]').value = todayKey();
+  $('[data-field="leadSource"]').value = 'Inbound';
+  $('#formTitle').textContent = 'New Client';
+  document.querySelectorAll('.clientItem').forEach(el => el.classList.remove('active'));
+  $('#main').scrollTop = 0;
+  $('[data-field="firstName"]').focus();
+  if (isMobile()) closeSidebar();
+}
+function saveClient(){
+  const d = readForm();
+  if (!d.firstName && !d.lastName){ flash('Add a name first', true); return; }
+  d.updated = new Date().toISOString();
+  d.id = currentId || (Date.now().toString(36) + Math.random().toString(36).slice(2,6));
+  const i = clients.findIndex(c => c.id === d.id);
+  if (i >= 0) clients[i] = d; else clients.unshift(d);
+  currentId = d.id;
+  persist(); renderList();
+  $('#formTitle').textContent = (d.firstName + ' ' + d.lastName).trim();
+  flash('✓ Saved');
+}
+function loadClient(id){
+  const c = clients.find(x => x.id === id);
+  if (!c) return;
+  currentId = id;
+  fillForm(c);
+  $('#authorizationCode').value = '';
+  $('#formTitle').textContent = (c.firstName + ' ' + c.lastName).trim();
+  document.querySelectorAll('.clientItem').forEach(el => el.classList.toggle('active', el.dataset.id === id));
+  $('#main').scrollTop = 0;
+  if (isMobile()) closeSidebar();
+}
+function deleteClient(){
+  if (currentId == null){ newClient(); return; }
+  const c = clients.find(x => x.id === currentId);
+  if (!confirm('Delete ' + (c ? (c.firstName+' '+c.lastName).trim() : 'this client') + '? This cannot be undone.')) return;
+  clients = clients.filter(x => x.id !== currentId);
+  persist(); renderList(); newClient();
+}
+function renderList(){
+  const q = ($('#search').value || '').toLowerCase();
+  const list = $('#clientList'); list.innerHTML = '';
+  const shown = clients.filter(c => (((c.firstName||'')+' '+(c.lastName||'')+' '+(c.phone||'')).toLowerCase()).includes(q));
+  shown.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'clientItem' + (c.id === currentId ? ' active' : '');
+    div.dataset.id = c.id;
+    div.innerHTML = '<div class="nm">' + esc((c.firstName+' '+c.lastName).trim() || 'Unnamed') + '</div>' +
+                    '<div class="meta">' + esc(c.status || c.phone || '—') + '</div>';
+    div.onclick = () => loadClient(c.id);
+    list.appendChild(div);
+  });
+  $('#countLabel').textContent = clients.length + (clients.length === 1 ? ' client' : ' clients');
+}
+function esc(s){ return (s||'').replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+
+/* ============ BACKUP / RESTORE ============ */
+function exportBackup(){
+  const blob = new Blob([JSON.stringify(clients, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'evermore-guided-intake-' + todayKey() + '.json';
+  a.click(); URL.revokeObjectURL(a.href);
+  flash('✓ Backup downloaded');
+}
+$('#importFile').addEventListener('change', e => {
+  const file = e.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      const data = JSON.parse(r.result);
+      if (!Array.isArray(data)) throw 0;
+      const byId = {}; [...clients, ...data].forEach(c => { if (c && c.id) byId[c.id] = c; });
+      clients = Object.values(byId);
+      persist(); renderList();
+      flash('✓ Restored ' + data.length + ' record(s)');
+    }catch(err){ flash('Not a valid backup file', true); }
+    e.target.value = '';
+  };
+  r.readAsText(file);
+});
+function clearAll(){
+  if (!clients.length){ flash('Nothing to clear'); return; }
+  if (!confirm('Remove all ' + clients.length + ' clients from this browser? Export a backup first if unsure.')) return;
+  clients = []; persist(); renderList(); newClient();
+}
+
+/* ============ CHIPS ============ */
+const SECTIONS = [
+  {id:'sec1', name:'Opener',      keys:['callingAbout','coverageFor','state','dob','leadQualified']},
+  {id:'sec2', name:'Basics',      keys:['firstName','lastName','phone','canText','height','weight','smoker']},
+  {id:'sec3', name:'Coverage',    keys:['goal']},
+  {id:'sec4', name:'Household',   keys:['marital','employment','ssIncome','birthState','hasBank']},
+  {id:'sec5', name:'Health',      keys:[]},
+  {id:'sec6', name:'Burial/Cremation', keys:['finalPlan','coverageTarget']},
+  {id:'sec7', name:'Beneficiary', keys:['ben1Name']},
+  {id:'sec8', name:'Needs',       keys:['needsNotes']},
+  {id:'sec9', name:'Benefits',    keys:['coverageType']},
+  {id:'sec10',name:'Options',     keys:['quotePreset','optionChosen']},
+  {id:'sec11',name:'Banking',     keys:['address','email','routing','account']},
+  {id:'sec12',name:'Policy Setup',keys:['ssnProvided']},
+  {id:'sec13',name:'Text Verify', keys:['textVerificationStatus']},
+  {id:'sec14',name:'Close-Out',   keys:['status']},
+  {id:'sec15',name:'Referrals',   keys:['serviceRating']}
+];
+const chipNav = $('#chipNav');
+SECTIONS.forEach(s => {
+  const c = document.createElement('div');
+  c.className = 'chip'; c.id = 'chip_' + s.id;
+  c.innerHTML = '<span class="dot"></span>' + s.name;
+  c.onclick = () => $('#' + s.id).scrollIntoView({behavior:'smooth', block:'start'});
+  chipNav.appendChild(c);
+});
+function val(field){ const el = $('[data-field="'+field+'"]'); return el ? (el.type==='checkbox'? (el.checked?'x':'') : el.value.trim()) : ''; }
+function updateChips(){
+  SECTIONS.forEach(s => {
+    const chip = $('#chip_' + s.id);
+    const done = s.keys.length && s.keys.every(k => val(k) !== '');
+    const any = Array.from($('#'+s.id).querySelectorAll('input,select,textarea'))
+      .some(el => !el.disabled && (el.type==='checkbox'? el.checked : el.value.trim()!=='') && !['callDate','leadSource'].includes(el.dataset.field));
+    chip.classList.toggle('done', !!done);
+    chip.classList.toggle('started', any && !done);
+  });
+}
+
+/* ============ COPY SUMMARY ============ */
+const LABELS = {
+  callDate:'Date of call', callingAbout:'Calling about', leadQualified:'Passed 90-sec qualify',
+  leadSource:'Lead source', coverageFor:'Purchasing for', firstName:'First name', lastName:'Last name',
+  dob:'DOB', age:'Age', state:'Resident state', phone:'Callback #', canText:'Can text', email:'Email',
+  existingCoverage:'Existing coverage', hasPermanent:'Permanent in place', existingDetails:'Current coverage details', goal:'Goal',
+  marital:'Marital', employment:'Employment', ssIncome:'SS/Disability', birthState:'State of birth', hasBank:'Has bank', paymentMethod:'Other bill payment method',
+  koFacility:'KO facility', koHospice:'KO hospice', koMobility:'KO mobility', cLung:'Lung/COPD', cHeart:'Heart/stroke/clot',
+  cArtery:'Artery/CHF', cCancer:'Cancer', cDiabetes:'Diabetic', cDiabComp:'Diabetic complications', cKidney:'Kidney/liver',
+  cMental:'Anxiety/depression', cMemory:'Dementia/Alzheimer', cSubstance:'Alcohol/drug', cTransplant:'Transplant/lupus/HIV',
+  cFelony:'Felony/DUI 5yr', cHosp2:'Hospitalized 2+ nights', cMeds:'Prescription medications', conditionDetails:'Condition details',
+  lungTreatment:'Inhalers/oxygen', lungDetails:'Lung details', heartCondition:'Heart/stroke/clot condition', heartDiagnosed:'Heart condition diagnosed',
+  cancerType:'Cancer type', cancerActive:'Cancer active', cancerDiagnosed:'Cancer first diagnosed', diabetes:'Diabetes treatment',
+  diabetesMedCount:'Diabetes medication count', diabetesDiagnosedAge:'Age diagnosed with diabetes', a1c:'A1C', hospitalReason:'Hospitalization reason',
+  medsCurrent:'Current meds and purpose', height:'Height', weight:'Weight', smoker:'Nicotine',
+  finalPlan:'Burial/cremation', coverageTarget:'Coverage target', monthlyIncome:'Monthly income', needsNotes:'Needs notes', quotePreset:'Quote profile',
+  quoteCarrier:'Quote carrier', goldCov:'Gold cov', goldPrem:'Gold prem', silverCov:'Silver cov', silverPrem:'Silver prem',
+  bronzeCov:'Bronze cov', bronzePrem:'Bronze prem', optionChosen:'Option chosen', coverageType:'Coverage type',
+  address:'Mailing address', ssn:'SSN', ssnProvided:'SSN provided', dlNumber:'DL #', dlState:'DL state', dlExp:'DL exp', dlHistory:'DUI/reckless',
+  verificationCarrier:'Verification carrier', textVerificationStatus:'Text verification status',
+  bankName:'Bank', bankType:'Bank type', bankState:'Account opened in', routing:'Routing #', account:'Account #', accountType:'Account type', payDay:'Draft day',
+  carrier:'Carrier', policyNumber:'Policy #', finalCoverage:'Coverage amount', finalPremium:'Monthly premium', effectiveDate:'Effective date', status:'Status', apptDateTime:'Appointment',
+  ben1Name:'Beneficiary 1', ben1Rel:'Ben 1 relationship', ben1Phone:'Ben 1 phone', ben2Name:'Beneficiary 2', ben2Rel:'Ben 2 relationship', ben2Phone:'Ben 2 phone', benSplit:'Benefit split',
+  serviceRating:'Service rating', beneficiaryReview:'Beneficiary review preference', benefitTakeaway:'Most beneficial takeaway',
+  referrals:'Referrals', notes:'Notes'
+};
+function copySummary(){
+  const d = readForm();
+  let out = '=== CLIENT FILE: ' + ((d.firstName||'')+' '+(d.lastName||'')).trim() + ' ===\n';
+  fieldEls().forEach(el => {
+    const f = el.dataset.field, v = d[f];
+    if (el.type === 'checkbox'){ if (v) out += (LABELS[f]||f) + ': Yes\n'; }
+    else if (v) out += (LABELS[f]||f) + ': ' + v + '\n';
+  });
+  out += quoteGroupsText(d.quoteGroups);
+  navigator.clipboard.writeText(out).then(() => flash('✓ Copied summary')).catch(() => prompt('Copy:', out));
+}
+function quoteGroupsText(groups){
+  if (!Array.isArray(groups)) return '';
+  return groups.filter(group => Object.values(group).some(Boolean)).map((group, index) => {
+    let out = '\n--- Carrier Quote ' + (index + 1) + ' ---\n';
+    if (group.quoteCarrier) out += 'Carrier: ' + group.quoteCarrier + '\n';
+    QUOTE_TIERS.forEach(tier => {
+      const coverage = group[tier.key + 'Cov'], premium = group[tier.key + 'Prem'];
+      if (coverage || premium) out += tier.label + ': ' + (coverage || '—') + (premium ? ' at ' + premium + '/month' : '') + '\n';
+    });
+    return out;
+  }).join('');
+}
+/* per-section copy buttons */
+function sectionText(sectionId){
+  const section = $('#'+sectionId);
+  const meta = SECTIONS.find(s => s.id === sectionId);
+  const d = readForm();
+  const name = ((d.firstName||'')+' '+(d.lastName||'')).trim();
+  let out = '=== ' + (meta ? meta.name.toUpperCase() : 'SECTION') + (name ? ': ' + name : '') + ' ===\n';
+  section.querySelectorAll('[data-field]').forEach(el => {
+    if (el.disabled) return;
+    const f = el.dataset.field;
+    if (el.type === 'checkbox'){ if (el.checked) out += (LABELS[f]||f) + ': Yes\n'; }
+    else { const v = (el.value||'').trim(); if (v) out += (LABELS[f]||f) + ': ' + v + '\n'; }
+  });
+  if (sectionId === 'sec10') out += quoteGroupsText(d.quoteGroups);
+  return out;
+}
+SECTIONS.forEach(s => {
+  const h = $('#'+s.id+' > h3');
+  if (!h) return;
+  const b = document.createElement('button');
+  b.type='button'; b.className='sectionCopy'; b.textContent='Copy';
+  b.addEventListener('click', e => { e.preventDefault(); navigator.clipboard.writeText(sectionText(s.id)).then(()=>flash('✓ Copied '+s.name)).catch(()=>{}); });
+  h.appendChild(b);
+});
+
+/* ============ MOBILE SIDEBAR + MISC UI ============ */
+function isMobile(){ return typeof window.matchMedia === 'function' && window.matchMedia('(max-width:820px)').matches; }
+function openSidebar(){ $('#sidebar').classList.add('open'); $('#sidebarScrim').classList.add('show'); }
+function closeSidebar(){ $('#sidebar').classList.remove('open'); $('#sidebarScrim').classList.remove('show'); }
+$('#sidebarToggle').addEventListener('click', openSidebar);
+$('#sidebarClose').addEventListener('click', closeSidebar);
+$('#sidebarScrim').addEventListener('click', closeSidebar);
+$('#actionsToggle').addEventListener('click', () => $('#topActions').classList.toggle('open'));
+HEALTH_FOLLOWUPS.forEach(({check, panel}) => {
+  const checkbox = $('[data-field="'+check+'"]');
+  checkbox.addEventListener('change', () => {
+    syncHealthFollowUps();
+    if (checkbox.checked){
+      const first = $('#'+panel).querySelector('input:not([disabled]),select:not([disabled]),textarea:not([disabled])');
+      if (first) first.focus();
+    }
+  });
+});
+
+function flash(msg, err){
+  const t = $('#toast'); t.textContent = msg; t.style.borderColor = err ? 'var(--danger)' : 'var(--gold)';
+  t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1800);
+  const s = $('#saveMsg'); if (!err){ s.textContent = msg; setTimeout(() => s.textContent = '', 2500); }
+}
+$('#search').addEventListener('input', renderList);
+$('#newBtn').addEventListener('click', newClient);
+$('#addQuoteBtn').addEventListener('click', () => {
+  const groups = readQuoteGroups();
+  groups.push(blankQuoteGroup($('[data-field="quotePreset"]').value));
+  renderQuoteGroups(groups);
+  $('#quote' + groups.length + 'Carrier').focus();
+  updateChips();
+});
+$('[data-field="quotePreset"]').addEventListener('change', e => applyQuotePreset(e.target.value));
+$('[data-field="finalPlan"]').addEventListener('change', e => {
+  const suggested = e.target.value === 'Burial' ? 'generalBurial' : (e.target.value === 'Cremation' ? 'generalCremation' : '');
+  const preset = $('[data-field="quotePreset"]');
+  if (suggested && (!preset.value || preset.value === 'generalBurial' || preset.value === 'generalCremation')){
+    preset.value = suggested;
+    applyQuotePreset(suggested);
+  }
+});
+$('#themeBtn').addEventListener('click', () => {
+  const r = document.documentElement;
+  r.dataset.theme = r.dataset.theme === 'dark' ? 'light' : 'dark';
+  $('#themeBtn').textContent = r.dataset.theme === 'dark' ? '☀️' : '🌙';
+});
+document.querySelectorAll('.eyeBtn').forEach(btn => btn.addEventListener('click', () => {
+  const input = $('[data-field="' + btn.dataset.for + '"]');
+  input.classList.toggle('masked');
+  btn.textContent = input.classList.contains('masked') ? '👁' : '🙈';
+}));
+$('[data-field="dob"]').addEventListener('change', e => {
+  const d = new Date(e.target.value); if (isNaN(d)) return;
+  const now = new Date(); let a = now.getFullYear() - d.getFullYear();
+  if (now < new Date(now.getFullYear(), d.getMonth(), d.getDate())) a--;
+  $('[data-field="age"]').value = a >= 0 ? a : '';
+});
+$('#intakeForm').addEventListener('input', updateChips);
+$('#intakeForm').addEventListener('change', updateChips);
+$('#intakeForm').addEventListener('keydown', e => {
+  if (e.key !== 'Enter' || e.target.tagName === 'TEXTAREA') return;
+  e.preventDefault();
+  const inputs = Array.from(document.querySelectorAll('#intakeForm input, #intakeForm select, #intakeForm textarea'))
+    .filter(el => !el.disabled && el.offsetParent !== null);
+  const i = inputs.indexOf(e.target);
+  if (i >= 0 && i < inputs.length - 1) inputs[i+1].focus();
+});
+['firstName','lastName','ben1Name','ben2Name','bankName'].forEach(f => {
+  const el = $('[data-field="'+f+'"]');
+  el.addEventListener('blur', e => e.target.value = e.target.value.replace(/\b[a-z]/g, m => m.toUpperCase()));
+});
+
+/* ============ INIT ============ */
+load(); renderList(); newClient();
+</script>
+</body>
+</html>
