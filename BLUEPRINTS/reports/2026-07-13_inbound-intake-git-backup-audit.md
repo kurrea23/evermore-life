@@ -4,12 +4,13 @@
 - **Agent or operator:** Codex
 - **Surface:** Inbound Client Intake Sheet + current Git branch/worktree
 - **Mission:** Make the approved update actively testable and define a clean GitHub backup that does not mix drifting work lanes
-- **Approval level used:** observe and test; no staging, commit, push, PR, deploy, or destructive cleanup
+- **Approval level used:** execute for isolated branch, commit, push, and draft
+  PR; no merge, deploy, or destructive cleanup
 
 ## Executive Finding
 
-The Inbound Client Intake Sheet is locally testable and its focused checks pass.
-It is not safely publishable from the current working tree as one bulk commit.
+The Inbound Client Intake Sheet is locally testable, its focused checks pass,
+and its approved lane is backed up on GitHub in draft PR #3.
 
 The checkout is on `experiment/script-intake` at `c7b2df0`, one commit ahead of
 `origin/main`. That commit contains only the original guided intake file, but
@@ -18,10 +19,11 @@ canonical version plus several unrelated Agent Suite, state-page, content, and
 generated-output lanes. There are 23 tracked modified entries, 19 untracked
 entries, and no staged files.
 
-The safe GitHub backup is a new isolated branch/worktree containing only the
-Inbound Intake lane. A publish was not attempted because GitHub CLI (`gh`) is
-not installed, and the mixed worktree requires explicit lane confirmation
-before staging.
+The safe GitHub backup was created from `origin/main` as the isolated branch
+`codex/inbound-client-intake-sheet`. The original mixed checkout was not
+switched, reset, cleaned, or bulk-staged. GitHub's remote readback confirms the
+draft PR contains 14 files, all belonging to the inbound worksheet and its
+required Blueprint/test documentation.
 
 ## Evidence
 
@@ -35,6 +37,9 @@ before staging.
 | Existing Agent Suite API/continuity checks pass | Worker + continuity test command — 17/17 | high |
 | Canonical local page renders all 15 sections, 16 script pop-outs, and 13 transitions with no browser errors | Browser readback at `http://127.0.0.1:8000/inbound-client-intake/` | high |
 | Git whitespace validation and tracked active-room symlink check pass | `git diff --check` and `find -L 00_START_HERE/active -type l -print` | high |
+| Isolated validation passes without changing the backend | Inbound sheet 5/5 plus existing API suite 9/9, 14/14 total | high |
+| The GitHub backup is open as a draft against `main` | `https://github.com/kurrea23/evermore-life/pull/3` | high |
+| The remote PR contains only the 14 approved inbound-lane files | `gh pr view 3 --json files,commits` | high |
 
 ## Map
 
@@ -82,27 +87,18 @@ before staging.
 - Include only in an intentionally named artifact/export commit if the operator
   confirms they belong in Git
 
-## Clean GitHub Backup Sequence
+## Completed GitHub Backup
 
-1. Install and authenticate GitHub CLI:
-   - `brew install gh`
-   - `gh auth login`
-   - verify with `gh auth status`
-2. Confirm that **Lane A only** is the intended first backup.
-3. Create an isolated branch/worktree from current `origin/main` named
+1. GitHub CLI was installed and authenticated as `kurrea23`.
+2. Lane A was isolated from current `origin/main` in a separate worktree on
    `codex/inbound-client-intake-sheet`.
-4. Bring in `c7b2df0`, then apply only the Lane A files and Blueprint hunks.
-5. Run:
-   - `node --test 04_tools/tests/inbound_client_intake_sheet_test.mjs`
-   - `git diff --check`
-   - browser verification of the canonical and compatibility routes
-6. Stage explicit Lane A paths/hunks only; never use `git add .` or
-   `git add -A` in the mixed checkout.
-7. Commit with a narrow message such as
-   `Approve inbound client intake sheet`.
-8. Push the isolated branch and open a draft PR against `main`.
-9. Verify the remote branch/PR contains no Agent Suite continuity, state-page,
-   content, or `outputs/` files before considering merge.
+3. Only explicit inbound files and Blueprint hunks were committed; the mixed
+   checkout was left intact.
+4. The inbound sheet tests passed 5/5, the existing API suite passed 9/9, and
+   whitespace validation passed.
+5. The branch was pushed and draft PR #3 was opened against `main`.
+6. GitHub's remote readback confirmed 14 files with no
+   Agent Suite backend, state-page, creative, `outputs/`, or deploy files.
 
 ## Active Manual Test Checklist
 
@@ -155,18 +151,12 @@ controls, and primary actions with no console errors.
 
 ## Unknown Or Unavailable
 
-- GitHub publish and draft PR creation are blocked until `gh` is installed and
-  authenticated.
-- Homebrew installation is currently blocked because `/opt/homebrew` and its
-  writable support directories are owned by the separate macOS account
-  `evermorelife:staff`, while the active user is `k9smac`. No `sudo` command or
-  ownership change was executed by Codex.
 - Save/restore/delete were not automated because the active browser may contain
   private local client records; the checklist leaves those actions to the
   operator using clearly fake data.
 - The current dirty non-Inbound lanes have not been approved for keep, discard,
   commit, or push.
-- No deploy or live route was requested or attempted.
+- Draft PR #3 has not been merged, deployed, or represented as a live route.
 
 ## Cross-Surface Overlaps
 
@@ -175,9 +165,9 @@ That drift must not be represented as one release or one GitHub backup.
 
 ## Recommended Next Move
 
-Confirm **Lane A only** for the first GitHub backup and install/authenticate
-`gh`. Then create the isolated branch/worktree, commit the verified Lane A
-scope, push it, and open a draft PR. Triage the remaining lanes independently.
+Complete the manual checklist with fake data, review draft PR #3, and merge it
+only after visual approval. Triage the remaining dirty lanes independently;
+do not bulk-commit the original mixed checkout.
 
 ## Files Changed
 
