@@ -36,11 +36,11 @@ button:disabled{opacity:.6;cursor:default}
     <div class="error" id="error"></div>
   </form>
   <a class="linkish" href="/signup/">Need an account? Create one</a>
-  <p class="lockNote">One login opens your Today dashboard, Client Intake, Score Tracker, Pipeline, and Growth Calculator — plus the team dashboard when your role allows it.</p>
+  <p class="lockNote">One login opens Today, General Intake, Inbound Intake, Score Tracker, Pipeline, and Growth Calculator — plus Team when your role allows it.</p>
 </main>
 <script src="/agent-suite-auth.js"></script>
 <script>
-const ALLOWED_NEXT = ["/today/", "/intake", "/score-tracker/", "/growth-calculator/", "/clients/", "/team/"];
+const ALLOWED_NEXT = ["/today/", "/intake", "/inbound-client-intake/", "/score-tracker/", "/growth-calculator/", "/clients/", "/team/"];
 function nextTarget(){
   const next = new URLSearchParams(location.search).get("next") || "";
   return ALLOWED_NEXT.includes(next) ? next : "/today/";

@@ -35,6 +35,7 @@
     color:var(--ink);font-size:15px}
   h1,h2,h3,.serif{font-family:Palatino,"Palatino Linotype",Georgia,serif}
   #app{display:flex;height:100vh}
+  body.el-inbound-suite #app{height:calc(100vh - 56px)}
   /* ============ SIDEBAR ============ */
   #sidebar{width:272px;min-width:272px;background:var(--sidebar);color:#dce4f0;display:flex;flex-direction:column}
   #sidebar header{padding:18px 16px 8px;display:flex;flex-direction:column;align-items:flex-start;gap:6px}
@@ -173,6 +174,7 @@
   @media (max-width:820px){
     body{font-size:14px}
     #app{height:100dvh;overflow:hidden}
+    body.el-inbound-suite #app{height:calc(100dvh - 56px)}
     #sidebar{position:fixed;inset:0 auto 0 0;z-index:40;width:min(84vw,318px);min-width:0;
       transform:translateX(-100%);transition:transform .22s ease;box-shadow:18px 0 42px rgba(0,0,0,.45)}
     #sidebar.open{transform:translateX(0)}
@@ -202,10 +204,10 @@
     <input type="text" id="search" placeholder="Search name or phone…">
     <div id="clientList"></div>
     <div id="sidebarFoot">
-      <button onclick="exportBackup()" title="Download a JSON backup of all clients">⬇ Backup</button>
-      <button onclick="document.getElementById('importFile').click()" title="Restore from a backup file">⬆ Restore</button>
-      <button onclick="clearAll()" title="Remove all clients from this browser">🗑 Clear All</button>
-      <span style="flex:1 1 100%;font-size:10.5px;color:#5f6f8a;text-align:center;padding-top:4px">Approved inbound call workflow · saves to this browser only</span>
+      <button onclick="exportBackup()" title="Download a non-sensitive copy of your server client list">⬇ Safe Export</button>
+      <button onclick="document.getElementById('importFile').click()" title="Import a previous Inbound Intake backup into your Agent Suite account">⬆ Import</button>
+      <button onclick="clearLocalDraft()" title="Remove the current non-sensitive draft from this browser">🗑 Clear Draft</button>
+      <span style="flex:1 1 100%;font-size:10.5px;color:#5f6f8a;text-align:center;padding-top:4px">Secure Agent Suite records · non-sensitive local drafts only</span>
       <input type="file" id="importFile" accept=".json" style="display:none">
     </div>
   </div>
@@ -713,11 +715,21 @@
 
 <div id="toast"></div>
 
+<script src="/agent-suite-icons.js"></script>
+<script src="/agent-suite-auth.js"></script>
+<script src="/agent-suite-intake-continuity.js"></script>
 <script>
-/* ============ APPROVED INBOUND CLIENT INTAKE — localStorage only ============ */
-const STORE = 'evermore_guided_intake_v1';
+/* ============ APPROVED INBOUND CLIENT INTAKE — Agent Suite server first ============ */
+const suite = window.EvermoreAgentSuite;
+const continuity = window.EvermoreIntakeContinuity;
+const LEGACY_STORE = 'evermore_guided_intake_v1';
+const DRAFT_PREFIX = 'evermore_inbound_draft_v1:';
+const MIGRATION_PREFIX = 'evermore_inbound_migration_v1:';
 let clients = [];
 let currentId = null;
+let formDirty = false;
+let draftTimer = null;
+let loadSerial = 0;
 
 const $ = s => document.querySelector(s);
 const fieldEls = () => Array.from(document.querySelectorAll('[data-field]'));
@@ -814,8 +826,49 @@ function syncHealthFollowUps(){
   });
 }
 
-function load(){ try{ clients = JSON.parse(localStorage.getItem(STORE)) || []; }catch(e){ clients = []; } }
-function persist(){ localStorage.setItem(STORE, JSON.stringify(clients)); }
+function userScope(){
+  const user = suite && suite.user ? suite.user() : {};
+  return String((user && (user.id || user.email)) || '');
+}
+function scopedKey(prefix){ const scope = userScope(); return scope ? prefix + scope : ''; }
+function readLocalJson(key, fallback){
+  if (!key) return fallback;
+  try{ const value = JSON.parse(localStorage.getItem(key)); return value == null ? fallback : value; }
+  catch(e){ return fallback; }
+}
+function hasDraftContent(form){
+  return Object.entries(form || {}).some(([key, value]) => {
+    if (key === 'callDate' || key === 'leadSource') return false;
+    if (key === 'quoteGroups') return Array.isArray(value) && value.some(group => Object.values(group || {}).some(Boolean));
+    return value === true || (value !== false && value != null && String(value).trim() !== '');
+  });
+}
+function readDraft(){ return readLocalJson(scopedKey(DRAFT_PREFIX), null); }
+function clearDraft(){
+  const key = scopedKey(DRAFT_PREFIX);
+  if (key) localStorage.removeItem(key);
+  clearTimeout(draftTimer);
+  formDirty = false;
+}
+function saveDraftNow(){
+  if (!continuity || !suite || !suite.token()) return;
+  const key = scopedKey(DRAFT_PREFIX);
+  if (!key) return;
+  const form = continuity.sanitizeDraft(readForm());
+  if (!hasDraftContent(form)) localStorage.removeItem(key);
+  else localStorage.setItem(key, JSON.stringify({clientId:currentId || '', form, updatedAt:new Date().toISOString()}));
+  formDirty = false;
+}
+function queueDraft(){
+  formDirty = true;
+  clearTimeout(draftTimer);
+  draftTimer = setTimeout(saveDraftNow, 400);
+}
+function clearLocalDraft(){
+  clearDraft();
+  if (currentId == null) newClient();
+  flash('✓ Draft cleared');
+}
 
 function readForm(){
   const o = {};
@@ -837,10 +890,12 @@ function fillForm(o){
   syncHealthFollowUps();
   updateChips();
 }
-function todayKey(){ const d = new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function todayKey(){ return suite && suite.dateKey ? suite.dateKey() : new Date().toISOString().slice(0,10); }
 
-function newClient(){
+function newClient(options = {}){
+  if (options.discardDraft) clearDraft();
   currentId = null;
+  formDirty = false;
   fillForm(null);
   $('#authorizationCode').value = '';
   $('[data-field="callDate"]').value = todayKey();
@@ -851,22 +906,66 @@ function newClient(){
   $('[data-field="firstName"]').focus();
   if (isMobile()) closeSidebar();
 }
-function saveClient(){
+function restoreDraft(draft){
+  const base = draft && draft.clientId ? clients.find(client => client.id === draft.clientId) : null;
+  currentId = base ? base.id : null;
+  const restored = {...base, ...((draft && draft.form) || {})};
+  if (base){
+    restored.status = base.status;
+    restored.apptDateTime = base.apptDateTime;
+  }
+  fillForm(restored);
+  $('#authorizationCode').value = '';
+  const form = (draft && draft.form) || {};
+  $('#formTitle').textContent = ((form.firstName || base?.firstName || '') + ' ' + (form.lastName || base?.lastName || '')).trim() || 'Unsaved Draft';
+  document.querySelectorAll('.clientItem').forEach(el => el.classList.toggle('active', el.dataset.id === currentId));
+  formDirty = false;
+  flash('✓ Draft restored');
+}
+function applyCanonicalPipelineFields(client){
+  if (!client) return;
+  const status = $('[data-field="status"]');
+  const appointment = $('[data-field="apptDateTime"]');
+  if (status && client.status != null) status.value = client.status;
+  if (appointment && client.apptDateTime != null) appointment.value = client.apptDateTime;
+}
+async function loadServerClients(options = {}){
+  const serial = ++loadSerial;
+  const out = await suite.api('/clients');
+  if (serial !== loadSerial) return clients;
+  clients = (out.clients || []).map(continuity.serverRowToClient);
+  renderList();
+  if (options.refreshCurrent && currentId) applyCanonicalPipelineFields(clients.find(client => client.id === currentId));
+  return clients;
+}
+async function saveClient(){
   const d = readForm();
   if (!d.firstName && !d.lastName){ flash('Add a name first', true); return; }
-  d.updated = new Date().toISOString();
-  d.id = currentId || (Date.now().toString(36) + Math.random().toString(36).slice(2,6));
-  const i = clients.findIndex(c => c.id === d.id);
-  if (i >= 0) clients[i] = d; else clients.unshift(d);
-  currentId = d.id;
-  persist(); renderList();
-  $('#formTitle').textContent = (d.firstName + ' ' + d.lastName).trim();
-  flash('✓ Saved');
+  const saveButton = document.querySelector('[onclick="saveClient()"]');
+  if (saveButton) saveButton.disabled = true;
+  try{
+    d.intakeType = 'Inbound';
+    if (currentId) d.id = currentId;
+    const out = currentId
+      ? await suite.api('/clients/' + encodeURIComponent(currentId), {method:'PUT', body:JSON.stringify(d)})
+      : await suite.api('/clients', {method:'POST', body:JSON.stringify(d)});
+    const savedId = currentId || out.id;
+    clearDraft();
+    await loadServerClients();
+    loadClient(savedId, {discardDraft:false});
+    flash('✓ Saved securely');
+  }catch(error){
+    flash((error && error.message) || 'Save failed', true);
+  }finally{
+    if (saveButton) saveButton.disabled = false;
+  }
 }
-function loadClient(id){
+function loadClient(id, options = {}){
   const c = clients.find(x => x.id === id);
   if (!c) return;
+  if (options.discardDraft !== false) clearDraft();
   currentId = id;
+  formDirty = false;
   fillForm(c);
   $('#authorizationCode').value = '';
   $('#formTitle').textContent = (c.firstName + ' ' + c.lastName).trim();
@@ -874,12 +973,17 @@ function loadClient(id){
   $('#main').scrollTop = 0;
   if (isMobile()) closeSidebar();
 }
-function deleteClient(){
+async function deleteClient(){
   if (currentId == null){ newClient(); return; }
   const c = clients.find(x => x.id === currentId);
   if (!confirm('Delete ' + (c ? (c.firstName+' '+c.lastName).trim() : 'this client') + '? This cannot be undone.')) return;
-  clients = clients.filter(x => x.id !== currentId);
-  persist(); renderList(); newClient();
+  try{
+    await suite.api('/clients/' + encodeURIComponent(currentId), {method:'DELETE'});
+    clearDraft();
+    await loadServerClients();
+    newClient();
+    flash('✓ Client deleted');
+  }catch(error){ flash((error && error.message) || 'Delete failed', true); }
 }
 function renderList(){
   const q = ($('#search').value || '').toLowerCase();
@@ -900,33 +1004,67 @@ function esc(s){ return (s||'').replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;'
 
 /* ============ BACKUP / RESTORE ============ */
 function exportBackup(){
-  const blob = new Blob([JSON.stringify(clients, null, 2)], {type:'application/json'});
+  const safeClients = continuity.safeExportClients(clients);
+  const blob = new Blob([JSON.stringify(safeClients, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'evermore-guided-intake-' + todayKey() + '.json';
+  a.download = 'evermore-inbound-safe-export-' + todayKey() + '.json';
   a.click(); URL.revokeObjectURL(a.href);
-  flash('✓ Backup downloaded');
+  flash('✓ Non-sensitive export downloaded');
 }
 $('#importFile').addEventListener('change', e => {
   const file = e.target.files[0]; if (!file) return;
   const r = new FileReader();
-  r.onload = () => {
+  r.onload = async () => {
     try{
       const data = JSON.parse(r.result);
       if (!Array.isArray(data)) throw 0;
-      const byId = {}; [...clients, ...data].forEach(c => { if (c && c.id) byId[c.id] = c; });
-      clients = Object.values(byId);
-      persist(); renderList();
-      flash('✓ Restored ' + data.length + ' record(s)');
-    }catch(err){ flash('Not a valid backup file', true); }
+      if (!confirm('Import ' + data.length + ' record(s) into your Agent Suite account? Existing matches will be updated, not duplicated.')) {
+        e.target.value = '';
+        return;
+      }
+      const result = await continuity.mergeLegacyClients(data, suite.api);
+      if (!result.ok || result.count !== data.length) throw result.error || new Error('Import stopped before every record was acknowledged.');
+      await loadServerClients();
+      flash('✓ Imported ' + result.count + ' record(s)');
+    }catch(err){ flash((err && err.message) || 'Not a valid backup file', true); }
     e.target.value = '';
   };
   r.readAsText(file);
 });
-function clearAll(){
-  if (!clients.length){ flash('Nothing to clear'); return; }
-  if (!confirm('Remove all ' + clients.length + ' clients from this browser? Export a backup first if unsure.')) return;
-  clients = []; persist(); renderList(); newClient();
+function legacyClients(){
+  const value = readLocalJson(LEGACY_STORE, []);
+  return Array.isArray(value) ? value.filter(item => item && typeof item === 'object') : [];
+}
+async function maybeMigrateLegacy(){
+  const key = scopedKey(MIGRATION_PREFIX);
+  if (!key || readLocalJson(key, null)) return;
+  const legacy = legacyClients();
+  if (!legacy.length){
+    localStorage.setItem(key, JSON.stringify({status:'none', checkedAt:new Date().toISOString()}));
+    return;
+  }
+  const importNow = confirm(
+    'This browser has ' + legacy.length + ' older Inbound Intake record(s).\n\n' +
+    'Choose OK to merge them into your secure Agent Suite account now. Choose Cancel to use server records only. The older browser copy will not be deleted.'
+  );
+  if (!importNow){
+    localStorage.setItem(key, JSON.stringify({status:'server-only', count:legacy.length, checkedAt:new Date().toISOString()}));
+    return;
+  }
+  flash('Migrating older records…');
+  const result = await continuity.mergeLegacyClients(legacy, suite.api);
+  if (!result.ok || result.count !== legacy.length){
+    flash('Migration paused after ' + result.count + ' of ' + legacy.length + '. Nothing was marked complete.', true);
+    return;
+  }
+  localStorage.setItem(key, JSON.stringify({status:'complete', count:result.count, completedAt:new Date().toISOString()}));
+  await loadServerClients();
+  flash('✓ Migrated ' + result.count + ' older record(s)');
+  if (confirm('Every older record was acknowledged by the server. Remove the old browser-only copy from this device now?')) {
+    localStorage.removeItem(LEGACY_STORE);
+    flash('✓ Old browser-only copy removed');
+  }
 }
 
 /* ============ CHIPS ============ */
@@ -1066,7 +1204,7 @@ function flash(msg, err){
   const s = $('#saveMsg'); if (!err){ s.textContent = msg; setTimeout(() => s.textContent = '', 2500); }
 }
 $('#search').addEventListener('input', renderList);
-$('#newBtn').addEventListener('click', newClient);
+$('#newBtn').addEventListener('click', () => newClient({discardDraft:true}));
 $('#addQuoteBtn').addEventListener('click', () => {
   const groups = readQuoteGroups();
   groups.push(blankQuoteGroup($('[data-field="quotePreset"]').value));
@@ -1099,8 +1237,8 @@ $('[data-field="dob"]').addEventListener('change', e => {
   if (now < new Date(now.getFullYear(), d.getMonth(), d.getDate())) a--;
   $('[data-field="age"]').value = a >= 0 ? a : '';
 });
-$('#intakeForm').addEventListener('input', updateChips);
-$('#intakeForm').addEventListener('change', updateChips);
+$('#intakeForm').addEventListener('input', () => { updateChips(); queueDraft(); });
+$('#intakeForm').addEventListener('change', () => { updateChips(); queueDraft(); });
 $('#intakeForm').addEventListener('keydown', e => {
   if (e.key !== 'Enter' || e.target.tagName === 'TEXTAREA') return;
   e.preventDefault();
@@ -1115,7 +1253,31 @@ $('#intakeForm').addEventListener('keydown', e => {
 });
 
 /* ============ INIT ============ */
-load(); renderList(); newClient();
+async function init(){
+  if (!suite || !continuity){ flash('Agent Suite support files are unavailable', true); return; }
+  if (!suite.requireAuth()) return;
+  suite.installTopNav('Inbound Intake');
+  document.body.classList.add('el-inbound-suite');
+  try{
+    await loadServerClients();
+    await maybeMigrateLegacy();
+    const draft = readDraft();
+    if (draft && draft.form) restoreDraft(draft);
+    else newClient();
+  }catch(error){
+    flash((error && error.message) || 'Unable to load clients', true);
+    newClient();
+  }
+}
+window.addEventListener('focus', () => {
+  if (!suite || !suite.token()) return;
+  loadServerClients({refreshCurrent:true}).catch(() => {});
+});
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && suite && suite.token()) loadServerClients({refreshCurrent:true}).catch(() => {});
+});
+window.addEventListener('pagehide', () => { if (formDirty) saveDraftNow(); });
+init();
 </script>
 </body>
 </html>

@@ -37,8 +37,29 @@ test("temporary authorization code is excluded from saved client fields", () => 
   assert.doesNotMatch(codeInput, /data-field=/);
   assert.match(codeInput, /autocomplete="one-time-code"/);
   assert.match(codeInput, /maxlength="6"/);
-  assert.match(canonical, /function newClient\(\)[\s\S]*?\$\('#authorizationCode'\)\.value = '';/);
-  assert.match(canonical, /function loadClient\(id\)[\s\S]*?\$\('#authorizationCode'\)\.value = '';/);
+  assert.match(canonical, /function newClient\(options = \{\}\)[\s\S]*?\$\('#authorizationCode'\)\.value = '';/);
+  assert.match(canonical, /function loadClient\(id, options = \{\}\)[\s\S]*?\$\('#authorizationCode'\)\.value = '';/);
+});
+
+test("inbound sheet requires Agent Suite auth and uses server client CRUD", () => {
+  assert.match(canonical, /<script src="\/agent-suite-auth\.js"><\/script>/);
+  assert.match(canonical, /<script src="\/agent-suite-intake-continuity\.js"><\/script>/);
+  assert.match(canonical, /suite\.requireAuth\(\)/);
+  assert.match(canonical, /suite\.installTopNav\('Inbound Intake'\)/);
+  assert.match(canonical, /suite\.api\('\/clients'\)/);
+  assert.match(canonical, /method:'POST'/);
+  assert.match(canonical, /method:'PUT'/);
+  assert.match(canonical, /method:'DELETE'/);
+  assert.doesNotMatch(canonical, /localStorage\.setItem\(STORE, JSON\.stringify\(clients\)\)/);
+});
+
+test("browser persistence is limited to sanitized drafts and migration metadata", () => {
+  assert.match(canonical, /continuity\.sanitizeDraft\(readForm\(\)\)/);
+  assert.match(canonical, /DRAFT_PREFIX = 'evermore_inbound_draft_v1:';/);
+  assert.match(canonical, /MIGRATION_PREFIX = 'evermore_inbound_migration_v1:';/);
+  assert.match(canonical, /continuity\.safeExportClients\(clients\)/);
+  assert.match(canonical, /result\.count !== legacy\.length/);
+  assert.match(canonical, /Remove the old browser-only copy from this device now\?/);
 });
 
 test("legacy experiment URL redirects to the single canonical source", () => {

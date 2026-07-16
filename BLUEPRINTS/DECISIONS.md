@@ -16,6 +16,30 @@ do not rewrite history.
 
 ---
 
+### 2026-07-16 - Make Inbound Intake server-first without redesigning it
+
+- **Status:** approved (implementation and local preview; production deploy
+  remains separately approval-gated)
+- **Decision:** Preserve the approved Inbound Client Intake Sheet layout and
+  scripts while moving completed client records to the authenticated Agent
+  Suite `/api/clients` contract. Keep only a per-user, non-sensitive unfinished
+  draft in browser storage; retain the authorization code in memory only; and
+  migrate the prior browser copy only after explicit user confirmation and
+  record-by-record server acknowledgement.
+- **Why:** The operator asked to streamline the tools already built, make one
+  account show the same records on every device, stop asking for a separate
+  Intake password, and defer AI, GoHighLevel, and password recovery.
+- **Consequences:** The server client ID is the permanent identity used by
+  Inbound Intake and Pipeline. Sensitive client writes require a valid Worker
+  `DATA_KEY` and fail closed if it is unavailable. The legacy browser copy is
+  preserved unless the user explicitly removes it. Live routing and deployment
+  are not included in this decision.
+- **Evidence:**
+  `BLUEPRINTS/reports/2026-07-16_inbound-intake-live-integration.md`,
+  `inbound-client-intake/index.html`, `agent-suite-intake-continuity.js`,
+  `01_website/agent-suite-api/cloudflare/worker.js`
+- **Owner:** Evermore operator; production deploy requires separate approval
+
 ### 2026-07-13 - Canonicalize the Inbound Client Intake Sheet outside experiments
 
 - **Status:** approved (source placement and planning only; suite/backend

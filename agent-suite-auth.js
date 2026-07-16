@@ -5,6 +5,7 @@
   const USER_KEY = "evermore-auth-user";
   const NAME_KEY = "evermore-user-name";
   const ROLE_KEY = "evermore-user-role";
+  const DATE_TIME_ZONE = "America/Phoenix";
 
   function token() {
     return localStorage.getItem(TOKEN_KEY) || "";
@@ -35,7 +36,8 @@
 
   function requireAuth() {
     if (!token()) {
-      window.location.replace("/login/");
+      const next = encodeURIComponent(window.location.pathname || "/today/");
+      window.location.replace(`/login/?next=${next}`);
       return false;
     }
     return true;
@@ -75,6 +77,17 @@
     return String(value || "").replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
   }
 
+  function dateKey(value = new Date()) {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: DATE_TIME_ZONE,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).formatToParts(value);
+    const byType = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+    return `${byType.year}-${byType.month}-${byType.day}`;
+  }
+
   function installTopNav(title) {
     if (document.getElementById("agentSuiteNav")) return;
     const currentUser = user();
@@ -92,6 +105,7 @@
         <a href="/clients/"${cls("/clients/")}>Pipeline</a>
         <a href="/growth-calculator/"${cls("/growth-calculator/")}>Growth Calculator</a>
         <a href="${intakeHref()}">Intake</a>
+        <a href="/inbound-client-intake/"${cls("/inbound-client-intake/")}>Inbound Intake</a>
         ${role === "owner" ? `<a href="/team/"${cls("/team/")}>Team</a>` : ""}
       </div>
       <div class="navRight">
@@ -167,6 +181,7 @@
     USER_KEY,
     NAME_KEY,
     ROLE_KEY,
+    DATE_TIME_ZONE,
     token,
     user,
     saveSession,
@@ -175,6 +190,8 @@
     api,
     logout,
     installTopNav,
+    intakeHref,
     escapeHtml,
+    dateKey,
   };
 })();

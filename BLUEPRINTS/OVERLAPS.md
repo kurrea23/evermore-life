@@ -17,6 +17,30 @@ shows.
 
 ---
 
+### 2026-07-16 - Inbound Intake now shares the Agent Suite client identity and encryption boundary
+
+- **Surfaces:** Inbound Intake + Agent Suite login/navigation + Pipeline/Today +
+  agent-suite-api Worker/D1
+- **Finding:** The approved inbound worksheet now reads and writes the existing
+  authenticated `/api/clients` contract. Completed records use the server ID;
+  status and appointment changes are refreshed from the backend; browser
+  persistence is limited to a user-scoped sanitized draft and migration state.
+  SSN, driver-license, bank, routing, account, and authorization-code values are
+  excluded from drafts and safe exports. Worker client writes fail closed when
+  `DATA_KEY` cannot encrypt sensitive columns.
+- **Evidence:**
+  `BLUEPRINTS/reports/2026-07-16_inbound-intake-live-integration.md`,
+  `inbound-client-intake/index.html`, `agent-suite-intake-continuity.js`,
+  `01_website/agent-suite-api/cloudflare/worker.js`
+- **Impact:** One Agent Suite account can become the continuity boundary across
+  devices without changing the approved call sheet. A partial Pages-only
+  release would be unsafe because the matching Worker encryption behavior and
+  live route verification are part of the same release gate.
+- **Next move:** Review the private/local preview, then separately approve the
+  coordinated API/static/live-route deployment and verify every production
+  route with fake data.
+- **Status:** decided
+
 ### 2026-07-05 - Pipeline, tracker, and intake now share two write paths that must stay in sync
 
 - **Surfaces:** Pipeline/Today pages + Score Tracker + Client-Intake PWA + agent-suite-api Worker
