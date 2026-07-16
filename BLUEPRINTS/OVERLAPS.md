@@ -17,6 +17,28 @@ shows.
 
 ---
 
+### 2026-07-16 - Inbound Intake production release closes the browser-only gap
+
+- **Surfaces:** Inbound Intake + Agent Suite API/D1 + Pipeline + Pages + live
+  Pages proxy
+- **Finding:** The live inbound route now uses the authenticated server client
+  contract. A production fake record saved in Inbound Intake, survived reload,
+  changed stage, appeared in Pipeline, stored sensitive columns with the
+  `enc:v1:` envelope, and was removed after verification. The existing
+  live-proxy Worker needed no code or deployment change; initial route readback
+  changed from 404 to 200 when the new Pages production alias finished
+  propagating.
+- **Evidence:**
+  `BLUEPRINTS/reports/2026-07-16_inbound-intake-production-release.md`, API
+  version `9ee3bb79-de92-4cef-afee-2c82587c9671`, Pages deployment
+  `c667c56b-f97f-42d2-b8ce-c8193cbb1bc5`
+- **Impact:** Inbound Intake is no longer a separate device-bound worksheet.
+  Future releases must verify the inbound route alongside Today, Pipeline,
+  Tracker, and Calculator and must preserve the API encryption secret.
+- **Next move:** Use fake data for periodic route/lifecycle checks; keep AI and
+  GHL work in separately approved releases.
+- **Status:** completed
+
 ### 2026-07-16 - Inbound Intake now shares the Agent Suite client identity and encryption boundary
 
 - **Surfaces:** Inbound Intake + Agent Suite login/navigation + Pipeline/Today +

@@ -16,6 +16,28 @@ do not rewrite history.
 
 ---
 
+### 2026-07-16 - Release the server-first Inbound Intake to production
+
+- **Status:** approved and completed
+- **Decision:** Merge the approved worksheet and Agent Suite integration in
+  dependency order, then release the existing API Worker and Pages surfaces to
+  production. Keep the established live-proxy Worker unchanged because its
+  Pages fallback already serves the new clean route.
+- **Why:** The operator approved the private preview and explicitly authorized
+  “merge and deploy to production.” Production preflight confirmed the existing
+  `DATA_KEY`, owner configuration, D1 binding, and absence of pending database
+  migrations.
+- **Consequences:** `https://evermorelife.org/inbound-client-intake/` is now a
+  live authenticated Agent Suite surface. Completed records share the backend
+  client ID with Pipeline; sensitive database values remain encrypted; AI,
+  GoHighLevel, and password recovery remain deferred.
+- **Evidence:**
+  `BLUEPRINTS/reports/2026-07-16_inbound-intake-production-release.md`,
+  merged PRs `#3` and `#4`, Agent Suite API version
+  `9ee3bb79-de92-4cef-afee-2c82587c9671`, and Pages deployment
+  `c667c56b-f97f-42d2-b8ce-c8193cbb1bc5`
+- **Owner:** Evermore operator
+
 ### 2026-07-16 - Make Inbound Intake server-first without redesigning it
 
 - **Status:** approved (implementation and local preview; production deploy
