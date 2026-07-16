@@ -35,6 +35,7 @@ flowchart LR
 | What is the stable website patch lane? | `01_website/v2/` and `01_website/state-pages/` | Patch in a clone/worktree and verify live before promotion |
 | Where is the live Sarah final-expense route? | `01_website/experiments/sarah-final-expense.html` and `/sarah` in `01_website/v2/cloudflare/evermore-live-proxy.js` | Verify `https://evermorelife.org/sarah` after Worker deploy before calling it live |
 | Where is the live client-intake app? | `01_website/experiments/Client-Intake.html`, intake PWA assets, and `/intake` in `01_website/v2/cloudflare/evermore-live-proxy.js` | Verify `https://evermorelife.org/intake`, `/intake.webmanifest`, `/intake-sw.js`, and `/intake-icon.svg` after Worker deploy |
+| Where is the approved inbound-call worksheet? | `inbound-client-intake/index.html` | Treat it as the operator-approved 15-step inbound call workflow; `01_website/experiments/Client-Intake-Guided.html` is a compatibility redirect only, persistence remains browser-only, and no live route or suite integration is implied |
 | What is the app/tool patch lane? | `agent-suite-auth.js`, root app/tool folders, and `01_website/agent-suite-api/cloudflare/` | Keep separate from public website patches unless explicitly scoped |
 | Where is the private recruiting-page draft? | `01_website/v2/pages/recruiting.html` and the `/recruiting` proxy mapping | Keep noindex and verify the route after an approved deploy |
 | Where are the standalone tool clean URL sources? | `score-tracker/index.html` and `growth-calculator/index.html` | Verify `https://evermorelife.org/score-tracker` and `https://evermorelife.org/growth-calculator` after push or deploy before calling them live |
@@ -55,6 +56,7 @@ flowchart LR
 | Stable website base | Website agent | `01_website/v2/` and `01_website/state-pages/` |
 | Sarah final-expense landing route | Website agent + Cloudflare Worker | `01_website/experiments/sarah-final-expense.html` plus `/sarah` in `01_website/v2/cloudflare/evermore-live-proxy.js` |
 | Client-intake PWA route | Human operator + Cloudflare Worker asset bundle | `01_website/experiments/Client-Intake.html`, `01_website/experiments/intake.*`, and `/intake` in `01_website/v2/cloudflare/evermore-live-proxy.js` |
+| Inbound client intake sheet | Evermore operator + sales workflow | `inbound-client-intake/index.html` (approved call-flow asset; local browser-only persistence until separately integrated) |
 | Standalone static tool routes | Public website source + static host | `score-tracker/index.html` and `growth-calculator/index.html` |
 | Agent Suite private backend | Cloudflare Worker + D1 + static tool pages | `01_website/agent-suite-api/cloudflare/`, `login/index.html`, `signup/index.html`, `team/index.html`, `agent-suite-auth.js`, `score-tracker/index.html`, `growth-calculator/index.html` |
 | Agent app/tool base | App agent | `agent-suite-auth.js`, `agent-suite-ui.css`, `agent-suite-icons.js`, `agent-suite-activity.js`, `login/`, `signup/`, `today/`, `team/`, `clients/`, `score-tracker/`, `growth-calculator/`, `01_website/agent-suite-api/cloudflare/` (incl. `/api/activities`) |

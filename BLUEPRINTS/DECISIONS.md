@@ -16,6 +16,50 @@ do not rewrite history.
 
 ---
 
+### 2026-07-13 - Canonicalize the Inbound Client Intake Sheet outside experiments
+
+- **Status:** approved (source placement and planning only; suite/backend
+  integration and deployment are deferred)
+- **Decision:** Name the asset **Inbound Client Intake Sheet** and maintain its
+  canonical source at `inbound-client-intake/index.html`, beside the other
+  root-level Agent Suite surfaces. Preserve
+  `01_website/experiments/Client-Intake-Guided.html` only as a compatibility
+  redirect. Plan shared navigation, authentication, and `/api/clients`
+  continuity now, but do not implement those connections in this release.
+- **Why:** The operator approved the inbound-call workflow, asked to remove
+  "Guided" from the visible name, requested a durable copy outside the
+  experiments folder, and explicitly deferred backend integration.
+- **Consequences:** Future edits have one canonical source. The future suite
+  navigation can show **Intake** and **Inbound Intake** side by side without
+  confusing the general intake form with the inbound-call workflow. Until a
+  later approved integration, the inbound sheet remains a standalone,
+  browser-saved local asset and is not a live Agent Suite route.
+- **Evidence:**
+  `BLUEPRINTS/reports/2026-07-13_inbound-client-intake-suite-plan.md`,
+  `inbound-client-intake/index.html`
+- **Owner:** Evermore operator; implementation requires separate approval
+
+### 2026-07-13 - Approve the Guided Inbound Client Intake Sheet
+
+- **Status:** approved (operator-approved workflow asset; deployment and secure
+  persistence integration remain separate approval gates)
+- **Decision:** Treat the inbound-call workflow now maintained at
+  `inbound-client-intake/index.html` as the approved Inbound Client Intake
+  Sheet. Remove its user-facing experiment labels while preserving its current
+  visual design, 15-step call flow, scripts, transitions, and form behavior.
+- **Why:** The operator reviewed the complete guided call sequence, iterated on
+  each major script and transition, and explicitly approved the result as the
+  functioning inbound intake-sheet asset.
+- **Consequences:** Future script optimizations should extend the canonical
+  source rather than rebuild it. The former experiment path remains as a
+  compatibility redirect. The page still discloses that it saves to the
+  current browser; workflow approval does not represent a live deployment or
+  replace the canonical Agent Suite secure-storage work.
+- **Evidence:**
+  `BLUEPRINTS/reports/2026-07-13_guided-intake-banking-closeout-flow.md`,
+  `inbound-client-intake/index.html`
+- **Owner:** Evermore operator
+
 ### 2026-07-05 - Integrate the Agent Suite into one CRM with client-side counter ownership
 
 - **Status:** approved (operator approved the plan in-session; deploys remain operator-gated)
