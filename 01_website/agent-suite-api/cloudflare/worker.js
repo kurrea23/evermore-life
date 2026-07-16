@@ -107,6 +107,9 @@ export default {
       return json(request, env, { error: "Not found." }, 404);
     } catch (error) {
       console.error("agent-suite-api error:", safeDetail(error));
+      if (error && error.code === "DATA_KEY_UNAVAILABLE") {
+        return json(request, env, { error: "Secure client storage is temporarily unavailable." }, 503);
+      }
       return json(request, env, { error: "Server error." }, 500);
     }
   },
@@ -635,7 +638,11 @@ async function encryptValue(env, value) {
   const text = String(value || "");
   if (!text || text.startsWith(ENC_PREFIX)) return text;
   const key = await dataKey(env);
-  if (!key) return text; // no key configured yet: store as-is so nothing breaks pre-rollout
+  if (!key) {
+    const error = new Error("DATA_KEY is missing or invalid.");
+    error.code = "DATA_KEY_UNAVAILABLE";
+    throw error;
+  }
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const cipher = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(text)));
   return `${ENC_PREFIX}${base64(iv)}:${base64(cipher)}`;

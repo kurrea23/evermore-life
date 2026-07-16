@@ -9,6 +9,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import worker from "./worker.js";
 
+const TEST_DATA_KEY = Buffer.from(Uint8Array.from({ length: 32 }, (_, index) => index + 1)).toString("base64");
+
 // ── Fake D1 ────────────────────────────────────────────────────────────────
 function fakeDb(state) {
   // state: { users:[], sessions:[], clients:[], activities:[], score_days:[] }
@@ -118,8 +120,8 @@ function fakeDb(state) {
   return db;
 }
 
-function makeEnv(state) {
-  return { DB: fakeDb(state), ALLOWED_ORIGINS: "https://evermorelife.org" };
+function makeEnv(state, overrides = {}) {
+  return { DB: fakeDb(state), ALLOWED_ORIGINS: "https://evermorelife.org", DATA_KEY: TEST_DATA_KEY, ...overrides };
 }
 
 function baseState() {
@@ -255,6 +257,24 @@ test("requests without a token get 401", async () => {
 
 // ── Intake sync contract regression ────────────────────────────────────────
 
+test("POST /api/clients dedupes a migrated local id instead of creating a second row", async () => {
+  const state = baseState();
+  state.clients[0].intake_json = JSON.stringify({ id: "legacy-local-1", firstName: "Jane" });
+  const res = await worker.fetch(
+    req("/api/clients", {
+      method: "POST",
+      body: { id: "legacy-local-1", firstName: "Jane", lastName: "Doe", status: "Applied" },
+    }),
+    makeEnv(state),
+  );
+  assert.equal(res.status, 200);
+  const payload = await res.json();
+  assert.equal(payload.id, "c1");
+  assert.equal(payload.deduped, true);
+  assert.equal(state.clients.length, 2);
+  assert.equal(state.clients[0].status, "Applied");
+});
+
 test("PUT /api/clients/:id with only status updates status and merges intake_json", async () => {
   const state = baseState();
   state.clients[0].intake_json = JSON.stringify({ id: "local-1", firstName: "Jane", goal: "Protect family" });
@@ -277,7 +297,50 @@ test("PUT /api/clients/:id with only status updates status and merges intake_jso
   const row = state.clients[0];
   assert.equal(row.status, "Applied");
   assert.equal(row.notes, "existing note"); // untouched
-  const mergedIntake = JSON.parse(row.intake_json);
+  assert.match(row.intake_json, /^enc:v1:/);
+  const listed = await (await worker.fetch(req("/api/clients"), makeEnv(state))).json();
+  const mergedIntake = listed.clients.find((client) => client.id === "c1").intake;
   assert.equal(mergedIntake.goal, "Protect family"); // previous intake preserved
   assert.equal(mergedIntake.status, "Applied"); // new field merged over
+});
+
+test("client writes encrypt sensitive columns and return them only after authenticated decryption", async () => {
+  const state = baseState();
+  const res = await worker.fetch(
+    req("/api/clients", {
+      method: "POST",
+      body: {
+        firstName: "Secure",
+        lastName: "Test",
+        phone: "5551112222",
+        ssn: "111-22-3333",
+        routing: "123456789",
+        account: "987654321",
+      },
+    }),
+    makeEnv(state),
+  );
+  assert.equal(res.status, 201);
+  const stored = state.clients.at(-1);
+  for (const column of ["ssn", "routing", "account", "intake_json"]) {
+    assert.match(stored[column], /^enc:v1:/);
+  }
+  assert.doesNotMatch(JSON.stringify(stored), /111-22-3333|123456789|987654321/);
+
+  const listed = await (await worker.fetch(req("/api/clients"), makeEnv(state))).json();
+  const restored = listed.clients.find((client) => client.id === stored.id);
+  assert.equal(restored.ssn, "111-22-3333");
+  assert.equal(restored.routing, "123456789");
+  assert.equal(restored.account, "987654321");
+});
+
+test("client writes fail closed when DATA_KEY is missing", async () => {
+  const state = baseState();
+  const res = await worker.fetch(
+    req("/api/clients", { method: "POST", body: { firstName: "Do", lastName: "Not Store" } }),
+    makeEnv(state, { DATA_KEY: "" }),
+  );
+  assert.equal(res.status, 503);
+  assert.deepEqual(await res.json(), { error: "Secure client storage is temporarily unavailable." });
+  assert.equal(state.clients.length, 2);
 });
