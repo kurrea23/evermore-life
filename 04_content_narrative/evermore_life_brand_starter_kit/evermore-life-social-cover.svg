@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1512" height="256" viewBox="0 0 1512 256" role="img" aria-labelledby="title desc">
+  <title id="title">Evermore Life Insurance LLC social cover</title>
+  <desc id="desc">Social cover with the message Build with purpose. Protect families. Grow into leadership.</desc>
+  <defs><linearGradient id="bg" x1="0" x2="1"><stop stop-color="#071726"/><stop offset=".62" stop-color="#123452"/><stop offset="1" stop-color="#0B1F33"/></linearGradient></defs>
+  <rect width="1512" height="256" fill="url(#bg)"/>
+  <path d="M0 220 C320 110 510 330 820 185 S1270 55 1512 130" fill="none" stroke="#C8A96E" stroke-width="2" opacity=".5"/>
+  <image href="../../01_website/v2/assets/evermorelife-llc-logo-nav.png" x="36" y="22" width="470" height="212" preserveAspectRatio="xMidYMid meet"/>
+  <text x="590" y="105" fill="#F7F4EE" font-family="Arial, sans-serif" font-size="29" font-weight="700">BUILD WITH PURPOSE.</text>
+  <text x="590" y="150" fill="#E8C981" font-family="Arial, sans-serif" font-size="29" font-weight="700">PROTECT FAMILIES.</text>
+  <text x="590" y="195" fill="#F7F4EE" font-family="Arial, sans-serif" font-size="29" font-weight="700">GROW INTO LEADERSHIP.</text>
+</svg>

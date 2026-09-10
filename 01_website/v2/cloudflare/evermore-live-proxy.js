@@ -30,6 +30,7 @@ const CLEAN_REDIRECTS = new Map([
   ["/thank-you.html", "/thank-you"],
   ["/recruiting.html", "/recruiting"],
   ["/recruiting/", "/recruiting"],
+  ["/brand.html", "/brand"],
   ["/404.html", "/404"],
   ["/cockpit-v2.html", "/dashboard"],
   ["/cockpit-v2", "/dashboard"],
@@ -67,6 +68,7 @@ const PUBLIC_ROUTES = new Map([
   ["/sarah", "/01_website/v2/pages/sarah"],
   ["/thank-you", "/01_website/v2/pages/thank-you"],
   ["/recruiting", "/01_website/v2/pages/recruiting"],
+  ["/brand", "/01_website/v2/pages/brand"],
   ["/sitemap.xml", "/01_website/v2/sitemap.xml"],
   ["/404", "/01_website/v2/pages/404"],
   ["/arizona", "/01_website/state-pages/public/arizona/"],
@@ -1496,6 +1498,7 @@ function rewriteHtml(html) {
     .replaceAll('href="terms.html"', 'href="/terms"')
     .replaceAll('href="thank-you.html"', 'href="/thank-you"')
     .replaceAll('href="recruiting.html"', 'href="/recruiting"')
+    .replaceAll('href="brand.html"', 'href="/brand"')
     .replaceAll('data-widget-id="69f6e7fdcc1c6313dcd0f983"', 'data-widget-id="6a34718b718826e00221fc81"')
     .replaceAll("Evermore Life LLC", "Evermore Life Insurance LLC")
     .replaceAll("EVERMORE LIFE LLC", "EVERMORE LIFE INSURANCE LLC")

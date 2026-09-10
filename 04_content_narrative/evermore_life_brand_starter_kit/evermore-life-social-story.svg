@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920" role="img" aria-labelledby="title desc">
+  <title id="title">Evermore Life Insurance LLC story and reel cover</title>
+  <desc id="desc">Vertical story artwork with an invitation to start a protection conversation.</desc>
+  <defs><linearGradient id="story" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#071726"/><stop offset=".55" stop-color="#0B1F33"/><stop offset="1" stop-color="#1D4B63"/></linearGradient></defs>
+  <rect width="1080" height="1920" fill="url(#story)"/>
+  <circle cx="540" cy="840" r="330" fill="none" stroke="#C8A96E" stroke-width="4" opacity=".6"/>
+  <circle cx="540" cy="840" r="255" fill="none" stroke="#C8A96E" stroke-width="2" opacity=".35"/>
+  <image href="../../01_website/v2/assets/evermorelife-llc-logo-nav.png" x="92" y="128" width="896" height="390" preserveAspectRatio="xMidYMid meet"/>
+  <text x="540" y="1080" text-anchor="middle" fill="#F7F4EE" font-family="Arial, sans-serif" font-size="62" font-weight="700">Your legacy starts</text>
+  <text x="540" y="1160" text-anchor="middle" fill="#E8C981" font-family="Arial, sans-serif" font-size="62" font-weight="700">with a conversation.</text>
+  <text x="540" y="1280" text-anchor="middle" fill="#C9D8E5" font-family="Arial, sans-serif" font-size="28">Build with purpose. Protect families.</text>
+  <rect x="350" y="1486" width="380" height="72" rx="36" fill="#C8A96E"/>
+  <text x="540" y="1532" text-anchor="middle" fill="#0B1F33" font-family="Arial, sans-serif" font-size="24" font-weight="700" letter-spacing="1">START THE CONVERSATION</text>
+  <text x="540" y="1772" text-anchor="middle" fill="#F7F4EE" font-family="Arial, sans-serif" font-size="22" letter-spacing="3">EVERMORE LIFE INSURANCE LLC</text>
+</svg>

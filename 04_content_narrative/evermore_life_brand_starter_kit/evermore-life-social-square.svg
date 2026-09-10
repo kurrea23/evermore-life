@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" role="img" aria-labelledby="title desc">
+  <title id="title">Evermore Life Insurance LLC square social post</title>
+  <desc id="desc">A square social post about protecting the people you love.</desc>
+  <rect width="1080" height="1080" fill="#0B1F33"/>
+  <circle cx="860" cy="210" r="300" fill="#173E5E" opacity=".8"/>
+  <circle cx="860" cy="210" r="230" fill="none" stroke="#C8A96E" stroke-width="3" opacity=".7"/>
+  <image href="../../01_website/v2/assets/evermorelife-llc-logo-nav.png" x="76" y="84" width="430" height="190" preserveAspectRatio="xMidYMid meet"/>
+  <text x="82" y="540" fill="#F7F4EE" font-family="Arial, sans-serif" font-size="66" font-weight="700">Protect the people</text>
+  <text x="82" y="620" fill="#E8C981" font-family="Arial, sans-serif" font-size="66" font-weight="700">you love.</text>
+  <text x="86" y="716" fill="#C9D8E5" font-family="Arial, sans-serif" font-size="28">Make today’s decision count for tomorrow.</text>
+  <rect x="82" y="842" width="280" height="5" fill="#C8A96E"/>
+  <text x="82" y="902" fill="#F7F4EE" font-family="Arial, sans-serif" font-size="23" letter-spacing="3">EVERMORE LIFE INSURANCE LLC</text>
+</svg>

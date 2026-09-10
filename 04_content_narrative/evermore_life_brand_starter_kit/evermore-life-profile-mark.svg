@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">Evermore Life Insurance LLC profile mark</title>
+  <desc id="desc">Evermore Life Insurance LLC gold tree mark within a navy circle.</desc>
+  <rect width="1024" height="1024" rx="220" fill="#0B1F33"/>
+  <circle cx="512" cy="512" r="392" fill="none" stroke="#C8A96E" stroke-width="5" opacity=".65"/>
+  <image href="../../01_website/v2/assets/evermorelife-llc-logo.png" x="172" y="126" width="680" height="680" preserveAspectRatio="xMidYMid slice"/>
+</svg>
