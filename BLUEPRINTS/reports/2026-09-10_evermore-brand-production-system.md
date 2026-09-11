@@ -27,7 +27,7 @@ email, print, voice, governance, and downloads.
 | Every page-linked local file resolves in the local preview | 40-link automated HTTP check on 2026-09-10 | high |
 | Complete and social-only ZIPs are internally valid | `unzip -t` checks on both packages | high |
 | The source lockup is preserved rather than redrawn | `01_website/v2/assets/evermorelife-llc-logo-nav.png`; `04_tools/builders/build_evermore_brand_kit.py` | high |
-| Live production verification | Pending approved deployment and live route check | unavailable |
+| Live production verification | `https://evermorelife.org/brand` served the production page; 40 unique page-linked resources reached HTTP 200 after redirect handling; both downloaded ZIPs passed `unzip -t`; the live browser reported no warning or error logs | high |
 
 ## Map
 
@@ -43,14 +43,14 @@ email, print, voice, governance, and downloads.
 ## Visual Evidence
 
 The local preview was reviewed at a 1440px desktop viewport and in the in-app
-browser. It demonstrated the dark editorial hero, living-tree motif, full
-section hierarchy, social previews, and responsive stacked layout. No private
-customer data was used.
+browser. The deployed page was then reviewed in the in-app browser at
+`https://evermorelife.org/brand?cb=20260910-production-v1`. It demonstrated the
+dark editorial hero, living-tree motif, full section hierarchy, social
+previews, and responsive stacked layout without browser warnings or errors. No
+private customer data was used.
 
 ## Unknown Or Unavailable
 
-- Live route, asset, ZIP, and browser-console verification remain unavailable
-  until the production deploy is complete.
 - The source logo is raster artwork. The self-contained SVG files preserve it
   as embedded high-resolution artwork; they are not newly traced vector paths.
 
@@ -63,8 +63,10 @@ customer data was used.
 
 ## Recommended Next Move
 
-Deploy the clean brand-system branch, verify `/brand` plus all page-linked
-assets and both ZIP downloads, and update this report with live evidence.
+Use `/brand` and the packaged manifest as the first check for future website,
+campaign, product, email, and print work. Re-run the deterministic builder and
+the complete link/ZIP/live-browser checks whenever the source logo or system
+version changes.
 
 ## Files Changed
 
@@ -75,6 +77,7 @@ assets and both ZIP downloads, and update this report with live evidence.
 - `04_content_narrative/evermore_life_brand_starter_kit/README.md`
 - `04_content_narrative/evermore_life_brand_starter_kit/ASSET_MASTER_LIST.md`
 - `04_tools/builders/build_evermore_brand_kit.py`
+- `deploy.sh`
 - `BLUEPRINTS/MAP.md`
 - `BLUEPRINTS/OVERLAPS.md`
 - `BLUEPRINTS/DECISIONS.md`
