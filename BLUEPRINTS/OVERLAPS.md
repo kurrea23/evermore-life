@@ -730,3 +730,21 @@ shows.
   future creative and product QA; keep factual, compliance, and final-crop
   review approval-gated.
 - **Status:** completed
+
+### 2026-09-11 - Reconstructed logo masters replace the cropped tree across every brand surface
+
+- **Surfaces:** Public website + campaigns + social + email + print + product icons
+- **Finding:** The former standalone tree was a fixed crop from the horizontal
+  raster lockup and removed part of the left canopy. The v1.1.0 system uses a
+  complete repository emblem to reconstruct the tree and path-based vector
+  masters for all gold, white, black, light, and dark logo variants.
+- **Evidence:**
+  `BLUEPRINTS/reports/2026-09-11_evermore-logo-master-reconstruction.md`,
+  `01_website/v2/assets/evermore-tree-master.svg`, and
+  `04_content_narrative/evermore_life_brand_kit/asset-manifest.json`
+- **Impact:** Any surface retaining an older copied logo/tree file may continue
+  to show the cropped mark; future work should use the canonical kit rather
+  than recropping website PNGs.
+- **Next move:** Publish v1.1.0 and verify representative assets at the live
+  `/brand` route; reconcile older copied logos only in separately scoped work.
+- **Status:** local reconstruction complete; live verification pending

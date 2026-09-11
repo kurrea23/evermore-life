@@ -11,6 +11,7 @@ import textwrap
 import zipfile
 from datetime import date
 from pathlib import Path
+from xml.etree import ElementTree
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
@@ -20,6 +21,11 @@ OUT = ROOT / "04_content_narrative" / "evermore_life_brand_kit"
 SOURCE_LOGO = ROOT / "01_website" / "v2" / "assets" / "evermorelife-llc-logo-nav.png"
 SOURCE_SQUARE = ROOT / "01_website" / "v2" / "assets" / "evermorelife-llc-logo.png"
 SOURCE_OG = ROOT / "01_website" / "v2" / "assets" / "og-evermore-life.svg"
+SOURCE_LOGO_MASTER = ROOT / "01_website" / "v2" / "assets" / "evermore-logo-master.svg"
+SOURCE_MARK_MASTER = ROOT / "01_website" / "v2" / "assets" / "evermore-tree-master.svg"
+SOURCE_MARK = ROOT / "01_website" / "v2" / "assets" / "evermore-tree-master.png"
+
+VERSION = "1.1.0"
 
 NAVY = "#091238"
 NAVY_MID = "#142A52"
@@ -58,10 +64,26 @@ def contain(image: Image.Image, box: tuple[int, int], margin: int = 0) -> Image.
     return copy
 
 
+def fit(image: Image.Image, box: tuple[int, int], margin: int = 0) -> Image.Image:
+    """Contain an image and allow careful upscaling for fixed-size PNG exports."""
+    target = (max(1, box[0] - margin * 2), max(1, box[1] - margin * 2))
+    ratio = min(target[0] / image.width, target[1] / image.height)
+    size = (max(1, round(image.width * ratio)), max(1, round(image.height * ratio)))
+    return image.resize(size, Image.Resampling.LANCZOS)
+
+
 def paste_center(base: Image.Image, image: Image.Image, center: tuple[int, int]) -> None:
     x = int(center[0] - image.width / 2)
     y = int(center[1] - image.height / 2)
     base.paste(image, (x, y), image if image.mode == "RGBA" else None)
+
+
+def flat_gold(image: Image.Image) -> Image.Image:
+    """Normalize legacy dimensional artwork into the flat production gold."""
+    rgba = image.convert("RGBA")
+    normalized = Image.new("RGBA", rgba.size, (*hex_rgb(GOLD), 0))
+    normalized.putalpha(rgba.getchannel("A"))
+    return normalized
 
 
 def draw_tracking(draw: ImageDraw.ImageDraw, xy: tuple[int, int], text: str, fnt: ImageFont.FreeTypeFont,
@@ -84,9 +106,15 @@ def draw_lines(draw: ImageDraw.ImageDraw, xy: tuple[int, int], lines: list[str],
 def logo_assets(logo: Image.Image, mark: Image.Image) -> list[dict]:
     items: list[dict] = []
     logo_trim = logo.crop(logo.getbbox())
-    logo_2x = contain(logo_trim, (1040, 466))
+    logo_viewbox, logo_path = load_vector_master(SOURCE_LOGO_MASTER)
+    mark_viewbox, mark_path = load_vector_master(SOURCE_MARK_MASTER)
+    logo_scaled = fit(logo_trim, (1040, 466))
+    logo_2x = Image.new("RGBA", (1040, 466), (0, 0, 0, 0))
+    paste_center(logo_2x, logo_scaled, (520, 233))
     logo_2x.save(OUT / "evermore-logo-gold-transparent.png")
     items.append(asset("evermore-logo-gold-transparent.png", "Logo", "1040×466", "transparent", "Primary gold lockup"))
+    write_svg_vector(OUT / "evermore-logo-gold.svg", logo_viewbox, logo_path, GOLD, "Primary gold lockup")
+    items.append(asset("evermore-logo-gold.svg", "Logo", "vector", "transparent", "Primary gold vector lockup"))
 
     for name, bg, label in [
         ("evermore-logo-light", CREAM, "Light surfaces"),
@@ -96,7 +124,7 @@ def logo_assets(logo: Image.Image, mark: Image.Image) -> list[dict]:
         scaled = contain(logo_trim, (1040, 320))
         paste_center(image, scaled, (600, 210))
         image.save(OUT / f"{name}.png")
-        write_svg_wrapper(OUT / f"{name}.svg", 1200, 420, bg, logo_trim, 80, 55, 1040, 310, label)
+        write_svg_vector_wrapper(OUT / f"{name}.svg", 1200, 420, bg, logo_viewbox, logo_path, GOLD, 80, 55, 1040, 310, label)
         items.extend([
             asset(f"{name}.svg", "Logo", "1200×420", bg, f"Primary lockup · {label.lower()}"),
             asset(f"{name}.png", "Logo", "1200×420", bg, f"Primary lockup · {label.lower()}"),
@@ -111,7 +139,7 @@ def logo_assets(logo: Image.Image, mark: Image.Image) -> list[dict]:
         mono.putalpha(alpha)
         mono = contain(mono, (1040, 466))
         mono.save(OUT / f"{name}.png")
-        write_svg_image(OUT / f"{name}.svg", mono.width, mono.height, mono, label)
+        write_svg_vector(OUT / f"{name}.svg", logo_viewbox, logo_path, color, label)
         items.extend([
             asset(f"{name}.svg", "Logo", f"{mono.width}×{mono.height}", "transparent", label),
             asset(f"{name}.png", "Logo", f"{mono.width}×{mono.height}", "transparent", label),
@@ -129,7 +157,7 @@ def logo_assets(logo: Image.Image, mark: Image.Image) -> list[dict]:
             rendered.putalpha(mark_trim.getchannel("A"))
         rendered = contain(rendered, (800, 800))
         rendered.save(OUT / f"{name}.png")
-        write_svg_image(OUT / f"{name}.svg", rendered.width, rendered.height, rendered, label)
+        write_svg_vector(OUT / f"{name}.svg", mark_viewbox, mark_path, color or GOLD, label)
         items.extend([
             asset(f"{name}.svg", "Mark", f"{rendered.width}×{rendered.height}", "transparent", label),
             asset(f"{name}.png", "Mark", f"{rendered.width}×{rendered.height}", "transparent", label),
@@ -151,6 +179,43 @@ def png_data(image: Image.Image) -> str:
     buffer = io.BytesIO()
     image.save(buffer, format="PNG")
     return base64.b64encode(buffer.getvalue()).decode("ascii")
+
+
+def load_vector_master(path: Path) -> tuple[str, str]:
+    root = ElementTree.parse(path).getroot()
+    vector_path = root.find("{http://www.w3.org/2000/svg}path")
+    if vector_path is None or not vector_path.attrib.get("d"):
+        raise ValueError(f"Missing vector path in {path}")
+    return root.attrib["viewBox"], vector_path.attrib["d"]
+
+
+def write_svg_vector(path: Path, viewbox: str, vector_path: str, fill: str, title: str) -> None:
+    width = viewbox.split()[2]
+    height = viewbox.split()[3]
+    path.write_text(
+        f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="{viewbox}" role="img" aria-labelledby="title desc">\n'''
+        f'''  <title id="title">{title}</title>\n'''
+        f'''  <desc id="desc">Production vector artwork for Evermore Life Insurance LLC.</desc>\n'''
+        f'''  <path d="{vector_path}" fill="{fill}" fill-rule="evenodd"/>\n'''
+        f'''</svg>\n''',
+        encoding="utf-8",
+    )
+
+
+def write_svg_vector_wrapper(path: Path, width: int, height: int, bg: str, viewbox: str,
+                             vector_path: str, fill: str, x: int, y: int,
+                             image_width: int, image_height: int, title: str) -> None:
+    path.write_text(
+        f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc">\n'''
+        f'''  <title id="title">{title}</title>\n'''
+        f'''  <desc id="desc">Production vector artwork for Evermore Life Insurance LLC.</desc>\n'''
+        f'''  <rect width="{width}" height="{height}" rx="28" fill="{bg}"/>\n'''
+        f'''  <svg x="{x}" y="{y}" width="{image_width}" height="{image_height}" viewBox="{viewbox}" preserveAspectRatio="xMidYMid meet">\n'''
+        f'''    <path d="{vector_path}" fill="{fill}" fill-rule="evenodd"/>\n'''
+        f'''  </svg>\n'''
+        f'''</svg>\n''',
+        encoding="utf-8",
+    )
 
 
 def write_svg_image(path: Path, width: int, height: int, image: Image.Image, title: str) -> None:
@@ -197,7 +262,7 @@ def application_assets(mark: Image.Image, logo: Image.Image) -> list[dict]:
     icon.save(OUT / "evermore-app-icon-1024.png")
     items.append(asset("evermore-app-icon-1024.png", "Application", "1024×1024", NAVY, "App icon"))
     for size in (512, 192, 180, 32, 16):
-        resized = icon.resize((size, size), Image.Resampling.LANCZOS)
+        resized = compact_icon(size) if size < 48 else icon.resize((size, size), Image.Resampling.LANCZOS)
         name = f"evermore-icon-{size}.png"
         resized.save(OUT / name)
         items.append(asset(name, "Application", f"{size}×{size}", NAVY, "Browser and app icon"))
@@ -221,6 +286,20 @@ def application_assets(mark: Image.Image, logo: Image.Image) -> list[dict]:
         card.save(OUT / name, dpi=(300, 300))
         items.append(asset(name, "Print", "1050×600 · 300dpi", NAVY if side == "front" else CREAM, f"Business card {side} template"))
     return items
+
+
+def compact_icon(size: int) -> Image.Image:
+    """Use an intentional small-size monogram where detailed leaves cannot resolve."""
+    image = canvas((size, size), NAVY, "RGBA")
+    mask = Image.new("L", (size, size), 0)
+    ImageDraw.Draw(mask).rounded_rectangle((0, 0, size, size), radius=max(3, size // 5), fill=255)
+    draw = ImageDraw.Draw(image)
+    inset = max(2, size // 8)
+    draw.ellipse((inset, inset, size - inset - 1, size - inset - 1), outline=GOLD, width=max(1, size // 18))
+    fnt = font(GEORGIA_BOLD, max(11, round(size * .57)))
+    draw.text((size / 2, size * .49), "E", font=fnt, fill=GOLD_LIGHT, anchor="mm")
+    image.putalpha(mask)
+    return image
 
 
 def rings(draw: ImageDraw.ImageDraw, center: tuple[int, int], radius: int, color: str, count: int = 4) -> None:
@@ -295,7 +374,7 @@ def social_assets(logo: Image.Image, mark: Image.Image) -> list[dict]:
 def write_support_files(manifest: list[dict]) -> None:
     tokens = {
         "name": "Evermore Life",
-        "version": "1.0.0",
+        "version": VERSION,
         "colors": {
             "evermoreNavy": NAVY,
             "heritageNavy": NAVY_MID,
@@ -319,7 +398,7 @@ def write_support_files(manifest: list[dict]) -> None:
     manifest.append(asset("brand-tokens.json", "Guidance", "JSON", "n/a", "Design tokens and messaging architecture"))
 
     social_specs = {
-        "version": "1.0.0",
+        "version": VERSION,
         "safeZoneRule": "Keep logos and essential copy inside the central 80% of each canvas. Preview every final upload in-platform before publishing.",
         "placements": [item for item in manifest if item["group"] == "Social"],
     }
@@ -330,25 +409,26 @@ def write_support_files(manifest: list[dict]) -> None:
 <html lang="en"><head><meta charset="utf-8"><title>Evermore Life email signature</title></head>
 <body style="margin:0;font-family:Arial,sans-serif;color:#16223A">
 <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
-<tr><td style="padding-right:18px;border-right:2px solid #C8A96E"><img src="https://evermorelife.org/01_website/v2/assets/evermorelife-llc-logo-nav.png" width="220" alt="Evermore Life Insurance LLC"></td>
+<tr><td style="padding-right:18px;border-right:2px solid #C8A96E"><img src="https://evermorelife.org/04_content_narrative/evermore_life_brand_kit/evermore-logo-gold-transparent.png" width="220" alt="Evermore Life Insurance LLC"></td>
 <td style="padding-left:18px"><strong style="font-size:16px;color:#091238">YOUR NAME</strong><br><span style="font-size:13px;color:#66748A">Licensed Insurance Agent</span><br><a href="https://evermorelife.org" style="font-size:13px;color:#142A52">evermorelife.org</a></td></tr>
 </table></body></html>\n"""
     (OUT / "email-signature.html").write_text(email_html, encoding="utf-8")
     manifest.append(asset("email-signature.html", "Email", "HTML", "transparent", "Editable email signature template"))
 
     email_header = canvas((1200, 300), NAVY)
-    logo = Image.open(SOURCE_LOGO).convert("RGBA")
+    logo = flat_gold(Image.open(SOURCE_LOGO))
     paste_center(email_header, contain(logo, (720, 250)), (600, 150))
     email_header.save(OUT / "email-header-1200x300.png")
     manifest.append(asset("email-header-1200x300.png", "Email", "1200×300", NAVY, "Email header artwork"))
 
     readme = f"""# Evermore Life Brand Kit
 
-Version 1.0.0 · released {date.today().isoformat()}
+Version {VERSION} · released {date.today().isoformat()}
 
 This package is the production source of truth for the Evermore Life identity.
-The original Evermore Life logo artwork is preserved; all files in this package
-are deterministic derivatives or brand applications built from that source.
+The original Evermore Life lockup silhouette is preserved as a true vector.
+The standalone tree is recovered from the complete high-resolution emblem so
+its canopy and infinity roots are no longer cropped.
 
 ## Core identity
 
@@ -376,30 +456,27 @@ See `asset-manifest.json`, `brand-tokens.json`, and `social-specs.json` for mach
 
 
 def build_zip() -> None:
-    social_zip = OUT / "Evermore-Life-Social-Kit-v1.0.0.zip"
+    social_zip = OUT / f"Evermore-Life-Social-Kit-v{VERSION}.zip"
     with zipfile.ZipFile(social_zip, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for path in sorted(OUT.iterdir()):
             if path.name != "social-specs.json" and path.name.startswith(("linkedin-", "facebook-", "x-header", "youtube-", "social-", "pinterest-", "paid-social-")):
-                archive.write(path, arcname=f"Evermore-Life-Social-Kit-v1.0.0/{path.name}")
-        archive.write(OUT / "social-specs.json", arcname="Evermore-Life-Social-Kit-v1.0.0/social-specs.json")
+                archive.write(path, arcname=f"Evermore-Life-Social-Kit-v{VERSION}/{path.name}")
+        archive.write(OUT / "social-specs.json", arcname=f"Evermore-Life-Social-Kit-v{VERSION}/social-specs.json")
 
-    zip_path = OUT / "Evermore-Life-Brand-Kit-v1.0.0.zip"
+    zip_path = OUT / f"Evermore-Life-Brand-Kit-v{VERSION}.zip"
     with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for path in sorted(OUT.iterdir()):
             if path == zip_path or path.name.startswith("."):
                 continue
-            archive.write(path, arcname=f"Evermore-Life-Brand-Kit-v1.0.0/{path.name}")
+            archive.write(path, arcname=f"Evermore-Life-Brand-Kit-v{VERSION}/{path.name}")
 
 
 def main() -> None:
     if OUT.exists():
         shutil.rmtree(OUT)
     OUT.mkdir(parents=True)
-    logo = Image.open(SOURCE_LOGO).convert("RGBA")
-    # The source lockup joins the word flourish to the tree. Crop at the clean
-    # separation point so compact placements never inherit stray letterforms.
-    mark = logo.crop((342, 0, logo.width, logo.height))
-    mark = mark.crop(mark.getbbox())
+    logo = flat_gold(Image.open(SOURCE_LOGO))
+    mark = Image.open(SOURCE_MARK).convert("RGBA")
 
     manifest: list[dict] = []
     manifest.extend(logo_assets(logo, mark))
@@ -409,7 +486,7 @@ def main() -> None:
     manifest.append(asset("evermore-open-graph.svg", "Application", "1200×630", "varied", "Existing website social preview artwork"))
     write_support_files(manifest)
     manifest_path = OUT / "asset-manifest.json"
-    manifest_path.write_text(json.dumps({"brand": "Evermore Life", "version": "1.0.0", "assetCount": len(manifest), "assets": manifest}, indent=2) + "\n", encoding="utf-8")
+    manifest_path.write_text(json.dumps({"brand": "Evermore Life", "version": VERSION, "assetCount": len(manifest), "assets": manifest}, indent=2) + "\n", encoding="utf-8")
     build_zip()
     print(f"Built {len(manifest)} assets in {OUT}")
 

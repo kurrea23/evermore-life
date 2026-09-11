@@ -1,10 +1,11 @@
 # Evermore Life Brand Kit
 
-Version 1.0.0 · released 2026-09-10
+Version 1.1.0 · released 2026-09-11
 
 This package is the production source of truth for the Evermore Life identity.
-The original Evermore Life logo artwork is preserved; all files in this package
-are deterministic derivatives or brand applications built from that source.
+The original Evermore Life lockup silhouette is preserved as a true vector.
+The standalone tree is recovered from the complete high-resolution emblem so
+its canopy and infinity roots are no longer cropped.
 
 ## Core identity
 

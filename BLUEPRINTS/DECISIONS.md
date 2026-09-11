@@ -539,3 +539,21 @@ do not rewrite history.
   identity or contact data still require review before publication.
 - **Evidence:** `BLUEPRINTS/reports/2026-09-10_evermore-brand-production-system.md`
 - **Owner:** Evermore operator
+
+### 2026-09-11 - Replace cropped raster logo derivatives with reconstructed vector masters
+
+- **Status:** approved
+- **Decision:** Preserve the recognizable Evermore script lockup silhouette,
+  normalize it into flat Legacy Gold vector geometry, and use a complete tree
+  recovered from the larger repository emblem as the standalone mark. Use the
+  detailed tree at 48px or larger and a simplified “E” icon at 16px and 32px.
+- **Why:** The operator identified that the standalone tree's left side was
+  visibly cut off and approved repairing the logo system and all dependent
+  assets. Inspection also confirmed the published SVGs embedded raster PNGs.
+- **Consequences:** Brand kit v1.1.0 replaces the raster-wrapped SVG family,
+  regenerates application/social/email/print assets, and becomes the canonical
+  source for future logo placements. Original designer vector files, if later
+  recovered, should be compared before replacing these reconstructed masters.
+- **Evidence:**
+  `BLUEPRINTS/reports/2026-09-11_evermore-logo-master-reconstruction.md`
+- **Owner:** Evermore operator

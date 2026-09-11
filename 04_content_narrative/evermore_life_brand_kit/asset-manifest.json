@@ -1,7 +1,7 @@
 {
   "brand": "Evermore Life",
-  "version": "1.0.0",
-  "assetCount": 38,
+  "version": "1.1.0",
+  "assetCount": 39,
   "assets": [
     {
       "file": "evermore-logo-gold-transparent.png",
@@ -9,6 +9,13 @@
       "dimensions": "1040\u00d7466",
       "background": "transparent",
       "description": "Primary gold lockup"
+    },
+    {
+      "file": "evermore-logo-gold.svg",
+      "group": "Logo",
+      "dimensions": "vector",
+      "background": "transparent",
+      "description": "Primary gold vector lockup"
     },
     {
       "file": "evermore-logo-light.svg",
@@ -69,42 +76,42 @@
     {
       "file": "evermore-tree-gold.svg",
       "group": "Mark",
-      "dimensions": "151\u00d7193",
+      "dimensions": "757\u00d7800",
       "background": "transparent",
       "description": "Gold tree and roots mark"
     },
     {
       "file": "evermore-tree-gold.png",
       "group": "Mark",
-      "dimensions": "151\u00d7193",
+      "dimensions": "757\u00d7800",
       "background": "transparent",
       "description": "Gold tree and roots mark"
     },
     {
       "file": "evermore-tree-white.svg",
       "group": "Mark",
-      "dimensions": "151\u00d7193",
+      "dimensions": "757\u00d7800",
       "background": "transparent",
       "description": "White tree and roots mark"
     },
     {
       "file": "evermore-tree-white.png",
       "group": "Mark",
-      "dimensions": "151\u00d7193",
+      "dimensions": "757\u00d7800",
       "background": "transparent",
       "description": "White tree and roots mark"
     },
     {
       "file": "evermore-tree-black.svg",
       "group": "Mark",
-      "dimensions": "151\u00d7193",
+      "dimensions": "757\u00d7800",
       "background": "transparent",
       "description": "Black tree and roots mark"
     },
     {
       "file": "evermore-tree-black.png",
       "group": "Mark",
-      "dimensions": "151\u00d7193",
+      "dimensions": "757\u00d7800",
       "background": "transparent",
       "description": "Black tree and roots mark"
     },
