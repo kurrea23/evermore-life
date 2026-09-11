@@ -589,3 +589,12 @@ do not rewrite history.
 - **Evidence:**
   `BLUEPRINTS/reports/2026-09-11_public-brand-kit-footer-link.md`
 - **Owner:** Evermore operator
+
+### 2026-09-11 - Release Evermore Growth as a separate B2B acquisition path
+
+- **Status:** approved and deployed
+- **Decision:** Publish `/agent-growth` with a dedicated public application endpoint and D1 table, separate from consumer insurance quote intake and authenticated Agent Suite client records.
+- **Why:** The Growth offer targets producers and agencies, requires different qualification data, and must not contaminate consumer client state.
+- **Consequences:** The page and API are live, but no owner notification or CRM handoff is implied; that remains a separate approved surface.
+- **Evidence:** `BLUEPRINTS/reports/2026-09-11_agent-growth-production-release.md`
+- **Owner:** Evermore operator

@@ -39,6 +39,7 @@ flowchart LR
 | Where is the live inbound-call worksheet? | `inbound-client-intake/index.html` plus `agent-suite-intake-continuity.js` | `https://evermorelife.org/inbound-client-intake/` is the verified authenticated 15-step workflow using `/api/clients`; `01_website/experiments/Client-Intake-Guided.html` remains a compatibility redirect |
 | What is the app/tool patch lane? | `agent-suite-auth.js`, root app/tool folders, and `01_website/agent-suite-api/cloudflare/` | Keep separate from public website patches unless explicitly scoped |
 | Where is the private recruiting-page draft? | `01_website/v2/pages/recruiting.html` and the `/recruiting` proxy mapping | Keep noindex and verify the route after an approved deploy |
+| Where is the live Evermore Growth acquisition page? | `01_website/v2/pages/agent-growth.html`, `/agent-growth` in the live proxy, and `01_website/agent-suite-api/cloudflare/` | Verify the public page plus the isolated `growth_applications` D1 path before calling intake live |
 | Where are the standalone tool clean URL sources? | `score-tracker/index.html` and `growth-calculator/index.html` | Verify `https://evermorelife.org/score-tracker` and `https://evermorelife.org/growth-calculator` after push or deploy before calling them live |
 | Where is the Agent Suite backend source? | `01_website/agent-suite-api/cloudflare/` plus `agent-suite-auth.js` | Verify D1 database creation, migrations, Worker deploy, and `api.evermorelife.org` health before calling it live |
 | How are state-specific pages built? | `01_website/state-pages/` | Validate state mode, regenerate drafts, and verify live routing before publish |
@@ -63,6 +64,7 @@ flowchart LR
 | Agent Suite private backend | Cloudflare Worker + D1 + static tool pages | `01_website/agent-suite-api/cloudflare/`, `login/index.html`, `signup/index.html`, `team/index.html`, `agent-suite-auth.js`, `agent-suite-intake-continuity.js`, `inbound-client-intake/index.html`, `score-tracker/index.html`, `growth-calculator/index.html` |
 | Agent app/tool base | App agent | `agent-suite-auth.js`, `agent-suite-ui.css`, `agent-suite-icons.js`, `agent-suite-activity.js`, `login/`, `signup/`, `today/`, `team/`, `clients/`, `score-tracker/`, `growth-calculator/`, `01_website/agent-suite-api/cloudflare/` (incl. `/api/activities`) |
 | Recruiting page draft | Human operator + website owners | `01_website/v2/pages/recruiting.html` plus `/recruiting` proxy route |
+| Evermore Growth B2B acquisition path | Website agent + Cloudflare Worker/D1 | `01_website/v2/pages/agent-growth.html`, `/agent-growth`, `01_website/agent-suite-api/cloudflare/`, and `growth_applications` |
 | State-page expansion | Human operator + website/GHL owners | `01_website/state-pages/` plus verified service and workflow evidence |
 | CRM, forms, workflows, nurture | GHL | `02_ghl/` plus verified live evidence |
 | Sales and marketing operations | Human operator | `03_sales_marketing/` |

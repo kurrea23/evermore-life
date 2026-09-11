@@ -779,3 +779,12 @@ shows.
   `/brand` as the canonical destination.
 - **Status:** completed — deployed from commit `290e350`; live footer and
   `/brand` destination verified
+
+### 2026-09-11 - Evermore Growth B2B intake is isolated from consumer intake
+
+- **Surfaces:** Public Growth page, Agent Suite API, D1, consumer client records
+- **Finding:** The Growth form writes only to `growth_applications`; the synthetic production proof returned one row there and zero matching rows in `clients`.
+- **Evidence:** `BLUEPRINTS/reports/2026-09-11_agent-growth-production-release.md`
+- **Impact:** Future notification, owner-review, and CRM work must preserve this boundary unless explicitly approved and separately verified.
+- **Next move:** Design the owner-review handoff before adding operational notifications.
+- **Status:** completed — live route and D1 boundary verified
