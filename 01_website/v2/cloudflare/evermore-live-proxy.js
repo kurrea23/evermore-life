@@ -31,6 +31,7 @@ const CLEAN_REDIRECTS = new Map([
   ["/recruiting.html", "/recruiting"],
   ["/recruiting/", "/recruiting"],
   ["/brand.html", "/brand"],
+  ["/brand/", "/brand"],
   ["/404.html", "/404"],
   ["/cockpit-v2.html", "/dashboard"],
   ["/cockpit-v2", "/dashboard"],
