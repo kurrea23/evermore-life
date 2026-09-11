@@ -23,7 +23,7 @@ assets, and keeps the complete standalone tree and compact icon repairs.
 | The incorrect traced lockup is no longer canonical | Removal of `evermore-logo-master.svg` and `evermore-logo-gold.svg` | high |
 | The complete standalone tree remains | `01_website/v2/assets/evermore-tree-master.svg`; `evermore-tree-gold.svg` | high |
 | The kit contains 38 documented v1.1.1 assets | `asset-manifest.json`; builder output | high |
-| Live production verification | Pending deployment and cache-busted review | unavailable |
+| Live production verification | Commit `f6b0903`; Cloudflare Pages deployment `5189a245`; cache-busted page and direct lockup review | high |
 
 ## Map
 
@@ -39,13 +39,14 @@ assets, and keeps the complete standalone tree and compact icon repairs.
 Local browser review confirmed the original gold dimensional script lettering,
 original tree relationship, and original root flourish are restored. The
 repaired standalone tree remains complete and visually separate from the
-primary horizontal lockup.
+primary horizontal lockup. Cache-busted production review then confirmed the
+same original lockup on `/brand` and at the direct transparent PNG URL.
 
 ## Unknown Or Unavailable
 
 - No original Illustrator or EPS lockup source was available. The approved
   primary lockup therefore remains raster artwork and is labeled honestly.
-- Live production state remains unavailable until v1.1.1 is deployed.
+- No original editable vector lockup source was available.
 
 ## Cross-Surface Overlaps
 
@@ -55,8 +56,8 @@ primary horizontal lockup.
 
 ## Recommended Next Move
 
-Publish v1.1.1 and verify the restored lockup, complete tree, downloads, and
-representative applications from cache-busted production URLs.
+Use v1.1.1 for new work. If original editable designer files are recovered,
+compare them with the approved raster lockup before any future replacement.
 
 ## Files Changed
 

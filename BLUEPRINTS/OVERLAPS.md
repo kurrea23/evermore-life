@@ -762,4 +762,4 @@ shows.
   lockup, and do not recreate standalone marks by cropping the horizontal PNG.
 - **Next move:** Use the original lockup file for horizontal branding and the
   complete tree master for avatars, icons, and compact tree placements.
-- **Status:** local correction complete; live verification pending
+- **Status:** completed — v1.1.1 live and cache-busted lockup verified
