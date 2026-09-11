@@ -13,7 +13,7 @@ const TEST_DATA_KEY = Buffer.from(Uint8Array.from({ length: 32 }, (_, index) => 
 
 // ── Fake D1 ────────────────────────────────────────────────────────────────
 function fakeDb(state) {
-  // state: { users:[], sessions:[], clients:[], activities:[], score_days:[] }
+  // state: { users:[], sessions:[], clients:[], activities:[], growth_applications:[], score_days:[] }
   const db = {
     prepare(sql) {
       return {
@@ -78,6 +78,14 @@ function fakeDb(state) {
       state.clients.push(row);
       return { ok: true };
     }
+    // growth applications
+    if (sql.startsWith("INSERT INTO growth_applications")) {
+      const columns = sql.slice(sql.indexOf("(") + 1, sql.indexOf(")")).split(", ").map((c) => c.trim());
+      const row = {};
+      columns.forEach((column, index) => { row[column] = binds[index]; });
+      state.growth_applications.push(row);
+      return { ok: true };
+    }
     // activities
     if (sql.startsWith("INSERT INTO activities")) {
       const [id, user_id, client_id, type, note, premium, meta_json, created_at] = binds;
@@ -140,9 +148,50 @@ function baseState() {
       { id: "c2", user_id: "u2", first_name: "Bob", last_name: "Ray", phone: "5559876543", status: "In Progress", intake_json: "{}" },
     ],
     activities: [],
+    growth_applications: [],
     score_days: [],
   };
 }
+
+test("POST /api/growth-applications stores a separate, consented B2B application", async () => {
+  const state = baseState();
+  const res = await worker.fetch(req("/api/growth-applications", {
+    method: "POST",
+    token: null,
+    body: {
+      first_name: "Alex", last_name: "Producer", email: "alex@example.com", phone: "555-555-1212",
+      agency: "Example Agency", operating_model: "Solo producer", package_interest: "Growth",
+      biggest_acquisition_problem: "Follow-up is inconsistent.", contact_consent: "on",
+    },
+  }), makeEnv(state));
+  assert.equal(res.status, 201);
+  const payload = await res.json();
+  assert.equal(payload.ok, true);
+  assert.equal(state.growth_applications.length, 1);
+  assert.equal(state.growth_applications[0].package_interest, "Growth");
+  assert.equal(state.clients.length, 2);
+});
+
+test("POST /api/growth-applications rejects missing consent and invalid package", async () => {
+  const state = baseState();
+  const res = await worker.fetch(req("/api/growth-applications", {
+    method: "POST",
+    token: null,
+    body: {
+      first_name: "Alex", last_name: "Producer", email: "alex@example.com", phone: "555-555-1212",
+      agency: "Example Agency", operating_model: "Solo producer", package_interest: "Unknown",
+      biggest_acquisition_problem: "Follow-up is inconsistent.", contact_consent: false,
+    },
+  }), makeEnv(state));
+  assert.equal(res.status, 400);
+  assert.equal(state.growth_applications.length, 0);
+});
+
+test("GET /api/growth-applications returns a method error without auth", async () => {
+  const res = await worker.fetch(req("/api/growth-applications", { method: "GET", token: null }), makeEnv(baseState()));
+  assert.equal(res.status, 405);
+  assert.equal(res.headers.get("allow"), "POST, OPTIONS");
+});
 
 function req(path, { method = "GET", token = "tok-u1", body } = {}) {
   return new Request("https://api.evermorelife.org" + path, {

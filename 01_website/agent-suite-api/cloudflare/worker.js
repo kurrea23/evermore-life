@@ -46,6 +46,13 @@ export default {
         return await handleLogout(request, env);
       }
 
+      // Public B2B intake is deliberately isolated from authenticated
+      // consumer/agent client records.
+      if (url.pathname === "/api/growth-applications") {
+        if (request.method === "POST") return await handleGrowthApplication(request, env);
+        return methodNotAllowed(request, env, "POST, OPTIONS");
+      }
+
       const auth = await requireUser(request, env);
       if (auth.error) return auth.error;
       const user = auth.user;
@@ -168,6 +175,62 @@ async function handleLogout(request, env) {
   const token = bearerToken(request);
   if (token) await env.DB.prepare("DELETE FROM sessions WHERE token = ?").bind(token).run();
   return json(request, env, { ok: true });
+}
+
+async function handleGrowthApplication(request, env) {
+  const body = await readJson(request, 90000);
+  if (body.error) return json(request, env, { error: body.error }, body.status);
+  const source = objectOrEmpty(body.value);
+  if (cleanString(source.website)) return json(request, env, { ok: true, application_id: null }, 201);
+
+  const required = ["first_name", "last_name", "email", "phone", "agency", "operating_model", "package_interest", "biggest_acquisition_problem"];
+  if (required.some((field) => !cleanString(source[field]))) {
+    return json(request, env, { error: "Please complete the required application fields." }, 400);
+  }
+  const email = cleanEmail(source.email);
+  if (!/^\S+@\S+\.\S+$/.test(email)) return json(request, env, { error: "Please provide a valid email address." }, 400);
+  if (source.contact_consent !== true && source.contact_consent !== "on") {
+    return json(request, env, { error: "Contact consent is required." }, 400);
+  }
+  const allowedPackages = new Set(["Launch", "Growth", "Team OS", "Not sure"]);
+  if (!allowedPackages.has(cleanString(source.package_interest))) {
+    return json(request, env, { error: "Please choose a valid package of interest." }, 400);
+  }
+
+  const id = crypto.randomUUID();
+  const now = nowIso();
+  const fields = {
+    first_name: cleanString(source.first_name).slice(0, 80),
+    last_name: cleanString(source.last_name).slice(0, 80),
+    email,
+    phone: cleanString(source.phone).slice(0, 40),
+    agency: cleanString(source.agency).slice(0, 160),
+    website_url: cleanString(source.website_url).slice(0, 300),
+    states_licensed: cleanString(source.states_licensed).slice(0, 300),
+    operating_model: cleanString(source.operating_model).slice(0, 40),
+    active_agents: cleanString(source.active_agents).slice(0, 40),
+    production_range: cleanString(source.production_range).slice(0, 80),
+    current_ad_spend: cleanString(source.current_ad_spend).slice(0, 80),
+    desired_ad_budget: cleanString(source.desired_ad_budget).slice(0, 80),
+    current_lead_sources: cleanString(source.current_lead_sources).slice(0, 500),
+    current_crm: cleanString(source.current_crm).slice(0, 120),
+    biggest_acquisition_problem: cleanString(source.biggest_acquisition_problem).slice(0, 2000),
+    package_interest: cleanString(source.package_interest).slice(0, 40),
+    preferred_contact_method: cleanString(source.preferred_contact_method).slice(0, 40),
+    contact_consent: 1,
+    created_at: now,
+    updated_at: now,
+  };
+  await env.DB.prepare(
+    `INSERT INTO growth_applications (
+      id, first_name, last_name, email, phone, agency, website_url,
+      states_licensed, operating_model, active_agents, production_range,
+      current_ad_spend, desired_ad_budget, current_lead_sources, current_crm,
+      biggest_acquisition_problem, package_interest, preferred_contact_method,
+      contact_consent, created_at, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  ).bind(id, ...Object.values(fields)).run();
+  return json(request, env, { ok: true, application_id: id }, 201);
 }
 
 async function requireUser(request, env) {
@@ -688,9 +751,9 @@ function mergeMetricSet(target, source) {
   for (const key of Object.keys(target)) target[key] += Number(source[key] || 0);
 }
 
-async function readJson(request) {
+async function readJson(request, maxBytes = MAX_JSON_BYTES) {
   const text = await request.text();
-  if (text.length > MAX_JSON_BYTES) return { error: "Request body is too large.", status: 413 };
+  if (text.length > maxBytes) return { error: "Request body is too large.", status: 413 };
   try {
     return { value: JSON.parse(text || "{}") };
   } catch {
