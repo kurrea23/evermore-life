@@ -522,3 +522,20 @@ do not rewrite history.
 - **Evidence:** `00_START_HERE/OPERATOR_STATE_UPDATE_2026-06-14.md`,
   `BLUEPRINTS/reports/2026-06-14_broad-cockpit-project-source-of-truth.md`
 - **Owner:** Evermore operator
+### 2026-09-10 - Make the production brand kit the canonical Evermore identity system
+
+- **Status:** approved
+- **Decision:** Use `https://evermorelife.org/brand` and
+  `04_content_narrative/evermore_life_brand_kit/` as the canonical source for
+  Evermore Life identity, logo usage, color, typography, voice, social,
+  application, email, print, and production downloads. Preserve the existing
+  gold tree-and-roots logo as the core mark. Use `Your legacy moves on.` as the
+  primary brand line, `Be there evermore.` as the supporting campaign line,
+  and the existing purpose/protection/leadership line only for recruiting.
+- **Why:** The operator explicitly requested a mature Evermore-specific brand
+  system comparable in completeness and usability to the AwardSignal kit.
+- **Consequences:** Future creative and product work should begin with the
+  packaged tokens, supplied assets, and usage rules. Templates with placeholder
+  identity or contact data still require review before publication.
+- **Evidence:** `BLUEPRINTS/reports/2026-09-10_evermore-brand-production-system.md`
+- **Owner:** Evermore operator

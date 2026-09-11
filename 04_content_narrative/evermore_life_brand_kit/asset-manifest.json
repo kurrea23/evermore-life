@@ -1,0 +1,273 @@
+{
+  "brand": "Evermore Life",
+  "version": "1.0.0",
+  "assetCount": 38,
+  "assets": [
+    {
+      "file": "evermore-logo-gold-transparent.png",
+      "group": "Logo",
+      "dimensions": "1040\u00d7466",
+      "background": "transparent",
+      "description": "Primary gold lockup"
+    },
+    {
+      "file": "evermore-logo-light.svg",
+      "group": "Logo",
+      "dimensions": "1200\u00d7420",
+      "background": "#F7F4EE",
+      "description": "Primary lockup \u00b7 light surfaces"
+    },
+    {
+      "file": "evermore-logo-light.png",
+      "group": "Logo",
+      "dimensions": "1200\u00d7420",
+      "background": "#F7F4EE",
+      "description": "Primary lockup \u00b7 light surfaces"
+    },
+    {
+      "file": "evermore-logo-dark.svg",
+      "group": "Logo",
+      "dimensions": "1200\u00d7420",
+      "background": "#091238",
+      "description": "Primary lockup \u00b7 dark surfaces"
+    },
+    {
+      "file": "evermore-logo-dark.png",
+      "group": "Logo",
+      "dimensions": "1200\u00d7420",
+      "background": "#091238",
+      "description": "Primary lockup \u00b7 dark surfaces"
+    },
+    {
+      "file": "evermore-logo-white.svg",
+      "group": "Logo",
+      "dimensions": "466\u00d7201",
+      "background": "transparent",
+      "description": "Monochrome white"
+    },
+    {
+      "file": "evermore-logo-white.png",
+      "group": "Logo",
+      "dimensions": "466\u00d7201",
+      "background": "transparent",
+      "description": "Monochrome white"
+    },
+    {
+      "file": "evermore-logo-black.svg",
+      "group": "Logo",
+      "dimensions": "466\u00d7201",
+      "background": "transparent",
+      "description": "Monochrome black"
+    },
+    {
+      "file": "evermore-logo-black.png",
+      "group": "Logo",
+      "dimensions": "466\u00d7201",
+      "background": "transparent",
+      "description": "Monochrome black"
+    },
+    {
+      "file": "evermore-tree-gold.svg",
+      "group": "Mark",
+      "dimensions": "151\u00d7193",
+      "background": "transparent",
+      "description": "Gold tree and roots mark"
+    },
+    {
+      "file": "evermore-tree-gold.png",
+      "group": "Mark",
+      "dimensions": "151\u00d7193",
+      "background": "transparent",
+      "description": "Gold tree and roots mark"
+    },
+    {
+      "file": "evermore-tree-white.svg",
+      "group": "Mark",
+      "dimensions": "151\u00d7193",
+      "background": "transparent",
+      "description": "White tree and roots mark"
+    },
+    {
+      "file": "evermore-tree-white.png",
+      "group": "Mark",
+      "dimensions": "151\u00d7193",
+      "background": "transparent",
+      "description": "White tree and roots mark"
+    },
+    {
+      "file": "evermore-tree-black.svg",
+      "group": "Mark",
+      "dimensions": "151\u00d7193",
+      "background": "transparent",
+      "description": "Black tree and roots mark"
+    },
+    {
+      "file": "evermore-tree-black.png",
+      "group": "Mark",
+      "dimensions": "151\u00d7193",
+      "background": "transparent",
+      "description": "Black tree and roots mark"
+    },
+    {
+      "file": "evermore-app-icon-1024.png",
+      "group": "Application",
+      "dimensions": "1024\u00d71024",
+      "background": "#091238",
+      "description": "App icon"
+    },
+    {
+      "file": "evermore-icon-512.png",
+      "group": "Application",
+      "dimensions": "512\u00d7512",
+      "background": "#091238",
+      "description": "Browser and app icon"
+    },
+    {
+      "file": "evermore-icon-192.png",
+      "group": "Application",
+      "dimensions": "192\u00d7192",
+      "background": "#091238",
+      "description": "Browser and app icon"
+    },
+    {
+      "file": "evermore-icon-180.png",
+      "group": "Application",
+      "dimensions": "180\u00d7180",
+      "background": "#091238",
+      "description": "Browser and app icon"
+    },
+    {
+      "file": "evermore-icon-32.png",
+      "group": "Application",
+      "dimensions": "32\u00d732",
+      "background": "#091238",
+      "description": "Browser and app icon"
+    },
+    {
+      "file": "evermore-icon-16.png",
+      "group": "Application",
+      "dimensions": "16\u00d716",
+      "background": "#091238",
+      "description": "Browser and app icon"
+    },
+    {
+      "file": "evermore-business-card-front-1050x600.png",
+      "group": "Print",
+      "dimensions": "1050\u00d7600 \u00b7 300dpi",
+      "background": "#091238",
+      "description": "Business card front template"
+    },
+    {
+      "file": "evermore-business-card-back-1050x600.png",
+      "group": "Print",
+      "dimensions": "1050\u00d7600 \u00b7 300dpi",
+      "background": "#F7F4EE",
+      "description": "Business card back template"
+    },
+    {
+      "file": "linkedin-company-cover-1512x256.png",
+      "group": "Social",
+      "dimensions": "1512\u00d7256",
+      "background": "#091238",
+      "description": "LinkedIn company cover"
+    },
+    {
+      "file": "facebook-page-cover-851x315.png",
+      "group": "Social",
+      "dimensions": "851\u00d7315",
+      "background": "#091238",
+      "description": "Facebook Page cover"
+    },
+    {
+      "file": "x-header-1500x500.png",
+      "group": "Social",
+      "dimensions": "1500\u00d7500",
+      "background": "#091238",
+      "description": "X profile header"
+    },
+    {
+      "file": "youtube-channel-banner-2560x1440.png",
+      "group": "Social",
+      "dimensions": "2560\u00d71440",
+      "background": "#091238",
+      "description": "YouTube channel banner"
+    },
+    {
+      "file": "social-feed-square-1080x1080.png",
+      "group": "Social",
+      "dimensions": "1080\u00d71080",
+      "background": "#091238",
+      "description": "Square feed master"
+    },
+    {
+      "file": "social-feed-portrait-1080x1350.png",
+      "group": "Social",
+      "dimensions": "1080\u00d71350",
+      "background": "#091238",
+      "description": "Portrait feed master"
+    },
+    {
+      "file": "social-story-reel-1080x1920.png",
+      "group": "Social",
+      "dimensions": "1080\u00d71920",
+      "background": "#091238",
+      "description": "Story and Reel master"
+    },
+    {
+      "file": "pinterest-pin-1000x1500.png",
+      "group": "Social",
+      "dimensions": "1000\u00d71500",
+      "background": "#091238",
+      "description": "Pinterest Pin master"
+    },
+    {
+      "file": "paid-social-landscape-1200x628.png",
+      "group": "Social",
+      "dimensions": "1200\u00d7628",
+      "background": "#091238",
+      "description": "Paid social landscape master"
+    },
+    {
+      "file": "evermore-open-graph.svg",
+      "group": "Application",
+      "dimensions": "1200\u00d7630",
+      "background": "varied",
+      "description": "Existing website social preview artwork"
+    },
+    {
+      "file": "brand-tokens.json",
+      "group": "Guidance",
+      "dimensions": "JSON",
+      "background": "n/a",
+      "description": "Design tokens and messaging architecture"
+    },
+    {
+      "file": "social-specs.json",
+      "group": "Guidance",
+      "dimensions": "JSON",
+      "background": "n/a",
+      "description": "Social dimensions and safe-zone rule"
+    },
+    {
+      "file": "email-signature.html",
+      "group": "Email",
+      "dimensions": "HTML",
+      "background": "transparent",
+      "description": "Editable email signature template"
+    },
+    {
+      "file": "email-header-1200x300.png",
+      "group": "Email",
+      "dimensions": "1200\u00d7300",
+      "background": "#091238",
+      "description": "Email header artwork"
+    },
+    {
+      "file": "README.md",
+      "group": "Guidance",
+      "dimensions": "Markdown",
+      "background": "n/a",
+      "description": "Brand kit usage guide"
+    }
+  ]
+}

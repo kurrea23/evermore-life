@@ -31,7 +31,7 @@ REPO_URL="https://github.com/kurrea23/evermore-life.git"
 BRANCH="main"
 PAGES_PROJECT="evermore-life"
 LIVE_URL="https://evermorelife.org"
-CHECK_ROUTES=("/" "/growth-calculator/" "/score-tracker/" "/clients/" "/today/" "/inbound-client-intake/")  # expect HTTP 200 after deploy
+CHECK_ROUTES=("/" "/brand" "/growth-calculator/" "/score-tracker/" "/clients/" "/today/" "/inbound-client-intake/")  # expect HTTP 200 after deploy
 MIN_FILES=100          # a healthy build has ~349 files; <100 means something is wrong
 WORKDIR="$(mktemp -d /tmp/evermore-deploy.XXXXXX)"
 

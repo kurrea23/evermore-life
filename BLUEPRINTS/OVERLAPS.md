@@ -711,3 +711,22 @@ shows.
   local completion flow, and choose a durable shared project-state store if
   future automations must read those completions.
 - **Status:** open
+### 2026-09-10 - The public brand system now governs website, campaign, product, email, and print work
+
+- **Surfaces:** Public website + content production + Agent Suite UI + email +
+  social + print
+- **Finding:** The Evermore identity has one production system built from the
+  existing gold tree-and-roots logo, a defined navy/gold/parchment palette,
+  Playfair Display and Inter typography roles, a three-line messaging
+  architecture, and machine-readable asset and social manifests.
+- **Evidence:** `01_website/v2/pages/brand.html`,
+  `04_content_narrative/evermore_life_brand_kit/asset-manifest.json`,
+  `04_content_narrative/evermore_life_brand_kit/brand-tokens.json`,
+  `BLUEPRINTS/reports/2026-09-10_evermore-brand-production-system.md`
+- **Impact:** New website, campaign, product, email, and print work should use
+  the same source files and guidance instead of independently sampling colors,
+  taglines, logo crops, or typography.
+- **Next move:** Treat `/brand` and the packaged manifest as the first check in
+  future creative and product QA; keep factual, compliance, and final-crop
+  review approval-gated.
+- **Status:** completed

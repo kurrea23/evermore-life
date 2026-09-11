@@ -32,6 +32,7 @@ flowchart LR
 | How does infrastructure connect? | `SYSTEM_MAP.md` | Verify time-sensitive live claims |
 | What should an operator do next? | `CODEX_MASTER_HANDOFF.md` and relevant handoff | Confirm it is still current |
 | What is the public-site source? | `01_website/current/` | Compare with the live GHL page |
+| Where is the Evermore Life brand source of truth? | `01_website/v2/pages/brand.html`, `01_website/v2/pages/brand.css`, and `04_content_narrative/evermore_life_brand_kit/` | Verify `https://evermorelife.org/brand`, every linked asset, and both ZIP packages after an approved deploy |
 | What is the stable website patch lane? | `01_website/v2/` and `01_website/state-pages/` | Patch in a clone/worktree and verify live before promotion |
 | Where is the live Sarah final-expense route? | `01_website/experiments/sarah-final-expense.html` and `/sarah` in `01_website/v2/cloudflare/evermore-live-proxy.js` | Verify `https://evermorelife.org/sarah` after Worker deploy before calling it live |
 | Where is the live client-intake app? | `01_website/experiments/Client-Intake.html`, intake PWA assets, and `/intake` in `01_website/v2/cloudflare/evermore-live-proxy.js` | Verify `https://evermorelife.org/intake`, `/intake.webmanifest`, `/intake-sw.js`, and `/intake-icon.svg` after Worker deploy |
@@ -53,6 +54,7 @@ flowchart LR
 | --- | --- | --- |
 | Daily command and active rooms | Human operator + cockpit | `00_START_HERE/active/` |
 | Website and funnel | GHL + repository source | `01_website/` |
+| Brand system and production assets | Evermore operator + website/content owners | `01_website/v2/pages/brand.html`, `01_website/v2/pages/brand.css`, `01_website/v2/pages/brand.js`, and `04_content_narrative/evermore_life_brand_kit/` |
 | Stable website base | Website agent | `01_website/v2/` and `01_website/state-pages/` |
 | Sarah final-expense landing route | Website agent + Cloudflare Worker | `01_website/experiments/sarah-final-expense.html` plus `/sarah` in `01_website/v2/cloudflare/evermore-live-proxy.js` |
 | Client-intake PWA route | Human operator + Cloudflare Worker asset bundle | `01_website/experiments/Client-Intake.html`, `01_website/experiments/intake.*`, and `/intake` in `01_website/v2/cloudflare/evermore-live-proxy.js` |

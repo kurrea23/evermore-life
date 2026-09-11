@@ -1,0 +1,28 @@
+{
+  "name": "Evermore Life",
+  "version": "1.0.0",
+  "colors": {
+    "evermoreNavy": "#091238",
+    "heritageNavy": "#142A52",
+    "legacyGold": "#C8A96E",
+    "warmGold": "#E5CB95",
+    "parchment": "#F7F4EE",
+    "paper": "#FFFCF7",
+    "ink": "#16223A",
+    "slate": "#66748A"
+  },
+  "typography": {
+    "display": "Playfair Display, Georgia, serif",
+    "sans": "Inter, Segoe UI, Arial, sans-serif"
+  },
+  "voice": [
+    "human",
+    "protective",
+    "clear",
+    "grounded",
+    "hopeful"
+  ],
+  "primaryTagline": "Your legacy moves on.",
+  "supportingLine": "Be there evermore.",
+  "recruitingLine": "Build with purpose. Protect families. Grow into leadership."
+}
