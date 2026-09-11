@@ -18,6 +18,8 @@ The canonical `/brand` page is now linked as **Brand Kit** from the footer of ev
 | All other public v2 page footers contain the same link | `01_website/v2/pages/{optin,privacy,terms,thank-you,chat,recruiting}.html` | high |
 | Future footer reuse includes the link | `01_website/v2/shared/_footer.html` | high |
 | The link targets the canonical brand route | `href="/brand"` in each footer | high |
+| Production serves the change from the approved commit | Cloudflare Pages deployment `c2347fcc.evermore-life.pages.dev`, commit `290e350` | high |
+| The live footer exposes Brand Kit and the target resolves | Cache-busted accessibility inspection of `https://evermorelife.org/#site-footer`; live `/brand` returned HTTP 200 | high |
 
 ## Map
 
@@ -25,11 +27,11 @@ The public brand destination remains `01_website/v2/pages/brand.html`, served at
 
 ## Visual Evidence
 
-Live visual verification is recorded through the deployed homepage footer and the existing `/brand` page; no repository screenshot was required for this navigation-only change.
+The cache-busted production homepage rendered the footer with **Brand Kit** between the copyright notice and legal links. Its accessible target resolved to `https://evermorelife.org/brand`. No repository screenshot was required for this navigation-only change.
 
 ## Unknown Or Unavailable
 
-None at implementation time. Production status is recorded only after live deployment and route verification.
+None. Production deployment and route verification completed successfully.
 
 ## Cross-Surface Overlaps
 
@@ -51,4 +53,3 @@ Use the footer link as the public entry point and continue keeping `/brand` out 
 - `01_website/v2/shared/_footer.html`
 - `BLUEPRINTS/OVERLAPS.md`
 - `BLUEPRINTS/DECISIONS.md`
-

@@ -777,4 +777,5 @@ shows.
   kit from the website without elevating it above customer-facing navigation.
 - **Next move:** Keep new public pages aligned with the shared footer and retain
   `/brand` as the canonical destination.
-- **Status:** implemented; production verification pending deployment
+- **Status:** completed — deployed from commit `290e350`; live footer and
+  `/brand` destination verified
