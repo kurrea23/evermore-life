@@ -763,3 +763,18 @@ shows.
 - **Next move:** Use the original lockup file for horizontal branding and the
   complete tree master for avatars, icons, and compact tree placements.
 - **Status:** completed — v1.1.1 live and cache-busted lockup verified
+
+### 2026-09-11 - The canonical brand system is now public footer navigation
+
+- **Surfaces:** Public website navigation + brand system + future website pages
+- **Finding:** The approved `/brand` source is linked as **Brand Kit** from every
+  public v2 page footer and the reusable shared footer, while remaining outside
+  primary navigation.
+- **Evidence:**
+  `BLUEPRINTS/reports/2026-09-11_public-brand-kit-footer-link.md` and
+  `01_website/v2/shared/_footer.html`
+- **Impact:** Visitors and collaborators can discover the source-of-truth brand
+  kit from the website without elevating it above customer-facing navigation.
+- **Next move:** Keep new public pages aligned with the shared footer and retain
+  `/brand` as the canonical destination.
+- **Status:** implemented; production verification pending deployment

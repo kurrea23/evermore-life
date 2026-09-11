@@ -574,3 +574,18 @@ do not rewrite history.
 - **Evidence:**
   `BLUEPRINTS/reports/2026-09-11_evermore-lockup-restoration.md`
 - **Owner:** Evermore operator
+
+### 2026-09-11 - Expose the canonical Brand Kit in the public website footer
+
+- **Status:** approved
+- **Decision:** Add a **Brand Kit** link targeting `/brand` to the bottom footer
+  navigation across public website pages, without adding it to the primary
+  header navigation.
+- **Why:** The operator explicitly requested that the finished brand kit become
+  part of the website at the bottom.
+- **Consequences:** The brand system is publicly discoverable from normal site
+  navigation while the customer-facing header stays focused on insurance and
+  recruiting actions.
+- **Evidence:**
+  `BLUEPRINTS/reports/2026-09-11_public-brand-kit-footer-link.md`
+- **Owner:** Evermore operator
