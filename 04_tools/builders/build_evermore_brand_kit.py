@@ -21,11 +21,10 @@ OUT = ROOT / "04_content_narrative" / "evermore_life_brand_kit"
 SOURCE_LOGO = ROOT / "01_website" / "v2" / "assets" / "evermorelife-llc-logo-nav.png"
 SOURCE_SQUARE = ROOT / "01_website" / "v2" / "assets" / "evermorelife-llc-logo.png"
 SOURCE_OG = ROOT / "01_website" / "v2" / "assets" / "og-evermore-life.svg"
-SOURCE_LOGO_MASTER = ROOT / "01_website" / "v2" / "assets" / "evermore-logo-master.svg"
 SOURCE_MARK_MASTER = ROOT / "01_website" / "v2" / "assets" / "evermore-tree-master.svg"
 SOURCE_MARK = ROOT / "01_website" / "v2" / "assets" / "evermore-tree-master.png"
 
-VERSION = "1.1.0"
+VERSION = "1.1.1"
 
 NAVY = "#091238"
 NAVY_MID = "#142A52"
@@ -78,14 +77,6 @@ def paste_center(base: Image.Image, image: Image.Image, center: tuple[int, int])
     base.paste(image, (x, y), image if image.mode == "RGBA" else None)
 
 
-def flat_gold(image: Image.Image) -> Image.Image:
-    """Normalize legacy dimensional artwork into the flat production gold."""
-    rgba = image.convert("RGBA")
-    normalized = Image.new("RGBA", rgba.size, (*hex_rgb(GOLD), 0))
-    normalized.putalpha(rgba.getchannel("A"))
-    return normalized
-
-
 def draw_tracking(draw: ImageDraw.ImageDraw, xy: tuple[int, int], text: str, fnt: ImageFont.FreeTypeFont,
                   fill: str, tracking: int = 3) -> None:
     x, y = xy
@@ -106,15 +97,12 @@ def draw_lines(draw: ImageDraw.ImageDraw, xy: tuple[int, int], lines: list[str],
 def logo_assets(logo: Image.Image, mark: Image.Image) -> list[dict]:
     items: list[dict] = []
     logo_trim = logo.crop(logo.getbbox())
-    logo_viewbox, logo_path = load_vector_master(SOURCE_LOGO_MASTER)
     mark_viewbox, mark_path = load_vector_master(SOURCE_MARK_MASTER)
     logo_scaled = fit(logo_trim, (1040, 466))
     logo_2x = Image.new("RGBA", (1040, 466), (0, 0, 0, 0))
     paste_center(logo_2x, logo_scaled, (520, 233))
     logo_2x.save(OUT / "evermore-logo-gold-transparent.png")
     items.append(asset("evermore-logo-gold-transparent.png", "Logo", "1040×466", "transparent", "Primary gold lockup"))
-    write_svg_vector(OUT / "evermore-logo-gold.svg", logo_viewbox, logo_path, GOLD, "Primary gold lockup")
-    items.append(asset("evermore-logo-gold.svg", "Logo", "vector", "transparent", "Primary gold vector lockup"))
 
     for name, bg, label in [
         ("evermore-logo-light", CREAM, "Light surfaces"),
@@ -124,7 +112,7 @@ def logo_assets(logo: Image.Image, mark: Image.Image) -> list[dict]:
         scaled = contain(logo_trim, (1040, 320))
         paste_center(image, scaled, (600, 210))
         image.save(OUT / f"{name}.png")
-        write_svg_vector_wrapper(OUT / f"{name}.svg", 1200, 420, bg, logo_viewbox, logo_path, GOLD, 80, 55, 1040, 310, label)
+        write_svg_wrapper(OUT / f"{name}.svg", 1200, 420, bg, logo_trim, 80, 55, 1040, 310, label)
         items.extend([
             asset(f"{name}.svg", "Logo", "1200×420", bg, f"Primary lockup · {label.lower()}"),
             asset(f"{name}.png", "Logo", "1200×420", bg, f"Primary lockup · {label.lower()}"),
@@ -139,7 +127,7 @@ def logo_assets(logo: Image.Image, mark: Image.Image) -> list[dict]:
         mono.putalpha(alpha)
         mono = contain(mono, (1040, 466))
         mono.save(OUT / f"{name}.png")
-        write_svg_vector(OUT / f"{name}.svg", logo_viewbox, logo_path, color, label)
+        write_svg_image(OUT / f"{name}.svg", mono.width, mono.height, mono, label)
         items.extend([
             asset(f"{name}.svg", "Logo", f"{mono.width}×{mono.height}", "transparent", label),
             asset(f"{name}.png", "Logo", f"{mono.width}×{mono.height}", "transparent", label),
@@ -416,7 +404,7 @@ def write_support_files(manifest: list[dict]) -> None:
     manifest.append(asset("email-signature.html", "Email", "HTML", "transparent", "Editable email signature template"))
 
     email_header = canvas((1200, 300), NAVY)
-    logo = flat_gold(Image.open(SOURCE_LOGO))
+    logo = Image.open(SOURCE_LOGO).convert("RGBA")
     paste_center(email_header, contain(logo, (720, 250)), (600, 150))
     email_header.save(OUT / "email-header-1200x300.png")
     manifest.append(asset("email-header-1200x300.png", "Email", "1200×300", NAVY, "Email header artwork"))
@@ -426,9 +414,11 @@ def write_support_files(manifest: list[dict]) -> None:
 Version {VERSION} · released {date.today().isoformat()}
 
 This package is the production source of truth for the Evermore Life identity.
-The original Evermore Life lockup silhouette is preserved as a true vector.
+The original Evermore Life dimensional script lockup is preserved from the
+approved transparent artwork. It is intentionally not retraced or redesigned.
 The standalone tree is recovered from the complete high-resolution emblem so
-its canopy and infinity roots are no longer cropped.
+its canopy and infinity roots are no longer cropped, and its SVG variants are
+true vector paths.
 
 ## Core identity
 
@@ -475,7 +465,7 @@ def main() -> None:
     if OUT.exists():
         shutil.rmtree(OUT)
     OUT.mkdir(parents=True)
-    logo = flat_gold(Image.open(SOURCE_LOGO))
+    logo = Image.open(SOURCE_LOGO).convert("RGBA")
     mark = Image.open(SOURCE_MARK).convert("RGBA")
 
     manifest: list[dict] = []

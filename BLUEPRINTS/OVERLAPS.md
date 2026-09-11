@@ -748,3 +748,18 @@ shows.
 - **Next move:** Reconcile older copied logos only in separately scoped work;
   use the v1.1.0 masters for every new placement.
 - **Status:** completed — v1.1.0 live and cache-busted assets verified
+
+### 2026-09-11 - Primary lockup and standalone tree require different source treatments
+
+- **Surfaces:** Public website + campaigns + social + email + print + product icons
+- **Finding:** Operator review rejected the flat path trace of the horizontal
+  Evermore Life lockup but approved the repaired complete standalone tree.
+  Version 1.1.1 restores the original dimensional lockup and keeps vector
+  reconstruction limited to standalone-tree placements.
+- **Evidence:**
+  `BLUEPRINTS/reports/2026-09-11_evermore-lockup-restoration.md`
+- **Impact:** Do not substitute the flat traced silhouette for the approved
+  lockup, and do not recreate standalone marks by cropping the horizontal PNG.
+- **Next move:** Use the original lockup file for horizontal branding and the
+  complete tree master for avatars, icons, and compact tree placements.
+- **Status:** local correction complete; live verification pending

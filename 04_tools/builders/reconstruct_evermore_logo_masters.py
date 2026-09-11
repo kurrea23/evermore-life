@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Reconstruct clean Evermore vector masters from the best existing artwork.
+"""Reconstruct the complete Evermore tree master from existing artwork.
 
-This is a one-time source-recovery tool. It traces the transparent horizontal
-lockup for an exact flat vector silhouette and extracts the complete tree from
-the larger circular emblem so the standalone mark does not inherit the cropped
-left canopy from the horizontal artwork.
+The approved dimensional script lockup remains untouched. This one-time
+source-recovery tool extracts only the complete tree from the larger circular
+emblem so the standalone mark does not inherit the cropped left canopy from
+the horizontal artwork.
 """
 
 from __future__ import annotations
@@ -19,7 +19,6 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "01_website" / "v2" / "assets"
-LOCKUP_SOURCE = ASSETS / "evermorelife-llc-logo-nav.png"
 EMBLEM_SOURCE = ROOT / "01_website" / "assets" / "images" / "evermore_logo.png"
 
 
@@ -56,20 +55,6 @@ def write_master(path: Path, width: int, height: int, vector_path: str, title: s
         f'''  <path d="{vector_path}" fill="#C8A96E" fill-rule="evenodd"/>\n'''
         f'''</svg>\n''',
         encoding="utf-8",
-    )
-
-
-def reconstruct_lockup() -> None:
-    image = Image.open(LOCKUP_SOURCE).convert("RGBA")
-    alpha = np.asarray(image.getchannel("A"))
-    mask = np.where(alpha >= 26, 255, 0).astype(np.uint8)
-    mask = clean_components(mask, 2)
-    write_master(
-        ASSETS / "evermore-logo-master.svg",
-        image.width,
-        image.height,
-        contours_to_path(mask, 0.38),
-        "Evermore Life Insurance LLC primary lockup",
     )
 
 
@@ -112,9 +97,8 @@ def reconstruct_tree() -> None:
 
 
 def main() -> None:
-    reconstruct_lockup()
     reconstruct_tree()
-    print("Reconstructed Evermore lockup and complete standalone tree masters")
+    print("Reconstructed complete Evermore standalone tree master")
 
 
 if __name__ == "__main__":

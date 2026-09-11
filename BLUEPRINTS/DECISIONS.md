@@ -557,3 +557,20 @@ do not rewrite history.
 - **Evidence:**
   `BLUEPRINTS/reports/2026-09-11_evermore-logo-master-reconstruction.md`
 - **Owner:** Evermore operator
+
+### 2026-09-11 - Restore the original dimensional lockup and keep only the repaired tree vector
+
+- **Status:** approved; reverses the v1.1.0 primary-lockup trace only
+- **Decision:** Restore the approved original Evermore Life dimensional script
+  lockup everywhere and remove the rejected flat traced lockup. Keep the
+  complete reconstructed standalone tree, its gold/white/black vector variants,
+  and the simplified small browser icons.
+- **Why:** The operator reviewed v1.1.0 and found the standalone tree good but
+  the traced Evermore Life lockup visibly incorrect and unacceptable.
+- **Consequences:** Brand kit v1.1.1 clearly separates two sources: the original
+  raster lockup is preserved without redesign, while standalone-tree uses rely
+  on the repaired vector. The kit no longer claims that the primary lockup is a
+  true vector.
+- **Evidence:**
+  `BLUEPRINTS/reports/2026-09-11_evermore-lockup-restoration.md`
+- **Owner:** Evermore operator

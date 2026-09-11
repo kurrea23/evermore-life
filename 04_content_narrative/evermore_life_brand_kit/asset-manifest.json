@@ -1,7 +1,7 @@
 {
   "brand": "Evermore Life",
-  "version": "1.1.0",
-  "assetCount": 39,
+  "version": "1.1.1",
+  "assetCount": 38,
   "assets": [
     {
       "file": "evermore-logo-gold-transparent.png",
@@ -9,13 +9,6 @@
       "dimensions": "1040\u00d7466",
       "background": "transparent",
       "description": "Primary gold lockup"
-    },
-    {
-      "file": "evermore-logo-gold.svg",
-      "group": "Logo",
-      "dimensions": "vector",
-      "background": "transparent",
-      "description": "Primary gold vector lockup"
     },
     {
       "file": "evermore-logo-light.svg",
