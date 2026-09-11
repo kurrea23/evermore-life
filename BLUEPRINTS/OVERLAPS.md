@@ -745,6 +745,6 @@ shows.
 - **Impact:** Any surface retaining an older copied logo/tree file may continue
   to show the cropped mark; future work should use the canonical kit rather
   than recropping website PNGs.
-- **Next move:** Publish v1.1.0 and verify representative assets at the live
-  `/brand` route; reconcile older copied logos only in separately scoped work.
-- **Status:** local reconstruction complete; live verification pending
+- **Next move:** Reconcile older copied logos only in separately scoped work;
+  use the v1.1.0 masters for every new placement.
+- **Status:** completed — v1.1.0 live and cache-busted assets verified

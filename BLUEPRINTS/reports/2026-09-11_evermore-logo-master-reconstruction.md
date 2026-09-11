@@ -27,7 +27,7 @@ dependent application/social/email/print exports, and reserves a simplified
 | The deterministic kit contains 39 documented v1.1.0 assets | `asset-manifest.json`; builder output | high |
 | Every local file linked by the brand page resolves | 38-URL local HTTP check on 2026-09-11 | high |
 | Both v1.1.0 archives are internally valid | Python `ZipFile.testzip()` and `unzip -t` | high |
-| Live production verification | Pending deployment and cache-busted readback | unavailable |
+| Live production verification | Commit `6a10318`; Cloudflare Pages deployment `023c4f95`; cache-busted `/brand` and direct SVG review | high |
 
 ## Map
 
@@ -46,15 +46,15 @@ Local browser review confirmed that the lockup remains recognizable in its
 original script silhouette, now with crisp flat-gold edges. Direct review of
 the standalone SVG confirmed both sides of the canopy and the full infinity
 roots are present. The app icon, social square, business-card back, and 32px
-browser icon were also reviewed after regeneration.
+browser icon were also reviewed after regeneration. The production page and
+standalone tree were then visually rechecked from cache-busted live URLs.
 
 ## Unknown Or Unavailable
 
 - The path masters are evidence-based reconstructions of existing artwork, not
   original designer source files. If original Illustrator/EPS artwork is later
   recovered, compare it before replacing these masters.
-- Live production state remains unavailable until the approved release is
-  deployed and verified.
+- No original Illustrator or EPS source was available for comparison.
 
 ## Cross-Surface Overlaps
 
@@ -64,8 +64,9 @@ browser icon were also reviewed after regeneration.
 
 ## Recommended Next Move
 
-Commit and publish v1.1.0, then verify `/brand`, the eight path-based SVGs, both
-ZIPs, and representative applications from a cache-busted production URL.
+Use the v1.1.0 masters for new work. If original designer source files are
+recovered, compare their geometry with the reconstructed masters before any
+replacement.
 
 ## Files Changed
 
