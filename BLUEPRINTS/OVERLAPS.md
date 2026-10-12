@@ -17,6 +17,27 @@ shows.
 
 ---
 
+### 2026-10-12 - Virtual office connects public traffic with private advisor work
+
+- **Surfaces:** Public website + Zoom + authenticated intake + brand + content
+- **Finding:** The local `/virtual-office/` draft can direct visitors into an
+  approved participant Zoom link during exact dated staffed windows. It does
+  not observe live host presence or replace secure intake. Basic permits a
+  small pilot but its 40-minute meeting limit includes the office and all
+  breakouts; co-host controls require a paid account.
+- **Evidence:** `BLUEPRINTS/reports/2026-10-12_virtual-office-pilot.md`,
+  `virtual-office/README.md`, `03_sales_marketing/virtual-office/README.md`,
+  and official Zoom references linked there
+- **Impact:** Public visitors must stay out of internal advisor tools, and the
+  host must remain available to route separate households. A stale recurring
+  weekly schedule should not imply an unattended office is staffed. Organic
+  posts and paid ads depend on tested live admission and follow-up.
+- **Next move:** Verify the newly approved Zoom meeting, approve actual staffing
+  dates, test one visitor-to-breakout handoff, then approve the Pages release.
+  Existing Pages fallback is the intended route; no shared Worker patch is
+  required for this draft.
+- **Status:** open; local source and artwork ready, public activation pending
+
 ### 2026-07-16 - Inbound Intake production release closes the browser-only gap
 
 - **Surfaces:** Inbound Intake + Agent Suite API/D1 + Pipeline + Pages + live

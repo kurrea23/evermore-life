@@ -34,6 +34,7 @@ flowchart LR
 | What is the public-site source? | `01_website/current/` | Compare with the live GHL page |
 | Where is the Evermore Life brand source of truth? | `01_website/v2/pages/brand.html`, `01_website/v2/pages/brand.css`, and `04_content_narrative/evermore_life_brand_kit/` | Verify `https://evermorelife.org/brand`, every linked asset, and both ZIP packages after an approved deploy |
 | What is the stable website patch lane? | `01_website/v2/` and `01_website/state-pages/` | Patch in a clone/worktree and verify live before promotion |
+| Where is the virtual office pilot draft? | `virtual-office/index.html`, `virtual-office/office-config.json`, and `03_sales_marketing/virtual-office/README.md` | Local draft only; approve staffed hours, create/test the Zoom meeting, and verify `/virtual-office/` after an approved Pages release before traffic |
 | Where is the live Sarah final-expense route? | `01_website/experiments/sarah-final-expense.html` and `/sarah` in `01_website/v2/cloudflare/evermore-live-proxy.js` | Verify `https://evermorelife.org/sarah` after Worker deploy before calling it live |
 | Where is the live client-intake app? | `01_website/experiments/Client-Intake.html`, intake PWA assets, and `/intake` in `01_website/v2/cloudflare/evermore-live-proxy.js` | Verify `https://evermorelife.org/intake`, `/intake.webmanifest`, `/intake-sw.js`, and `/intake-icon.svg` after Worker deploy |
 | Where is the live inbound-call worksheet? | `inbound-client-intake/index.html` plus `agent-suite-intake-continuity.js` | `https://evermorelife.org/inbound-client-intake/` is the verified authenticated 15-step workflow using `/api/clients`; `01_website/experiments/Client-Intake-Guided.html` remains a compatibility redirect |
@@ -57,6 +58,7 @@ flowchart LR
 | Website and funnel | GHL + repository source | `01_website/` |
 | Brand system and production assets | Evermore operator + website/content owners | `01_website/v2/pages/brand.html`, `01_website/v2/pages/brand.css`, `01_website/v2/pages/brand.js`, and `04_content_narrative/evermore_life_brand_kit/` |
 | Stable website base | Website agent | `01_website/v2/` and `01_website/state-pages/` |
+| Virtual office pilot draft | Evermore operator + website owners + Zoom host | `virtual-office/`, `03_sales_marketing/virtual-office/README.md`, and `04_content_narrative/virtual-office/`; proposed route `/virtual-office/`, not deployed |
 | Sarah final-expense landing route | Website agent + Cloudflare Worker | `01_website/experiments/sarah-final-expense.html` plus `/sarah` in `01_website/v2/cloudflare/evermore-live-proxy.js` |
 | Client-intake PWA route | Human operator + Cloudflare Worker asset bundle | `01_website/experiments/Client-Intake.html`, `01_website/experiments/intake.*`, and `/intake` in `01_website/v2/cloudflare/evermore-live-proxy.js` |
 | Inbound client intake sheet | Evermore operator + Agent Suite backend | `inbound-client-intake/index.html`, `agent-suite-intake-continuity.js`, and live route `https://evermorelife.org/inbound-client-intake/` |

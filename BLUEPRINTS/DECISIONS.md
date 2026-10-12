@@ -16,6 +16,57 @@ do not rewrite history.
 
 ---
 
+### 2026-10-12 - Draft a Zoom-based Evermore virtual office on a feature branch
+
+- **Status:** approved for local implementation; schedule suggestions and external activation remain unapproved
+- **Decision:** Build a short branded landing page, an Evermore navy/gold Zoom
+  background with the approved logo bottom right in a gold frame, and a standard
+  host/teammate breakout-room playbook. Use Zoom Basic for the initial pilot and
+  keep the established client-intake system as the advisor workflow.
+- **Why:** The operator requested a new feature branch for a staffed virtual
+  support office and asked for an easy standardized outline, suggested hours,
+  and help obtaining the Zoom link.
+- **Consequences:** Local source lives at `virtual-office/`; joining ships
+  disabled. A proposed two-week pilot uses Tuesday/Thursday evenings and Saturday
+  morning 30-minute sessions in Phoenix time. The proposal does not authorize
+  staffing commitments, account-setting changes, paid licensing, deployment,
+  posts, ads, or messages.
+- **Evidence:** `BLUEPRINTS/reports/2026-10-12_virtual-office-pilot.md`,
+  `03_sales_marketing/virtual-office/README.md`, and the operator request in-session
+- **Owner:** Evermore operator; website owner handles the approved release and
+  Zoom host verifies the visitor-to-breakout flow
+
+### 2026-10-12 - Create the free reusable Zoom office meeting
+
+- **Status:** approved and created; live visitor flow and website deployment remain pending
+- **Decision:** Save a dedicated Basic-plan recurring No Fixed Time meeting
+  named **Evermore Life Insurance Support Room**, with passcode, Waiting Room,
+  muted entry, and automatic recording/transcription disabled in the draft.
+- **Why:** After reviewing the concrete meeting draft, the operator explicitly
+  selected **Save the free office meeting**.
+- **Consequences:** The approved participant URL is stored in
+  `virtual-office/office-config.json`; reports omit its embedded participant
+  passcode. No invitations, calendar connection, purchases, or website release
+  were included. Joining stays disabled until staffing and the live handoff test.
+- **Evidence:** `BLUEPRINTS/reports/2026-10-12_virtual-office-pilot.md`,
+  `BLUEPRINTS/visuals/virtual-office/zoom-meeting-created.png`, and verified
+  Zoom Meeting Information page after Save
+- **Owner:** Evermore operator / designated Zoom host
+
+### 2026-10-12 - Enable Zoom meeting breakout rooms for the office
+
+- **Status:** approved and saved; live visitor-to-room handoff remains untested
+- **Decision:** Enable **Breakout room – Meetings** in the signed-in host account.
+- **Why:** Read-only inspection found the setting off. The operator explicitly
+  approved **Enable breakout rooms** after reviewing the current setting.
+- **Consequences:** The host can create and assign meeting breakout rooms.
+  Existing optional breakout defaults were preserved. This does not establish
+  staffed hours or authorize starting a live session or website publication.
+- **Evidence:** `BLUEPRINTS/visuals/virtual-office/zoom-breakout-enabled.png`,
+  checked and enabled switch in the account's saved settings, and
+  `BLUEPRINTS/reports/2026-10-12_virtual-office-pilot.md`
+- **Owner:** Evermore Zoom host
+
 ### 2026-07-16 - Release the server-first Inbound Intake to production
 
 - **Status:** approved and completed
