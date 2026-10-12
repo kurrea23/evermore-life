@@ -44,7 +44,9 @@ The button starts disabled, opens only within a valid configured session, and
 checks availability again on click. Missing/invalid settings, non-Zoom URLs,
 failed refreshes, stale configuration, and expired sessions disable joining.
 Configuration refreshes each minute and after returning to the tab; the state
-refreshes each second. No visitor intake, chat, analytics, or browser storage is
+refreshes each second. Root `_headers` disables caching for the office configuration
+on Cloudflare Pages so updated staffing is not served from an old cached response.
+No visitor intake, chat, analytics, or browser storage is
 added by this page. Existing callback and legal links use the public site routes.
 
 ## Local preview and checks
