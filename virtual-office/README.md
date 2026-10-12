@@ -4,10 +4,10 @@ Canonical source: `virtual-office/index.html`. **Published October 12, 2026** at
 [evermorelife.org/virtual-office/](https://evermorelife.org/virtual-office/),
 served as a root-level static directory through the existing Cloudflare Pages
 fallback. The operator approved scheduled entry for a two-week pilot,
-**October 13–24, 2026**, in Phoenix time: Tuesday/Thursday 5:30–6 p.m. and
-Saturday 10–10:30 a.m. Joining opens only inside those six dated windows and
+**October 13–23, 2026**, Monday–Friday **9 a.m.–5 p.m. Phoenix time**.
+Joining opens only inside those nine dated weekday windows and
 closes after the final session. No public navigation changed. See the
-[activation receipt](../BLUEPRINTS/reports/2026-10-12_virtual-office-hours-activation.md).
+[hours correction](../BLUEPRINTS/reports/2026-10-12_virtual-office-business-hours.md).
 
 The visitor page is intentionally short and uses the existing approved brand.
 Operator instructions live in the
@@ -28,18 +28,27 @@ remaining fields when future staffing dates are approved:
   `false` and deploy if the office must close early.
 - `proposal`: display suggestions while disabled/unconfigured; never enables joining.
 
-The first approved Tuesday pilot window:
+The first approved weekday window:
 
 ```json
-{"startsAt":"2026-10-13T17:30:00-07:00","endsAt":"2026-10-13T18:00:00-07:00"}
+{"startsAt":"2026-10-13T09:00:00-07:00","endsAt":"2026-10-13T17:00:00-07:00"}
 ```
 
 Use dated windows so last week’s schedule cannot reopen an unattended office.
 All sessions use the same approved Zoom participant URL for the initial pilot.
-If Zoom requires separate meeting URLs for weekdays and Saturday, add per-session
-URL support and tests before enabling those sessions; do not silently use the
-wrong meeting. Weekly labels do not turn into sessions automatically. After
-October 24, approve and publish the next set of dated windows to continue.
+Weekly labels do not turn into sessions automatically. After October 23,
+approve and publish the next set of dated windows to continue. The last day
+in the original pilot span, October 24, is Saturday and is now closed.
+
+The page displays matching hours for Arizona, Pacific, Mountain, Central and
+Eastern time. `office-hours.mjs` converts the next/current session's actual
+instants with IANA zones and Intl, so daylight-saving offsets are date-correct.
+The rows are time conversions, not a statement of licensed service coverage.
+The dense list of individual dates is replaced by this compact time-zone view.
+
+The eight-hour page window does not remove Zoom Basic's 40-minute limit for
+active participant meetings. A continuous 9–5 meeting requires an approved paid
+host license. No upgrade or payment was made for this change.
 
 Availability means scheduled hours, not live host presence. The browser uses the
 visitor’s clock; it cannot verify staffing, capacity, or whether Zoom has started.

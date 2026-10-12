@@ -4,33 +4,34 @@
 [evermorelife.org/virtual-office/](https://evermorelife.org/virtual-office/).
 Approved free recurring Zoom meeting created and participant link saved in the
 [page configuration](../../virtual-office/office-config.json).
-The operator approved scheduled joining for **October 13–24, 2026**. Entry
-opens during the six configured sessions and closes outside them. The host
+The operator corrected the office to **Monday–Friday, 9 a.m.–5 p.m. Phoenix time**.
+The current pilot runs **October 13–23, 2026**. Entry opens during nine configured
+weekday windows and closes outside them. The host
 starts Zoom manually; a teammate handoff rehearsal remains outstanding.
 **Purpose:** welcome visitors on video, explain life insurance with screen sharing,
 and move each visitor into a private conversation with an available teammate.
 
 ## Approved pilot hours
 
-Run a two-week pilot with three 30-minute sessions each week, all in
+Run weekday business hours within the existing two-week pilot, all in
 **America/Phoenix (Arizona, Mountain Standard Time)**:
 
 | Day | Time |
 | --- | --- |
-| Tuesday | 5:30–6:00 p.m. |
-| Thursday | 5:30–6:00 p.m. |
-| Saturday | 10:00–10:30 a.m. |
+| Monday–Friday | 9:00 a.m.–5:00 p.m. |
+| Saturday–Sunday | Closed |
 
-These hours were approved by the operator on October 12, 2026. The first
-session is Tuesday, October 13; the last is Saturday, October 24. Start Zoom five
-minutes early. On Basic, the meeting clock applies to the entire office and
-breakouts; later arrivals do not receive a fresh 40-minute window. Plan to finish
-before the limit. Offer a scheduled follow-up for a longer application.
+The corrected hours were approved by the operator on October 12, 2026. The
+first window is Tuesday, October 13; the last is Friday, October 23. Start Zoom
+five minutes early. Basic ends most active meetings after 40 minutes, including
+breakouts. A continuous 9–5 room needs a paid host license; the corrected page
+schedule does not extend Zoom's free meeting limit. No upgrade was purchased.
+Before operating an uninterrupted office, the operator must approve that license.
 
-After October 24, the page stays closed until a new dated schedule is approved
+After October 23, the page stays closed until a new dated schedule is approved
 and published. Review visits, wait times, completed conversations, applications,
-and missed visitors. Keep the strongest hours. If demand supports it, approve a
-paid host license and expand to 60–90 minutes per session.
+and missed visitors. Review staffing for the 9–5 window and publish the next
+approved dated schedule if continuing.
 
 ## One office, two roles
 
@@ -67,7 +68,7 @@ below document the repeatable setup; do not create a duplicate meeting.
    use it for the pilot’s different weekday/weekend times. Zoom documents this
    reusable-link option but also warns it will be removed in the future. Confirm
    availability in the current account; if absent, create scheduled recurring
-   weekday and Saturday meetings and revise the page to use each session’s link.
+   weekday meetings and revise the page to use each session’s link.
 5. Generate a dedicated meeting ID. Keep **Passcode** and **Waiting Room** on.
    Keep join-before-host off. Keep recording, AI summaries/transcripts, persistent
    meeting chat, and participant self-selection of rooms off for this pilot.

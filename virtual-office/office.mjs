@@ -1,4 +1,5 @@
 import { availability } from './availability.mjs';
+import { DISPLAY_ZONES, hoursInZone } from './office-hours.mjs';
 
 let config = null;
 let checkedAt = 0;
@@ -23,16 +24,21 @@ function render() {
   $('join').disabled = !state.joinUrl;
   const list = $('sessions');
   list.replaceChildren();
-  $('hours-title').textContent = state.state === 'unconfigured' ? 'Proposed pilot hours' : 'Office hours';
+  $('hours-title').textContent = 'Office hours';
   $('timezone').textContent = 'All times shown in Phoenix, Arizona.';
-  const add = text => { const li = document.createElement('li'); li.textContent = text; list.append(li); };
+  const add = (label, value) => {
+    const li = document.createElement('li');
+    const name = document.createElement('span'); name.textContent = label; li.append(name);
+    if (value) { const hours = document.createElement('span'); hours.textContent = value; li.append(hours); }
+    list.append(li);
+  };
   if (state.state === 'unavailable') { add('Please check back for office hours.'); return; }
-  const time = new Intl.DateTimeFormat('en-US', { timeZone: config.timeZone, hour: 'numeric', minute: '2-digit' });
-  const date = new Intl.DateTimeFormat('en-US', { timeZone: config.timeZone, weekday: 'short', month: 'short', day: 'numeric' });
-  const zone = new Intl.DateTimeFormat('en-US', { timeZone: config.timeZone, timeZoneName: 'long' }).formatToParts().find(p => p.type === 'timeZoneName').value;
-  $('timezone').textContent = `${config.timeZone.replaceAll('_', ' ')} · ${zone}`;
-  if (state.sessions.length) state.sessions.slice(0, 6).forEach(s => add(`${date.format(s.start)} · ${time.format(s.start)}–${time.format(s.end)}`));
-  else if (state.state === 'unconfigured' && Array.isArray(config.proposal)) config.proposal.forEach(add);
+  $('timezone').textContent = config.hoursLabel || 'Office hours by time zone';
+  if (state.sessions.length) {
+    const session = state.sessions[0];
+    DISPLAY_ZONES.forEach(zone => add(zone.label, hoursInZone(session.start, session.end, zone.timeZone)));
+  }
+  else if (state.state === 'unconfigured' && Array.isArray(config.proposal)) config.proposal.forEach(text => add(text));
   else add('Our next session will be announced here.');
 }
 async function refresh() {

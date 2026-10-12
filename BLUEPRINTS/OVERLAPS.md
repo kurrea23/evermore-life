@@ -17,6 +17,23 @@ shows.
 
 ---
 
+### 2026-10-12 - Weekday office hours and regional clocks must represent one window
+
+- **Surfaces:** Visitor page + time-zone conversion + Zoom license and staffing
+- **Finding:** The corrected 9–5 Phoenix window is displayed across the main
+  continental U.S. zones. Those rows represent the same session instants, not
+  separate 9–5 offices. Arizona's DST behavior differs from other regions.
+  An eight-hour visitor-entry window does not extend Zoom Basic's meeting limit.
+- **Evidence:** `BLUEPRINTS/reports/2026-10-12_virtual-office-business-hours.md`,
+  `virtual-office/office-hours.mjs`, `03_sales_marketing/virtual-office/README.md`
+- **Impact:** Hard-coded offsets become wrong after DST changes. Visitors need
+  date-aware equivalents, and continuous room operation needs an approved paid
+  host license plus human staffing. Conversion rows do not establish licensed
+  insurance coverage or team locations.
+- **Next move:** Review staffing/license for continuous operation; extend the
+  dated schedule when the current pilot ends October 23.
+- **Status:** corrected schedule and conversion prepared for deployment
+
 ### 2026-10-12 - Approved scheduled entry needs a human Zoom host
 
 - **Surfaces:** Public office page + Zoom operation + source control

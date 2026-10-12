@@ -16,6 +16,24 @@ do not rewrite history.
 
 ---
 
+### 2026-10-12 - Replace short pilot slots with weekday 9–5 hours and time-zone rows
+
+- **Status:** approved for implementation and deployment
+- **Decision:** Replace Tuesday/Thursday evening and Saturday morning slots
+  with Monday–Friday 9 a.m.–5 p.m., using the established Phoenix office clock.
+  Preserve the existing pilot date span; its nine weekdays are October 13–23.
+  Display Arizona, Pacific, Mountain, Central and Eastern equivalents instead
+  of the individual-date list, calculated from the next/current session.
+- **Why:** The operator explicitly corrected the hours to “like 9-5” and asked
+  to show the time zones. Phoenix is the existing base time zone; business
+  weekdays are the stated implementation assumption.
+- **Consequences:** No weekend entry; date-aware conversions handle daylight
+  saving changes. This approves website scheduling and publication, not a paid
+  Zoom upgrade. Basic cannot provide an uninterrupted eight-hour meeting.
+- **Evidence:** `BLUEPRINTS/reports/2026-10-12_virtual-office-business-hours.md`,
+  `virtual-office/office-config.json`, `virtual-office/office-hours.mjs`
+- **Owner:** Evermore operator / Zoom host
+
 ### 2026-10-12 - Activate the approved two-week virtual office hours
 
 - **Status:** approved and deployed; scheduled entry verified live
