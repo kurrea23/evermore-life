@@ -32,7 +32,7 @@ shows.
   insurance coverage or team locations.
 - **Next move:** Review staffing/license for continuous operation; extend the
   dated schedule when the current pilot ends October 23.
-- **Status:** corrected schedule and conversion prepared for deployment
+- **Status:** corrected schedule and conversion deployed and verified
 
 ### 2026-10-12 - Approved scheduled entry needs a human Zoom host
 

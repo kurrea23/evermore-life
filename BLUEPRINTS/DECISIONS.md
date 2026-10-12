@@ -18,7 +18,7 @@ do not rewrite history.
 
 ### 2026-10-12 - Replace short pilot slots with weekday 9–5 hours and time-zone rows
 
-- **Status:** approved for implementation and deployment
+- **Status:** approved, deployed and verified live
 - **Decision:** Replace Tuesday/Thursday evening and Saturday morning slots
   with Monday–Friday 9 a.m.–5 p.m., using the established Phoenix office clock.
   Preserve the existing pilot date span; its nine weekdays are October 13–23.
