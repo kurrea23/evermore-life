@@ -33,7 +33,7 @@ shows.
 - **Next move:** Rehearse before October 13's session. Treat Desktop branch
   reconciliation as separate work preserving all existing changes; do not
   switch or reset that checkout blindly.
-- **Status:** schedule approved and prepared for release; human rehearsal pending
+- **Status:** scheduled entry deployed and verified; human rehearsal pending
 
 ### 2026-10-12 - Publishing the office page does not establish staffed availability
 

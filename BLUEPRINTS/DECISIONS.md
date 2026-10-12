@@ -18,7 +18,7 @@ do not rewrite history.
 
 ### 2026-10-12 - Activate the approved two-week virtual office hours
 
-- **Status:** approved; scheduled entry enabled in source for deployment
+- **Status:** approved and deployed; scheduled entry verified live
 - **Decision:** Enable the six dated October 13–24 pilot sessions in
   `virtual-office/office-config.json`: Tuesday/Thursday 5:30–6 p.m. and Saturday
   10–10:30 a.m., America/Phoenix. Publish through the existing Pages workflow.
