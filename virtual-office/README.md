@@ -3,8 +3,11 @@
 Canonical source: `virtual-office/index.html`. **Published October 12, 2026** at
 [evermorelife.org/virtual-office/](https://evermorelife.org/virtual-office/),
 served as a root-level static directory through the existing Cloudflare Pages
-fallback. Joining remains disabled with no staffed date windows. No public
-navigation changed. See the [release receipt](../BLUEPRINTS/reports/2026-10-12_virtual-office-cloudflare-release.md).
+fallback. The operator approved scheduled entry for a two-week pilot,
+**October 13–24, 2026**, in Phoenix time: Tuesday/Thursday 5:30–6 p.m. and
+Saturday 10–10:30 a.m. Joining opens only inside those six dated windows and
+closes after the final session. No public navigation changed. See the
+[activation receipt](../BLUEPRINTS/reports/2026-10-12_virtual-office-hours-activation.md).
 
 The visitor page is intentionally short and uses the existing approved brand.
 Operator instructions live in the
@@ -13,7 +16,7 @@ Operator instructions live in the
 ## Configure for an approved session
 
 The approved Zoom participant link is already in `office-config.json`. Edit the
-remaining fields after the meeting flow and staffing are verified:
+remaining fields when future staffing dates are approved:
 
 - `zoomJoinUrl`: approved HTTPS Zoom participant URL, `/j/` + 9–11 digit ID.
   Include an approved embedded participant passcode if desired. Never use host
@@ -21,11 +24,11 @@ remaining fields after the meeting flow and staffing are verified:
 - `timeZone`: display timezone; default `America/Phoenix`.
 - `sessions`: exact staffed date windows, each with ISO `startsAt` and `endsAt`,
   including seconds and an explicit timezone offset or `Z`.
-- `enabled`: `true` only after meeting testing and approved staffing. Set
+- `enabled`: `true` for the operator-approved scheduled pilot. Set
   `false` and deploy if the office must close early.
 - `proposal`: display suggestions while disabled/unconfigured; never enables joining.
 
-For example, a Tuesday pilot date window (illustrative, not an approved commitment):
+The first approved Tuesday pilot window:
 
 ```json
 {"startsAt":"2026-10-13T17:30:00-07:00","endsAt":"2026-10-13T18:00:00-07:00"}
@@ -35,7 +38,8 @@ Use dated windows so last week’s schedule cannot reopen an unattended office.
 All sessions use the same approved Zoom participant URL for the initial pilot.
 If Zoom requires separate meeting URLs for weekdays and Saturday, add per-session
 URL support and tests before enabling those sessions; do not silently use the
-wrong meeting. The proposed weekly hours do not turn into sessions automatically.
+wrong meeting. Weekly labels do not turn into sessions automatically. After
+October 24, approve and publish the next set of dated windows to continue.
 
 Availability means scheduled hours, not live host presence. The browser uses the
 visitor’s clock; it cannot verify staffing, capacity, or whether Zoom has started.
@@ -62,10 +66,11 @@ node --test 04_tools/tests/virtual_office_test.mjs
 
 Open `http://127.0.0.1:8767/virtual-office/`. Existing clean legal/callback routes
 resolve on the production Worker, rather than this plain local file server.
-The published page, assets, disabled entry state and configuration cache headers
-were verified live. Before enabling entry, approve exact staffed dates and
-verify Zoom admission and breakout handoff with a teammate. Local open/closed
-state checks do not establish live host presence.
+The published page, assets, initial disabled entry state and configuration cache
+headers were verified live in the first release. The operator subsequently
+approved enabling scheduled entry. Rehearse Zoom admission and breakout handoff
+with a teammate before the first office session. Local open/closed state checks
+do not establish live host presence.
 
 The current deployment script ships fresh `main`, not this branch. Merge through
 the approved release process first; do not run `deploy.sh` on the assumption

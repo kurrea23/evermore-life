@@ -4,11 +4,13 @@
 [evermorelife.org/virtual-office/](https://evermorelife.org/virtual-office/).
 Approved free recurring Zoom meeting created and participant link saved in the
 [page configuration](../../virtual-office/office-config.json).
-Joining remains disabled pending approved staffed dates and a teammate test.
+The operator approved scheduled joining for **October 13–24, 2026**. Entry
+opens during the six configured sessions and closes outside them. The host
+starts Zoom manually; a teammate handoff rehearsal remains outstanding.
 **Purpose:** welcome visitors on video, explain life insurance with screen sharing,
 and move each visitor into a private conversation with an available teammate.
 
-## Suggested starting hours
+## Approved pilot hours
 
 Run a two-week pilot with three 30-minute sessions each week, all in
 **America/Phoenix (Arizona, Mountain Standard Time)**:
@@ -19,12 +21,14 @@ Run a two-week pilot with three 30-minute sessions each week, all in
 | Thursday | 5:30–6:00 p.m. |
 | Saturday | 10:00–10:30 a.m. |
 
-These are suggestions, not confirmed staffing commitments. Start Zoom five
+These hours were approved by the operator on October 12, 2026. The first
+session is Tuesday, October 13; the last is Saturday, October 24. Start Zoom five
 minutes early. On Basic, the meeting clock applies to the entire office and
 breakouts; later arrivals do not receive a fresh 40-minute window. Plan to finish
 before the limit. Offer a scheduled follow-up for a longer application.
 
-After two weeks, review visits, wait times, completed conversations, applications,
+After October 24, the page stays closed until a new dated schedule is approved
+and published. Review visits, wait times, completed conversations, applications,
 and missed visitors. Keep the strongest hours. If demand supports it, approve a
 paid host license and expand to 60–90 minutes per session.
 
@@ -139,8 +143,8 @@ for another participant before use. Do not mirror the artwork preemptively.
 - Talking videos: answer one real question, show one understandable example,
   and end with the office-hours invitation. Quotes remain individual.
 
-The landing-page URL is verified live; advertise staffed drop-in availability
-only after dates and the visitor handoff test are confirmed. Keep
+The landing-page URL is verified live and pilot dates are approved. Rehearse the
+visitor handoff before promoting staffed availability. Keep
 organic posting and paid campaigns in the existing
 [Content Activation Board](../../04_content_narrative/ad_campaign_scaffold/CONTENT_ACTIVATION_BOARD.md).
 Publishing, messages, and ad spend need separate approval.

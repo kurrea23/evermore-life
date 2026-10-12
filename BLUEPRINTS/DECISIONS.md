@@ -16,6 +16,23 @@ do not rewrite history.
 
 ---
 
+### 2026-10-12 - Activate the approved two-week virtual office hours
+
+- **Status:** approved; scheduled entry enabled in source for deployment
+- **Decision:** Enable the six dated October 13–24 pilot sessions in
+  `virtual-office/office-config.json`: Tuesday/Thursday 5:30–6 p.m. and Saturday
+  10–10:30 a.m., America/Phoenix. Publish through the existing Pages workflow.
+- **Why:** The operator explicitly said “good run it live those hours are fine
+  then status check and what needs to be done git wise.” This authorizes
+  scheduled page entry without another approval request.
+- **Consequences:** Joining opens only in those dated windows and stays closed
+  otherwise and after October 24. The host starts the existing Zoom meeting
+  manually; live admission and breakout handoff have not yet been rehearsed.
+  No ad, messaging, or purchase authorization is inferred from this approval.
+- **Evidence:** `BLUEPRINTS/reports/2026-10-12_virtual-office-hours-activation.md`,
+  `virtual-office/office-config.json`, and operator approval in-session
+- **Owner:** Evermore operator / Zoom host
+
 ### 2026-10-12 - Publish the virtual office page through Cloudflare
 
 - **Status:** approved and deployed; office entry remains disabled

@@ -9,12 +9,27 @@ const fixture = {
   enabled: true, zoomJoinUrl: 'https://us02web.zoom.us/j/12345678901', timeZone: 'America/Phoenix',
   sessions: [{ startsAt: '2026-10-13T17:30:00-07:00', endsAt: '2026-10-13T18:00:00-07:00' }]
 };
-test('repository ships with joining disabled, an approved participant URL and no staffed sessions', () => {
+test('approved pilot config opens each 30-minute Phoenix session and expires after two weeks', () => {
   const config = JSON.parse(readFileSync(new URL('../../virtual-office/office-config.json', import.meta.url)));
-  assert.equal(config.enabled, false);
+  assert.equal(config.enabled, true);
   assert.ok(zoomUrl(config.zoomJoinUrl));
-  assert.deepEqual(config.sessions, []);
-  assert.equal(availability(config, start).joinUrl, null);
+  assert.equal(config.timeZone, 'America/Phoenix');
+  assert.equal(config.sessions.length, 6);
+  for (const session of config.sessions) {
+    const s = Date.parse(session.startsAt), e = Date.parse(session.endsAt);
+    assert.equal(e - s, 30 * 60000);
+    assert.equal(availability(config, s - 1).joinUrl, null);
+    assert.ok(availability(config, s).joinUrl);
+    assert.ok(availability(config, e - 1).joinUrl);
+    assert.equal(availability(config, e).joinUrl, null);
+    const phoenix = new Date(s - 7 * 3600000);
+    const day = phoenix.getUTCDay();
+    assert.ok([2, 4, 6].includes(day));
+    assert.equal(phoenix.getUTCHours(), day === 6 ? 10 : 17);
+    assert.equal(phoenix.getUTCMinutes(), day === 6 ? 0 : 30);
+  }
+  assert.equal(availability(config, Date.parse('2026-10-12T14:00:00-07:00')).state, 'closed');
+  assert.equal(availability(config, Date.parse('2026-10-27T17:30:00-07:00')).joinUrl, null);
 });
 test('only a configured dated staffing window enables joining, including exact boundaries', () => {
   assert.equal(availability(fixture, start - 1).state, 'closed');

@@ -17,6 +17,24 @@ shows.
 
 ---
 
+### 2026-10-12 - Approved scheduled entry needs a human Zoom host
+
+- **Surfaces:** Public office page + Zoom operation + source control
+- **Finding:** The operator approved the October 13–24 pilot. Page configuration
+  enables entry inside six dated 30-minute windows; scheduling does not start
+  Zoom, admit visitors, or verify advisor presence. This feature release is
+  isolated from the separate dirty Desktop checkout.
+- **Evidence:** `BLUEPRINTS/reports/2026-10-12_virtual-office-hours-activation.md`,
+  `virtual-office/office-config.json`, `03_sales_marketing/virtual-office/README.md`
+- **Impact:** The host must open the saved meeting before each session and
+  rehearse the private-room handoff. The page closes after the pilot until future
+  dates are approved. Git cleanliness applies to this release worktree, not
+  every checkout sharing the repository.
+- **Next move:** Rehearse before October 13's session. Treat Desktop branch
+  reconciliation as separate work preserving all existing changes; do not
+  switch or reset that checkout blindly.
+- **Status:** schedule approved and prepared for release; human rehearsal pending
+
 ### 2026-10-12 - Publishing the office page does not establish staffed availability
 
 - **Surfaces:** Cloudflare Pages + public Worker route + Zoom staffing
