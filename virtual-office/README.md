@@ -1,8 +1,10 @@
 # Virtual office landing page
 
-Canonical local page: `virtual-office/index.html`. Proposed production route:
-`/virtual-office/`, served as a root-level static directory through the existing
-Cloudflare Pages fallback. **Not deployed.** No public navigation changed.
+Canonical source: `virtual-office/index.html`. **Published October 12, 2026** at
+[evermorelife.org/virtual-office/](https://evermorelife.org/virtual-office/),
+served as a root-level static directory through the existing Cloudflare Pages
+fallback. Joining remains disabled with no staffed date windows. No public
+navigation changed. See the [release receipt](../BLUEPRINTS/reports/2026-10-12_virtual-office-cloudflare-release.md).
 
 The visitor page is intentionally short and uses the existing approved brand.
 Operator instructions live in the
@@ -60,9 +62,10 @@ node --test 04_tools/tests/virtual_office_test.mjs
 
 Open `http://127.0.0.1:8767/virtual-office/`. Existing clean legal/callback routes
 resolve on the production Worker, rather than this plain local file server.
-Review the draft and approve publication separately. Before release, verify the
-chosen site hostname, `/virtual-office/`, config refresh/cache behavior, closed
-and open states, Zoom admission, and breakout handoff with a teammate.
+The published page, assets, disabled entry state and configuration cache headers
+were verified live. Before enabling entry, approve exact staffed dates and
+verify Zoom admission and breakout handoff with a teammate. Local open/closed
+state checks do not establish live host presence.
 
 The current deployment script ships fresh `main`, not this branch. Merge through
 the approved release process first; do not run `deploy.sh` on the assumption

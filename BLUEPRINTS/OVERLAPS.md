@@ -17,6 +17,23 @@ shows.
 
 ---
 
+### 2026-10-12 - Publishing the office page does not establish staffed availability
+
+- **Surfaces:** Cloudflare Pages + public Worker route + Zoom staffing
+- **Finding:** `/virtual-office/` is now published and verified through both the
+  Cloudflare deployment origin and `evermorelife.org`. Its participant Zoom link
+  is configured, but joining remains disabled with zero staffed windows.
+  A narrowly scoped `_headers` rule delivers office configuration with
+  `Cache-Control: no-store, max-age=0` through the public proxy.
+- **Evidence:** `BLUEPRINTS/reports/2026-10-12_virtual-office-cloudflare-release.md`,
+  `_headers`, `virtual-office/office-config.json`
+- **Impact:** The page can be shared for review while the host completes the
+  rehearsal and confirms dates. Page availability does not prove an advisor is
+  waiting in Zoom or establish a valid household handoff.
+- **Next move:** Approve actual staffing dates and run one teammate admission,
+  private-room handoff, and follow-up test before enabling office entry.
+- **Status:** page deployment completed; staffed operation pending
+
 ### 2026-10-12 - Virtual office connects public traffic with private advisor work
 
 - **Surfaces:** Public website + Zoom + authenticated intake + brand + content

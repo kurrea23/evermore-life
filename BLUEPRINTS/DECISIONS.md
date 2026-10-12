@@ -16,6 +16,24 @@ do not rewrite history.
 
 ---
 
+### 2026-10-12 - Publish the virtual office page through Cloudflare
+
+- **Status:** approved and deployed; office entry remains disabled
+- **Decision:** Fast-forward the isolated virtual office source to remote
+  `main` and publish through the established clean-main `deploy.sh` workflow
+  to Cloudflare Pages project `evermore-life`, using the existing public Worker
+  fallback for `/virtual-office/`.
+- **Why:** The operator explicitly requested “send this on a live URL with
+  cloudflare” after receiving the completed branch and Zoom meeting.
+- **Consequences:** `https://evermorelife.org/virtual-office/` is verified live.
+  The existing site route sweep passes. No shared Worker, Zoom account,
+  staffing dates, homepage navigation, messages, or spending changes were made
+  in this release. Joining remains disabled. Configuration is served no-store.
+- **Evidence:** `BLUEPRINTS/reports/2026-10-12_virtual-office-cloudflare-release.md`,
+  Cloudflare deployment `22058368.evermore-life.pages.dev`, deployed source
+  `bd5b299`, and the operator instruction in-session
+- **Owner:** Evermore operator / website owner; Zoom host owns rehearsal and staffing
+
 ### 2026-10-12 - Draft a Zoom-based Evermore virtual office on a feature branch
 
 - **Status:** approved for local implementation; schedule suggestions and external activation remain unapproved

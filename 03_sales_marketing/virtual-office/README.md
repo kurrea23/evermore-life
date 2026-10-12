@@ -1,7 +1,9 @@
 # Evermore Life Virtual Office — Standard Pilot
 
-**State:** local page draft, not published. Approved free recurring Zoom meeting
-created and participant link saved in the [page configuration](../../virtual-office/office-config.json).
+**State:** page published October 12, 2026 at
+[evermorelife.org/virtual-office/](https://evermorelife.org/virtual-office/).
+Approved free recurring Zoom meeting created and participant link saved in the
+[page configuration](../../virtual-office/office-config.json).
 Joining remains disabled pending approved staffed dates and a teammate test.
 **Purpose:** welcome visitors on video, explain life insurance with screen sharing,
 and move each visitor into a private conversation with an available teammate.
@@ -137,7 +139,8 @@ for another participant before use. Do not mirror the artwork preemptively.
 - Talking videos: answer one real question, show one understandable example,
   and end with the office-hours invitation. Quotes remain individual.
 
-Use the office landing-page URL in social posts after live verification. Keep
+The landing-page URL is verified live; advertise staffed drop-in availability
+only after dates and the visitor handoff test are confirmed. Keep
 organic posting and paid campaigns in the existing
 [Content Activation Board](../../04_content_narrative/ad_campaign_scaffold/CONTENT_ACTIVATION_BOARD.md).
 Publishing, messages, and ad spend need separate approval.
