@@ -19,7 +19,8 @@ Release `926e0f1` is committed to remote main and deployed to Cloudflare Pages.
 The current feature worktree is clean after the activation receipt is committed.
 Local `main` was safely fast-forwarded from its old ancestor. The separate
 Desktop checkout still has **63 tracked changes and 150 untracked paths**;
-its files and feature branch were preserved.
+its files and feature branch were preserved. Its branch also has **two unique
+commits** not contained in production main and requires reconciliation.
 
 ## Evidence
 
@@ -38,6 +39,7 @@ its files and feature branch were preserved.
 | Breakout rooms remain enabled | Read-only account setting check: Breakout room – Meetings `aria-checked=true`; no account setting changes this turn | high |
 | Current release worktree started clean and aligned with origin/main | Initial `git status --short` empty; `origin/main...HEAD`: `0 0` | high |
 | Desktop work requires separate reconciliation | Read-only `git status --porcelain` count at `/Users/k9smac/Desktop/EVERMORE-LIFE`, branch `feat-evermorelife-growth`: 63 tracked changes, 150 untracked paths | high |
+| Desktop branch cannot simply fast-forward to main | Audit against release `926e0f1`: `feat-evermorelife-growth...origin/main` returned `2 25` (two unique Desktop commits, 25 main commits); later receipt commits add to main only | high |
 
 ## Map
 
