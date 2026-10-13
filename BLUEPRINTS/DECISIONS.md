@@ -712,3 +712,13 @@ do not rewrite history.
 - **Consequences:** The first local directory/profile uses supplied professional details and current official license evidence. Publication, messaging and account changes remain separately approval-gated. Layout and copy still await operator review.
 - **Evidence:** `BLUEPRINTS/reports/2026-10-12_keenan-agent-pages-and-licenses.md` and `agents/README.md`
 - **Owner:** Evermore operator
+
+
+### 2026-10-12 - Publish Keenan's agent directory and profile on Cloudflare
+
+- **Status:** publication approved; verification pending
+- **Decision:** Publish `/agents/` and `/agents/keenan-urrea/` on the existing Evermore Cloudflare site.
+- **Why:** Operator explicitly requested a live Cloudflare link after receiving the completed draft.
+- **Consequences:** Public access is approved; noindex remains for this initial review release. No Worker update, messaging, quote-intake reassignment or account change is included.
+- **Evidence:** `BLUEPRINTS/reports/2026-10-12_keenan-cloudflare-release.md`
+- **Owner:** Evermore operator
