@@ -732,3 +732,13 @@ do not rewrite history.
 - **Consequences:** Copy describes involvement with Topgolf in Albuquerque and commercial real estate without unprovided roles or accomplishments. A short introduction script is prepared; actual video production awaits a source/format choice.
 - **Evidence:** `BLUEPRINTS/reports/2026-10-12_keenan-profile-refinement.md`
 - **Owner:** Keenan Urrea / Evermore operator
+
+
+### 2026-10-12 - Keep Keenan's profile and introduction focused on insurance
+
+- **Status:** approved; live verification pending
+- **Decision:** Remove Keenan's personal career-background section and its hero link. Keep the profile and future video script focused on insurance.
+- **Why:** Keenan explicitly rejected the biography and requested its removal from the live page.
+- **Consequences:** The current registry omits biography input; the script also omits personal career material. This supersedes the biography portion of the earlier refinement direction. Existing insurance credentials, licensing-preparation details and presentation remain.
+- **Evidence:** `BLUEPRINTS/reports/2026-10-12_keenan-insurance-only.md`
+- **Owner:** Keenan Urrea / Evermore operator

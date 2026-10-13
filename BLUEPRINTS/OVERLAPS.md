@@ -881,3 +881,13 @@ shows.
 - **Impact:** Future profiles must avoid turning personal copy into unsupported official credential or carrier/securities claims.
 - **Next move:** Keep provenance explicit in the registry/report; add a reviewed recording with captions when Keenan supplies it or chooses another video format.
 - **Status:** copy/layout deployed and verified October 12, 2026; video source pending
+
+
+### 2026-10-12 - Profile copy and future video must follow the latest approved scope
+
+- **Surfaces:** Public agent profile + canonical registry + introduction-video script
+- **Finding:** The operator rejected the personal career-background section. Removing only generated HTML would allow the registry to restore it and leave the script inconsistent.
+- **Evidence:** `agents/data/profiles.json`, `agents/INTRO_VIDEO_SCRIPT.md`, `BLUEPRINTS/reports/2026-10-12_keenan-insurance-only.md`
+- **Impact:** Canonical content and the video script now follow the same insurance-only direction.
+- **Next move:** Verify the public correction and use current sources when adding a recording.
+- **Status:** sources corrected; live verification pending

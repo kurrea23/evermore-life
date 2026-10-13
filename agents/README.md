@@ -39,19 +39,20 @@ The card supplies the mobile, Arkansas office and business email. Those channels
 were transcribed, not called or emailed. Direct links reach Keenan; the shared
 quote form has no verified Keenan owner routing and is not used by these pages.
 
-## Biography and licensing preparation
+## Insurance-only profile copy
 
-The About Me text and fingerprinting/Live Scan/background-check completion
-statement come directly from Keenan's October 12, 2026 request. These personal
-experience statements are distinct from the regulator-verified license records.
-The draft describes involvement with Topgolf in Albuquerque without claiming
-ownership, development leadership, dates, deal volume, or an endorsement.
-No private background-check records are stored or linked.
+Keenan requested removal of the personal-background section on October 12, 2026.
+Keep his profile and introduction script focused on insurance, verified licenses,
+contact details and his stated Arizona licensing preparation. Do not reintroduce
+career biography without a new explicit request.
 
-[INTRO_VIDEO_SCRIPT.md](INTRO_VIDEO_SCRIPT.md) is a proposed recording script.
-No video exists on the public page yet. Add a reviewed recording and captions
-when available; do not show a dead play button or an invented introduction.
-Latest presentation update: `BLUEPRINTS/reports/2026-10-12_keenan-profile-refinement.md`.
+The fingerprinting/Live Scan/background-check completion statement comes directly
+from Keenan's October 12 request. These process statements are distinct from the
+regulator-verified license records. No private check records are stored or linked.
+
+[INTRO_VIDEO_SCRIPT.md](INTRO_VIDEO_SCRIPT.md) is an insurance-only recording
+script. No video exists on the page yet. Add a reviewed recording and captions
+when available. Latest change: `BLUEPRINTS/reports/2026-10-12_keenan-insurance-only.md`.
 
 ## Release
 

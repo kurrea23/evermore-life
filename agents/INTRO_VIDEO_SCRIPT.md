@@ -1,36 +1,26 @@
 # Keenan introduction video
 
-Draft for Keenan to review and record. About 45 seconds at a relaxed pace.
+Insurance-only draft for Keenan to review and record, about 30 seconds.
 No video has been generated, uploaded or added to the public page.
 
 > Hi, I'm Keenan Urrea with Evermore Life.
 >
-> My background is in commercial real estate: development projects, land sales,
-> and triple net leased investment properties. That experience includes
-> involvement with Topgolf in Albuquerque and other developments.
+> Life insurance starts with the people you care about. I'm here to listen,
+> answer your questions clearly, and help you think through your options.
 >
-> Today, I bring that same attention to the details to conversations about life
-> insurance. I want to understand what matters to you, answer your questions
-> clearly, and help you think through your next step.
+> You don't need to have everything figured out before we talk. Whether you're
+> thinking about protecting your family or planning ahead, we can start with
+> what matters to you and take it one step at a time.
 >
-> You don't need to have everything figured out before we talk. If you're
-> thinking about protecting your family or planning ahead, give me a call.
->
-> I'm here to help you start the conversation, at your pace.
+> Give me a call whenever you're ready. Your questions, your pace, no obligation.
 
-## Recording
+## Recording and placement
 
-- Look into the camera as if speaking to one person. Use your own phrasing.
-- Record horizontally at 1080p with the camera at eye level, window light in
-  front of you, and a quiet background. A phone camera is sufficient.
-- Leave two seconds at the start and end for a clean edit.
-- Review the Topgolf involvement sentence for the exact role you want to claim;
-  the draft does not imply ownership, development leadership or endorsement.
+Record horizontally at 1080p, with the camera at eye level and good light in
+front of you. Speak to one person, using your own phrasing. Leave two seconds
+at each end for editing.
 
-## Website placement
-
-Place the reviewed recording beside or immediately after About Me. Use a
-real video player with controls, no autoplay, a supplied poster and captions.
-Keep the page complete without a video until the recording is available.
-Use a reviewed real recording by default; an AI avatar requires a separate
-choice and appropriate likeness/voice authorization.
+Add the reviewed recording near the opening introduction. Use controls, no
+autoplay, a supplied poster and captions. Keep the page complete without a
+video until a recording is available. An AI avatar requires a separate choice
+and appropriate likeness/voice authorization.
