@@ -890,4 +890,4 @@ shows.
 - **Evidence:** `agents/data/profiles.json`, `agents/INTRO_VIDEO_SCRIPT.md`, `BLUEPRINTS/reports/2026-10-12_keenan-insurance-only.md`
 - **Impact:** Canonical content and the video script now follow the same insurance-only direction.
 - **Next move:** Verify the public correction and use current sources when adding a recording.
-- **Status:** sources corrected; live verification pending
+- **Status:** corrected sources deployed and public profile verified October 12, 2026

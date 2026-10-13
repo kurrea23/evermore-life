@@ -736,7 +736,7 @@ do not rewrite history.
 
 ### 2026-10-12 - Keep Keenan's profile and introduction focused on insurance
 
-- **Status:** approved; live verification pending
+- **Status:** approved, deployed and verified live
 - **Decision:** Remove Keenan's personal career-background section and its hero link. Keep the profile and future video script focused on insurance.
 - **Why:** Keenan explicitly rejected the biography and requested its removal from the live page.
 - **Consequences:** The current registry omits biography input; the script also omits personal career material. This supersedes the biography portion of the earlier refinement direction. Existing insurance credentials, licensing-preparation details and presentation remain.
