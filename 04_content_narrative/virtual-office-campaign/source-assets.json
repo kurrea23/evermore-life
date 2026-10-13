@@ -1,0 +1,66 @@
+[
+  {
+    "id": "organic/part-01",
+    "label": "PART 1 OF 5",
+    "headline": "Meet the virtual office.",
+    "sub": "A human conversation about life insurance, from wherever you are.",
+    "visual": "a minimal elegant gold-line laptop with a video conversation window",
+    "source": "/Users/k9smac/.codex/generated_images/01a131a3-7371-7f61-8588-fba717a56049/exec-83a5fbc1-37fa-4ffe-a6d4-094c17f5971c.png"
+  },
+  {
+    "id": "organic/part-02",
+    "label": "PART 2 OF 5",
+    "headline": "Compare coverage. Clearly.",
+    "sub": "Explore coverage options with someone who can explain the differences.",
+    "visual": "a minimal elegant gold-line illustration of three coverage-option cards",
+    "source": "/Users/k9smac/.codex/generated_images/01a131a3-7371-7f61-8588-fba717a56049/exec-d1b30705-d289-4d5e-9dc6-f7ec8d50fec5.png"
+  },
+  {
+    "id": "organic/part-03",
+    "label": "PART 3 OF 5",
+    "headline": "See the numbers together.",
+    "sub": "Review quotes and costs on screen. No guessing.",
+    "visual": "a minimal elegant gold-line laptop displaying generic quote rows with no actual prices",
+    "source": "/Users/k9smac/.codex/generated_images/01a131a3-7371-7f61-8588-fba717a56049/exec-d7eb884c-a562-440c-92e9-589c1cbd6d73.png"
+  },
+  {
+    "id": "organic/part-04",
+    "label": "PART 4 OF 5",
+    "headline": "Know your next step.",
+    "sub": "Walk through the process before you decide to apply.",
+    "visual": "a minimal elegant gold-line path with three numbered steps",
+    "source": "/Users/k9smac/.codex/generated_images/01a131a3-7371-7f61-8588-fba717a56049/exec-8fdc6d16-e935-4423-ac9f-2ba959851e1c.png"
+  },
+  {
+    "id": "organic/part-05",
+    "label": "PART 5 OF 5",
+    "headline": "Your questions.\nA real conversation.",
+    "sub": "Bring your questions. Meet us in the virtual office.",
+    "visual": "a minimal elegant gold-line pair of overlapping conversation bubbles",
+    "source": "/Users/k9smac/.codex/generated_images/01a131a3-7371-7f61-8588-fba717a56049/exec-5aab7b81-6a91-4120-83e4-03ea4902eb0e.png"
+  },
+  {
+    "id": "paid/ad-01",
+    "label": "THE EVERMORE VIRTUAL OFFICE",
+    "headline": "Talk it through.",
+    "sub": "Life insurance questions deserve a human conversation.",
+    "visual": "a minimal elegant gold-line laptop with a conversation window",
+    "source": "/Users/k9smac/.codex/generated_images/01a131a3-7371-7f61-8588-fba717a56049/exec-80e4a6c9-a621-45a7-9979-436a171cf378.png"
+  },
+  {
+    "id": "paid/ad-02",
+    "label": "THE EVERMORE VIRTUAL OFFICE",
+    "headline": "See your options.",
+    "sub": "Compare coverage and review quotes with our team on screen.",
+    "visual": "a minimal elegant gold-line screen with three clean comparison cards",
+    "source": "/Users/k9smac/.codex/generated_images/01a131a3-7371-7f61-8588-fba717a56049/exec-06c84c06-1b22-435e-bd4e-a456aee34732.png"
+  },
+  {
+    "id": "paid/ad-03",
+    "label": "THE EVERMORE VIRTUAL OFFICE",
+    "headline": "Clarity comes first.",
+    "sub": "Ask questions. Understand the process. Decide when you are ready.",
+    "visual": "a minimal elegant gold-line compass within a simple circle",
+    "source": "/Users/k9smac/.codex/generated_images/01a131a3-7371-7f61-8588-fba717a56049/exec-cf455a5a-164f-4771-b6c0-48b0d3d8c906.png"
+  }
+]

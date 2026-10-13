@@ -1,0 +1,108 @@
+{
+  "campaign": "virtual_office_launch",
+  "created": "2026-10-12",
+  "platforms": [
+    "Facebook",
+    "Instagram"
+  ],
+  "officeTimezone": "America/Phoenix",
+  "officePilotEnds": "2026-10-23T17:00:00-07:00",
+  "organic": [
+    {
+      "id": "part-01",
+      "title": "Meet the virtual office.",
+      "asset": "organic/part-01-1080x1350.png",
+      "scheduledFor": "2026-10-13T08:30:00-07:00",
+      "timezone": "America/Phoenix",
+      "facebookCaption": "Part 1 of 5 • Meet the virtual office.\n\nLife insurance conversations can happen face to face, wherever you are. Our virtual office is a place to meet the Evermore team, ask questions, and review information together on screen.\n\nVisit: https://evermorelife.org/virtual-office/?utm_source=facebook&utm_medium=organic_social&utm_campaign=virtual_office_launch&utm_content=part_01\n\nOffice hours: Monday–Friday, 9 a.m.–5 p.m. Arizona time. Visit the page for current availability.\n\nCoverage, pricing, and eligibility vary by state, carrier, product, and individual circumstances. Not all applicants qualify.\n\n#EvermoreLife #LifeInsurance #VirtualOffice",
+      "instagramCaption": "Part 1 of 5 • Meet the virtual office.\n\nLife insurance conversations can happen face to face, wherever you are. Our virtual office is a place to meet the Evermore team, ask questions, and review information together on screen.\n\nVisit evermorelife.org/virtual-office\n\nOffice hours: Monday–Friday, 9 a.m.–5 p.m. Arizona time. Visit the page for current availability.\n\nCoverage, pricing, and eligibility vary by state, carrier, product, and individual circumstances. Not all applicants qualify.\n\n#EvermoreLife #LifeInsurance #VirtualOffice",
+      "status": "prepared",
+      "platformReceipts": []
+    },
+    {
+      "id": "part-02",
+      "title": "Compare coverage. Clearly.",
+      "asset": "organic/part-02-1080x1350.png",
+      "scheduledFor": "2026-10-14T08:30:00-07:00",
+      "timezone": "America/Phoenix",
+      "facebookCaption": "Part 2 of 5 • Compare coverage. Clearly.\n\nTerm and permanent life insurance serve different purposes. In our virtual office, we can explain coverage options, how long they are designed to last, and the details to consider before choosing.\n\nVisit: https://evermorelife.org/virtual-office/?utm_source=facebook&utm_medium=organic_social&utm_campaign=virtual_office_launch&utm_content=part_02\n\nOffice hours: Monday–Friday, 9 a.m.–5 p.m. Arizona time. Visit the page for current availability.\n\nCoverage, pricing, and eligibility vary by state, carrier, product, and individual circumstances. Not all applicants qualify.\n\n#EvermoreLife #LifeInsurance #VirtualOffice",
+      "instagramCaption": "Part 2 of 5 • Compare coverage. Clearly.\n\nTerm and permanent life insurance serve different purposes. In our virtual office, we can explain coverage options, how long they are designed to last, and the details to consider before choosing.\n\nVisit evermorelife.org/virtual-office\n\nOffice hours: Monday–Friday, 9 a.m.–5 p.m. Arizona time. Visit the page for current availability.\n\nCoverage, pricing, and eligibility vary by state, carrier, product, and individual circumstances. Not all applicants qualify.\n\n#EvermoreLife #LifeInsurance #VirtualOffice",
+      "status": "prepared",
+      "platformReceipts": []
+    },
+    {
+      "id": "part-03",
+      "title": "See the numbers together.",
+      "asset": "organic/part-03-1080x1350.png",
+      "scheduledFor": "2026-10-15T08:30:00-07:00",
+      "timezone": "America/Phoenix",
+      "facebookCaption": "Part 3 of 5 • See the numbers together.\n\nA quote is easier to understand when someone walks through it with you. In our virtual office, we can review available quotes on screen and explain the coverage, premiums, and details behind the numbers.\n\nVisit: https://evermorelife.org/virtual-office/?utm_source=facebook&utm_medium=organic_social&utm_campaign=virtual_office_launch&utm_content=part_03\n\nOffice hours: Monday–Friday, 9 a.m.–5 p.m. Arizona time. Visit the page for current availability.\n\nCoverage, pricing, and eligibility vary by state, carrier, product, and individual circumstances. Not all applicants qualify.\n\n#EvermoreLife #LifeInsurance #VirtualOffice",
+      "instagramCaption": "Part 3 of 5 • See the numbers together.\n\nA quote is easier to understand when someone walks through it with you. In our virtual office, we can review available quotes on screen and explain the coverage, premiums, and details behind the numbers.\n\nVisit evermorelife.org/virtual-office\n\nOffice hours: Monday–Friday, 9 a.m.–5 p.m. Arizona time. Visit the page for current availability.\n\nCoverage, pricing, and eligibility vary by state, carrier, product, and individual circumstances. Not all applicants qualify.\n\n#EvermoreLife #LifeInsurance #VirtualOffice",
+      "status": "prepared",
+      "platformReceipts": []
+    },
+    {
+      "id": "part-04",
+      "title": "Know your next step.",
+      "asset": "organic/part-04-1080x1350.png",
+      "scheduledFor": "2026-10-16T08:30:00-07:00",
+      "timezone": "America/Phoenix",
+      "facebookCaption": "Part 4 of 5 • Know your next step.\n\nBefore applying, understand what the process involves. Our team can explain the information an application may request and what happens next. Please keep personal and health information out of public comments.\n\nVisit: https://evermorelife.org/virtual-office/?utm_source=facebook&utm_medium=organic_social&utm_campaign=virtual_office_launch&utm_content=part_04\n\nOffice hours: Monday–Friday, 9 a.m.–5 p.m. Arizona time. Visit the page for current availability.\n\nCoverage, pricing, and eligibility vary by state, carrier, product, and individual circumstances. Not all applicants qualify.\n\n#EvermoreLife #LifeInsurance #VirtualOffice",
+      "instagramCaption": "Part 4 of 5 • Know your next step.\n\nBefore applying, understand what the process involves. Our team can explain the information an application may request and what happens next. Please keep personal and health information out of public comments.\n\nVisit evermorelife.org/virtual-office\n\nOffice hours: Monday–Friday, 9 a.m.–5 p.m. Arizona time. Visit the page for current availability.\n\nCoverage, pricing, and eligibility vary by state, carrier, product, and individual circumstances. Not all applicants qualify.\n\n#EvermoreLife #LifeInsurance #VirtualOffice",
+      "status": "prepared",
+      "platformReceipts": []
+    },
+    {
+      "id": "part-05",
+      "title": "Your questions.\nA real conversation.",
+      "asset": "organic/part-05-1080x1350.png",
+      "scheduledFor": "2026-10-19T08:30:00-07:00",
+      "timezone": "America/Phoenix",
+      "facebookCaption": "Part 5 of 5 • Your questions. A real conversation.\n\nBring the questions you have been putting off. Meet the Evermore team in our virtual office to talk through life insurance options and the process at your own pace.\n\nVisit: https://evermorelife.org/virtual-office/?utm_source=facebook&utm_medium=organic_social&utm_campaign=virtual_office_launch&utm_content=part_05\n\nOffice hours: Monday–Friday, 9 a.m.–5 p.m. Arizona time. Visit the page for current availability.\n\nCoverage, pricing, and eligibility vary by state, carrier, product, and individual circumstances. Not all applicants qualify.\n\n#EvermoreLife #LifeInsurance #VirtualOffice",
+      "instagramCaption": "Part 5 of 5 • Your questions. A real conversation.\n\nBring the questions you have been putting off. Meet the Evermore team in our virtual office to talk through life insurance options and the process at your own pace.\n\nVisit evermorelife.org/virtual-office\n\nOffice hours: Monday–Friday, 9 a.m.–5 p.m. Arizona time. Visit the page for current availability.\n\nCoverage, pricing, and eligibility vary by state, carrier, product, and individual circumstances. Not all applicants qualify.\n\n#EvermoreLife #LifeInsurance #VirtualOffice",
+      "status": "prepared",
+      "platformReceipts": []
+    }
+  ],
+  "paid": [
+    {
+      "id": "ad-01",
+      "headline": "Talk it through.",
+      "primaryText": "Life insurance questions deserve a human conversation. Meet the Evermore team in our virtual office to ask questions and review information together. Weekdays, 9–5 Arizona time. Visit the page for current availability.\n\nCoverage, pricing, and eligibility vary by state, carrier, product, and individual circumstances. Not all applicants qualify.",
+      "description": "Evermore Life Insurance LLC • Virtual office",
+      "cta": "Learn More",
+      "url": "https://evermorelife.org/virtual-office/?utm_source=meta&utm_medium=paid_social&utm_campaign=virtual_office_launch&utm_content=ad_01",
+      "asset": "paid/ad-01-1080x1350.png",
+      "status": "local_draft",
+      "platformReceipt": null,
+      "budget": null,
+      "launchApproved": false
+    },
+    {
+      "id": "ad-02",
+      "headline": "See your options.",
+      "primaryText": "Compare coverage and review available quotes with the Evermore team on screen. Our virtual office helps make the details easier to follow. Weekdays, 9–5 Arizona time. Visit the page for current availability.\n\nCoverage, pricing, and eligibility vary by state, carrier, product, and individual circumstances. Not all applicants qualify.",
+      "description": "Evermore Life Insurance LLC • Virtual office",
+      "cta": "Learn More",
+      "url": "https://evermorelife.org/virtual-office/?utm_source=meta&utm_medium=paid_social&utm_campaign=virtual_office_launch&utm_content=ad_02",
+      "asset": "paid/ad-02-1080x1350.png",
+      "status": "local_draft",
+      "platformReceipt": null,
+      "budget": null,
+      "launchApproved": false
+    },
+    {
+      "id": "ad-03",
+      "headline": "Clarity comes first.",
+      "primaryText": "Ask questions. Understand the process. Decide when you are ready. Visit the Evermore virtual office for a conversation about life insurance options and next steps. Weekdays, 9–5 Arizona time. Visit the page for current availability.\n\nCoverage, pricing, and eligibility vary by state, carrier, product, and individual circumstances. Not all applicants qualify.",
+      "description": "Evermore Life Insurance LLC • Virtual office",
+      "cta": "Learn More",
+      "url": "https://evermorelife.org/virtual-office/?utm_source=meta&utm_medium=paid_social&utm_campaign=virtual_office_launch&utm_content=ad_03",
+      "asset": "paid/ad-03-1080x1350.png",
+      "status": "local_draft",
+      "platformReceipt": null,
+      "budget": null,
+      "launchApproved": false
+    }
+  ]
+}

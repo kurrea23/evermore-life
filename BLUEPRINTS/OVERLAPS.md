@@ -861,3 +861,12 @@ shows.
 - **Impact:** Future notification, owner-review, and CRM work must preserve this boundary unless explicitly approved and separately verified.
 - **Next move:** Design the owner-review handoff before adding operational notifications.
 - **Status:** completed — live route and D1 boundary verified
+
+### 2026-10-12 - Virtual office promotion depends on dated availability and exact Meta identity
+
+- **Surfaces:** Social campaigns, Meta Ads Manager, public virtual office and Zoom staffing
+- **Finding:** The five-part series points to the October 13–23 office pilot. Portfolio labels differed from the actual Evermore page and ad identities. Scheduling proof requires saved platform rows, not local timestamps.
+- **Evidence:** [Campaign report](reports/2026-10-12_virtual-office-campaign.md) and [manifest](../04_content_narrative/virtual-office-campaign/campaign.json).
+- **Impact:** Select the exact Evermore Page/profile for every post. Staff office hours and extend dated availability before reusing this campaign later.
+- **Next move:** Complete image uploads and verify organic schedule receipts.
+- **Status:** Creative pack complete; scheduling pending browser upload permission.

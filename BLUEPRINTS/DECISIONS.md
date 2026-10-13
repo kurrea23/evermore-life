@@ -702,3 +702,12 @@ do not rewrite history.
 - **Consequences:** The page and API are live, but no owner notification or CRM handoff is implied; that remains a separate approved surface.
 - **Evidence:** `BLUEPRINTS/reports/2026-09-11_agent-growth-production-release.md`
 - **Owner:** Evermore operator
+
+### 2026-10-12 - Schedule the virtual office organic series and keep paid versions as drafts
+
+- **Status:** approved scope; execution pending upload permission
+- **Decision:** Create a five-part organic series for Facebook and Instagram and three paid creative drafts. Paid launch and spending are excluded from this approval.
+- **Why:** The operator requested the full creative campaign and selected Facebook/Instagram plus Prepare three paid drafts in clarification.
+- **Consequences:** Organic publication is authorized. Paid activation still needs budget, run dates and verified targeting. The proposed organic dates are October 13–16 and 19 at 8:30 a.m. Phoenix; platform receipts must confirm scheduling.
+- **Evidence:** [Campaign report](reports/2026-10-12_virtual-office-campaign.md).
+- **Owner:** Evermore operator
