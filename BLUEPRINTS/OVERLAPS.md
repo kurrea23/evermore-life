@@ -880,4 +880,4 @@ shows.
 - **Evidence:** `agents/data/profiles.json`, `agents/INTRO_VIDEO_SCRIPT.md`, `BLUEPRINTS/reports/2026-10-12_keenan-profile-refinement.md`
 - **Impact:** Future profiles must avoid turning personal copy into unsupported official credential or carrier/securities claims.
 - **Next move:** Keep provenance explicit in the registry/report; add a reviewed recording with captions when Keenan supplies it or chooses another video format.
-- **Status:** copy/layout complete locally; video source pending
+- **Status:** copy/layout deployed and verified October 12, 2026; video source pending

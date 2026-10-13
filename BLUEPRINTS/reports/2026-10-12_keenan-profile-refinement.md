@@ -11,8 +11,9 @@
 The profile now has a navy header, cleaner contact buttons, and a contrasting
 About Me section. Keenan's supplied commercial-real-estate experience and
 Arizona fingerprinting/Live Scan/background-check completion are reflected
-without adding unsupported titles, dates, deal totals or endorsements. Local
-verification passed. Cloudflare publication receipt pending.
+without adding unsupported titles, dates, deal totals or endorsements. The revised [public profile](https://evermorelife.org/agents/keenan-urrea/) is
+verified live. Cloudflare deployed source `7067367` at
+[the deployment origin](https://314de94c.evermore-life.pages.dev/agents/keenan-urrea/).
 
 ## Evidence
 
@@ -23,6 +24,8 @@ verification passed. Cloudflare publication receipt pending.
 | Header uses canonical navy and existing approved logo | `agents/assets/agents.css`, existing logo asset; browser returned `rgb(9, 18, 56)` | high |
 | Narrow mobile layout fits | Browser measured `innerWidth=320`, `scrollWidth=320`; stacked contact buttons at least 50px tall | high |
 | Directory and profile remain intact | Both rebuilt; local links, assets and anchors resolve; directory logo/portrait load; `git diff --check` passes | high for local source |
+| Updated profile, directory, CSS and registry match live source | Public HTTPS requests returned 200 and passed SHA-256 equality; origin contains Topgolf and Live Scan copy | high |
+| Cloudflare release succeeded | `deploy.sh` fetched `7067367`, validated 479 source files, uploaded 15 files (497 already uploaded) and `_headers`; existing seven-route sweep passed | high |
 | Video preparation is complete | `agents/INTRO_VIDEO_SCRIPT.md` contains a proposed 45-second script and recording/placement guidance | high |
 
 ## Map
@@ -37,7 +40,7 @@ and its anchor render only when biography input is present.
 
 - [About Me layout](../visuals/2026-10-12_keenan-about.png).
 - [Narrow mobile profile](../visuals/2026-10-12_keenan-refined-mobile.png).
-- Live page capture pending publication.
+- [Updated live profile](../visuals/2026-10-12_keenan-refined-live.png).
 
 ## Unknown Or Unavailable
 
@@ -59,8 +62,9 @@ and accessibility requirement: use an actual approved recording with captions.
 
 ## Recommended Next Move
 
-Publish the requested update and verify the public page. Keenan can review the
-short script and record a real introduction for a later video addition.
+Keenan can share the updated live link, review the short script and record a
+real introduction for a later video addition. Recording/AI-avatar/later options
+were offered; no format choice or recording had been received at completion.
 
 ## Files Changed
 
