@@ -53,7 +53,24 @@
           "Live Scan completed",
           "Background check completed"
         ],
-        "source": "Direct statement from Keenan, October 12, 2026"
+        "source": "Direct statement from Keenan, October 12, 2026",
+        "badges": [
+          {
+            "icon": "fingerprint",
+            "label": "Fingerprinted",
+            "description": "Fingerprinting completed"
+          },
+          {
+            "icon": "live-scan",
+            "label": "Live Scan",
+            "description": "Live Scan completed"
+          },
+          {
+            "icon": "background-check",
+            "label": "Background checked",
+            "description": "Background check completed"
+          }
+        ]
       }
     }
   ]

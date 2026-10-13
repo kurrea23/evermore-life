@@ -891,3 +891,13 @@ shows.
 - **Impact:** Canonical content and the video script now follow the same insurance-only direction.
 - **Next move:** Verify the public correction and use current sources when adding a recording.
 - **Status:** corrected sources deployed and public profile verified October 12, 2026
+
+
+### 2026-10-12 - Compact trust symbols need accessible meaning and factual scope
+
+- **Surfaces:** Public agent profile + screening provenance + accessibility
+- **Finding:** Three generic symbols replace the long preparation explanation. Visible labels and accessible completion descriptions preserve meaning without relying on the artwork alone.
+- **Evidence:** `agents/data/profiles.json`, `agents/assets/`, `BLUEPRINTS/reports/2026-10-12_keenan-screening-icons.md`
+- **Impact:** Future visual refinements should retain readable labels and avoid unverified agency/vendor logos or endorsements.
+- **Next move:** Verify profile and icon assets after publication.
+- **Status:** local display verified; publication pending

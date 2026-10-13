@@ -46,13 +46,16 @@ Keep his profile and introduction script focused on insurance, verified licenses
 contact details and his stated Arizona licensing preparation. Do not reintroduce
 career biography without a new explicit request.
 
-The fingerprinting/Live Scan/background-check completion statement comes directly
+Fingerprinting, Live Scan and background-check completion now appear as a compact
+icon row beneath the opening profile, with short visible labels and accessible
+completion descriptions. The icons are generic symbols, not agency or vendor logos.
+The completion information comes directly
 from Keenan's October 12 request. These process statements are distinct from the
 regulator-verified license records. No private check records are stored or linked.
 
 [INTRO_VIDEO_SCRIPT.md](INTRO_VIDEO_SCRIPT.md) is an insurance-only recording
 script. No video exists on the page yet. Add a reviewed recording and captions
-when available. Latest change: `BLUEPRINTS/reports/2026-10-12_keenan-insurance-only.md`.
+when available. Latest change: `BLUEPRINTS/reports/2026-10-12_keenan-screening-icons.md`.
 
 ## Release
 
