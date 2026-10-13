@@ -900,4 +900,4 @@ shows.
 - **Evidence:** `agents/data/profiles.json`, `agents/assets/`, `BLUEPRINTS/reports/2026-10-12_keenan-screening-icons.md`
 - **Impact:** Future visual refinements should retain readable labels and avoid unverified agency/vendor logos or endorsements.
 - **Next move:** Verify profile and icon assets after publication.
-- **Status:** local display verified; publication pending
+- **Status:** profile and all three SVGs deployed and verified October 12, 2026

@@ -11,7 +11,10 @@
 The Arizona preparation heading, paragraph and checklist are removed from the
 rendered profile. A fingerprint, scan and shield-check icon row now appears below
 the introduction. Short visible labels and accessible completion descriptions
-retain the meaning. Local verification passed; publication pending.
+retain the meaning. The [public profile](https://evermorelife.org/agents/keenan-urrea/)
+is deployed and verified live from source `a0cbe6d`. The
+[Cloudflare origin](https://fa34808b.evermore-life.pages.dev/agents/keenan-urrea/)
+also contains the three-symbol profile.
 
 ## Evidence
 
@@ -22,6 +25,8 @@ retain the meaning. Local verification passed; publication pending.
 | Screening prose under Arizona is absent | Generated HTML contains no preparation heading or explanatory paragraph | high |
 | Assets load and mobile layout fits | Browser: all three SVGs loaded, `innerWidth=320`, `scrollWidth=320`, icons approximately 26px | high |
 | Assets and builder remain valid | SVG XML parse, generator, scoped HTML assertions and `git diff --check` passed | high |
+| Public profile, CSS and all three SVGs match source | HTTP 200 and SHA-256 equality; original preparation heading absent | high |
+| Cloudflare release succeeded | `deploy.sh`: 488 source files, 16 uploaded, 505 already uploaded; existing seven-route sweep passed | high |
 
 ## Map
 
@@ -35,7 +40,7 @@ vendor logos, independent certifications or endorsements.
 
 - [Desktop icon row](../visuals/2026-10-12_keenan-screening-icons-desktop.png).
 - [Mobile profile](../visuals/2026-10-12_keenan-screening-icons-mobile.png).
-- Live capture pending publication.
+- [Live icon row](../visuals/2026-10-12_keenan-screening-icons-live.png).
 
 ## Unknown Or Unavailable
 
@@ -50,7 +55,8 @@ should not acquire agency/vendor branding or imply a new official credential.
 
 ## Recommended Next Move
 
-Publish this display refinement and verify the profile and all three SVGs live.
+Use the updated public link. Preserve short labels and accessible descriptions
+when adjusting the symbols in future.
 
 ## Files Changed
 

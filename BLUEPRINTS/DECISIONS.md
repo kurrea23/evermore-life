@@ -746,7 +746,7 @@ do not rewrite history.
 
 ### 2026-10-12 - Show screening preparation with compact symbols
 
-- **Status:** approved; live verification pending
+- **Status:** approved, deployed and verified live
 - **Decision:** Replace the Arizona preparation prose block with fingerprint, Live Scan and shield-check symbols beneath Keenan's introduction, with short labels.
 - **Why:** Keenan requested symbols rather than the Arizona-specific explanation.
 - **Consequences:** Completion descriptions remain accessible; symbols are generic and do not add government/vendor endorsement claims. License cards and insurance-only scope remain.
