@@ -14,10 +14,59 @@
       "portrait_source": "/agents/assets/keenan-business-card.png",
       "verified_on": "2026-10-12",
       "licenses": [
-        {"state": "Arizona", "number": "22162173", "type": "Insurance Producer · Resident", "status": "Active", "effective": "2026-03-20", "expires": "2029-05-31", "lines": "Life; Variable Life and Variable Annuity", "source": "https://external-lookup-web.prod.naic.org/solar-external-lookup/lookup?jurisdiction=AZ&searchType=Licensee&entityType=IND&npn=22162173"},
-        {"state": "Arkansas", "number": "22162173", "type": "Insurance Producer · Non-resident", "status": "Active", "effective": "2026-06-15", "expires": "2028-05-31", "lines": "Life; Variable Life and Variable Annuity", "source": "https://external-lookup-web.prod.naic.org/solar-external-lookup/lookup?jurisdiction=AR&searchType=Licensee&entityType=IND&npn=22162173"},
-        {"state": "Texas", "number": "3510352", "type": "Life Agent Individual", "status": "Active", "effective": "2026-06-12", "expires": "2028-05-31", "lines": "Life", "source": "https://www.sircon.com/ComplianceExpress/Inquiry/consumerInquiry.do?nonSscrb=Y"}
-      ]
+        {
+          "state": "Arizona",
+          "number": "22162173",
+          "type": "Insurance Producer · Resident",
+          "status": "Active",
+          "effective": "2026-03-20",
+          "expires": "2029-05-31",
+          "lines": "Life; Variable Life and Variable Annuity",
+          "source": "https://external-lookup-web.prod.naic.org/solar-external-lookup/lookup?jurisdiction=AZ&searchType=Licensee&entityType=IND&npn=22162173"
+        },
+        {
+          "state": "Arkansas",
+          "number": "22162173",
+          "type": "Insurance Producer · Non-resident",
+          "status": "Active",
+          "effective": "2026-06-15",
+          "expires": "2028-05-31",
+          "lines": "Life; Variable Life and Variable Annuity",
+          "source": "https://external-lookup-web.prod.naic.org/solar-external-lookup/lookup?jurisdiction=AR&searchType=Licensee&entityType=IND&npn=22162173"
+        },
+        {
+          "state": "Texas",
+          "number": "3510352",
+          "type": "Life Agent Individual",
+          "status": "Active",
+          "effective": "2026-06-12",
+          "expires": "2028-05-31",
+          "lines": "Life",
+          "source": "https://www.sircon.com/ComplianceExpress/Inquiry/consumerInquiry.do?nonSscrb=Y"
+        }
+      ],
+      "about": {
+        "heading": "Commercial real estate. Personal protection.",
+        "paragraphs": [
+          "My background is in commercial real estate, with experience in development projects, land sales and triple net leased investment properties. That work included involvement with Topgolf in Albuquerque and other developments.",
+          "That background shapes how I approach conversations today: understand what matters to you, explain the details clearly, and give you room to make a decision. With life insurance, the conversation starts with the people and plans you want to protect."
+        ],
+        "experience": [
+          "Commercial real estate & development",
+          "Land sales",
+          "Triple net leased investment properties"
+        ]
+      },
+      "licensing_preparation": {
+        "state": "Arizona",
+        "statement": "As part of obtaining my Arizona insurance license, I completed fingerprinting, Live Scan and a background check.",
+        "steps": [
+          "Fingerprinting completed",
+          "Live Scan completed",
+          "Background check completed"
+        ],
+        "source": "Direct statement from Keenan, October 12, 2026"
+      }
     }
   ]
 }

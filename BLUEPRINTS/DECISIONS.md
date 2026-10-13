@@ -722,3 +722,13 @@ do not rewrite history.
 - **Consequences:** Public access is approved; noindex remains for this initial review release. No Worker update, messaging, quote-intake reassignment or account change is included.
 - **Evidence:** `BLUEPRINTS/reports/2026-10-12_keenan-cloudflare-release.md`
 - **Owner:** Evermore operator
+
+
+### 2026-10-12 - Add Keenan's personal background and refine his live profile
+
+- **Status:** approved direction; deployment verification pending
+- **Decision:** Give the agent pages a navy header and cleaner buttons; add Keenan's About Me and stated Arizona fingerprinting, Live Scan and background-check completion to his existing live profile.
+- **Why:** Keenan explicitly requested these refinements and supplied the real-estate experience and licensing-preparation details.
+- **Consequences:** Copy describes involvement with Topgolf in Albuquerque and commercial real estate without unprovided roles or accomplishments. A short introduction script is prepared; actual video production awaits a source/format choice.
+- **Evidence:** `BLUEPRINTS/reports/2026-10-12_keenan-profile-refinement.md`
+- **Owner:** Keenan Urrea / Evermore operator

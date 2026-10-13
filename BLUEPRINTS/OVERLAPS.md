@@ -871,3 +871,13 @@ shows.
 - **Impact:** Public profiles need dated individual credentials; repository-wide Pages deployment can expose draft files even with noindex. Noindex does not make a page private.
 - **Next move:** Directory and first profile are now verified live; review the next agent before adding them. Add agent-specific form routing only after assignment is proven.
 - **Status:** directory and Keenan profile deployed and verified October 12; contact-channel operation untested. Release: `BLUEPRINTS/reports/2026-10-12_keenan-cloudflare-release.md`
+
+
+### 2026-10-12 - Agent biography and license verification need distinct evidence
+
+- **Surfaces:** Public profiles + individual credentials + introduction video
+- **Finding:** Keenan supplied his commercial-real-estate experience and completed licensing steps directly. Official license statuses are separately regulator-verified; completion of fingerprinting/background checks is not an endorsement or new certification.
+- **Evidence:** `agents/data/profiles.json`, `agents/INTRO_VIDEO_SCRIPT.md`, `BLUEPRINTS/reports/2026-10-12_keenan-profile-refinement.md`
+- **Impact:** Future profiles must avoid turning personal copy into unsupported official credential or carrier/securities claims.
+- **Next move:** Keep provenance explicit in the registry/report; add a reviewed recording with captions when Keenan supplies it or chooses another video format.
+- **Status:** copy/layout complete locally; video source pending
