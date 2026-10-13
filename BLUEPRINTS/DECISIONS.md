@@ -702,3 +702,13 @@ do not rewrite history.
 - **Consequences:** The page and API are live, but no owner notification or CRM handoff is implied; that remains a separate approved surface.
 - **Evidence:** `BLUEPRINTS/reports/2026-09-11_agent-growth-production-release.md`
 - **Owner:** Evermore operator
+
+
+### 2026-10-12 - Start public human-agent pages with Keenan Urrea
+
+- **Status:** human-approved draft direction; publication not approved
+- **Decision:** Create human-agent pages beginning with Keenan Urrea, using a warm real-people-here-to-help voice.
+- **Why:** The operator explicitly requested agent pages, named Keenan first, confirmed his legal name, and supplied a business card and Arkansas certificate.
+- **Consequences:** The first local directory/profile uses supplied professional details and current official license evidence. Publication, messaging and account changes remain separately approval-gated. Layout and copy still await operator review.
+- **Evidence:** `BLUEPRINTS/reports/2026-10-12_keenan-agent-pages-and-licenses.md` and `agents/README.md`
+- **Owner:** Evermore operator

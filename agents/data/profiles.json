@@ -1,0 +1,23 @@
+{
+  "agents": [
+    {
+      "slug": "keenan-urrea",
+      "name": "Keenan Urrea",
+      "first_name": "Keenan",
+      "role": "Insurance Specialist",
+      "npn": "22162173",
+      "phone": "+15055043101",
+      "phone_display": "(505) 504-3101",
+      "office_phone": "+14795451243",
+      "office_phone_display": "(479) 545-1243",
+      "email": "kurrea7@gmail.com",
+      "portrait_source": "/agents/assets/keenan-business-card.png",
+      "verified_on": "2026-10-12",
+      "licenses": [
+        {"state": "Arizona", "number": "22162173", "type": "Insurance Producer · Resident", "status": "Active", "effective": "2026-03-20", "expires": "2029-05-31", "lines": "Life; Variable Life and Variable Annuity", "source": "https://external-lookup-web.prod.naic.org/solar-external-lookup/lookup?jurisdiction=AZ&searchType=Licensee&entityType=IND&npn=22162173"},
+        {"state": "Arkansas", "number": "22162173", "type": "Insurance Producer · Non-resident", "status": "Active", "effective": "2026-06-15", "expires": "2028-05-31", "lines": "Life; Variable Life and Variable Annuity", "source": "https://external-lookup-web.prod.naic.org/solar-external-lookup/lookup?jurisdiction=AR&searchType=Licensee&entityType=IND&npn=22162173"},
+        {"state": "Texas", "number": "3510352", "type": "Life Agent Individual", "status": "Active", "effective": "2026-06-12", "expires": "2028-05-31", "lines": "Life", "source": "https://www.sircon.com/ComplianceExpress/Inquiry/consumerInquiry.do?nonSscrb=Y"}
+      ]
+    }
+  ]
+}

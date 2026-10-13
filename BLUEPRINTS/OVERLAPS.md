@@ -861,3 +861,13 @@ shows.
 - **Impact:** Future notification, owner-review, and CRM work must preserve this boundary unless explicitly approved and separately verified.
 - **Next move:** Design the owner-review handoff before adding operational notifications.
 - **Status:** completed — live route and D1 boundary verified
+
+
+### 2026-10-12 - Individual agent trust connects licensing, public pages and lead ownership
+
+- **Surfaces:** Human-agent pages + state licensing + public state pages + quote intake
+- **Finding:** Live Arizona, Arkansas and Texas lookup results confirm Keenan Urrea's active licenses. Agency state status is not individual credential evidence. The generic quote form has no verified Keenan assignment; the profile uses direct contact links.
+- **Evidence:** `agents/data/profiles.json`, `agents/README.md`, and `BLUEPRINTS/reports/2026-10-12_keenan-agent-pages-and-licenses.md`
+- **Impact:** Public profiles need dated individual credentials; repository-wide Pages deployment can expose draft files even with noindex. Noindex does not make a page private.
+- **Next move:** Review the first profile and contacts, approve publication separately, then verify public routes. Add agent-specific form routing only after assignment is proven.
+- **Status:** local draft complete; release and contact-channel operation unverified
