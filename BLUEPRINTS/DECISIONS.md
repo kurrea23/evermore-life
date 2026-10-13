@@ -716,7 +716,7 @@ do not rewrite history.
 
 ### 2026-10-12 - Publish Keenan's agent directory and profile on Cloudflare
 
-- **Status:** publication approved; verification pending
+- **Status:** publication approved, deployed and verified live
 - **Decision:** Publish `/agents/` and `/agents/keenan-urrea/` on the existing Evermore Cloudflare site.
 - **Why:** Operator explicitly requested a live Cloudflare link after receiving the completed draft.
 - **Consequences:** Public access is approved; noindex remains for this initial review release. No Worker update, messaging, quote-intake reassignment or account change is included.

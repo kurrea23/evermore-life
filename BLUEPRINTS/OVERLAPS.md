@@ -869,5 +869,5 @@ shows.
 - **Finding:** Live Arizona, Arkansas and Texas lookup results confirm Keenan Urrea's active licenses. Agency state status is not individual credential evidence. The generic quote form has no verified Keenan assignment; the profile uses direct contact links.
 - **Evidence:** `agents/data/profiles.json`, `agents/README.md`, and `BLUEPRINTS/reports/2026-10-12_keenan-agent-pages-and-licenses.md`
 - **Impact:** Public profiles need dated individual credentials; repository-wide Pages deployment can expose draft files even with noindex. Noindex does not make a page private.
-- **Next move:** Review the first profile and contacts, approve publication separately, then verify public routes. Add agent-specific form routing only after assignment is proven.
-- **Status:** local draft complete; release and contact-channel operation unverified
+- **Next move:** Directory and first profile are now verified live; review the next agent before adding them. Add agent-specific form routing only after assignment is proven.
+- **Status:** directory and Keenan profile deployed and verified October 12; contact-channel operation untested. Release: `BLUEPRINTS/reports/2026-10-12_keenan-cloudflare-release.md`

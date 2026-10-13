@@ -8,8 +8,10 @@
 
 ## Executive Finding
 
-Publication authorized. Release and live verification pending; this report will
-be completed with deployment and route evidence before handoff.
+[Keenan’s profile](https://evermorelife.org/agents/keenan-urrea/) and the
+[agent directory](https://evermorelife.org/agents/) are live on the existing
+Cloudflare Pages site. Deployment source is `6426ced`; both pages and their
+assets match repository source byte for byte. No Worker deployment was needed.
 
 ## Evidence
 
@@ -17,7 +19,12 @@ be completed with deployment and route evidence before handoff.
 | --- | --- | --- |
 | Public source and credentials prepared | [Draft report](2026-10-12_keenan-agent-pages-and-licenses.md), [registry](../../agents/data/profiles.json) | high |
 | Current source preserves newer virtual-office changes | Feature rebased onto current `origin/main` (`ab9cbc5`) before release | high |
-| Cloudflare access available | Wrangler OAuth account check October 12, 2026 | high |
+| Cloudflare access and project verified | Wrangler OAuth account check and `pages project list`, October 12 | high |
+| Approved source deployed | `deploy.sh` fetched GitHub main `6426ced`, validated 474 source files, uploaded 18 files (489 already uploaded), and uploaded `_headers` | high |
+| Deployment origin serves the profile | [Cloudflare deployment](https://75349c2d.evermore-life.pages.dev/agents/keenan-urrea/) returned HTTP 200 and expected profile content | high |
+| Public pages and assets match approved source | HTTPS curl requests for `/agents/`, `/agents/keenan-urrea/`, stylesheet, unchanged card asset and canonical logo returned 200 and passed SHA-256 equality | high |
+| Live browser renders credentials and direct contacts | Public profile readback showed all three licenses, supplied contacts and portrait | high |
+| Existing website routes remain available | Deploy sweep returned 200 for root, brand, growth calculator, score tracker, clients, today and inbound client intake | high for route availability |
 
 ## Map
 
@@ -31,12 +38,13 @@ Noindex remains for this first review release; the pages are publicly accessible
 ## Visual Evidence
 
 See [local draft screenshots](2026-10-12_keenan-agent-pages-and-licenses.md#visual-evidence).
-Live screenshot pending verification.
+[Live profile](../visuals/2026-10-12_keenan-live.png) records the public page after release.
 
 ## Unknown Or Unavailable
 
-Deployment URL and live page/assets pending. Contact channels were not called
-or emailed. Licenses reflect October 12 checks, not an exhaustive national search.
+Contact channels were not called or emailed. Licenses reflect October 12
+checks, not an exhaustive national search. Search indexing remains disabled
+by noindex; public access is live.
 
 ## Cross-Surface Overlaps
 
@@ -46,9 +54,10 @@ private-address data is introduced by this release.
 
 ## Recommended Next Move
 
-Deploy approved source, verify origin and public hostname, and record the receipt.
+Operator can share the live profile and directory links. Review the next
+agent’s professional details and current license evidence before adding them.
 
 ## Files Changed
 
 - `agents/README.md`
-- This report, `BLUEPRINTS/MAP.md`, `BLUEPRINTS/DECISIONS.md`, `BLUEPRINTS/OVERLAPS.md`
+- This report, live screenshot, `BLUEPRINTS/MAP.md`, `BLUEPRINTS/DECISIONS.md`, `BLUEPRINTS/OVERLAPS.md`
